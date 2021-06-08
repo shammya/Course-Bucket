@@ -1,28 +1,27 @@
 import React, { useEffect } from 'react'
 import MaterialTable from 'material-table'
-import CountryService from '../AdminPanel/api/CountryService.js'
+import LanguageService from '../AdminPanel/api/LanguageService.js'
 import { Drawer, Grid } from '@material-ui/core';
 
 
-function CountryComponent(props) {
+function LanguageComponent(props) {
   const { useState } = React;
 
   const [columns, setColumns] = useState([
     { title: 'Id', field: 'id',editable : false },
-    {
-      title: 'Country Name', field: 'name'
+    { title: 'Language Name', field: 'name'
     },
     { title: 'Admin', field: 'admin' }
   ])
 
   const [data, setData] = useState([])
 
-  CallgetAllCountries('shammya')
+  CallgetAllLanguages('shammya')
 
 
-  function CallgetAllCountries(username) {
+  function CallgetAllLanguages(username) {
     useEffect(() => {
-      CountryService.getAllCountries(username)
+      LanguageService.getAllLanguages(username)
         .then(response => {
           //console.log(response.data)
           //callData(response.data)
@@ -33,9 +32,9 @@ function CountryComponent(props) {
     }, [])
   }
 
-  function CallupdateCountry(username, id, country) {
+  function CallupdateLanguage(username, id, country) {
 
-    CountryService.updateCountry(username, id, country)
+    LanguageService.updateLanguage(username, id, country)
       .then(response => {
         //console.log(response.data)
         //callData(response.data)
@@ -46,7 +45,7 @@ function CountryComponent(props) {
 
   function CalldeleteCountry(username, id) {
 
-    CountryService.deleteCountry(username, id)
+    LanguageService.deleteCountry(username, id)
       .then(response => {
         ///console.log(response)
         //callData(response.data)
@@ -55,9 +54,9 @@ function CountryComponent(props) {
       )
   }
 
-  function CalladdCountry(username, country,countries) {
+  function CalladdLanguage(username, country,countries) {
 
-    CountryService.addCountry(username, country)
+    LanguageService.addLanguage(username, country)
       .then(response => {
         //console.log('call add : ')
         //console.log(response.data)
@@ -82,7 +81,7 @@ function CountryComponent(props) {
       >
         <MaterialTable
           style={{ width: "80%" }}
-          title="Country"
+          title="Language"
           columns={columns}
           data={data}
           editable={{
@@ -93,7 +92,7 @@ function CountryComponent(props) {
                   //setData([...data, newData]);
                   newData.id = -1
                   //console.log(newData.id)
-                  CalladdCountry('shammya',newData,data)
+                  CalladdLanguage('shammya',newData,data)
                   resolve();
                 }, 1000)
               }),
@@ -105,7 +104,7 @@ function CountryComponent(props) {
                   dataUpdate[index] = newData;
                   console.log(index)
                   setData([...dataUpdate]);
-                  CallupdateCountry('shammya', index + 1, newData)
+                  CallupdateLanguage('shammya', index + 1, newData)
 
                   resolve();
                 }, 1000)
@@ -131,4 +130,4 @@ function CountryComponent(props) {
   )
 }
 
-export default CountryComponent
+export default LanguageComponent

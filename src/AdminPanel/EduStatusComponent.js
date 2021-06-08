@@ -1,28 +1,28 @@
 import React, { useEffect } from 'react'
 import MaterialTable from 'material-table'
-import CountryService from '../AdminPanel/api/CountryService.js'
+import EduStatusService from '../AdminPanel/api/EduStatusService.js'
 import { Drawer, Grid } from '@material-ui/core';
 
 
-function CountryComponent(props) {
+function EduStatusComponent(props) {
   const { useState } = React;
 
   const [columns, setColumns] = useState([
     { title: 'Id', field: 'id',editable : false },
     {
-      title: 'Country Name', field: 'name'
+      title: 'Educational Status', field: 'name'
     },
     { title: 'Admin', field: 'admin' }
   ])
 
   const [data, setData] = useState([])
 
-  CallgetAllCountries('shammya')
+  CallgetAllEduStatus('shammya')
 
 
-  function CallgetAllCountries(username) {
+  function CallgetAllEduStatus(username) {
     useEffect(() => {
-      CountryService.getAllCountries(username)
+      EduStatusService.getAllEduStatus(username)
         .then(response => {
           //console.log(response.data)
           //callData(response.data)
@@ -33,9 +33,9 @@ function CountryComponent(props) {
     }, [])
   }
 
-  function CallupdateCountry(username, id, country) {
+  function CallupdateEduStatus(username, id, edustatus) {
 
-    CountryService.updateCountry(username, id, country)
+    EduStatusService.updateEduStatus(username, id, edustatus)
       .then(response => {
         //console.log(response.data)
         //callData(response.data)
@@ -44,9 +44,9 @@ function CountryComponent(props) {
       )
   }
 
-  function CalldeleteCountry(username, id) {
+  function CalldeleteEdustatus(username, id) {
 
-    CountryService.deleteCountry(username, id)
+    EduStatusService.deleteEdustatus(username, id)
       .then(response => {
         ///console.log(response)
         //callData(response.data)
@@ -55,13 +55,13 @@ function CountryComponent(props) {
       )
   }
 
-  function CalladdCountry(username, country,countries) {
+  function CalladdEduStatus(username, edustatus,edustatuses) {
 
-    CountryService.addCountry(username, country)
+    EduStatusService.addEduStatus(username, edustatus)
       .then(response => {
         //console.log('call add : ')
         //console.log(response.data)
-        setData([...countries,response.data])
+        setData([...edustatuses,response.data])
         //callData(response.data)
         //setData(response.data)
       }
@@ -82,7 +82,7 @@ function CountryComponent(props) {
       >
         <MaterialTable
           style={{ width: "80%" }}
-          title="Country"
+          title="Educational Status"
           columns={columns}
           data={data}
           editable={{
@@ -93,7 +93,7 @@ function CountryComponent(props) {
                   //setData([...data, newData]);
                   newData.id = -1
                   //console.log(newData.id)
-                  CalladdCountry('shammya',newData,data)
+                  CalladdEduStatus('shammya',newData,data)
                   resolve();
                 }, 1000)
               }),
@@ -105,7 +105,7 @@ function CountryComponent(props) {
                   dataUpdate[index] = newData;
                   console.log(index)
                   setData([...dataUpdate]);
-                  CallupdateCountry('shammya', index + 1, newData)
+                  CallupdateEduStatus('shammya', index + 1, newData)
 
                   resolve();
                 }, 1000)
@@ -117,7 +117,7 @@ function CountryComponent(props) {
                   const index = oldData.tableData.id;
                   dataDelete.splice(index, 1);
                   setData([...dataDelete]);
-                  CalldeleteCountry('shammya', index + 1)
+                  CalldeleteEdustatus('shammya', index + 1)
                   resolve();
                 }, 1000)
               }),
@@ -131,4 +131,4 @@ function CountryComponent(props) {
   )
 }
 
-export default CountryComponent
+export default EduStatusComponent

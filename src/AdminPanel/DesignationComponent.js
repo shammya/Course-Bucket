@@ -1,28 +1,27 @@
 import React, { useEffect } from 'react'
 import MaterialTable from 'material-table'
-import CountryService from '../AdminPanel/api/CountryService.js'
+import DesignationService from '../AdminPanel/api/DesignationService.js'
 import { Drawer, Grid } from '@material-ui/core';
 
 
-function CountryComponent(props) {
+function DesignationComponent(props) {
   const { useState } = React;
 
   const [columns, setColumns] = useState([
     { title: 'Id', field: 'id',editable : false },
-    {
-      title: 'Country Name', field: 'name'
+    { title: 'Designation ', field: 'name'
     },
     { title: 'Admin', field: 'admin' }
   ])
 
   const [data, setData] = useState([])
 
-  CallgetAllCountries('shammya')
+  CallgetAllDesignations('shammya')
 
 
-  function CallgetAllCountries(username) {
+  function CallgetAllDesignations(username) {
     useEffect(() => {
-      CountryService.getAllCountries(username)
+      DesignationService.getAllDesignations(username)
         .then(response => {
           //console.log(response.data)
           //callData(response.data)
@@ -33,9 +32,9 @@ function CountryComponent(props) {
     }, [])
   }
 
-  function CallupdateCountry(username, id, country) {
+  function CallupdateDesignation(username, id, country) {
 
-    CountryService.updateCountry(username, id, country)
+    DesignationService.updateDesignation(username, id, country)
       .then(response => {
         //console.log(response.data)
         //callData(response.data)
@@ -44,9 +43,9 @@ function CountryComponent(props) {
       )
   }
 
-  function CalldeleteCountry(username, id) {
+  function CalldeleteDesignation(username, id) {
 
-    CountryService.deleteCountry(username, id)
+    DesignationService.deleteDesignation(username, id)
       .then(response => {
         ///console.log(response)
         //callData(response.data)
@@ -55,9 +54,9 @@ function CountryComponent(props) {
       )
   }
 
-  function CalladdCountry(username, country,countries) {
+  function CalladdDesignation(username, country,countries) {
 
-    CountryService.addCountry(username, country)
+    DesignationService.addDesignation(username, country)
       .then(response => {
         //console.log('call add : ')
         //console.log(response.data)
@@ -82,7 +81,7 @@ function CountryComponent(props) {
       >
         <MaterialTable
           style={{ width: "80%" }}
-          title="Country"
+          title="Designation"
           columns={columns}
           data={data}
           editable={{
@@ -93,7 +92,7 @@ function CountryComponent(props) {
                   //setData([...data, newData]);
                   newData.id = -1
                   //console.log(newData.id)
-                  CalladdCountry('shammya',newData,data)
+                  CalladdDesignation('shammya',newData,data)
                   resolve();
                 }, 1000)
               }),
@@ -105,7 +104,7 @@ function CountryComponent(props) {
                   dataUpdate[index] = newData;
                   console.log(index)
                   setData([...dataUpdate]);
-                  CallupdateCountry('shammya', index + 1, newData)
+                  CallupdateDesignation('shammya', index + 1, newData)
 
                   resolve();
                 }, 1000)
@@ -117,7 +116,7 @@ function CountryComponent(props) {
                   const index = oldData.tableData.id;
                   dataDelete.splice(index, 1);
                   setData([...dataDelete]);
-                  CalldeleteCountry('shammya', index + 1)
+                  CalldeleteDesignation('shammya', index + 1)
                   resolve();
                 }, 1000)
               }),
@@ -131,4 +130,4 @@ function CountryComponent(props) {
   )
 }
 
-export default CountryComponent
+export default DesignationComponent
