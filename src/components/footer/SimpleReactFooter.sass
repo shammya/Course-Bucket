@@ -1,0 +1,97 @@
+@import url(https://fonts.googleapis.com/css?family=Mulish:200,300,regular,500,600,700,800,900,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic)
+$titles-font: 20px
+$secondary-text-font: 16px
+$smaller-screen: 650px
+$main-font: "Mulish", regular
+$letter-spacing: 1px
+$smaller-screen: 870px
+
+.first-row
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    justify-content: inherit
+    @media (min-width: $smaller-screen)
+        display: flex
+        flex-direction: row
+        flex-wrap: nowrap
+
+.footer-container
+    margin-top: 20px
+    padding-top: 8px
+    padding-bottom: 8px
+
+.social-media
+    display: flex
+    flex-direction: row
+    justify-content: center
+    margin-top: 15px
+
+.social-media-col
+    display: flex
+    flex-direction: column
+
+.img-logo
+    max-height: 70px
+    min-height: 70px
+    border-radius: 35%
+    width: auto
+
+.socialMediaLogo
+    padding: 0px 20px
+
+%titles
+   font-family: $main-font
+   font-size: $titles-font 
+   letter-spacing: $letter-spacing
+   font-weight: bold
+   margin-top: 20px
+
+.first-title
+    @extend %titles
+    font-weight: bolder
+    font-size: 28px
+
+.second-title
+    @extend %titles
+
+.third-title
+    @extend %titles
+
+.stay-connected-title
+    font-family: $main-font
+    font-size: $titles-font 
+    align-self: center
+    letter-spacing: 2px
+    font-weight: bold
+    margin-top: 20px
+
+.description
+    font-family: $main-font
+    font-size: $secondary-text-font
+    letter-spacing: $letter-spacing
+    text-align: justify
+
+.resources
+    font-family: $main-font
+    font-size: $secondary-text-font
+    letter-spacing: $letter-spacing
+    color: black
+
+.resources:hover
+    text-decoration: none
+    font-weight: bolder
+
+.copyright
+    text-align: center
+    font-size: 18px
+    margin-top: 10px
+    letter-spacing: $letter-spacing
+
+.col-about
+    min-width: auto
+    display: flex
+    flex-direction: column
+
+.grid-item
+    padding: 0px 12px

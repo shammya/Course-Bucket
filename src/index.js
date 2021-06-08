@@ -1,12 +1,20 @@
+import { MuiThemeProvider } from '@material-ui/core';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { lightTheme } from 'Theme';
 import App from './App';
+import './assets/styles/index.css';
 import reportWebVitals from './reportWebVitals';
+
+
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <MuiThemeProvider theme={lightTheme}>
+      <App />
+    </MuiThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
