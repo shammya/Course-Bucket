@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, Grid, IconButton
 import { AddCircleOutline, DeleteForever, Edit, ExpandMore, ImportExport, PictureAsPdf, TextFields, VideoCall } from "@material-ui/icons";
 import LinkIcon from '@material-ui/icons/Link';
 import React, { useState } from "react";
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+// import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { ArticleInput } from "./ArticleInput";
 import { ArticleOutput } from "./ArticleOutput";
 import { LinkInput } from "./LinkInput";
