@@ -11,7 +11,7 @@ export default function TopNav(props) {
       <Responsive displayIn={["Laptop", "Tablet"]}>
         <Grid className={classes.menuContainer} container direction="row" justify="space-between" alignItems="center">
           {menuItems.data.map(item => (
-            <Menu item={item} />
+            <Menu item={item} key={item} />
           ))}
         </Grid>
       </Responsive>
