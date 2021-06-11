@@ -7,6 +7,7 @@ import Auth from './layout/Auth';
 import Search from './views/Search';
 import CreateCourse from './views/CreateCourse';
 import DrawerLayout from './layout/DrawerLayout';
+import CountryComponent from  '../src/components/AdminPanel/CountryComponent.js'
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route path="/profile-details" component={ProfileDetails} />
           <Route path="/create-course" component={CreateCourse} />
 
-
+          <Route path="/admin/country" component={CountryComponent} />
           <Route path="/test" component={CreateCourse} />
           {/* <Redirect from="/" to="/home" /> */}
           <Redirect from="/" to="/test" />

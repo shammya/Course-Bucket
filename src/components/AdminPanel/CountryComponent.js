@@ -83,7 +83,7 @@ function CountryComponent(props) {
         <MaterialTable
           style={{ width: "80%" }}
           title="Country"
-          columns={columns}
+          columns ={columns}
           data={data}
           editable={{
             onRowAdd: newData =>
