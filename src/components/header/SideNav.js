@@ -52,7 +52,7 @@ export default function SideNav({ children }) {
 
           <DefaultComponentOfSideNav />
           {menuItems.data.map(item => (
-            <Menu item={item} />
+            <Menu item={item} key={item} />
           ))}
         </SwipeableDrawer>
         {/* </ScrollView> */}

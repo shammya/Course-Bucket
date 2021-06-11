@@ -3,15 +3,16 @@ import MUIRichTextEditor from "mui-rte";
 import React from "react";
 import { OutputLayout } from "./OutputLayout";
 
-export function ArticleOutput() {
+export function ArticleOutput({
+  file = { title: '', body: '' }, onUpdate
+}) {
   return (
-    <OutputLayout
-    >
-      <Typography variant="h3">Title</Typography>
+    <OutputLayout onUpdate={onUpdate} >
+      <Typography variant="h3">{file.title}</Typography>
       <MUIRichTextEditor
         readOnly
         toolbar={false}
-        defaultValue=""
+        defaultValue={file.body}
       />
     </OutputLayout>
   )

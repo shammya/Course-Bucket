@@ -32,22 +32,22 @@ export function AddAbleTextField({
     newArray.splice(index, 1);
     onDataChange(newArray);
   }
-  function upArrowClick(index) {
-    if (index === 0) return;
-    let array = data.splice(0);
-    let obj = array[index];
-    array[index] = array[index - 1];
-    array[index - 1] = obj;
-    onDataChange(array);
-  }
-  function downArrowClick(index) {
-    if (index === data.length - 1) return;
-    let array = data.splice(0);
-    let obj = array[index];
-    array[index] = array[index + 1];
-    array[index + 1] = obj;
-    onDataChange(array);
-  }
+  // function upArrowClick(index) {
+  //   if (index === 0) return;
+  //   let array = data.splice(0);
+  //   let obj = array[index];
+  //   array[index] = array[index - 1];
+  //   array[index - 1] = obj;
+  //   onDataChange(array);
+  // }
+  // function downArrowClick(index) {
+  //   if (index === data.length - 1) return;
+  //   let array = data.splice(0);
+  //   let obj = array[index];
+  //   array[index] = array[index + 1];
+  //   array[index + 1] = obj;
+  //   onDataChange(array);
+  // }
   function onIconValueChange(index, icon) {
     let newArray = [...data];
     newArray.splice(index, 1, { ...newArray[index], icon: icon });

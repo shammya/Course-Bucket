@@ -1,6 +1,6 @@
 import MUIRichTextEditor from "mui-rte";
-// import PDFViewer from "pdf-viewer-reactjs";
 import React, { useState } from "react";
+import { PDFOpener } from "tools/PDFViewer";
 import { OutputLayout } from "./OutputLayout";
 
 export function PDFOutput() {
@@ -17,11 +17,7 @@ export function PDFOutput() {
 
   return (
     <OutputLayout>
-      {/* <PDFViewer
-        document={{
-          url: 'https://juventudedesporto.cplp.org/files/sample-pdf_9359.pdf',
-        }}
-      /> */}
+      {/* <PDFOpener /> */}
       <MUIRichTextEditor
         readOnly
         toolbar={false}

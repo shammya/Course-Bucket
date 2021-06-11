@@ -1,25 +1,18 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, Grid, IconButton, TextField, Typography } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { AddCircleOutline, DeleteForever, Edit, ExpandMore, ImportExport, PictureAsPdf, TextFields, VideoCall } from '@material-ui/icons';
-import LinkIcon from '@material-ui/icons/Link';
 import MailIcon from '@material-ui/icons/Mail';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import { AddAbleTextField } from 'components/createCourse/AddAbleTextField';
-import { Week } from 'components/createCourse/Curriculum/Week';
-import { menuItems } from 'components/header/MenuBar';
-import { CategoryChips } from 'components/search/filter/Chips';
-import PropTypes from 'prop-types';
+import { CoursePrice } from 'components/createCourse/CoursePrice';
+import { Curriculum } from 'components/createCourse/Curriculum/Curriculum';
+import { TargetStudent } from 'components/createCourse/TargetStudent';
 import React, { useState } from 'react';
 import { ReactSortable } from 'react-sortablejs';
-import CategorySelector from 'tools/CategorySelector';
-import { LanguageField } from 'tools/LanguageField';
 import DrawerLayout from './../layout/DrawerLayout';
-import { CustomImageUploader } from './../tools/ImageUploader';
+import { LandingPage } from './LandingPage';
 
 const drawerWidth = 270;
 
@@ -95,90 +88,13 @@ function CreateCourse(props) {
   const icon = <InboxIcon />
 
 
-  function TargetStudent() {
-    return (
-      <>
-        <AddAbleTextField header="What will students learn in your course?" />
-        <AddAbleTextField header="Are there any course requirements or prerequisites?" />
-        <AddAbleTextField header="Write down the properties in brief with attractive icons" showIconPicker />
-      </>
-    )
-  }
-  function LandingPage() {
-    const [categories, setCategories] = useState(menuItems)
-    return (
-      <Grid container direction="column">
-        <TextField
-          label="Course title"
-          variant="outlined"
-        />
-        <TextField
-          label="Course subtitle"
-          variant="outlined"
-        />
-        <TextField
-          label="Course description"
-          variant="outlined"
-          multiline
-          rows={4}
-        />
-        <CustomImageUploader />
-        <LanguageField />
-        <Typography >Category</Typography>
-        <CategoryChips
-          object={categories}
-          onObjectChange={(newCategories => setCategories(newCategories))}
-        />
-        <CategorySelector
-          objects={categories}
-          onObjectsChange={(newCategories) => setCategories(newCategories)}
-        />
-      </Grid>
-    )
-  }
-
-  function CoursePrice() {
-    const [offerShow, setOfferShow] = useState(false);
-    return (
-      <Grid container direction="column">
-        <TextField
-          label="Course price"
-          variant="outlined"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={offerShow}
-              onChange={event => setOfferShow(!offerShow)}
-            />
-          }
-          label="Do you want to give offer?"
-        />
-        {
-          offerShow &&
-          <TextField
-            label="Set an offer in percentage"
-            variant="outlined"
-          />
-        }
-        <Grid item container direction="row" justify="center">
-          <Button variant="contained" color="primary">Save</Button>
-          <Button variant="contained" color="secondary">Cancel</Button>
-        </Grid>
-      </Grid>
-    )
-  }
 
 
-  function Curriculum() {
 
 
-    return (
-      <Grid container direction="column">
-        <Week />
-      </Grid>
-    )
-  }
+
+
+
   function Sorting() {
     const [items, setItems] = useState(['Apple', 'Banana', 'Cherry', 'Guava', 'Peach', 'Strawberry']);
     const [list, setList] = useState(
@@ -249,12 +165,5 @@ function CreateCourse(props) {
   );
 }
 
-CreateCourse.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
 
 export default CreateCourse;

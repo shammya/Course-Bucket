@@ -1,7 +1,9 @@
 import { Button, Grid } from "@material-ui/core";
 import React from "react";
 
-export function OutputLayout({ children }) {
+export function OutputLayout({
+  onUpdate, children
+}) {
   return (
     <Grid
       container
@@ -16,7 +18,13 @@ export function OutputLayout({ children }) {
         direction="row"
         justify="center"
       >
-        <Button color="primary" variant="outlined">Update</Button>
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={onUpdate}
+        >
+          Update
+          </Button>
       </Grid>
     </Grid>
   )

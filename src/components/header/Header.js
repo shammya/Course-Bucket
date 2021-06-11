@@ -134,7 +134,7 @@ export const Header = () => {
               <IconSet />
             </Grid>
             <Responsive displayIn={"Mobile"}>
-              <Grid direction="row">
+              <Grid container direction="row">
                 <SearchBox />
               </Grid>
             </Responsive>
