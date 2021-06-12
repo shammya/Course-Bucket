@@ -1,0 +1,8 @@
+To run the app in your local machine :
+1. download the whole project using the link of the repository
+2. iside frontend there is react code ,inisde backend there is java spring boot code with oracle jdbc , inside database there is DDL of our database
+3. load backend folder in eclipse ide and add all the maven dependencies
+4. do an npm start on frontend folder from terminal
+5. run ddl in navicat or sqldeveloper to create the database
+6. run backend from eclipse
+7. then play around with coursebucket
