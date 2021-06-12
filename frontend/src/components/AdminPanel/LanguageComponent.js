@@ -11,58 +11,62 @@ function LanguageComponent(props) {
     { title: 'Id', field: 'id',editable : false },
     { title: 'Language Name', field: 'name'
     },
-    { title: 'Admin', field: 'admin' }
+    { title: 'Admin', field: 'adminId' }
   ])
 
   const [data, setData] = useState([])
 
-  CallgetAllLanguages('shammya')
+  CallgetAllLanguages()
 
-
-  function CallgetAllLanguages(username) {
-    useEffect(() => {
-      LanguageService.getAllLanguages(username)
+  function getAllLanguages(){
+    LanguageService.getAllLanguages()
         .then(response => {
-          //console.log(response.data)
-          //callData(response.data)
+          console.log(response.data)
+          //callData(response.data)          
           setData(response.data);
           //setData(response.data)
         }
         )
-    }, [])
   }
 
-  function CallupdateLanguage(username, id, country) {
+  function CallgetAllLanguages() {
+    useEffect(() => { getAllLanguages() }, [])
+  }
 
-    LanguageService.updateLanguage(username, id, country)
+  function CallupdateLanguage(language) {
+
+    LanguageService.updateLanguage(language)
       .then(response => {
         //console.log(response.data)
         //callData(response.data)
         //setData(response.data)
+        getAllLanguages();
       }
       )
   }
 
-  function CalldeleteCountry(username, id) {
+  function CalldeleteLanguage( id) {
 
-    LanguageService.deleteCountry(username, id)
+    LanguageService.deleteLanguage( id)
       .then(response => {
         ///console.log(response)
         //callData(response.data)
         //setData(response.data)
+        getAllLanguages();
       }
       )
   }
 
-  function CalladdLanguage(username, country,countries) {
+  function CalladdLanguage(language) {
 
-    LanguageService.addLanguage(username, country)
+    LanguageService.addLanguage(language)
       .then(response => {
         //console.log('call add : ')
         //console.log(response.data)
-        setData([...countries,response.data])
+        //setData([...countries,response.data])
         //callData(response.data)
         //setData(response.data)
+        getAllLanguages();
       }
       )
   }
@@ -89,22 +93,20 @@ function LanguageComponent(props) {
               new Promise((resolve, reject) => {
 
                 setTimeout(() => {
-                  //setData([...data, newData]);
-                  newData.id = -1
-                  //console.log(newData.id)
-                  CalladdLanguage('shammya',newData,data)
+                  newData.adminId = 'shammya';
+                  CalladdLanguage(newData)
                   resolve();
                 }, 1000)
               }),
             onRowUpdate: (newData, oldData) =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const dataUpdate = [...data];
-                  const index = oldData.tableData.id;
-                  dataUpdate[index] = newData;
-                  console.log(index)
-                  setData([...dataUpdate]);
-                  CallupdateLanguage('shammya', index + 1, newData)
+                  // const dataUpdate = [...data];
+                  // const index = oldData.tableData.id;
+                  // dataUpdate[index] = newData;
+                  // console.log(index)
+                  // setData([...dataUpdate]);
+                  CallupdateLanguage( newData)
 
                   resolve();
                 }, 1000)
@@ -112,11 +114,11 @@ function LanguageComponent(props) {
             onRowDelete: oldData =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const dataDelete = [...data];
-                  const index = oldData.tableData.id;
-                  dataDelete.splice(index, 1);
-                  setData([...dataDelete]);
-                  CalldeleteCountry('shammya', index + 1)
+                  // const dataDelete = [...data];
+                  // const index = oldData.tableData.id;
+                  // dataDelete.splice(index, 1);
+                  // setData([...dataDelete]);
+                  CalldeleteLanguage(oldData.id)
                   resolve();
                 }, 1000)
               }),

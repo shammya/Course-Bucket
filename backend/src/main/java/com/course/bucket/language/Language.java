@@ -84,31 +84,31 @@ public class Language {
         boolean x = DB.execute(sql, DB.generateId("LANGUAGE").toString(), text, admin);
     }
 
-    public static void changeLanguageName(String oldName, String newName) {
-        ResultSet rs = DB.executeQuery("SELECT ID FROM LANGUAGE WHERE NAME = '" + oldName + "'");
-        try {
-            rs.next();
-            if (oldName != newName) {
+    public static void changeLanguageName(Language language) {
+//        ResultSet rs = DB.executeQuery("SELECT ID FROM LANGUAGE WHERE NAME = '" + oldName + "'");
+//        try {
+//            rs.next();
+//            if (oldName != newName) {
                 String sql = "UPDATE LANGUAGE SET NAME = '#' WHERE ID = #";
-                boolean x = DB.execute(sql, newName, rs.getString("ID"));
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Language.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                boolean x = DB.execute(sql, language.getName(),language.getId().toString());
+//            }
+//            rs.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Language.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
     }
 
-    public static void deleteLanguage(String selected) {
-        ResultSet rs = DB.executeQuery("SELECT ID FROM LANGUAGE WHERE NAME = '#'", selected);
-        try {
-            rs.next();
-            String id = rs.getString("ID");
-            DB.execute("UPDATE PERSON  SET LANGUAGE_ID = NULL WHERE LANGUAGE_ID = # ", id);
-            DB.execute("DELETE FROM LANGUAGE WHERE NAME = '#' ", selected);
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Language.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static void deleteLanguage(Integer id) {
+//        ResultSet rs = DB.executeQuery("SELECT ID FROM LANGUAGE WHERE NAME = '#'", selected);
+//        try {
+//            rs.next();
+//            String id = rs.getString("ID");
+            DB.execute("UPDATE PERSON  SET LANGUAGE_ID = NULL WHERE LANGUAGE_ID = # ", id.toString());
+            DB.execute("DELETE FROM LANGUAGE WHERE ID = '#' ", id.toString());
+//            rs.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Language.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 }

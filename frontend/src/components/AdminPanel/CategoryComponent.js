@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -10,6 +10,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import UpdateIcon from '@material-ui/icons/Update';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CancelIcon from '@material-ui/icons/Cancel';
+import CategoryService from '../AdminPanel/api/CategoryService.js'
 
 const useStyles = makeStyles({
   root: {
@@ -27,81 +28,43 @@ const useStyles = makeStyles({
     width: "100%"
   }
 });
-const initTreeData = [
-  {
-    nodeId: "1",
-    label: "Application",
-    children: [],
-  },
-  {
-    nodeId: "2",
-    label: "Documents",
-    children: [
-      {
-        nodeId: "3",
-        label: "a",
-        children: [
-          {
-            nodeId: "4",
-            label: "b",
-            children: [],
-          },
-        ]
-      },
-    ]
-  },
-  {
-    nodeId: "5",
-    label: "a",
-    children: [
-      {
-        nodeId: "6",
-        label: "b",
-        children: [
-          {
-            nodeId: "7",
-            label: "a",
-            children: [
-              {
-                nodeId: "8",
-                label: "b",
-                children: [],
-              },
-            ]
-          }, {
-            nodeId: "9",
-            label: "a",
-            children: [
-              {
-                nodeId: "10",
-                label: "b",
-                children: [],
-              },
-            ]
-          },
-        ]
-      },
-    ]
-  },
-  {
-    nodeId: "11",
-    label: "a",
-    children: [
-      {
-        nodeId: "12",
-        label: "b",
-        children: [],
-      },
-    ]
-  },
-]
 
 
 
 export default function MultiSelectTreeView() {
   const classes = useStyles();
   const [showTextField, setShowTextField] = useState(0);
-  const [treeData, setTreeData] = useState(initTreeData);
+  const [treeData, setTreeData] = useState([]);
+
+  // console.log(
+  // CategoryService.getAllCategories()
+  //   .then(response => {
+  //     //console.log(response.data)
+  //     //callData(response.data)          
+  //    // setTreeData(response.data);
+  //    return response.data;
+  //     //setData(response.data)
+  //   }
+  //   ));
+
+  CallgetAllCategories()
+
+  function getAllCategories() {
+    CategoryService.getCategories()
+      .then(response => {
+        //console.log(response.data)
+        //callData(response.data)          
+        setTreeData(response.data);
+        //setData(response.data)
+      }
+      )
+  }
+
+  function CallgetAllCategories() {
+    useEffect(() => { getAllCategories() }, []);
+  }
+
+
 
   function PrintClickedLabel(event) {
     //console.log(event.target.textContent)
@@ -109,35 +72,62 @@ export default function MultiSelectTreeView() {
 
     //{onLabelClick = {()=>PrintClickedLabel(this.props.label)}}
   }
-  function DFS(array, label){
-    if(array.length === 0) return;
-    array.map((item,idx) => {
-      if(item.label === label){
-        array.splice(idx,1);
-        console.log(array);
-        return;
-      }
-      DFS(item.children, label);
-    })
-  }
-  function deleteItem(label){
-    let array = treeData;
-    DFS(array, label);
-    array = array.filter(()=>true);
-    setTreeData(array);
-  }
+  // function DFS(array, label) {
+  //   if (array.length === 0) return;
+  //   array.map((item, idx) => {
+  //     if (item.name === label) {
+  //       array.splice(idx, 1);
+  //       console.log(array);
+  //       return;
+  //     }
+  //     DFS(item.children, label);
+  //   })
+  // }
+  // function deleteItem(label) {
+  //   let array = treeData;
+  //   DFS(array, label);
+  //   array = array.filter(() => true);
+  //   setTreeData(array);
+  // }
 
   function AddData({ data }) {
     const [textFieldData, setTextFieldData] = useState("");
-    function handleTextFieldDataChange(event){
+    function handleTextFieldDataChange(event) {
       setTextFieldData(event.target.value);
     }
-    function OnUpdateClicked(label) {
-      setShowTextField(label)
-      setTextFieldData(label)
+    function callAddCategory(category) {
+      CategoryService.addCategory(category)
+        .then(response => {
+
+          getAllCategories();
+        }
+        )
     }
-    function onCancelClicked(){
+
+    function callUpdateCategory(category) {
+      CategoryService.updateCategory(category)
+        .then(response => {
+
+          getAllCategories();
+        }
+        )
+    }
+
+    function callDeleteCategory(id) {
+      CategoryService.deleteCategory(id)
+        .then(response => {
+
+          getAllCategories();
+        }
+        )
+    }
+
+    function onCancelClicked() {
       setShowTextField(0)
+    }
+
+    function onUpdateClicked(id) {
+       setShowTextField(id);
     }
     //console.log(data)
     if (data.length === 0) return null;
@@ -145,48 +135,52 @@ export default function MultiSelectTreeView() {
       <>
         {
           data.map(item => (
-            <TreeItem className="category-tree-item" key={item.label} nodeId={item.label} label={
+            <TreeItem className="category-tree-item" key={item.id} nodeId={item.name} label={
               <>
-                {!(showTextField === item.label) && (<Grid container direction="row" alignItems="center">
+                {!(showTextField === item.id) && (<Grid container direction="row" alignItems="center">
                   <Grid item container sm>
-                    <Typography> {item.label} </Typography>
+                    <Typography> {item.name} </Typography>
                   </Grid>
                   <Grid item className={classes.iconContainer}>
                     <IconButton>
-                      <UpdateIcon onClick={() => OnUpdateClicked(item.label)} />
+                      <UpdateIcon onClick={() => onUpdateClicked(item.id) } />
                     </IconButton>
                     <IconButton>
-                      <DeleteForeverIcon onClick = {() => {deleteItem(item.label)}}/>
+                      <DeleteForeverIcon onClick={() => { callDeleteCategory(item.id) }} />
                     </IconButton>
                     <IconButton>
-                      <AddCircleIcon onClick = {() => {
-                        let obj = {nodeId: "100", label: "New category", children:[]};
-                        item.children = [...item.children, obj]; 
-                        OnUpdateClicked("New category");
+                      <AddCircleIcon onClick={() => {
+                        let obj = { name: "New category", parentId: item.id, adminId: 'shammya', children: [] };
+                        //item.children = [...item.children, obj];
+
+                        callAddCategory(obj);
                         console.log(showTextField);
                       }} />
                     </IconButton>
                   </Grid>
                 </Grid>)}
-                {(showTextField === item.label) && (<Grid container direction="row" alignItems="center">
+                {(showTextField === item.id) && (<Grid container direction="row" alignItems="center">
                   <Grid item container sm>
-                    {/* {React.useEffect(()=>{setTextFieldData(item.label)},[])} */}
+                    {/* {React.useEffect(()=>{setTextFieldData(item.name)},[])} */}
                     <TextField
                       className={classes.textField}
                       id="outlined-basic"
                       label="Category Name"
                       variant="outlined"
-                      defaultValue={item.label}
+                      defaultValue={item.name}
                       onChange={handleTextFieldDataChange}
                     />
                   </Grid>
                   <Grid item className={classes.iconContainer}>
                     <IconButton>
-                      <CheckCircleOutlineIcon onClick={() => {item.label = textFieldData; setShowTextField(0);}} />
-                      {/* <CheckCircleOutlineIcon onClick={() => onTickClicked(item.nodeId, textFieldData)} /> */}
+                      <CheckCircleOutlineIcon onClick={() => { 
+                        let category = { id :item.id ,name: textFieldData, parentId: item.parentId, adminId: 'shammya', children: [] };
+                        callUpdateCategory(category) ; setShowTextField(0); }} 
+                        />
+                      {/* <CheckCircleOutlineIcon onClick={() => onTickClicked(item.id, textFieldData)} /> */}
                     </IconButton>
                     <IconButton>
-                      <CancelIcon onClick={onCancelClicked}/>
+                      <CancelIcon onClick={onCancelClicked} />
                     </IconButton>
                   </Grid>
                 </Grid>)}
@@ -202,16 +196,16 @@ export default function MultiSelectTreeView() {
   }
   return (
     <>
-    <h3>Category List</h3>
-    <TreeView
-      className={classes.root}
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      multiSelect
-      onNodeSelect={PrintClickedLabel}
-    >
-      <AddData data={treeData} />
-    </TreeView>
+      <h3>Category List</h3>
+      <TreeView
+        className={classes.root}
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpandIcon={<ChevronRightIcon />}
+        multiSelect
+        onNodeSelect={PrintClickedLabel}
+      >
+        <AddData data={treeData} />
+      </TreeView>
     </>
   );
 }

@@ -8,61 +8,67 @@ function DesignationComponent(props) {
   const { useState } = React;
 
   const [columns, setColumns] = useState([
-    { title: 'Id', field: 'id',editable : false },
-    { title: 'Designation ', field: 'name'
+    { title: 'Id', field: 'id', editable: false },
+    {
+      title: 'Designation ', field: 'type'
     },
-    { title: 'Admin', field: 'admin' }
+    { title: 'Admin', field: 'adminId' ,editable: false }
   ])
 
   const [data, setData] = useState([])
 
-  CallgetAllDesignations('shammya')
+  CallgetAllDesignations()
 
 
-  function CallgetAllDesignations(username) {
-    useEffect(() => {
-      DesignationService.getAllDesignations(username)
-        .then(response => {
-          //console.log(response.data)
-          //callData(response.data)
-          setData(response.data);
-          //setData(response.data)
-        }
-        )
-    }, [])
-  }
-
-  function CallupdateDesignation(username, id, country) {
-
-    DesignationService.updateDesignation(username, id, country)
+  function getAllDesignations() {
+    DesignationService.getAllDesignation()
       .then(response => {
         //console.log(response.data)
         //callData(response.data)
+        setData(response.data);
         //setData(response.data)
       }
       )
   }
 
-  function CalldeleteDesignation(username, id) {
+  function CallgetAllDesignations() {
+    useEffect(() => { getAllDesignations()  }, []);
+  }
 
-    DesignationService.deleteDesignation(username, id)
+  function CallupdateDesignation( designation) {
+
+    DesignationService.updateDesignation(designation)
+      .then(response => {
+        //console.log(response.data)
+        //callData(response.data)
+        //setData(response.data)
+        getAllDesignations();
+      }
+      )
+  }
+
+  function CalldeleteDesignation(id) {
+
+    DesignationService.deleteDesignation( id)
       .then(response => {
         ///console.log(response)
         //callData(response.data)
         //setData(response.data)
+        getAllDesignations();
       }
       )
   }
 
-  function CalladdDesignation(username, country,countries) {
+  function CalladdDesignation(designation) {
 
-    DesignationService.addDesignation(username, country)
+    DesignationService.addDesignation(designation)
       .then(response => {
         //console.log('call add : ')
         //console.log(response.data)
-        setData([...countries,response.data])
+        //setData([...countries, response.data])
         //callData(response.data)
         //setData(response.data)
+        getAllDesignations();
       }
       )
   }
@@ -89,22 +95,21 @@ function DesignationComponent(props) {
               new Promise((resolve, reject) => {
 
                 setTimeout(() => {
-                  //setData([...data, newData]);
-                  newData.id = -1
                   //console.log(newData.id)
-                  CalladdDesignation('shammya',newData,data)
+                  newData.adminId = 'shammya';
+                  CalladdDesignation( newData)
                   resolve();
                 }, 1000)
               }),
             onRowUpdate: (newData, oldData) =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const dataUpdate = [...data];
-                  const index = oldData.tableData.id;
-                  dataUpdate[index] = newData;
-                  console.log(index)
-                  setData([...dataUpdate]);
-                  CallupdateDesignation('shammya', index + 1, newData)
+                  // const dataUpdate = [...data];
+                  // const index = oldData.tableData.id;
+                  // dataUpdate[index] = newData;
+                  // console.log(index)
+                  // setData([...dataUpdate]);
+                  CallupdateDesignation(newData)
 
                   resolve();
                 }, 1000)
@@ -112,11 +117,11 @@ function DesignationComponent(props) {
             onRowDelete: oldData =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const dataDelete = [...data];
-                  const index = oldData.tableData.id;
-                  dataDelete.splice(index, 1);
-                  setData([...dataDelete]);
-                  CalldeleteDesignation('shammya', index + 1)
+                  // const dataDelete = [...data];
+                  // const index = oldData.tableData.id;
+                  // dataDelete.splice(index, 1);
+                  // setData([...dataDelete]);
+                  CalldeleteDesignation(oldData.id);
                   resolve();
                 }, 1000)
               }),

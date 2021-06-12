@@ -82,31 +82,32 @@ public class Designation {
         boolean x = DB.execute(sql, DB.generateId("DESIGNATION").toString(), text,admin);
     }
 
-    public static void changeDesignationName(String oldName, String newName) {
-        ResultSet rs = DB.executeQuery("SELECT ID FROM DESIGNATION WHERE TYPE = '" + oldName + "'");
-        try {
-            rs.next();
-            if (oldName != newName) {
-                String sql = "UPDATE DESIGNATION SET TYPE = '#' WHERE ID = #";
-                boolean x = DB.execute(sql, newName, rs.getString("ID"));
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Designation.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static void changeDesignationName(Designation designation) {
+//        ResultSet rs = DB.executeQuery("SELECT ID FROM DESIGNATION WHERE TYPE = '" + oldName + "'");
+//        try {
+//            rs.next();
+//            if (oldName != newName) {
+//                String sql = "UPDATE DESIGNATION SET TYPE = '#' WHERE ID = #";
+//                boolean x = DB.execute(sql, newName, rs.getString("ID"));
+//            }
+//            rs.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Designation.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    	DB.executeQuery("UPDATE DESIGNATION SET TYPE = '#' WHERE ID = #",designation.getType(),designation.getId().toString());
     }
 
-    public static void deleteDesignation(String selected) {
-        ResultSet rs = DB.executeQuery("SELECT ID FROM DESIGNATION WHERE TYPE = '#'", selected);
-        try {
-            rs.next();
-            String id = rs.getString("ID");
-            DB.execute("UPDATE TEACHER  SET DESIGNATION_ID = NULL WHERE DESIGNATION_ID = # ", id);
-            DB.execute("DELETE FROM DESIGNATION WHERE TYPE = '#' ", selected);
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Designation.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static void deleteDesignation(Integer id) {
+//        ResultSet rs = DB.executeQuery("SELECT ID FROM DESIGNATION WHERE TYPE = '#'", selected);
+//        try {
+//            rs.next();
+//            String id = rs.getString("ID");
+            DB.execute("UPDATE TEACHER  SET DESIGNATION_ID = NULL WHERE DESIGNATION_ID = # ", id.toString());
+            DB.execute("DELETE FROM DESIGNATION WHERE ID = '#' ", id.toString());
+//            rs.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Designation.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
     }
 

@@ -3,6 +3,7 @@ package com.course.bucket.designation;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:6600")
 public class DesignationController {
 	
 	@PostMapping("/add-designation")
@@ -33,13 +35,13 @@ public class DesignationController {
 	}
 		
 	
-	@PutMapping("/update-designation/{oldName}/{newName}")
-	public void updateDesignation(@PathVariable String oldName, @PathVariable String newName) {
-		Designation.changeDesignationName(oldName, newName);
+	@PutMapping("/update-designation")
+	public void updateDesignation(@RequestBody Designation  designation) {
+		Designation.changeDesignationName(designation);
 	}
 	
-	@DeleteMapping("/delete-designation/{name}")
-	public void deleteDesignation(@PathVariable String name) {
-		Designation.deleteDesignation(name);
+	@DeleteMapping("/delete-designation/{id}")
+	public void deleteDesignation(@PathVariable Integer id) {
+		Designation.deleteDesignation(id);
 	}
 }

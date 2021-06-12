@@ -3,6 +3,7 @@ package com.course.bucket.language;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,18 +12,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.course.bucket.Global;
+
 
 @RestController
+@CrossOrigin(origins = Global.HOST)
 public class LanguageController {
 	
 	@PostMapping("/add-language")
 	public void addLanguage(@RequestBody Language language) {
-		System.out.println("Language : "+language.name+" "+language.adminId);
+		//System.out.println("Language : "+language.name+" "+language.adminId);
 		Language.createNewLanguage(language.getName(),language.getAdminId());
 	}
 	
 	@GetMapping("/get-languages")
-	public List<Language> findCountries(){
+	public List<Language> findLanguages(){
 		return Language.getList();
 	}
 	
@@ -33,13 +37,13 @@ public class LanguageController {
 	}
 		
 	
-	@PutMapping("/update-language/{oldName}/{newName}")
-	public void updateLanguage(@PathVariable String oldName, @PathVariable String newName) {
-		Language.changeLanguageName(oldName, newName);
+	@PutMapping("/update-language/")
+	public void updateLanguage(@RequestBody Language language) {
+		Language.changeLanguageName(language);
 	}
 	
-	@DeleteMapping("/delete-language/{name}")
-	public void deleteLanguage(@PathVariable String name) {
-		Language.deleteLanguage(name);
+	@DeleteMapping("/delete-language/{id}")
+	public void deleteLanguage(@PathVariable Integer id) {
+		Language.deleteLanguage(id);
 	}
 }

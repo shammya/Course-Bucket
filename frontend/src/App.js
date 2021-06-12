@@ -8,6 +8,10 @@ import Search from './views/Search';
 import CreateCourse from './views/CreateCourse';
 import DrawerLayout from './layout/DrawerLayout';
 import CountryComponent from  '../src/components/AdminPanel/CountryComponent.js'
+import EduStatusComponent from  '../src/components/AdminPanel/EduStatusComponent.js'
+import LanguageComponent from  '../src/components/AdminPanel/LanguageComponent.js'
+import CategoryComponent from  '../src/components/AdminPanel/CategoryComponent.js'
+import DesignationComponent from  '../src/components/AdminPanel/DesignationComponent.js'
 
 function App() {
   return (
@@ -22,6 +26,10 @@ function App() {
           <Route path="/create-course" component={CreateCourse} />
 
           <Route path="/admin/country" component={CountryComponent} />
+          <Route path="/admin/category" component={CategoryComponent} />
+          <Route path="/admin/edustatus" component={EduStatusComponent} />
+          <Route path="/admin/language" component={LanguageComponent} />
+          <Route path="/admin/designation" component={DesignationComponent} />
           <Route path="/test" component={CreateCourse} />
           {/* <Redirect from="/" to="/home" /> */}
           <Redirect from="/" to="/test" />

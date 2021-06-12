@@ -1,23 +1,24 @@
 import axios from "axios"
+import {global} from 'Configure.js'
 
 
 class DesignationService {
 
-    getAllDesignations(username) {
-        return axios.get(`http://localhost:8080/admins/${username}/designations`)
+    getAllDesignation() {
+        return axios.get(global.HOST + '/get-designations')
     }
 
-    deleteDesignation(username,id) {
-        return axios.delete(`http://localhost:8080/admins/${username}/designations/${id}`)
+    deleteDesignation(id) {
+        return axios.delete(global.HOST + `/delete-designation/${id}`)
     }
 
 
-    updateDesignation(username,id,designation) {
-        return axios.put(`http://localhost:8080/admins/${username}/designations/${id}`,designation)
+    updateDesignation(designation) {
+        return axios.put(global.HOST + '/update-designation',designation)
     }
 
-    addDesignation(username,designation) {
-        return axios.post(`http://localhost:8080/admins/${username}/designations`,designation)
+    addDesignation(designation) {
+        return axios.post(global.HOST + '/add-designation',designation)
     }
     
 }
