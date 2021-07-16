@@ -1,23 +1,23 @@
 import axios from "axios"
-
+import {global} from 'Configure.js'
 
 class LanguageService {
 
-    getAllLanguages(username) {
-        return axios.get(`http://localhost:8080/admins/${username}/languages`)
+    getAllLanguages() {
+        return axios.get(global.HOST + '/get-languages')
     }
 
-    deleteLanguage(username,id) {
-        return axios.delete(`http://localhost:8080/admins/${username}/languages/${id}`)
+    deleteLanguage(id) {
+        return axios.delete(global.HOST + `/delete-language/${id}`)
     }
 
 
-    updateLanguage(username,id,language) {
-        return axios.put(`http://localhost:8080/admins/${username}/languages/${id}`,language)
+    updateLanguage(language) {
+        return axios.put(global.HOST + '/update-language',language)
     }
 
-    addLanguage(username,language) {
-        return axios.post(`http://localhost:8080/admins/${username}/languages`,language)
+    addLanguage(language) {
+        return axios.post(global.HOST + '/add-language',language)
     }
     
 }

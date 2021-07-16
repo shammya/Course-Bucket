@@ -8,62 +8,67 @@ function EduStatusComponent(props) {
   const { useState } = React;
 
   const [columns, setColumns] = useState([
-    { title: 'Id', field: 'id',editable : false },
+    { title: 'Id', field: 'id', editable: false },
     {
-      title: 'Educational Status', field: 'name'
+      title: 'Educational Status', field: 'type'
     },
-    { title: 'Admin', field: 'admin' }
+    { title: 'Admin', field: 'adminId', editable: false }
   ])
 
   const [data, setData] = useState([])
 
-  CallgetAllEduStatus('shammya')
+  CallgetAllEduStatus()
 
-
-  function CallgetAllEduStatus(username) {
-    useEffect(() => {
-      EduStatusService.getAllEduStatus(username)
-        .then(response => {
-          //console.log(response.data)
-          //callData(response.data)
-          setData(response.data);
-          //setData(response.data)
-        }
-        )
-    }, [])
-  }
-
-  function CallupdateEduStatus(username, id, edustatus) {
-
-    EduStatusService.updateEduStatus(username, id, edustatus)
+  function getAllEduStatus() {
+    EduStatusService.getAllEduStatus()
       .then(response => {
         //console.log(response.data)
         //callData(response.data)
+        setData(response.data);
         //setData(response.data)
       }
       )
   }
 
-  function CalldeleteEdustatus(username, id) {
 
-    EduStatusService.deleteEdustatus(username, id)
+  function CallgetAllEduStatus() {
+    useEffect(() => { getAllEduStatus()}, [])
+  }
+
+  function CallupdateEduStatus( edustatus) {
+
+    EduStatusService.updateEduStatus( edustatus)
+      .then(response => {
+        //console.log(response.data)
+        //callData(response.data)
+        //setData(response.data)
+        getAllEduStatus();
+      }
+      )
+  }
+
+  function CalldeleteEdustatus( id) {
+
+    EduStatusService.deleteEduStatus(id)
       .then(response => {
         ///console.log(response)
         //callData(response.data)
         //setData(response.data)
+        getAllEduStatus();
       }
       )
   }
 
-  function CalladdEduStatus(username, edustatus,edustatuses) {
+  function CalladdEduStatus(edustatus) {
 
-    EduStatusService.addEduStatus(username, edustatus)
+    EduStatusService.addEduStatus(edustatus)
       .then(response => {
         //console.log('call add : ')
         //console.log(response.data)
-        setData([...edustatuses,response.data])
+        //setData([...edustatuses, response.data])
         //callData(response.data)
         //setData(response.data)
+        getAllEduStatus();
       }
       )
   }
@@ -88,36 +93,33 @@ function EduStatusComponent(props) {
           editable={{
             onRowAdd: newData =>
               new Promise((resolve, reject) => {
-
                 setTimeout(() => {
-                  //setData([...data, newData]);
-                  newData.id = -1
                   //console.log(newData.id)
-                  CalladdEduStatus('shammya',newData,data)
+                  newData.adminId = 'shammya';
+                  CalladdEduStatus( newData)
                   resolve();
                 }, 1000)
               }),
             onRowUpdate: (newData, oldData) =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const dataUpdate = [...data];
-                  const index = oldData.tableData.id;
-                  dataUpdate[index] = newData;
-                  console.log(index)
-                  setData([...dataUpdate]);
-                  CallupdateEduStatus('shammya', index + 1, newData)
-
+                  // const dataUpdate = [...data];
+                  // const index = oldData.tableData.id;
+                  // dataUpdate[index] = newData;
+                  // console.log(index)
+                  // setData([...dataUpdate]);
+                  CallupdateEduStatus( newData);
                   resolve();
                 }, 1000)
               }),
             onRowDelete: oldData =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const dataDelete = [...data];
-                  const index = oldData.tableData.id;
-                  dataDelete.splice(index, 1);
-                  setData([...dataDelete]);
-                  CalldeleteEdustatus('shammya', index + 1)
+                  // const dataDelete = [...data];
+                  // const index = oldData.tableData.id;
+                  // dataDelete.splice(index, 1);
+                  // setData([...dataDelete]);
+                  CalldeleteEdustatus(oldData.id);
                   resolve();
                 }, 1000)
               }),

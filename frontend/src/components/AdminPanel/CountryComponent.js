@@ -12,7 +12,7 @@ function CountryComponent(props) {
     {
       title: 'Country Name', field: 'name'
     },
-    { title: 'Admin', field: 'adminId' }
+    { title: 'Admin', field: 'adminId' ,editable: false  }
   ])
 
   const [data, setData] = useState([])
@@ -32,7 +32,6 @@ function CountryComponent(props) {
 
   function CallgetAllCountries() {
     useEffect(() => {getAllCountries()}, []);
-    console.log('mara kha')
   }
 
   function CallupdateCountry(country) {
@@ -59,7 +58,7 @@ function CountryComponent(props) {
       
   }
 
-  function CalladdCountry(country,countries) {
+  function CalladdCountry(country) {
 
     CountryService.addCountry(country)
       .then(response => {
@@ -96,7 +95,7 @@ function CountryComponent(props) {
                 setTimeout(() => {
                   newData.adminId = 'shammya';
                   //console.log(newData.id)
-                  CalladdCountry(newData,data)
+                  CalladdCountry(newData)
                   resolve();
                 }, 1000)
               }),

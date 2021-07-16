@@ -18,12 +18,12 @@ import com.course.bucket.Global;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:6600")
+@CrossOrigin(origins = Global.HOST)
 public class CountryController {
 	
 	@PostMapping("/add-country")
 	public void addCountry(@RequestBody Country country) {
-		System.out.println("Country : "+country.name+" "+country.adminId);
+		//System.out.println("Country : "+country.name+" "+country.adminId);
 		Country.createNewCountry(country.name,country.adminId);
 	}
 	

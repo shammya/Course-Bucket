@@ -14,14 +14,9 @@ public class Category {
 
 	Integer id;
 	String name;
-	String parentName;
+	Integer parentId;
 	String adminId;
 	List<Category> children = new ArrayList<>();
-
-	@Override
-	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", parentName=" + parentName + ", adminId=" + adminId + "]";
-	}
 
 	public Category() {
 
@@ -29,59 +24,63 @@ public class Category {
 
 	public Category(Integer id) {
 		this.setId(id);
-		ResultSet rs = DB.executeQuery("SELECT * FROM CATEGORY WHERE ID = #", id.toString());
+		ResultSet rs = DB.executeQuery("SELECT * FROM CATEGORY WHERE ID = #", id.toString()), rs1;
 		try {
 			if (rs.next()) {
 				this.setName(rs.getString("NAME"));
-				ResultSet rs1 = DB.executeQuery("SELECT NAME FROM CATEGORY WHERE ID = '#'",
-						Integer.toString(rs.getInt("PARENT_ID")));
-				if (rs1.next())
-					this.parentName = rs1.getString("NAME");
+				// ResultSet rs1 = DB.executeQuery("SELECT NAME FROM CATEGORY WHERE ID = '#'",
+				// Integer.toString(rs.getInt("PARENT_ID")));
+				if (rs.getInt("PARENT_ID") != 0)
+					this.setParentId(rs.getInt("PARENT_ID"));
 				else {
-					this.parentName = null;
+					this.setParentId(null);
 				}
 				this.setAdminId(rs.getString("ADMIN_ID"));
-				this.children.clear();
-				rs1.close();
-			}
-			rs.close();
-
-		} catch (SQLException ex) {
-			Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	public Category(String categoryName) {
-		// this.children.clear();
-		System.out.println("category name = " + categoryName);
-		this.setName(categoryName);
-		ResultSet rs = DB.executeQuery("SELECT * FROM CATEGORY WHERE NAME = '#'", categoryName);
-		ResultSet rs1;
-		try {
-			if (rs.next()) {
-				System.out.println(rs.getInt("ID") + " " + rs.getString("NAME") + " " + rs.getInt("PARENT_ID"));
-				this.setId(rs.getInt("ID"));
-				//System.out.println("id = " + this.getId());
-				rs1 = DB.executeQuery("SELECT NAME FROM CATEGORY WHERE ID = '#'",
-						Integer.toString(rs.getInt("PARENT_ID")));
-				if (rs1.next())
-					this.parentName = rs1.getString("NAME");
-				else {
-					this.parentName = null;
+				rs1 = DB.executeQuery("SELECT ID FROM CATEGORY WHERE PARENT_ID = #", this.getId().toString());
+				while (rs1.next()) {
+					this.children.add(new Category(rs1.getInt("ID")));
 				}
-				this.adminId = rs.getString("ADMIN_ID");
 				rs1.close();
-			}
-			rs1 = DB.executeQuery("SELECT NAME FROM CATEGORY WHERE PARENT_ID = #", this.getId().toString());
-			while (rs1.next()) {
-				this.children.add(new Category(rs1.getString("NAME")));
+
 			}
 			rs.close();
-			rs1.close();
+
 		} catch (SQLException ex) {
 			Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
+
+//	public Category(String categoryName) {
+//		// this.children.clear();
+//		System.out.println("category name = " + categoryName);
+//		this.setName(categoryName);
+//		ResultSet rs = DB.executeQuery("SELECT * FROM CATEGORY WHERE NAME = '#'", categoryName);
+//		ResultSet rs1;
+//		try {
+//			if (rs.next()) {
+//				System.out.println(rs.getInt("ID") + " " + rs.getString("NAME") + " " + rs.getInt("PARENT_ID"));
+//				this.setId(rs.getInt("ID"));
+//				// System.out.println("id = " + this.getId());
+//				rs1 = DB.executeQuery("SELECT NAME FROM CATEGORY WHERE ID = '#'",
+//						Integer.toString(rs.getInt("PARENT_ID")));
+//				if (rs1.next())
+//					this.parentName = rs1.getString("NAME");
+//				else {
+//					this.parentName = null;
+//				}
+//				this.adminId = rs.getString("ADMIN_ID");
+//				rs1.close();
+//			}
+//			rs1 = DB.executeQuery("SELECT NAME FROM CATEGORY WHERE PARENT_ID = #", this.getId().toString());
+//			while (rs1.next()) {
+//				this.children.add(new Category(rs1.getString("NAME")));
+//			}
+//			rs.close();
+//			rs1.close();
+//		} catch (SQLException ex) {
+//			Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+//		}
+//	}
 
 	public Integer getId() {
 		return id;
@@ -99,12 +98,12 @@ public class Category {
 		this.name = name;
 	}
 
-	public String getParentName() {
-		return parentName;
+	public Integer getParentId() {
+		return parentId;
 	}
 
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
 	}
 
 	public String getAdminId() {
@@ -129,7 +128,7 @@ public class Category {
 		ResultSet rsMainCat = DB.executeQuery("SELECT * FROM CATEGORY WHERE PARENT_ID IS NULL");
 		try {
 			while (rsMainCat.next()) {
-				Category mainCat = new Category(rsMainCat.getString("NAME"));
+				Category mainCat = new Category(rsMainCat.getInt("ID"));
 				categories.add(mainCat);
 			}
 			rsMainCat.close();
@@ -144,7 +143,7 @@ public class Category {
 		ResultSet rsMainCat = DB.executeQuery("SELECT NAME FROM CATEGORY WHERE PARENT_ID = 35");
 		try {
 			while (rsMainCat.next()) {
-				list.add(new Category(rsMainCat.getString("NAME")));
+				list.add(new Category(rsMainCat.getInt("ID")));
 			}
 			rsMainCat.close();
 		} catch (SQLException ex) {
@@ -171,7 +170,7 @@ public class Category {
 		System.out.println("in create categories");
 		String sql2 = "INSERT INTO CATEGORY VALUES (#,'#',#,NULL,'#')";
 		String sql1 = "INSERT INTO CATEGORY VALUES (#,'#',NULL,NULL,'#')";
-		Integer parentId = DB.getIdFromDb("CATEGORY", "NAME", category.getParentName());
+		Integer parentId = category.getParentId();
 		System.out.println("parent id = " + parentId);
 		if (parentId == null) {
 			DB.execute(sql1, DB.generateId("CATEGORY").toString(), category.getName(), category.getAdminId());
@@ -187,18 +186,40 @@ public class Category {
 //		boolean x = DB.execute(sql, DB.generateId("CATEGORY").toString(), name, ctg.getId().toString(), admin);
 //	}
 
-	public static void deleteCategory(String name) {
-		String sql = "DELETE FROM CATEGORY WHERE PARENT_ID  = # ";
-		Category ctg = new Category(name);
-		DB.execute(sql, ctg.getId().toString());
-		sql = "DELETE FROM CATEGORY WHERE NAME = '#'";
-		DB.execute(sql, name);
+	public static void getAllChildren(Category category, List<String> ids) {
+
+		if (category.children.size() != 0) {
+			for (Category child : category.children) {
+				getAllChildren(child, ids);
+				ids.add(child.getId().toString());
+			}
+
+		}
 
 	}
 
-	public static void updateCategory(String oldName, String newName) {
-		String sql = "UPDATE CATEGORY SET NAME = '#' WHERE  NAME = '#'";
-		DB.execute(sql, newName, oldName);
+	public static void deleteCategory( Integer id) {
+		String sql = "DELETE FROM CATEGORY WHERE ID IN(#) ";
+		List<String>  idList = new ArrayList<String>();
+		String  ids = "";
+		getAllChildren(new Category(id),idList);
+		idList.add(id.toString());
+		System.out.println("list size = "+idList.size());
+		int len = idList.size(),i=0;
+		for(String id1 : idList) {
+			ids += id1 ;
+			if(i <= len-2)
+				ids+= " , ";
+			i++;
+		}
+		sql = "DELETE FROM CATEGORY WHERE ID IN (#)";
+		DB.execute(sql,ids);
+
+	}
+
+	public static void updateCategory(Category category) {
+		String sql = "UPDATE CATEGORY SET NAME = '#' WHERE  ID = #";
+		DB.execute(sql, category.getName(), category.getId().toString());
 	}
 
 //	  public static ArrayList<Pair<Category, ArrayList<Category>>> getTreeList() {
@@ -217,8 +238,4 @@ public class Category {
 
 }
 
-//{
-//	  "name" : "BB",
-//	  "parentName" : "Root",
-//	  "adminId" : "shammya"
-//}
+

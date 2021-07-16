@@ -82,31 +82,31 @@ public class EduStatus {
         boolean x = DB.execute(sql, DB.generateId("EDUCATIONAL_STATUS").toString(), text, admin);
     }
 
-    public static void changeEduStatusName(String oldName, String newName) {
-        ResultSet rs = DB.executeQuery("SELECT ID FROM EDUCATIONAL_STATUS WHERE TYPE = '" + oldName + "'");
-        try {
-            rs.next();
-            if (oldName != newName) {
+    public static void changeEduStatusName(EduStatus eduStatus) {
+//        ResultSet rs = DB.executeQuery("SELECT ID FROM EDUCATIONAL_STATUS WHERE TYPE = '" + oldName + "'");
+//        try {
+//            rs.next();
+//            if (oldName != newName) {
                 String sql = "UPDATE EDUCATIONAL_STATUS SET TYPE = '#' WHERE ID = #";
-                boolean x = DB.execute(sql, newName, rs.getString("ID"));
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(EduStatus.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                boolean x = DB.execute(sql,eduStatus.getType(),eduStatus.getId().toString());
+//            }
+//            rs.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(EduStatus.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
-    public static void deleteEduStatus(String selected) {
-        ResultSet rs = DB.executeQuery("SELECT ID FROM EDUCATIONAL_STATUS WHERE TYPE = '#'", selected);
-        try {
-            rs.next();
-            String id = rs.getString("ID");
-            DB.execute("UPDATE STUDENT  SET EDU_STATUS_ID = NULL WHERE EDU_STATUS_ID = # ", id);
-            DB.execute("DELETE FROM EDUCATIONAL_STATUS WHERE TYPE = '#' ", selected);
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(EduStatus.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static void deleteEduStatus(Integer id) {
+//        ResultSet rs = DB.executeQuery("SELECT ID FROM EDUCATIONAL_STATUS WHERE TYPE = '#'", selected);
+//        try {
+//            rs.next();
+//            String id = rs.getString("ID");
+            DB.execute("UPDATE STUDENT  SET EDU_STATUS_ID = NULL WHERE EDU_STATUS_ID = # ", id.toString());
+            DB.execute("DELETE FROM EDUCATIONAL_STATUS WHERE ID = '#' ", id.toString());
+//            rs.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(EduStatus.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
     }
 }

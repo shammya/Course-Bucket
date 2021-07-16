@@ -3,6 +3,7 @@ package com.course.bucket.category;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,13 +12,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.course.bucket.Global;
+
 
 @RestController
+@CrossOrigin(origins = Global.HOST)
 public class CategoryController {
 	
 	@PostMapping("/add-category")
 	public void addCategory(@RequestBody Category category) {
-		System.out.println("\t category : "+category.getName()+" "+category.getParentName()+" "+category.getAdminId());
+		//System.out.println("\t category : "+category.getName()+" "+category.getParentName()+" "+category.getAdminId());
 		Category.createNewCategory(category);
 	}
 	
@@ -26,19 +30,19 @@ public class CategoryController {
 		return Category.getAllCategories();
 	}
 	
-	@GetMapping("/get-category-by-name/{name}")
-	public Category findById(@PathVariable String name) {
-		return new Category(name);
+	@GetMapping("/get-category-by-name/{id}")
+	public Category findById(@PathVariable Integer id) {
+		return new Category(id);
 	}
 		
 	
-	@PutMapping("/update-category/{oldName}/{newName}")
-	public void updateCategory(@PathVariable String oldName, @PathVariable String newName) {
-		Category.updateCategory(oldName, newName);
+	@PutMapping("/update-category")
+	public void updateCategory(@RequestBody Category category) {
+		Category.updateCategory(category);
 	}
 	
-	@DeleteMapping("/delete-category/{name}")
-	public void deleteCategory(@PathVariable String name) {
-		Category.deleteCategory(name);
+	@DeleteMapping("/delete-category/{id}")
+	public void deleteCategory(@PathVariable Integer id) {
+		Category.deleteCategory(id);
 	}
 }

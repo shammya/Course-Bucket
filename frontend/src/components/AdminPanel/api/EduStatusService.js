@@ -1,23 +1,24 @@
 import axios from "axios"
+import {global} from 'Configure.js'
 
 
 class EduStatusService {
 
-    getAllEduStatus(username) {
-        return axios.get(`http://localhost:8080/admins/${username}/edustatus`)
+    getAllEduStatus() {
+        return axios.get(global.HOST + '/get-edustatus')
     }
 
-    deleteEduStatus(username,id) {
-        return axios.delete(`http://localhost:8080/admins/${username}/edustatus/${id}`)
+    deleteEduStatus(id) {
+        return axios.delete(global.HOST + `/delete-edustatus/${id}`)
     }
 
 
-    updateEduStatus(username,id,edustatus) {
-        return axios.put(`http://localhost:8080/admins/${username}/edustatus/${id}`,edustatus)
+    updateEduStatus(edustatus) {
+        return axios.put(global.HOST + '/update-edustatus',edustatus)
     }
 
-    addEduStatus(username,edustatus) {
-        return axios.post(`http://localhost:8080/admins/${username}/edustatus`,edustatus)
+    addEduStatus(edustatus) {
+        return axios.post(global.HOST + '/add-edustatus',edustatus)
     }
     
 }
