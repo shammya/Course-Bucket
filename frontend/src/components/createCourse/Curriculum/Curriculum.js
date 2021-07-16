@@ -21,21 +21,21 @@ const defaultWeek = {
   ],
 }
 const weeksTemp = [
-  defaultWeek
+  { ...defaultWeek }
 ]
 
 export function Curriculum() {
   const [weeks, setWeeks] = useState(weeksTemp);
 
   function onWeekChange(index, week) {
-    weeks[index] = week;
-    // const newWeeks = [...weeks];
-    // newWeeks[index] = week;
-    // setWeeks(newWeeks);
+    let updWeeks = [...weeks];
+    updWeeks.splice(index, 1, week);
+    setWeeks(updWeeks);
   }
   function handleOnWeekAdd(index) {
-    weeks.splice(index, 0, defaultWeek);
-    setWeeks([...weeks]);
+    let updWeeks = [...weeks];
+    updWeeks.splice(index, 0, { ...defaultWeek });
+    setWeeks(updWeeks);
   }
   function handleOnWeekRemove(index) {
     weeks.splice(index, 1);
@@ -50,12 +50,14 @@ export function Curriculum() {
       {
         weeks.map((item, index) => (
           // <div key={item.id}>
-          <Week
-            week={item}
-            onWeekChange={week => onWeekChange(index, week)}
-            onWeekAdd={() => handleOnWeekAdd(index)}
-            onWeekRemove={() => handleOnWeekRemove(index)}
-          />
+          <>
+            <Week
+              week={item}
+              setWeek={week => onWeekChange(index, week)}
+              onWeekAdd={() => handleOnWeekAdd(index)}
+              onWeekRemove={() => handleOnWeekRemove(index)}
+            />
+          </>
         ))
       }
       {/* </div> */}

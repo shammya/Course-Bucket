@@ -3,6 +3,7 @@ import ImageSlider from 'components/ImageCarousel';
 import User from 'layout/User';
 import React from 'react';
 import { useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { CourseCarousel } from './../components/courseView/CourseCarousel';
 
 const courses = [
@@ -330,8 +331,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export const Home = () => {
+export const Home = (props) => {
   let match = useRouteMatch();
+  const history = useHistory();
+  console.log(props.location.state);
   const classes = useStyles();
   return (
     <User>

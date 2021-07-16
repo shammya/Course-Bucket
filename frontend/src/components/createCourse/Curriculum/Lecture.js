@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, Grid, IconButton, TextField, Typography } from "@material-ui/core";
-import { AddCircleOutline, Cancel, CheckCircle, DeleteForever, Edit, ExpandMore, ImportExport, PictureAsPdf, TextFields, VideoCall } from "@material-ui/icons";
+import { AddCircleOutline, Cancel, CheckCircle, DeleteForever, Edit, ExpandMore, PictureAsPdf, TextFields, VideoCall } from "@material-ui/icons";
 import LinkIcon from '@material-ui/icons/Link';
 import React, { useState } from "react";
 import { ArticleInput } from './ArticleInput';
@@ -20,6 +20,7 @@ export function Lecture({
       body: '',
     }
   },
+  setLecture,
   onLectureAdd,
   onLectureRemove
 }) {
@@ -29,7 +30,6 @@ export function Lecture({
     no: 1,
     fieldValue: lecture.name,
     editMode: false,
-    lecture: lecture,
   });
   function handleBodyChange(body) {
     setState({ ...state, body: body });
@@ -42,26 +42,19 @@ export function Lecture({
   // }
   function handleOnSave(type, file) {
     console.log(file);
-    setState({
-      ...state,
-      body: type + "_OUTPUT",
-      lecture: {
-        ...state.lecture,
-        type: type,
-        file: file
-      }
-    });
+    setLecture({ ...lecture, type: type, file: file });
+    setState({ ...state, body: type + "_OUTPUT" });
   }
   function handleOnCancel() {
     setState({
       ...state,
-      body: state.lecture.type === '' ? "LECTURE_TYPE" : state.lecture.type + "_OUTPUT"
+      body: lecture.type === '' ? "LECTURE_TYPE" : lecture.type + "_OUTPUT"
     });
   }
   function handleOnUpdate(file) {
     setState({
       ...state,
-      body: state.lecture.type + "_INPUT"
+      body: lecture.type + "_INPUT"
     })
   }
 
@@ -120,16 +113,16 @@ export function Lecture({
               <DeleteForever onClick={onLectureRemove} />
             </IconButton>
             <Typography>Lecture {state.no} :</Typography>
-            <Typography> {state.lecture.name}</Typography>
+            <Typography> {lecture.name}</Typography>
             {
-              !state.expanded && state.lecture.type === '' && <Button
+              !state.expanded && lecture.type === '' && <Button
                 variant="outlined"
                 color="primary"
                 onClick={event => setState({ ...state, expanded: !state.expanded })}
               >Content +</Button>
             }
             {
-              state.expanded && state.lecture.type === '' &&
+              state.expanded && lecture.type === '' &&
               <IconButton onClick={event => setState({ ...state, body: "LECTURE_TYPE", expanded: !state.expanded })}>
                 <Cancel />
               </IconButton>
@@ -142,14 +135,14 @@ export function Lecture({
             <TextField
               variant="outlined"
               fullWidth
-              defaultValue={state.fieldValue}
+              defaultValue={lecture.name}
               onBlur={event => setState({ ...state, fieldValue: event.target.value })}
             />
             <IconButton>
-              <CheckCircle onClick={event => { setState({ ...state, editMode: false, lecture: { ...state.lecture, name: state.fieldValue } }) }} />
+              <CheckCircle onClick={event => { setLecture({ ...lecture, name: state.fieldValue }); setState({ ...state, editMode: false }); }} />
             </IconButton>
             <IconButton>
-              <Cancel onClick={event => setState({ ...state, editMode: false, fieldValue: state.lecture.name })} />
+              <Cancel onClick={event => setState({ ...state, editMode: false, fieldValue: lecture.name })} />
             </IconButton>
           </>
         }
@@ -161,7 +154,7 @@ export function Lecture({
     <Accordion key={lecture.id} expanded={state.expanded} style={{ backgroundColor: 'pink' }}>
       <AccordionSummary
         expandIcon={
-          state.lecture.type !== '' &&
+          lecture.type !== '' &&
           <ExpandMore onClick={event => setState({ ...state, expanded: !state.expanded })} />
         }
       >
@@ -170,7 +163,7 @@ export function Lecture({
       <AccordionDetails>
         {state.body === "LECTURE_TYPE" && <LectureType />}
 
-        {state.body === "ARTICLE_INPUT" && <ArticleInput file={state.lecture.file} onSave={(file) => handleOnSave('ARTICLE', file)} onCancel={handleOnCancel} />}
+        {state.body === "ARTICLE_INPUT" && <ArticleInput file={lecture.file} onSave={(file) => handleOnSave('ARTICLE', file)} onCancel={handleOnCancel} />}
         {state.body === "VIDEO_INPUT" && <VideoInput />}
         {state.body === "PDF_INPUT" && <PDFInput />}
         {state.body === "LINK_INPUT" && <LinkInput />}
@@ -178,7 +171,7 @@ export function Lecture({
         {/* {
           state.lecture.file != undefined &&
           <> */}
-        {state.body === "ARTICLE_OUTPUT" && <ArticleOutput file={state.lecture.file} onUpdate={handleOnUpdate} />}
+        {state.body === "ARTICLE_OUTPUT" && <ArticleOutput file={lecture.file} onUpdate={handleOnUpdate} />}
         {state.body === "VIDEO_OUTPUT" && <VideoOutput />}
         {state.body === "PDF_OUTPUT" && <PDFOutput />}
         {state.body === "LINK_OUTPUT" && <LinkOutput />}

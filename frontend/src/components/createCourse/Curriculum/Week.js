@@ -15,36 +15,26 @@ const defaultLecture = {
 }
 
 export function Week({
-  week, onWeekChange, onWeekAdd, onWeekRemove
+  week, setWeek, onWeekAdd, onWeekRemove
 }) {
   const [state, setState] = useState({
     expanded: false,
     editMode: false,
     no: 1,
-    week: { ...week },
     fieldValue: week.name,
   });
-  onWeekChange(state.week);
 
+  function handleOnLectureChange(index, lecture) {
+    week.lectures.splice(index, 1, lecture);
+    setWeek({ ...week, lectures: week.lectures });
+  }
   function handleOnLectureAdd(index) {
-    state.week.lectures.splice(index, 0, defaultLecture);
-    setState({
-      ...state,
-      week: {
-        ...state.week,
-        lectures: state.week.lectures,
-      }
-    });
+    week.lectures.splice(index, 0, defaultLecture);
+    setWeek({ ...week, lectures: week.lectures });
   }
   function handleOnLectureRemove(index) {
-    state.week.lectures.splice(index, 1);
-    setState({
-      ...state,
-      week: {
-        ...state.week,
-        lectures: state.week.lectures,
-      }
-    });
+    week.lectures.splice(index, 1);
+    setWeek({ ...week, lectures: week.lectures });
   }
 
   return (
@@ -70,7 +60,7 @@ export function Week({
               <DeleteForever onClick={onWeekRemove} />
             </IconButton>
             <Typography>Week {state.no} :</Typography>
-            <Typography> {state.week.name}</Typography>
+            <Typography> {week.name}</Typography>
           </>
         }
         {
@@ -79,14 +69,14 @@ export function Week({
             <TextField
               variant="outlined"
               fullWidth
-              defaultValue={state.fieldValue}
-              onChange={event => setState({ ...state, fieldValue: event.target.value })}
+              defaultValue={week.name}
+              onBlur={event => setState({ ...state, fieldValue: event.target.value })}
             />
             <IconButton>
-              <CheckCircle onClick={event => { setState({ ...state, editMode: false, week: { ...state.week, name: state.fieldValue } }) }} />
+              <CheckCircle onClick={event => { setWeek({ ...week, name: state.fieldValue }); setState({ ...state, editMode: false }); }} />
             </IconButton>
             <IconButton>
-              <Cancel onClick={event => setState({ ...state, editMode: false, fieldValue: state.week.name })} />
+              <Cancel onClick={event => setState({ ...state, editMode: false, fieldValue: week.name })} />
             </IconButton>
           </>
         }
@@ -105,6 +95,7 @@ export function Week({
               // <div key={item.id}>
               <Lecture
                 lecture={item}
+                setLecture={lecture => handleOnLectureChange(index, lecture)}
                 onLectureAdd={() => handleOnLectureAdd(index)}
                 onLectureRemove={() => handleOnLectureRemove(index)}
               />

@@ -1,6 +1,6 @@
 
 
 export const global = {
-    HOST: 'http://localhost:8080',
+    HOST: 'http://localhost:6600',
 
 }
