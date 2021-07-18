@@ -11,6 +11,22 @@ import CountryComponent from './components/AdminPanel/CountryComponent.js';
 import Auth from './layout/Auth';
 import CreateCourse from './views/CreateCourse';
 import Search from './views/Search';
+import CoursePagination from 'components/courseView/CustomPagination.js';
+import { CourseView } from './components/courseView/CourseView';
+
+export const RouteAddress = {
+  home: { route: '/home', child: [] },
+  search: { route: '/search', child: [] },
+  admin: {
+    route: '/admin',
+    child: [
+      { country: { route: '/country' }, child: [] },
+      { language: { route: '/language' }, child: [] },
+    ]
+  },
+  search: '/search',
+  admin: '/admin',
+}
 
 function App() {
   return (
@@ -23,13 +39,15 @@ function App() {
           <Route path="/profile" component={Profile} />
           <Route path="/profile-details" component={ProfileDetails} />
           <Route path="/create-course" component={CreateCourse} />
+          <Route path="/course" component={CourseView} />
 
           <Route path="/admin/country" component={CountryComponent} />
-          <Route path="/test" component={Auth} />
           <Route path="/admin/category" component={CategoryComponent} />
           <Route path="/admin/edustatus" component={EduStatusComponent} />
           <Route path="/admin/language" component={LanguageComponent} />
           <Route path="/admin/designation" component={DesignationComponent} />
+
+          <Route path="/test" component={CourseView} />
           <Redirect from="/" to="/test" />
         </Switch>
       </BrowserRouter>

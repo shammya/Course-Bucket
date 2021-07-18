@@ -21,7 +21,7 @@ export class Course {
   languages: Array<Language>;
   properties: Array<Property>;
   rating: number;
-  reveiws: Array<Review>;
+  reviews: Array<Review>;
   numOfStudents: number;
   prerequisite: Array<string>;
   outcomes: Array<string>;
@@ -37,6 +37,11 @@ export class Lecture {
   lastUpdate: Date;
   file: Files;
   isPreview: Boolean;
+
+  constructor(title: string = "Lecture Title") {
+    this.isPreview = false;
+    this.title = title;
+  }
 }
 
 export class Week {
@@ -45,6 +50,11 @@ export class Week {
   title: string;
   lastUpdate: Date;
   lectures: Array<Lecture>;
+
+  constructor(title: string = "Week Title") {
+    this.title = title;
+    this.lectures = [new Lecture()];
+  }
 }
 
 export class FAQ {
@@ -65,10 +75,9 @@ export class PurchaseHistory {
   time: Date;
   cost: number;
 }
-
-export class CourseLearning {
-  learnings: Array<string>;
-}
+// export class CourseLearning {
+//   learnings: Array<string>;
+// }
 
 export class CourseRating {
   id: number;
@@ -89,11 +98,16 @@ export class Property {
   icon: Files;
   text: string;
   position: number;
+
+  constructor(text: string = "", iconName: string = "FaIcons") {
+    this.text = text;
+    this.icon = new Files("ICON", "PROPERTY", iconName);
+  }
 }
 
-export class Requirement {
-  requirements: Array<string>;
-}
+// export class Requirement {
+//   requirements: Array<string>;
+// }
 
 export class Review {
   id: number;

@@ -47,7 +47,8 @@ const DrawerLayout = ({
   children = <></>
 }) => {
   const classes = useStyles();
-  const [tabIndex, setTabIndex] = useState(1);
+  const [tabIndex, setTabIndex] = useState(0);
+
   function timeout(delay) {
     return new Promise(res => setTimeout(res, delay));
   }

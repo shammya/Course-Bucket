@@ -1,16 +1,20 @@
 export class Files {
   id: number;
-  type: FileType;
+  type: "ICON" | "VIDEO" | "PICTURE" | "PDF" | "ARTICLE" | "LINK";
   title: string;
   content: string;
   uploadTime: Date;
   lastUpdateTime: Date;
-}
 
-export class FileType {
-  id: string;
-  typeName: string;
-  adminId: string;
+  constructor(
+    type: "ICON" | "VIDEO" | "PICTURE" | "PDF" | "ARTICLE" | "LINK",
+    title: string = "",
+    content: string
+  ) {
+    this.type = type;
+    this.title = title;
+    this.content = content;
+  }
 }
 
 export {};
