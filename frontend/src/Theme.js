@@ -79,8 +79,15 @@ Object.assign(lightTheme, {
         fontSize: "1.2rem",
         marginTop: 3,
       }
-    }
-  },
+    },
+    '&MuiGrid-spacing-xs-100': {
+      display: 'none'
+    },
+    // spacing: {
+    //   '&:hover': {
+    //   },
+    // }
+  }
 })
 export const darkTheme = createMuiTheme({
   palette: {

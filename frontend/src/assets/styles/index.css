@@ -35,3 +35,9 @@ code {
 /* .MUIRichTextEditor-editorContainer-35 {
   position: "relative";
 } */
+
+.MuiGrid-spacing-xs-2 {
+  width: calc(100%-16px);
+  margin: 16;
+  height: "100vh";
+}
