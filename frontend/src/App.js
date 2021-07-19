@@ -9,10 +9,9 @@ import EduStatusComponent from '../src/components/AdminPanel/EduStatusComponent.
 import LanguageComponent from '../src/components/AdminPanel/LanguageComponent.js';
 import CountryComponent from './components/AdminPanel/CountryComponent.js';
 import Auth from './layout/Auth';
+import { CourseView } from './views/Course';
 import CreateCourse from './views/CreateCourse';
 import Search from './views/Search';
-import CoursePagination from 'components/courseView/CustomPagination.js';
-import { CourseView } from './components/courseView/CourseView';
 
 export const RouteAddress = {
   home: { route: '/home', child: [] },

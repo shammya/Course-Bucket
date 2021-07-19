@@ -60,6 +60,26 @@ Object.assign(lightTheme, {
         right: 0,
       }
     },
+    MuiListItem: {
+      root: {
+        alignItems: "flex-start"
+      },
+      gutters: {
+        paddingLeft: 0,
+        paddingRight: 0,
+      }
+    },
+    MuiListItemAvatar: {
+      root: {
+        minWidth: 30
+      }
+    },
+    MuiSvgIcon: {
+      root: {
+        fontSize: "1.2rem",
+        marginTop: 3,
+      }
+    }
   },
 })
 export const darkTheme = createMuiTheme({
