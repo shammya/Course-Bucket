@@ -1,3 +1,5 @@
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.light.css';
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Home } from "views/Home";
@@ -12,6 +14,8 @@ import Auth from './layout/Auth';
 import { CourseView } from './views/Course';
 import CreateCourse from './views/CreateCourse';
 import Search from './views/Search';
+import Dashboard from './views/Dashboard';
+import MyCourse from './views/MyCourse';
 
 export const RouteAddress = {
   home: { route: '/home', child: [] },
@@ -39,6 +43,8 @@ function App() {
           <Route path="/profile-details" component={ProfileDetails} />
           <Route path="/create-course" component={CreateCourse} />
           <Route path="/course" component={CourseView} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/my-course" component={MyCourse} />
 
           <Route path="/admin/country" component={CountryComponent} />
           <Route path="/admin/category" component={CategoryComponent} />
@@ -46,7 +52,7 @@ function App() {
           <Route path="/admin/language" component={LanguageComponent} />
           <Route path="/admin/designation" component={DesignationComponent} />
 
-          <Route path="/test" component={CourseView} />
+          <Route path="/test" component={MyCourse} />
           <Redirect from="/" to="/test" />
         </Switch>
       </BrowserRouter>

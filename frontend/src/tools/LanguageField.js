@@ -5,10 +5,9 @@ import {
   makeStyles,
   MenuItem,
   Select,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import React, { useState } from "react";
-import { Language } from "../classes/Language";
 
 const useStyles = makeStyles((theme) => ({
   chips: {
@@ -23,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1, 0),
-    minWidth: 400,
     width: "100%",
   },
   selectEmpty: {

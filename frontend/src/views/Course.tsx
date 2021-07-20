@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  makeStyles,
   Typography,
 } from "@material-ui/core";
 import { DoneAll, Image, LabelImportant } from "@material-ui/icons";
@@ -73,7 +74,27 @@ course = {
   ],
   weeks: [new Week(), new Week(), new Week()],
 };
+
+const useStyles = makeStyles((theme) => ({
+  MuiListItemRoot: {
+    alignItems: "flex-start",
+  },
+  MuiListItemGutters: {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+  MuiListItemAvatarRoot: {
+    minWidth: 30,
+  },
+  MuiSvgIconRoot: {
+    fontSize: "1.2rem",
+    marginTop: 3,
+  },
+}));
+
 export function CourseView() {
+  const classes = useStyles();
+
   function Price() {
     return (
       <>
@@ -129,9 +150,15 @@ export function CourseView() {
         </Grid>
         <List dense={true}>
           {course.properties.map((item) => (
-            <ListItem>
-              <ListItemAvatar>
+            <ListItem
+              classes={{
+                root: classes.MuiListItemRoot,
+                gutters: classes.MuiListItemGutters,
+              }}
+            >
+              <ListItemAvatar classes={{ root: classes.MuiListItemAvatarRoot }}>
                 <IconPickerItem
+                  classes={{ root: classes.MuiSvgIconRoot }}
                   //@ts-ignore
                   icon={item.icon.content}
                   containerStyles={{ fontSize: "15px" }}
@@ -263,9 +290,16 @@ export function CourseView() {
                 </Grid>
                 <List dense={false}>
                   {course.outcomes.map((item) => (
-                    <ListItem>
-                      <ListItemAvatar>
-                        <DoneAll />
+                    <ListItem
+                      classes={{
+                        root: classes.MuiListItemRoot,
+                        gutters: classes.MuiListItemGutters,
+                      }}
+                    >
+                      <ListItemAvatar
+                        classes={{ root: classes.MuiListItemAvatarRoot }}
+                      >
+                        <DoneAll classes={{ root: classes.MuiSvgIconRoot }} />
                       </ListItemAvatar>
                       <ListItemText>{item}</ListItemText>
                     </ListItem>
@@ -281,9 +315,18 @@ export function CourseView() {
               <Typography variant="h5">Requirements</Typography>
               <List dense={false}>
                 {course.prerequisite.map((item) => (
-                  <ListItem>
-                    <ListItemAvatar style={{ top: 0 }}>
-                      <LabelImportant />
+                  <ListItem
+                    classes={{
+                      root: classes.MuiListItemRoot,
+                      gutters: classes.MuiListItemGutters,
+                    }}
+                  >
+                    <ListItemAvatar
+                      classes={{ root: classes.MuiListItemAvatarRoot }}
+                    >
+                      <LabelImportant
+                        classes={{ root: classes.MuiSvgIconRoot }}
+                      />
                     </ListItemAvatar>
                     <ListItemText>{item}</ListItemText>
                   </ListItem>

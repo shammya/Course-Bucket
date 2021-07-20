@@ -8,7 +8,13 @@ import { LanguageField } from "tools/LanguageField";
 export function LandingPage({ course, onCourseAttrChange }) {
   const [categories, setCategories] = useState(menuItems);
   return (
-    <Grid container direction="column" alignContent="space-between" spacing={1}>
+    <Grid
+      container
+      direction="column"
+      alignContent="space-between"
+      xs
+      spacing={1}
+    >
       <Grid item container>
         <TextField
           fullWidth

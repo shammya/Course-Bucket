@@ -60,29 +60,11 @@ Object.assign(lightTheme, {
         right: 0,
       }
     },
-    MuiListItem: {
+    MuiTypography: {
       root: {
-        alignItems: "flex-start"
-      },
-      gutters: {
-        paddingLeft: 0,
-        paddingRight: 0,
+        textAlign: "justify",
       }
-    },
-    MuiListItemAvatar: {
-      root: {
-        minWidth: 30
-      }
-    },
-    MuiSvgIcon: {
-      root: {
-        fontSize: "1.2rem",
-        marginTop: 3,
-      }
-    },
-    '&MuiGrid-spacing-xs-100': {
-      display: 'none'
-    },
+    }
     // spacing: {
     //   '&:hover': {
     //   },
