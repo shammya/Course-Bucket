@@ -1,4 +1,5 @@
 import {
+  AppBar,
   Drawer,
   Grid,
   List,
@@ -6,10 +7,13 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
+  Tab,
+  Tabs,
 } from "@material-ui/core";
 import InboxIcon from "@material-ui/icons/Inbox";
 import React, { useState } from "react";
 import { Sticky, StickyContainer } from "react-sticky";
+import { Responsive } from "tools/Responsive";
 import User from "./User";
 
 const drawerWidth = 600;
@@ -46,13 +50,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export interface DrawerLayoutObject {
+export interface IDrawerLayoutObject {
   label: string;
   icon: JSX.Element;
   content: JSX.Element;
 }
 
-const DrawerLayout = ({ objects }: { objects: Array<DrawerLayoutObject> }) => {
+const DrawerLayout = ({ objects }: { objects: Array<IDrawerLayoutObject> }) => {
   const classes = useStyles();
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -83,39 +87,88 @@ const DrawerLayout = ({ objects }: { objects: Array<DrawerLayoutObject> }) => {
       </div>
     );
   }
+  function TabPanel({ children, value, index, ...other }) {
+    return (
+      <div role="tabpanel" hidden={value != index} {...other}>
+        {value === index && children}
+      </div>
+    );
+  }
   return (
     <User>
       <StickyContainer>
-        <Grid container direction="row">
-          <Grid style={{ width: drawerWidth }} item sm>
-            <Sticky>
-              {({ style }) => (
-                <Drawer
-                  classes={{
-                    paper: classes.drawerPaper,
-                  }}
-                  style={style}
-                  variant="permanent"
-                  open
-                >
-                  <DrawerList
-                    objects={objects.map((item) => ({
-                      label: item.label,
-                      icon: item.icon,
-                    }))}
-                  />
-                </Drawer>
-              )}
-            </Sticky>
-          </Grid>
-          <Grid item className={classes.content}>
-            {objects
-              .map((item) => ({ content: item.content }))
-              .map((item, index) => (
-                <div hidden={tabIndex !== index}>{item.content}</div>
+        <Responsive displayIn="Laptop">
+          <Grid container direction="row">
+            <Grid style={{ width: drawerWidth }} item sm>
+              <Sticky>
+                {({ style }) => (
+                  <Drawer
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    style={{ ...style, marginTop: 24, marginBottom: 24 }}
+                    variant="permanent"
+                    open
+                  >
+                    <Tabs
+                      orientation="vertical"
+                      value={tabIndex}
+                      onChange={(event, newValue) => setTabIndex(newValue)}
+                      variant="scrollable"
+                      scrollButtons="auto"
+                    >
+                      {objects.map((item, idx) => (
+                        <Tab label={item.label} icon={item.icon} />
+                      ))}
+                    </Tabs>
+                  </Drawer>
+                )}
+              </Sticky>
+            </Grid>
+            <Grid item className={classes.content}>
+              {objects.map((item, idx) => (
+                <TabPanel value={tabIndex} index={idx}>
+                  {item.content}
+                </TabPanel>
               ))}
+              {/* {objects
+                .map((item) => ({ content: item.content }))
+                .map((item, index) => (
+                  <div hidden={tabIndex !== index}>{item.content}</div>
+                ))} */}
+            </Grid>
           </Grid>
-        </Grid>
+        </Responsive>
+        <Responsive displayIn="Mobile">
+          <Sticky>
+            {({ style }) => (
+              <AppBar position="static" color="default" style={style}>
+                <Tabs
+                  value={tabIndex}
+                  onChange={(event, newValue) => setTabIndex(newValue)}
+                  variant="scrollable"
+                  scrollButtons="auto"
+                >
+                  {objects.map((item, idx) => (
+                    <Tab label={item.label} />
+                  ))}
+                </Tabs>
+              </AppBar>
+            )}
+          </Sticky>
+
+          {objects.map((item, idx) => (
+            <TabPanel
+              value={tabIndex}
+              index={idx}
+              style={{
+                padding: 15,
+              }}
+            >
+              {item.content}
+            </TabPanel>
+          ))}
+        </Responsive>
       </StickyContainer>
     </User>
   );

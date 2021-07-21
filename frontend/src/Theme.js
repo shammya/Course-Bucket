@@ -64,6 +64,14 @@ Object.assign(lightTheme, {
       root: {
         textAlign: "justify",
       }
+    },
+    PrivateTabIndicator: {
+      root: {
+        height: 6
+      },
+      vertical: {
+        width: 6
+      }
     }
     // spacing: {
     //   '&:hover': {

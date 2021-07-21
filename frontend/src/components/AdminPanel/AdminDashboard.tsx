@@ -1,26 +1,16 @@
 import {
-  Card,
-  CardActionArea,
   CardContent,
-  CardMedia,
+  CardActionArea,
   Grid,
   Typography,
+  Card,
 } from "@material-ui/core";
-import { Image, Looks, RateReview } from "@material-ui/icons";
-import FAQBox from "components/courseView/FAQ";
-import ReviewBox from "components/courseView/Review";
+import { Looks, Image } from "@material-ui/icons";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
-import CustomPagination from "layout/Pagination";
-import MaterialTable from "material-table";
-import React, { useState } from "react";
-import { FaChalkboardTeacher, FaDollarSign, FaQq } from "react-icons/fa";
-import IncomePerCourseChart from "./IncomePerCourseChart";
-import { OverviewBarChart } from "./Overview";
-import PopularCategoryChart from "./PopularCategoryChart";
-import { CoursePopularityPieChart } from "./PopularityPieChart";
-import { PopularCourseAdminChart } from "./PopurlarCourseAdminChart";
-import { RatingLineChart } from "./RatingLIneChart";
-import { UserRegistrationChart } from "./UserRegistrationChart";
+import { useState } from "react";
+import PopularCategoryChart from "views/PopularCategoryChart";
+import { PopularCourseAdminChart } from "views/PopurlarCourseAdminChart";
+import { UserRegistrationChart } from "views/UserRegistrationChart";
 
 function ContentHeader({ children }) {
   return (
@@ -56,7 +46,7 @@ interface PurchaseHistory {
   amount: number;
 }
 
-function Dashboard() {
+function AdminDashboard() {
   const [columns, setColumns] = useState([
     { title: "Course Image", field: "image" },
     { title: "Course Name", field: "courseName" },
@@ -83,7 +73,7 @@ function Dashboard() {
   ]);
   const objects: Array<IDrawerLayoutObject> = [
     {
-      label: "Admin Overview",
+      label: "Overview",
       icon: <Looks />,
       content: (
         <Grid container xs spacing={2}>
@@ -147,7 +137,6 @@ function Dashboard() {
               </CardContent>
             </Card>
           </Grid>
-
           <Grid item xs={6} md={3}>
             <Card>
               <CardContent>
@@ -184,115 +173,8 @@ function Dashboard() {
         </Grid>
       ),
     },
-    {
-      label: "Overview",
-      icon: <Looks />,
-      content: (
-        <Grid container xs spacing={2}>
-          <Grid item xs={12}>
-            <OverviewBarChart />
-          </Grid>
-          <Grid item xs={12}>
-            <RatingLineChart />
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <CoursePopularityPieChart />
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <IncomePerCourseChart />
-          </Grid>
-        </Grid>
-      ),
-    },
-    {
-      label: "Purchase History",
-      icon: <FaDollarSign />,
-      content: (
-        <MaterialTable
-          // @ts-ignore
-          columns={columns}
-          title="Purchase History"
-          data={data}
-        />
-      ),
-    },
-    {
-      label: "Reviews",
-      icon: <RateReview />,
-      content: (
-        <CustomPagination objectsPerPage={3}>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <Grid item>
-              <ContentHeader>
-                <CustomPagination type="two-item-per-line" objectsPerPage={2}>
-                  {[1, 2, 3, 4, 5].map((item) => (
-                    <ReviewBox />
-                  ))}
-                </CustomPagination>
-              </ContentHeader>
-            </Grid>
-          ))}
-        </CustomPagination>
-      ),
-    },
-    {
-      label: "FAQ",
-      icon: <FaQq />,
-      content: (
-        <CustomPagination objectsPerPage={3}>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <Grid item>
-              <ContentHeader>
-                <CustomPagination type="one-item-per-line" objectsPerPage={2}>
-                  {[1, 2, 3, 4, 5].map((item) => (
-                    <FAQBox />
-                  ))}
-                </CustomPagination>
-              </ContentHeader>
-            </Grid>
-          ))}
-        </CustomPagination>
-      ),
-    },
-    {
-      label: "Student List",
-      icon: <FaChalkboardTeacher />,
-      content: (
-        <CustomPagination objectsPerPage={3}>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <ContentHeader>
-              <CustomPagination type="calculate-by-width">
-                {[1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 1, 1].map(
-                  (item) => (
-                    <Card>
-                      <CardActionArea>
-                        <CardMedia>
-                          <Image />
-                        </CardMedia>
-                        <CardContent>
-                          <Grid container direction="column">
-                            <Grid item>
-                              <Typography variant="h6">Student Name</Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography variant="body2">
-                                Enrolled Date
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  )
-                )}
-              </CustomPagination>
-            </ContentHeader>
-          ))}
-        </CustomPagination>
-      ),
-    },
   ];
   return <DrawerLayout objects={objects} />;
 }
 
-export default Dashboard;
+export default AdminDashboard;

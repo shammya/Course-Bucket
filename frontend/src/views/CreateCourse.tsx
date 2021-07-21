@@ -5,7 +5,7 @@ import { Curriculum } from "components/createCourse/Curriculum/Curriculum";
 import { TargetStudent } from "components/createCourse/TargetStudent";
 import React from "react";
 import { LandingPage } from "../components/createCourse/LandingPage";
-import DrawerLayout, { DrawerLayoutObject } from "../layout/DrawerLayout";
+import DrawerLayout, { IDrawerLayoutObject } from "../layout/DrawerLayout";
 
 function CreateCourse(props) {
   const icon = <InboxIcon />;
@@ -25,7 +25,7 @@ function CreateCourse(props) {
     console.log(course);
   }
 
-  const topics: Array<DrawerLayoutObject> = [
+  const topics: Array<IDrawerLayoutObject> = [
     {
       label: "Landing Page",
       icon: icon,

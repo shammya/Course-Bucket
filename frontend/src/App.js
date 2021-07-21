@@ -13,9 +13,10 @@ import CountryComponent from './components/AdminPanel/CountryComponent.js';
 import Auth from './layout/Auth';
 import { CourseView } from './views/Course';
 import CreateCourse from './views/CreateCourse';
-import Search from './views/Search';
 import Dashboard from './views/Dashboard';
 import MyCourse from './views/MyCourse';
+import Search from './views/Search';
+import AdminDashboard from './components/AdminPanel/AdminDashboard';
 
 export const RouteAddress = {
   home: { route: '/home', child: [] },
@@ -51,8 +52,11 @@ function App() {
           <Route path="/admin/edustatus" component={EduStatusComponent} />
           <Route path="/admin/language" component={LanguageComponent} />
           <Route path="/admin/designation" component={DesignationComponent} />
+          <Route path="/admin" component={AdminDashboard}>
 
-          <Route path="/test" component={MyCourse} />
+          </Route>
+
+          <Route path="/test" component={Dashboard} />
           <Redirect from="/" to="/test" />
         </Switch>
       </BrowserRouter>
