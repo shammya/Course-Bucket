@@ -9,14 +9,16 @@ import { Category, Image, Language, Looks } from "@material-ui/icons";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import { useState } from "react";
 import { ImEarth } from "react-icons/im";
+import { Redirect, Route, Switch } from "react-router";
+import { useRouteMatch } from "react-router-dom";
 import PopularCategoryChart from "views/PopularCategoryChart";
 import { PopularCourseAdminChart } from "views/PopurlarCourseAdminChart";
 import { UserRegistrationChart } from "views/UserRegistrationChart";
 import MultiSelectTreeView from "./CategoryComponent";
 import CountryComponent from "./CountryComponent";
 import DesignationComponent from "./DesignationComponent";
-import LanguageComponent from "./LanguageComponent";
 import EduStatusComponent from "./EduStatusComponent";
+import LanguageComponent from "./LanguageComponent";
 
 function ContentHeader({ children }) {
   return (
@@ -80,6 +82,7 @@ function AdminDashboard() {
   const objects: Array<IDrawerLayoutObject> = [
     {
       label: "Overview",
+      urlShort: "overview",
       icon: <Looks />,
       content: (
         <Grid container xs spacing={2}>
@@ -181,31 +184,55 @@ function AdminDashboard() {
     },
     {
       label: "Category",
+      urlShort: "category",
       icon: <Category />,
       content: <MultiSelectTreeView />,
     },
     {
       label: "Country",
+      urlShort: "country",
       icon: <ImEarth />,
       content: <CountryComponent />,
     },
     {
       label: "Language",
+      urlShort: "language",
       icon: <Language />,
       content: <LanguageComponent />,
     },
     {
       label: "Designation",
+      urlShort: "designation",
       icon: <Language />,
       content: <DesignationComponent />,
     },
     {
       label: "Educational Status",
+      urlShort: "educational-status",
       icon: <Language />,
       content: <EduStatusComponent />,
     },
   ];
-  return <DrawerLayout objects={objects} />;
+
+  const route = useRouteMatch();
+
+  return (
+    <>
+      <Switch>
+        {objects.map((item, idx) => (
+          <Route exact path={`${route.path}/${item.urlShort}`}>
+            <DrawerLayout objects={objects} defaultTabIndex={idx} />
+          </Route>
+        ))}
+        <Route path={`${route.path}/**`}>
+          <Redirect to={`${route.path}`} />
+        </Route>
+        <Route path={`${route.path}`}>
+          <DrawerLayout objects={objects} defaultTabIndex={0} />
+        </Route>
+      </Switch>
+    </>
+  );
 }
 
 export default AdminDashboard;

@@ -17,6 +17,7 @@ import Dashboard from './views/Dashboard';
 import MyCourse from './views/MyCourse';
 import Search from './views/Search';
 import AdminDashboard from './components/AdminPanel/AdminDashboard';
+import { Fade } from '@material-ui/core';
 
 export const RouteAddress = {
   home: { route: '/home', child: [] },
@@ -36,29 +37,30 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Switch>
-          <Route path="/auth" component={Auth} />
-          <Route path="/home" component={Home} />
-          <Route path="/search" component={Search} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/profile-details" component={ProfileDetails} />
-          <Route path="/create-course" component={CreateCourse} />
-          <Route path="/course" component={CourseView} />
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="/my-course" component={MyCourse} />
+        <Fade>
+          <Switch>
+            <Route path="/auth" component={Auth} />
+            <Route path="/home" component={Home} />
+            <Route path="/search" component={Search} />
+            <Route path="/profile" component={Profile} />
+            <Route path="/profile-details" component={ProfileDetails} />
+            <Route path="/create-course" component={CreateCourse} />
+            <Route path="/course" component={CourseView} />
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/my-course" component={MyCourse} />
 
-          <Route path="/admin/country" component={CountryComponent} />
+            {/* <Route path="/admin/country" component={CountryComponent} />
           <Route path="/admin/category" component={CategoryComponent} />
           <Route path="/admin/edustatus" component={EduStatusComponent} />
           <Route path="/admin/language" component={LanguageComponent} />
-          <Route path="/admin/designation" component={DesignationComponent} />
-          <Route path="/admin" component={AdminDashboard}>
+          <Route path="/admin/designation" component={DesignationComponent} /> */}
+            {/* <Route path="/admin" component={AdminDashboard} /> */}
+            <Route path="/admin" component={AdminDashboard} />
 
-          </Route>
-
-          <Route path="/test" component={Dashboard} />
-          <Redirect from="/" to="/test" />
-        </Switch>
+            <Route path="/test" component={Dashboard} />
+            <Redirect from="/" to="/test" />
+          </Switch>
+        </Fade>
       </BrowserRouter>
     </div>
   );

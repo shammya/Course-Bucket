@@ -14,6 +14,7 @@ import InboxIcon from "@material-ui/icons/Inbox";
 import React, { useState } from "react";
 import { Sticky, StickyContainer } from "react-sticky";
 import { Responsive } from "tools/Responsive";
+import { getURLLastPart } from "tools/Tools";
 import User from "./User";
 
 const drawerWidth = 600;
@@ -52,13 +53,20 @@ const useStyles = makeStyles((theme) => ({
 
 export interface IDrawerLayoutObject {
   label: string;
+  urlShort?: string;
   icon: JSX.Element;
   content: JSX.Element;
 }
 
-const DrawerLayout = ({ objects }: { objects: Array<IDrawerLayoutObject> }) => {
+const DrawerLayout = ({
+  objects,
+  defaultTabIndex = 0,
+}: {
+  objects: Array<IDrawerLayoutObject>;
+  defaultTabIndex?: number;
+}) => {
   const classes = useStyles();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(defaultTabIndex);
 
   function timeout(delay) {
     return new Promise((res) => setTimeout(res, delay));

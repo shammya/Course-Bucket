@@ -5,3 +5,8 @@ export function timeout(delay) {
 export function delay() {
   return timeout(500);
 }
+
+export function getURLLastPart(url) {
+  const result = url.split('/');
+  return result[result.length - 1];
+}

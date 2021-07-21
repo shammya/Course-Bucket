@@ -1,0 +1,150 @@
+Student List:
+	Array<{
+		courseName, 
+		courseImage, 
+		courseSubtitle, 
+		Array<{
+			studentImage, 
+			studentName, 
+			enrolledDate
+		}>
+	}>
+==> Sorted by date
+	
+FAQ:
+	Array<{
+		courseName,
+		courseImage,
+		courseSubtitle,
+		Array<{
+			studentName,
+			studentImage,
+			questionTime,
+			question,
+			teacherName,
+			teacherImage,
+			answerTime,
+			answer
+		}>
+	}>
+==> Sorted by date
+
+Review:
+	Array<{
+		courseName,
+		courseImage,
+		courseSubtitle,
+		Array<{
+			studentName,
+			studentImage,
+			reviewTime,
+			ratingValue,
+			review,
+		}>
+	}>
+==> Sorted by date
+
+PurchaseHistory:
+	Array<{
+		courseImage,
+		courseTitle,
+		studentImage,
+		studentName,
+		purchaseTime,
+		purchaseAmount
+	}>
+==> Sorted by date
+
+Overview:
+	Array<{
+		courseName,
+		Array<{
+			date,
+			enrolledStudentCount,
+			reviewCount,
+			star1Count,
+			star2Count,
+			star3Count,
+			star4Count,
+			star5Count
+		}>
+	}>
+	
+Rating: 
+	Array<{
+		date,
+		rating: Cumulative rating
+	}>
+1 - 5*4 avg = 4
+2 - 3*3.5 avg = (4*5+3*3.5)/8
+				(4+3*3.5)/4
+				
+CGPA = (previous CGPA*previous credit + (per subject cgpa*credit))/totalCredit
+
+Popularity: // Respecto to one teacher
+	Array<{
+		courseName,
+		rating,
+		ratingStudentCount,
+		enrolledStudentCount,
+		reviewCount
+	}>
+
+IncomePerCourse:
+	Array<{
+		courseName,
+		income : Total income under this course
+	}>
+
+
+# Admin
+ToShowCard:
+	totalVisitor,
+	newCourse,
+	totalCourse,
+	newUser,
+	totalUser,
+	todayIncome,
+	totalIncome
+
+Popularity: // Respect to admin
+	Array<{
+		courseName,
+		rating,
+		ratingStudentCount,
+		enrolledStudentCount,
+		reviewCount
+	}>
+
+Popular Category:
+	Array<{
+		mainCategoryName,
+		enrolledStudentCount,
+		reviewCount,
+		ratingValue,
+		ratingCount
+	}
+==> All data calculated respect to a category (only main category)
+
+New User:
+	Array<{
+		date,
+		studentRegistrationCount,
+		teacherRegistrationCount
+	}>
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
