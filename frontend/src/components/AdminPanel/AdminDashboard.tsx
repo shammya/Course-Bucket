@@ -1,16 +1,22 @@
 import {
-  CardContent,
+  Card,
   CardActionArea,
+  CardContent,
   Grid,
   Typography,
-  Card,
 } from "@material-ui/core";
-import { Looks, Image } from "@material-ui/icons";
+import { Category, Image, Language, Looks } from "@material-ui/icons";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import { useState } from "react";
+import { ImEarth } from "react-icons/im";
 import PopularCategoryChart from "views/PopularCategoryChart";
 import { PopularCourseAdminChart } from "views/PopurlarCourseAdminChart";
 import { UserRegistrationChart } from "views/UserRegistrationChart";
+import MultiSelectTreeView from "./CategoryComponent";
+import CountryComponent from "./CountryComponent";
+import DesignationComponent from "./DesignationComponent";
+import LanguageComponent from "./LanguageComponent";
+import EduStatusComponent from "./EduStatusComponent";
 
 function ContentHeader({ children }) {
   return (
@@ -172,6 +178,31 @@ function AdminDashboard() {
           </Grid>
         </Grid>
       ),
+    },
+    {
+      label: "Category",
+      icon: <Category />,
+      content: <MultiSelectTreeView />,
+    },
+    {
+      label: "Country",
+      icon: <ImEarth />,
+      content: <CountryComponent />,
+    },
+    {
+      label: "Language",
+      icon: <Language />,
+      content: <LanguageComponent />,
+    },
+    {
+      label: "Designation",
+      icon: <Language />,
+      content: <DesignationComponent />,
+    },
+    {
+      label: "Educational Status",
+      icon: <Language />,
+      content: <EduStatusComponent />,
     },
   ];
   return <DrawerLayout objects={objects} />;

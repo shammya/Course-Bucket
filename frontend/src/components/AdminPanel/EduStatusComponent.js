@@ -32,12 +32,12 @@ function EduStatusComponent(props) {
 
 
   function CallgetAllEduStatus() {
-    useEffect(() => { getAllEduStatus()}, [])
+    useEffect(() => { getAllEduStatus() }, [])
   }
 
-  function CallupdateEduStatus( edustatus) {
+  function CallupdateEduStatus(edustatus) {
 
-    EduStatusService.updateEduStatus( edustatus)
+    EduStatusService.updateEduStatus(edustatus)
       .then(response => {
         //console.log(response.data)
         //callData(response.data)
@@ -47,7 +47,7 @@ function EduStatusComponent(props) {
       )
   }
 
-  function CalldeleteEdustatus( id) {
+  function CalldeleteEdustatus(id) {
 
     EduStatusService.deleteEduStatus(id)
       .then(response => {
@@ -74,61 +74,50 @@ function EduStatusComponent(props) {
   }
 
   return (
-    <Grid container style={{ height: "700px" }}>
-      <Grid item sm={3}>
-        <Drawer
-          open={false}
-        />
-      </Grid>
-      <Grid item container sm={9}
-        alignItems="center"
-        justify="center"
-        style={{ height: "100%" }}
-      >
-        <MaterialTable
-          style={{ width: "80%" }}
-          title="Educational Status"
-          columns={columns}
-          data={data}
-          editable={{
-            onRowAdd: newData =>
-              new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  //console.log(newData.id)
-                  newData.adminId = 'shammya';
-                  CalladdEduStatus( newData)
-                  resolve();
-                }, 1000)
-              }),
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  // const dataUpdate = [...data];
-                  // const index = oldData.tableData.id;
-                  // dataUpdate[index] = newData;
-                  // console.log(index)
-                  // setData([...dataUpdate]);
-                  CallupdateEduStatus( newData);
-                  resolve();
-                }, 1000)
-              }),
-            onRowDelete: oldData =>
-              new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  // const dataDelete = [...data];
-                  // const index = oldData.tableData.id;
-                  // dataDelete.splice(index, 1);
-                  // setData([...dataDelete]);
-                  CalldeleteEdustatus(oldData.id);
-                  resolve();
-                }, 1000)
-              }),
-          }}
-          options={{
-            actionsColumnIndex: -1, addRowPosition: "first"
-          }}
-        />
-      </Grid>
+    <Grid container >
+      <MaterialTable
+        style={{ width: "100%" }}
+        title="Educational Status"
+        columns={columns}
+        data={data}
+        editable={{
+          onRowAdd: newData =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                //console.log(newData.id)
+                newData.adminId = 'shammya';
+                CalladdEduStatus(newData)
+                resolve();
+              }, 1000)
+            }),
+          onRowUpdate: (newData, oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                // const dataUpdate = [...data];
+                // const index = oldData.tableData.id;
+                // dataUpdate[index] = newData;
+                // console.log(index)
+                // setData([...dataUpdate]);
+                CallupdateEduStatus(newData);
+                resolve();
+              }, 1000)
+            }),
+          onRowDelete: oldData =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                // const dataDelete = [...data];
+                // const index = oldData.tableData.id;
+                // dataDelete.splice(index, 1);
+                // setData([...dataDelete]);
+                CalldeleteEdustatus(oldData.id);
+                resolve();
+              }, 1000)
+            }),
+        }}
+        options={{
+          actionsColumnIndex: -1, addRowPosition: "first"
+        }}
+      />
     </Grid>
   )
 }
