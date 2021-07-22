@@ -2,6 +2,9 @@ import {
   Avatar,
   Badge,
   Button,
+  Card,
+  CardActionArea,
+  Divider,
   Grid,
   IconButton,
   List,
@@ -111,14 +114,14 @@ export function Header() {
   }
   const popUpNavProperty = [
     { label: "My Course", link: "/my-course" },
-    { label: "Purchase History", link: "/dashboard" },
-    { label: "My Review", link: "/dashboard" },
-    { label: "FAQ", link: "/dashboard" },
-    { label: "Account Setting", link: "/profile-setting" },
-    { label: "Sign out", link: "/signin" },
-    { label: "Overview", link: "/dashboard" },
+    { label: "Purchase History", link: "/dashboard/purchase-history" },
+    { label: "My Review", link: "/dashboard/review" },
+    { label: "FAQ", link: "/dashboard/faq" },
+    { label: "Account Setting", link: "/profile-details" },
+    { label: "Sign out", link: "/auth/signin" },
+    { label: "Overview", link: "/dashboard/overview" },
     { label: "Create a course", link: "/create-course" },
-    { label: "Student's Review", link: "/dashboard" },
+    { label: "Student's Review", link: "/dashboard/review" },
   ];
 
   function IconSet() {
@@ -154,16 +157,44 @@ export function Header() {
                   horizontal: "center",
                 }}
               >
-                <List>
-                  {popUpNavProperty.map((item) => (
-                    <ListItem
-                      button
-                      onClick={(event) => history.push(item.link)}
-                    >
-                      {item.label}
-                    </ListItem>
-                  ))}
-                </List>
+                <Grid container direction="column">
+                  <Grid item>
+                    <CardActionArea style={{ padding: 16 }}>
+                      <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        wrap="nowrap"
+                        xs
+                        spacing={1}
+                      >
+                        <Grid item>
+                          <Avatar />
+                        </Grid>
+                        <Grid item>
+                          <Typography>Signed in as</Typography>
+                          <Typography variant="h6">mehedi</Typography>
+                          <Typography variant="body1">
+                            66.mehedi@gmail.com
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardActionArea>
+                  </Grid>
+                  <Divider />
+                  <Grid item>
+                    <List>
+                      {popUpNavProperty.map((item) => (
+                        <ListItem
+                          button
+                          onClick={(event) => history.push(item.link)}
+                        >
+                          {item.label}
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Grid>
+                </Grid>
               </Popover>
             </Grid>
           </>

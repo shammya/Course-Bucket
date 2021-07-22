@@ -48,14 +48,8 @@ function App() {
             <Route path="/course" component={CourseView} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/my-course" component={MyCourse} />
-
-            {/* <Route path="/admin/country" component={CountryComponent} />
-          <Route path="/admin/category" component={CategoryComponent} />
-          <Route path="/admin/edustatus" component={EduStatusComponent} />
-          <Route path="/admin/language" component={LanguageComponent} />
-          <Route path="/admin/designation" component={DesignationComponent} /> */}
-            {/* <Route path="/admin" component={AdminDashboard} /> */}
             <Route path="/admin" component={AdminDashboard} />
+
 
             <Route path="/test" component={Dashboard} />
             <Redirect from="/" to="/test" />

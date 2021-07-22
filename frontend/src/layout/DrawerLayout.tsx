@@ -11,10 +11,9 @@ import {
   Tabs,
 } from "@material-ui/core";
 import InboxIcon from "@material-ui/icons/Inbox";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sticky, StickyContainer } from "react-sticky";
 import { Responsive } from "tools/Responsive";
-import { getURLLastPart } from "tools/Tools";
 import User from "./User";
 
 const drawerWidth = 600;
@@ -68,6 +67,10 @@ const DrawerLayout = ({
   const classes = useStyles();
   const [tabIndex, setTabIndex] = useState(defaultTabIndex);
 
+  useEffect(() => {
+    setTabIndex(defaultTabIndex);
+  }, [defaultTabIndex]);
+
   function timeout(delay) {
     return new Promise((res) => setTimeout(res, delay));
   }
@@ -105,7 +108,7 @@ const DrawerLayout = ({
   return (
     <User>
       <StickyContainer>
-        <Responsive displayIn="Laptop">
+        <Responsive displayIn={["Tablet", "Laptop"]}>
           <Grid container direction="row">
             <Grid style={{ width: drawerWidth }} item sm>
               <Sticky>

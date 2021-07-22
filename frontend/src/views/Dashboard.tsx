@@ -21,6 +21,8 @@ import { CoursePopularityPieChart } from "./PopularityPieChart";
 import { PopularCourseAdminChart } from "./PopurlarCourseAdminChart";
 import { RatingLineChart } from "./RatingLIneChart";
 import { UserRegistrationChart } from "./UserRegistrationChart";
+import { useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router";
 
 function ContentHeader({ children }) {
   return (
@@ -83,109 +85,8 @@ function Dashboard() {
   ]);
   const objects: Array<IDrawerLayoutObject> = [
     {
-      label: "Admin Overview",
-      icon: <Looks />,
-      content: (
-        <Grid container xs spacing={2}>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Visitors
-                </Typography>
-                <Typography align="center" variant="h4">
-                  170
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  New Course
-                </Typography>
-                <Typography align="center" variant="h4">
-                  17
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Total Course
-                </Typography>
-                <Typography align="center" variant="h4">
-                  170
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  New User
-                </Typography>
-                <Typography align="center" variant="h4">
-                  2
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Total User
-                </Typography>
-                <Typography align="center" variant="h4">
-                  240
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Today Income
-                </Typography>
-                <Typography align="center" variant="h4">
-                  $345
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Total Income
-                </Typography>
-                <Typography align="center" variant="h4">
-                  $2404
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <PopularCourseAdminChart />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <PopularCategoryChart />
-          </Grid>
-          <Grid item xs={12}>
-            <UserRegistrationChart />
-          </Grid>
-        </Grid>
-      ),
-    },
-    {
       label: "Overview",
+      urlShort: "overview",
       icon: <Looks />,
       content: (
         <Grid container xs spacing={2}>
@@ -206,6 +107,7 @@ function Dashboard() {
     },
     {
       label: "Purchase History",
+      urlShort: "purchase-history",
       icon: <FaDollarSign />,
       content: (
         <MaterialTable
@@ -218,6 +120,7 @@ function Dashboard() {
     },
     {
       label: "Reviews",
+      urlShort: "review",
       icon: <RateReview />,
       content: (
         <CustomPagination objectsPerPage={3}>
@@ -237,6 +140,7 @@ function Dashboard() {
     },
     {
       label: "FAQ",
+      urlShort: "faq",
       icon: <FaQq />,
       content: (
         <CustomPagination objectsPerPage={3}>
@@ -256,6 +160,7 @@ function Dashboard() {
     },
     {
       label: "Student List",
+      urlShort: "enrolled-student",
       icon: <FaChalkboardTeacher />,
       content: (
         <CustomPagination objectsPerPage={3}>
@@ -292,7 +197,24 @@ function Dashboard() {
       ),
     },
   ];
-  return <DrawerLayout objects={objects} />;
+  const route = useRouteMatch();
+  return (
+    <>
+      <Switch>
+        {objects.map((item, idx) => (
+          <Route exact path={`${route.path}/${item.urlShort}`}>
+            <DrawerLayout objects={objects} defaultTabIndex={idx} />
+          </Route>
+        ))}
+        <Route path={`${route.path}/**`}>
+          <Redirect to={`${route.path}`} />
+        </Route>
+        <Route path={`${route.path}`}>
+          <DrawerLayout objects={objects} defaultTabIndex={0} />
+        </Route>
+      </Switch>
+    </>
+  );
 }
 
 export default Dashboard;
