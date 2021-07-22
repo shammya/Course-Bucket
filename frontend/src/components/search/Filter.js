@@ -2,7 +2,7 @@ import { Drawer, Grid, IconButton, List, makeStyles, Tab, Tabs, Typography } fro
 import { Cancel } from '@material-ui/icons'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import React from 'react'
-import { Responsive } from 'tools/Responsive'
+import { Responsive } from 'tools/responsive/Responsive'
 import { delay } from 'tools/Tools'
 import { GenerateFilterValue, MakeList } from './filter/MakeList'
 
@@ -140,10 +140,10 @@ function Filter({
           </IconButton>
           <Typography variant="h6">
             Filter list
-            </Typography>
+          </Typography>
           <Typography variant="h6" onClick={onClearAll} component="button">
             Clear all
-            </Typography>
+          </Typography>
         </Grid>
         <Grid
           container

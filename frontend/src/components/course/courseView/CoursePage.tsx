@@ -12,16 +12,20 @@ import {
 } from "@material-ui/core";
 import { DoneAll, Image, LabelImportant } from "@material-ui/icons";
 import { Course, Property, Week } from "classes/Course";
-import FAQBox from "components/courseView/FAQ";
-import InstructorShortDetailsBox from "components/courseView/InstructorShortDetails";
-import RatingBox from "components/courseView/Rating";
-import ReviewBox from "components/courseView/Review";
-import { Curriculum } from "components/createCourse/Curriculum/Curriculum";
+import {
+  CheckoutDialog,
+  CongratulationDialog,
+} from "components/course/courseView/Checkout";
+import FAQBox from "components/course/courseView/FAQ";
+import InstructorShortDetailsBox from "components/course/courseView/InstructorShortDetails";
+import RatingBox from "components/course/courseView/Rating";
+import ReviewBox from "components/course/courseView/Review";
+import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
 import User from "layout/User";
-import React from "react";
+import React, { useState } from "react";
 import { IconPickerItem } from "react-fa-icon-picker";
 import { Sticky, StickyContainer } from "react-sticky";
-import { Responsive } from "tools/Responsive";
+import { Responsive } from "tools/responsive/Responsive";
 
 export const lorem =
   "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid magni adipisci, a quibusdam deserunt cupiditate. Reprehenderit, molestiae quas minima corporis non nulla perspiciatis esse nostrum in harum eveniet. Repellendus, animi!";
@@ -94,6 +98,8 @@ const useStyles = makeStyles((theme) => ({
 
 export function CourseView() {
   const classes = useStyles();
+  const [checkout, setCheckout] = useState(false);
+  const [purchased, setPurchased] = useState(false);
 
   function Price() {
     return (
@@ -171,6 +177,7 @@ export function CourseView() {
       </Grid>
     );
   }
+
   function PCHeader() {
     return (
       <Card
@@ -211,13 +218,26 @@ export function CourseView() {
                         <Price />
                       </Grid>
                       <Grid item>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          style={{ width: "100%" }}
-                        >
-                          Buy now
-                        </Button>
+                        <div onClick={() => setCheckout(true)}>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ width: "100%" }}
+                          >
+                            Buy now
+                          </Button>
+                        </div>
+                        <CheckoutDialog
+                          open={checkout}
+                          onClose={() => setCheckout(false)}
+                          onPurchase={() => setPurchased(true)}
+                        />
+                        <CongratulationDialog
+                          open={purchased}
+                          onClose={() => {
+                            setPurchased(false);
+                          }}
+                        />
                       </Grid>
                       <CourseProperties />
                     </CardContent>
@@ -264,13 +284,26 @@ export function CourseView() {
                 </Grid>
               </Grid>
               <Grid item xs={6}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ width: "100%" }}
-                >
-                  BUY NOW
-                </Button>
+                <div onClick={() => setCheckout(true)}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ width: "100%" }}
+                  >
+                    Buy now
+                  </Button>
+                </div>
+                <CheckoutDialog
+                  open={checkout}
+                  onClose={() => setCheckout(false)}
+                  onPurchase={() => setPurchased(true)}
+                />
+                <CongratulationDialog
+                  open={purchased}
+                  onClose={() => {
+                    setPurchased(false);
+                  }}
+                />
               </Grid>
             </Grid>
           </Grid>

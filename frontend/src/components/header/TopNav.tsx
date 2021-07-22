@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
-import { Responsive } from "tools/Responsive";
+import { Responsive } from "tools/responsive/Responsive";
 import { Menu, menuItems, useStyles } from "./MenuBar";
 
 export default function TopNav(props) {

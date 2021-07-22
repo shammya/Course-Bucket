@@ -1,11 +1,11 @@
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import { Course } from "classes/Course";
-import { CoursePrice } from "components/createCourse/CoursePrice";
-import { Curriculum } from "components/createCourse/Curriculum/Curriculum";
-import { TargetStudent } from "components/createCourse/TargetStudent";
+import { CoursePrice } from "components/course/createCourse/CoursePrice";
+import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
+import { TargetStudent } from "components/course/createCourse/TargetStudent";
+import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import React from "react";
-import { LandingPage } from "../components/createCourse/LandingPage";
-import DrawerLayout, { IDrawerLayoutObject } from "../layout/DrawerLayout";
+import { LandingPage } from "./Landing";
 
 function CreateCourse(props) {
   const icon = <InboxIcon />;

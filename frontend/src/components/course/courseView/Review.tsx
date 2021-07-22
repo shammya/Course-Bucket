@@ -1,7 +1,7 @@
 import { Avatar, Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import React from "react";
-import { lorem } from "views/Course";
+import { lorem } from "components/course/courseView/CoursePage";
 
 function ReviewBox() {
   return (

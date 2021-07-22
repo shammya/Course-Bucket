@@ -11,14 +11,14 @@ import { useState } from "react";
 import { ImEarth } from "react-icons/im";
 import { Redirect, Route, Switch } from "react-router";
 import { useRouteMatch } from "react-router-dom";
-import PopularCategoryChart from "views/PopularCategoryChart";
-import { PopularCourseAdminChart } from "views/PopurlarCourseAdminChart";
-import { UserRegistrationChart } from "views/UserRegistrationChart";
+import { UserRegistrationChart } from "components/AdminPanel/charts/UserRegistrationChart";
 import MultiSelectTreeView from "./CategoryComponent";
 import CountryComponent from "./CountryComponent";
 import DesignationComponent from "./DesignationComponent";
 import EduStatusComponent from "./EduStatusComponent";
 import LanguageComponent from "./LanguageComponent";
+import PopularCategoryChart from "./charts/PopularCategoryChart";
+import { PopularCourseAdminChart } from "./charts/PopurlarCourseAdminChart";
 
 function ContentHeader({ children }) {
   return (

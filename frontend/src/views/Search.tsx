@@ -1,12 +1,11 @@
-import { Grid } from '@material-ui/core'
-import { menuItems } from 'components/header/MenuBar'
-import Filter from 'components/search/Filter'
-import { FilterChips } from 'components/search/filter/Chips'
-import Sort from 'components/search/Sort'
-import User from 'layout/User'
-import React, { useState } from 'react'
-import { Responsive } from 'tools/Responsive'
-
+import { Grid } from "@material-ui/core";
+import { menuItems } from "components/header/MenuBar";
+import Filter from "components/search/Filter";
+import { FilterChips } from "components/search/filter/Chips";
+import Sort from "components/search/Sort";
+import User from "layout/User";
+import React, { useState } from "react";
+import { Responsive } from "tools/responsive/Responsive";
 
 export const filterObjectList = [
   {
@@ -83,13 +82,14 @@ export const filterObjectList = [
     max: 10000,
     value: [0, 10000],
     step: 10,
-    valueType: "$"
+    valueType: "$",
   },
-]
-
+];
 
 const Search = () => {
-  const [filterData, setFilterData] = useState(JSON.parse(JSON.stringify(filterObjectList)));
+  const [filterData, setFilterData] = useState(
+    JSON.parse(JSON.stringify(filterObjectList))
+  );
   function onObjectsChange(array) {
     setFilterData(array.splice(0));
   }
@@ -98,16 +98,16 @@ const Search = () => {
   }
   return (
     <User>
-      <Grid container >
+      <Grid container>
         <Responsive displayIn={["Laptop", "Tablet"]}>
           <Grid item sm={3}>
             <Grid container direction="column">
               <Sort />
-              <FilterChips objects={filterData} onObjectsChange={onObjectsChange} />
-              <Filter
+              <FilterChips
                 objects={filterData}
                 onObjectsChange={onObjectsChange}
               />
+              <Filter objects={filterData} onObjectsChange={onObjectsChange} />
             </Grid>
           </Grid>
         </Responsive>
@@ -121,16 +121,18 @@ const Search = () => {
                 onClearAll={clearAll}
               />
             </Grid>
-            <FilterChips objects={filterData} onObjectsChange={onObjectsChange} />
+            <FilterChips
+              objects={filterData}
+              onObjectsChange={onObjectsChange}
+            />
           </Grid>
         </Responsive>
         <Grid item sm={9} xs={12}>
           {/* <CoursePagination courses={courses} title="Search Page" /> */}
         </Grid>
       </Grid>
-    </User >
-  )
-}
+    </User>
+  );
+};
 
-export default Search
-
+export default Search;

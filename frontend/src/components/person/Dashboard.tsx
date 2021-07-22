@@ -7,22 +7,20 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Image, Looks, RateReview } from "@material-ui/icons";
-import FAQBox from "components/courseView/FAQ";
-import ReviewBox from "components/courseView/Review";
+import FAQBox from "components/course/courseView/FAQ";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import CustomPagination from "layout/Pagination";
 import MaterialTable from "material-table";
 import React, { useState } from "react";
 import { FaChalkboardTeacher, FaDollarSign, FaQq } from "react-icons/fa";
-import IncomePerCourseChart from "./IncomePerCourseChart";
-import { OverviewBarChart } from "./Overview";
-import PopularCategoryChart from "./PopularCategoryChart";
-import { CoursePopularityPieChart } from "./PopularityPieChart";
-import { PopularCourseAdminChart } from "./PopurlarCourseAdminChart";
-import { RatingLineChart } from "./RatingLIneChart";
-import { UserRegistrationChart } from "./UserRegistrationChart";
+import IncomePerCourseChart from "./teacher/IncomePerCourseChart";
+import { OverviewBarChart } from "./teacher/Overview";
+import { UserRegistrationChart } from "../AdminPanel/charts/UserRegistrationChart";
 import { useRouteMatch } from "react-router-dom";
 import { Redirect, Route, Switch } from "react-router";
+import ReviewBox from "components/course/courseView/Review";
+import { CoursePopularityPieChart } from "./teacher/PopularityPieChart";
+import { RatingLineChart } from "./teacher/RatingLIneChart";
 
 function ContentHeader({ children }) {
   return (

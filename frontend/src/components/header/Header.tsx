@@ -21,7 +21,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { Responsive } from "tools/Responsive";
+import { Responsive } from "tools/responsive/Responsive";
 import SideNav from "./SideNav";
 import TopNav from "./TopNav";
 

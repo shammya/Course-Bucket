@@ -1,6 +1,6 @@
 import { Collapse, Grid, List, ListItem, ListItemText } from "@material-ui/core";
 import React, { useState } from "react";
-import CategorySelector from "tools/CategorySelector";
+import CategorySelector from "tools/customDesign/CategorySelector";
 import { timeout } from "tools/Tools";
 import { FilterCheckBox } from "./FilterCheckbox";
 import { FilterSlider } from "./FilterSlider";

@@ -1,4 +1,4 @@
-import CourseBox from "components/courseView/CourseBox";
+import CourseBox from "components/course/CourseBox";
 import { courseData } from "Data";
 import CustomPagination from "layout/Pagination";
 import User from "layout/User";

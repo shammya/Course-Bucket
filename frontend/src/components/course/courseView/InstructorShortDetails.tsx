@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Star, Image } from "@material-ui/icons";
 import React from "react";
-import { lorem } from "views/Course";
+import { lorem } from "components/course/courseView/CoursePage";
 
 function InstructorShortDetailsBox() {
   return (

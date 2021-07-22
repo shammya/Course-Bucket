@@ -1,6 +1,6 @@
-import { Divider, SwipeableDrawer, Button } from "@material-ui/core";
+import { Button, Divider, SwipeableDrawer } from "@material-ui/core";
 import React from "react";
-import { Responsive } from "tools/Responsive";
+import { Responsive } from "tools/responsive/Responsive";
 import { isLogIn } from "./Header";
 import { Menu, menuItems, useStyles } from "./MenuBar";
 

@@ -2,8 +2,8 @@ import { Grid, TextField, Typography } from "@material-ui/core";
 import { menuItems } from "components/header/MenuBar";
 import { CategoryChips } from "components/search/filter/Chips";
 import React, { useState } from "react";
-import { CustomImageUploader } from "tools/ImageUploader";
-import { LanguageField } from "tools/LanguageField";
+import { CustomImageUploader } from "tools/customDesign/ImageUploader";
+import { LanguageField } from "tools/customDesign/LanguageField";
 
 export function LandingPage({ course, onCourseAttrChange }) {
   const [categories, setCategories] = useState(menuItems);

@@ -1,12 +1,11 @@
 // components
 import { Grid, makeStyles } from "@material-ui/core";
+import { ForgotPassword } from "components/auth/ForgotPassword";
+import { SignIn } from "components/auth/SignIn";
+import { SignUp } from "components/auth/SignUp";
+import ProfileDetails from "components/person/ProfileDetails";
 import React from "react";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
-import { SignIn } from "views/auth/SignIn";
-import { SignUp } from "views/auth/SignUp";
-import ProfileDetails from "../views/ProfileDetails";
-import { ForgotPassword } from "../views/auth/ForgotPassword";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",

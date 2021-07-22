@@ -15,18 +15,18 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import React from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { Country } from "../classes/Country";
+import { Country } from "classes/Country";
 import {
-  CreditCard,
   Designation,
   EduStatus,
   Student,
   Teacher,
-} from "../classes/Person";
-import { CustomImageUploader } from "../tools/ImageUploader";
-import { LanguageField } from "../tools/LanguageField";
+  CreditCard,
+} from "classes/Person";
+import React from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { CustomImageUploader } from "tools/customDesign/ImageUploader";
+import { LanguageField } from "tools/customDesign/LanguageField";
 
 const useStyles = makeStyles((theme) => ({
   chips: {

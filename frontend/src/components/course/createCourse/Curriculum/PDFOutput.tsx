@@ -1,6 +1,5 @@
 import MUIRichTextEditor from "mui-rte";
 import React, { useState } from "react";
-import { PDFOpener } from "tools/PDFViewer";
 import { LectureOutputProps, OutputLayout } from "./OutputLayout";
 
 export function PDFOutput({ file, onUpdate }: LectureOutputProps) {

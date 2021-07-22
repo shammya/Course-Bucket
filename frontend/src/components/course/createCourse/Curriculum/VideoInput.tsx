@@ -1,12 +1,12 @@
-import MUIRichTextEditor from "mui-rte";
-import React, { useState } from "react";
-import { InputLayout, LectureInputProps } from "./InputLayout";
-import { FileUploader } from "tools/FileUploader";
 import { Files } from "classes/Files";
 import { convertToRaw } from "draft-js";
+import MUIRichTextEditor from "mui-rte";
+import React, { useState } from "react";
+import { FileUploader } from "tools/customDesign/FileUploader";
+import { InputLayout, LectureInputProps } from "./InputLayout";
 
-export function PDFInput({ file, onSave, onCancel }: LectureInputProps) {
-  const [title, setTitle] = useState(file?.title);
+export function VideoInput({ file, onSave, onCancel }: LectureInputProps) {
+  const [title, setTile] = useState(file?.title);
   const [content, setContent] = useState(file?.content);
 
   function handleContentChange(event) {
@@ -16,12 +16,12 @@ export function PDFInput({ file, onSave, onCancel }: LectureInputProps) {
 
   return (
     <InputLayout
-      onSave={() => onSave(new Files("PDF", title, content))}
+      onSave={() => onSave(new Files("VIDEO", title, content))}
       onCancel={onCancel}
     >
       <MUIRichTextEditor
         label="Start typing here..."
-        defaultValue={content}
+        value={content}
         onChange={handleContentChange}
       />
       <FileUploader />

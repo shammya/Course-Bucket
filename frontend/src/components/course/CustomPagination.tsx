@@ -1,6 +1,6 @@
 import { Grid, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import CourseBox from 'components/courseView/CourseBox';
+import CourseBox from 'components/course/CourseBox';
 import React, { useState } from 'react';
 
 const CourseBoxContainer = ({ courses }) => {

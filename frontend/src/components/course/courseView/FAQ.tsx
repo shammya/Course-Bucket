@@ -1,6 +1,6 @@
 import { Avatar, CardContent, Grid, Typography, Card } from "@material-ui/core";
 import React from "react";
-import { lorem } from "views/Course";
+import { lorem } from "components/course/courseView/CoursePage";
 
 function FAQBox() {
   return (

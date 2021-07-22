@@ -13,7 +13,7 @@ import {
 import InboxIcon from "@material-ui/icons/Inbox";
 import React, { useEffect, useState } from "react";
 import { Sticky, StickyContainer } from "react-sticky";
-import { Responsive } from "tools/Responsive";
+import { Responsive } from "tools/responsive/Responsive";
 import User from "./User";
 
 const drawerWidth = 600;
