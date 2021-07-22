@@ -4,7 +4,7 @@ import User from "layout/User";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { CourseCarousel } from "../components/course/CourseCarousel";
+import { CourseCarousel } from "./course/CourseCarousel";
 
 const courses = [
   {

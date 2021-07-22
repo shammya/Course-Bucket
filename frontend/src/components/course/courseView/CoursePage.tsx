@@ -16,10 +16,10 @@ import {
   CheckoutDialog,
   CongratulationDialog,
 } from "components/course/courseView/Checkout";
-import FAQBox from "components/course/courseView/FAQ";
+import { FAQBox, FAQSection } from "components/course/courseView/FAQ";
 import InstructorShortDetailsBox from "components/course/courseView/InstructorShortDetails";
-import RatingBox from "components/course/courseView/Rating";
-import ReviewBox from "components/course/courseView/Review";
+import RatingSection from "components/course/courseView/Rating";
+import { ReviewSection } from "components/course/courseView/Review";
 import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
 import User from "layout/User";
 import React, { useState } from "react";
@@ -397,15 +397,6 @@ export function CourseView() {
   }
   function InstructorDetails() {
     return <InstructorShortDetailsBox />;
-  }
-  function RatingSection() {
-    return <RatingBox />;
-  }
-  function ReviewSection() {
-    return <ReviewBox />;
-  }
-  function FAQSection() {
-    return <FAQBox />;
   }
   return (
     <User>

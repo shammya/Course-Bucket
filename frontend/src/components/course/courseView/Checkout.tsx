@@ -16,13 +16,7 @@ import { TransitionProps } from "@material-ui/core/transitions";
 import { Image } from "@material-ui/icons";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import React, { useState } from "react";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & { children?: React.ReactElement<any, any> },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { SlidingUpTransition } from "tools/Tools";
 
 export function CongratulationDialog({
   open,
@@ -100,7 +94,7 @@ export function CheckoutDialog({
   return (
     <Dialog
       open={open}
-      TransitionComponent={Transition}
+      TransitionComponent={SlidingUpTransition}
       keepMounted
       onClose={onClose}
     >
@@ -131,7 +125,7 @@ export function CheckoutDialog({
                   // disableToolbar
                   variant="inline"
                   format="dd/MMM/yyyy"
-                  label="Date of Birth"
+                  label="Expire Date"
                   inputVariant="outlined"
                   value={expDate}
                   onChange={(date) => {

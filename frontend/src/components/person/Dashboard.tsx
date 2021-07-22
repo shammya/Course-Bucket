@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Image, Looks, RateReview } from "@material-ui/icons";
-import FAQBox from "components/course/courseView/FAQ";
+import { FAQBox } from "components/course/courseView/FAQ";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import CustomPagination from "layout/Pagination";
 import MaterialTable from "material-table";
@@ -18,9 +18,9 @@ import { OverviewBarChart } from "./teacher/Overview";
 import { UserRegistrationChart } from "../AdminPanel/charts/UserRegistrationChart";
 import { useRouteMatch } from "react-router-dom";
 import { Redirect, Route, Switch } from "react-router";
-import ReviewBox from "components/course/courseView/Review";
 import { CoursePopularityPieChart } from "./teacher/PopularityPieChart";
 import { RatingLineChart } from "./teacher/RatingLIneChart";
+import { ReviewBox } from "components/course/courseView/Review";
 
 function ContentHeader({ children }) {
   return (

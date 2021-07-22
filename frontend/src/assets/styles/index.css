@@ -36,8 +36,6 @@ code {
   position: "relative";
 } */
 
-.MuiGrid-spacing-xs-2 {
-  width: calc(100%-16px);
-  margin: 16;
-  height: "100vh";
+.MuiDialogTitle-root > .MuiTypography-root {
+  text-align: center;
 }
