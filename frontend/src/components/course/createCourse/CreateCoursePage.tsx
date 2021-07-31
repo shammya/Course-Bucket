@@ -1,4 +1,5 @@
 import InboxIcon from "@material-ui/icons/MoveToInbox";
+import { Category } from "classes/Category";
 import { Course } from "classes/Course";
 import { CoursePrice } from "components/course/createCourse/CoursePrice";
 import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
@@ -10,6 +11,7 @@ import { LandingPage } from "./Landing";
 function CreateCourse(props) {
   const icon = <InboxIcon />;
 
+  let id = 1;
   let course = new Course();
   course = {
     ...course,
@@ -17,6 +19,13 @@ function CreateCourse(props) {
     title: "Title",
     subTitle: "Sub",
     outcomes: ["1", "2", "ok"],
+    categories: [
+      new Category(id++, "Category " + id),
+      new Category(id++, "Category " + id),
+      new Category(id++, "Category " + id),
+      new Category(id++, "Category " + id),
+      new Category(id++, "Category " + id),
+    ],
   };
   console.log(course);
 

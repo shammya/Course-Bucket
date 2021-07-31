@@ -1,13 +1,11 @@
 import { Chip, Grid, makeStyles, useTheme } from "@material-ui/core";
-import { menuItems } from "components/header/MenuBar";
 import React, { useState } from "react";
-import CategorySelector from "./CategorySelector";
-
+import { CategorySelector } from "./CategorySelector";
 
 const useStyles = makeStyles((theme) => ({
   chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: "flex",
+    flexWrap: "wrap",
   },
   chip: {
     margin: 2,
@@ -23,30 +21,29 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   root: {
-    width: '100%',
+    width: "100%",
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
+    flexBasis: "33.33%",
     flexShrink: 0,
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
-
 }));
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
-
 
 export function CategoryField({
   objects = {
     defaultExpanded: [],
     data: [],
   },
-  onObjectsChange = (selectedCategories) => (console.log(selectedCategories))
+  onObjectsChange = (selectedCategories: any) =>
+    console.log(selectedCategories),
 }) {
   const classes = useStyles();
   const theme = useTheme();
@@ -58,17 +55,14 @@ export function CategoryField({
   return (
     <>
       <Grid container direction="row">
-        {
-          selectedCategories.data.map(item => (
-            <Chip label={item.title} />
-          ))
-        }
+        {selectedCategories.data.map((item: any) => (
+          <Chip label={item.title} />
+        ))}
       </Grid>
       <CategorySelector
-        objects={menuItems}
-        onObjectsChange={onCategoriesChange}
+        categories={[]}
+        onCategoriesChange={onCategoriesChange}
       />
     </>
-  )
+  );
 }
-

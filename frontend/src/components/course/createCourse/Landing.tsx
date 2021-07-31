@@ -1,12 +1,18 @@
-import { Grid, TextField, Typography } from "@material-ui/core";
+import { Grid, TextField, Typography, Chip } from "@material-ui/core";
+import { Category } from "classes/Category";
 import { menuItems } from "components/header/MenuBar";
 import { CategoryChips } from "components/search/filter/Chips";
 import React, { useState } from "react";
+import { CategorySelector } from "tools/customDesign/CategorySelector";
 import { CustomImageUploader } from "tools/customDesign/ImageUploader";
 import { LanguageField } from "tools/customDesign/LanguageField";
 
 export function LandingPage({ course, onCourseAttrChange }) {
-  const [categories, setCategories] = useState(menuItems);
+  const [categories, setCategories] = useState(course.categories);
+  function handleCategoriesChange(newCategories: Category[]) {
+    setCategories(newCategories);
+    onCourseAttrChange({ categories: newCategories });
+  }
   return (
     <Grid
       container
@@ -61,14 +67,27 @@ export function LandingPage({ course, onCourseAttrChange }) {
       </Grid>
       <Grid item>
         <Typography>Category</Typography>
-        <CategoryChips
-          object={categories}
-          onObjectChange={(newCategories) => setCategories(newCategories)}
+        <Grid container sm>
+          {categories.map((category, idx) => (
+            <Grid item>
+              <Chip
+                size="medium"
+                style={{ width: "100%", marginTop: 5, marginRight: 5 }}
+                label={category.name}
+                onDelete={() => {
+                  let array = [...categories];
+                  array.splice(idx, 1);
+                  handleCategoriesChange(array);
+                }}
+                color="secondary"
+              />
+            </Grid>
+          ))}
+        </Grid>
+        <CategorySelector
+          categories={categories}
+          onCategoriesChange={handleCategoriesChange}
         />
-        {/* <CategorySelector
-        objects={categories}
-        onObjectsChange={(newCategories) => setCategories(newCategories)}
-      /> */}
       </Grid>
     </Grid>
   );

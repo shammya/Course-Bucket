@@ -16,8 +16,7 @@ export class Course {
   lastUpdate: Date;
   isApproved: Boolean;
   teacher: Teacher;
-  mainCategory: Category;
-  subCategory: Category;
+  categories: Array<Category>;
   languages: Array<Language>;
   properties: Array<Property>;
   rating: number;

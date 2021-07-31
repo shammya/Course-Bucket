@@ -72,6 +72,12 @@ Object.assign(lightTheme, {
       vertical: {
         width: 6
       }
+    },
+    MuiFormControlLabel: {
+      root: {
+        margin: 'auto',
+        marginRight: 0,
+      }
     }
     // spacing: {
     //   '&:hover': {
