@@ -54,7 +54,7 @@ export function CategoryField({
   };
   return (
     <>
-      <Grid container direction="row">
+      {/* <Grid container direction="row">
         {selectedCategories.data.map((item: any) => (
           <Chip label={item.title} />
         ))}
@@ -62,7 +62,7 @@ export function CategoryField({
       <CategorySelector
         categories={[]}
         onCategoriesChange={onCategoriesChange}
-      />
+      /> */}
     </>
   );
 }

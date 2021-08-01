@@ -1,73 +1,96 @@
 import { Grid } from "@material-ui/core";
-import { menuItems } from "components/header/MenuBar";
+import { categoryList, CategoryTreeNode } from "classes/Category";
 import Filter from "components/search/Filter";
 import { FilterChips } from "components/search/filter/Chips";
 import Sort from "components/search/Sort";
 import User from "layout/User";
 import React, { useState } from "react";
+import { StickyContainer } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
 
-export const filterObjectList = [
+export interface IFilter {
+  type: "LIST" | "CATEGORY" | "SLIDER";
+  title: string;
+}
+export interface IListFilter extends IFilter {
+  items: Array<{ title: string; id: number }>;
+}
+export interface ICategoryFilter extends IFilter {
+  items: Array<CategoryTreeNode>;
+}
+export interface ISliderFilter extends IFilter {
+  min: number;
+  max: number;
+  value: Array<number>;
+  step: number;
+  valueType: string;
+}
+export type IFilterType = IListFilter | ISliderFilter | ICategoryFilter;
+export interface IFilteredValue {
+  type: "LIST" | "SLIDER" | "CATEGORY";
+  title: string;
+  value: string | Array<number>;
+  id?: number;
+  valueType?: string;
+}
+var id = 1;
+export const filterObjectList: Array<IFilterType> = [
   {
     title: "Teacher",
-    type: "List",
-    open: false,
+    type: "LIST",
     items: [
       {
         title: "Abrar Fahad",
-        checked: false,
+        id: id++,
       },
       {
         title: "Mahdi BUET 3",
-        checked: false,
+        id: id++,
       },
       {
         title: "Md. Mehedi Hasan",
-        checked: false,
+        id: id++,
       },
       {
         title: "Kazi Wasif Amin Shammya",
-        checked: false,
+        id: id++,
       },
     ],
   },
   {
     title: "Category",
-    type: "List",
-    open: false,
-    items: menuItems,
+    type: "CATEGORY",
+    items: categoryList,
   },
   {
     title: "Language",
-    type: "List",
-    open: false,
+    type: "LIST",
     items: [
       {
         title: "Arabic",
-        checked: false,
+        id: id++,
       },
       {
         title: "English",
-        checked: false,
+        id: id++,
       },
       {
         title: "Bangla",
-        checked: false,
+        id: id++,
       },
       {
         title: "Hindi",
-        checked: false,
+        id: id++,
       },
       {
         title: "Persian",
-        checked: false,
+        id: id++,
       },
     ],
   },
   {
     title: "Rating",
-    type: "Slider",
-    open: false,
+    type: "SLIDER",
     min: 0,
     max: 5,
     value: [0, 5],
@@ -76,8 +99,7 @@ export const filterObjectList = [
   },
   {
     title: "Price",
-    type: "Slider",
-    open: false,
+    type: "SLIDER",
     min: 0,
     max: 10000,
     value: [0, 10000],
@@ -87,50 +109,80 @@ export const filterObjectList = [
 ];
 
 const Search = () => {
-  const [filterData, setFilterData] = useState(
-    JSON.parse(JSON.stringify(filterObjectList))
-  );
-  function onObjectsChange(array) {
-    setFilterData(array.splice(0));
+  // const [filterData, setFilterData] = useState(
+  //   JSON.parse(JSON.stringify(filterObjectList))
+  // );
+  const [filteredData, setFilteredData] = useState<Array<IFilteredValue>>([]);
+  function onObjectsChange(value: IFilteredValue, type: "ADD" | "REMOVE") {
+    let array;
+    if (type === "ADD") {
+      let idx = filteredData.findIndex((item) => item.title === value.title);
+      if (value.type === "SLIDER" && idx != -1) {
+        array = [...filteredData];
+        array[idx] = value;
+      } else {
+        array = [...filteredData, value];
+      }
+    } else if (type === "REMOVE") {
+      let idx;
+      if (value.type === "SLIDER") {
+        idx = filteredData.findIndex(
+          (item) => item.type === value.type && item.id === value.id
+        );
+      } else {
+        idx = filteredData.findIndex((item) => item.type === value.type);
+      }
+      array = [...filteredData];
+      array.splice(idx, 1);
+    }
+    setFilteredData(array);
   }
   function clearAll() {
-    setFilterData(JSON.parse(JSON.stringify(filterObjectList)));
+    setFilteredData([]);
   }
   return (
     <User>
-      <Grid container>
-        <Responsive displayIn={["Laptop", "Tablet"]}>
-          <Grid item sm={3}>
-            <Grid container direction="column">
-              <Sort />
-              <FilterChips
-                objects={filterData}
-                onObjectsChange={onObjectsChange}
-              />
-              <Filter objects={filterData} onObjectsChange={onObjectsChange} />
+      <StickyContainer>
+        <Grid container>
+          <Responsive displayIn={["Laptop", "Tablet"]}>
+            <Grid item sm={3}>
+              <Grid container direction="column">
+                <Sort />
+                <FilterChips
+                  filteredData={filteredData}
+                  onDelete={onObjectsChange}
+                />
+                <Filter
+                  filteredData={filteredData}
+                  filterDataList={filterObjectList}
+                  onFilterChange={onObjectsChange}
+                  onClearAll={clearAll}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </Responsive>
-        <Responsive displayIn={["Mobile"]}>
-          <Grid container>
+          </Responsive>
+          <Responsive displayIn={["Mobile"]}>
             <Grid container>
-              <Sort />
-              <Filter
-                objects={filterData}
-                onObjectsChange={onObjectsChange}
-                onClearAll={clearAll}
+              <Grid container>
+                <Sort />
+                <Filter
+                  filteredData={filteredData}
+                  filterDataList={filterObjectList}
+                  onFilterChange={onObjectsChange}
+                  onClearAll={clearAll}
+                />
+              </Grid>
+              <FilterChips
+                filteredData={filteredData}
+                onDelete={onObjectsChange}
               />
             </Grid>
-            <FilterChips
-              objects={filterData}
-              onObjectsChange={onObjectsChange}
-            />
+          </Responsive>
+          <Grid item sm={9} xs={12}>
+            {/* <CoursePagination courses={courses} title="Search Page" /> */}
           </Grid>
-        </Responsive>
-        <Grid item sm={9} xs={12}>
-          {/* <CoursePagination courses={courses} title="Search Page" /> */}
         </Grid>
-      </Grid>
+      </StickyContainer>
     </User>
   );
 };

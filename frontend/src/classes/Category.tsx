@@ -16,4 +16,185 @@ export interface CategoryTreeNode {
   child: Array<CategoryTreeNode>;
 }
 
+var i = 1;
+export const categoryList: Array<CategoryTreeNode> = [
+  {
+    category: new Category(i++, "Category " + (i - 1)),
+    child: [
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: new Category(i++, "Category " + (i - 1)),
+    child: [
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: new Category(i++, "Category " + (i - 1)),
+    child: [
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: new Category(i++, "Category " + (i - 1)),
+    child: [
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: new Category(i++, "Category " + (i - 1)),
+    child: [
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [
+          {
+            category: new Category(i++, "Category " + (i - 1)),
+            child: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: new Category(i++, "Category " + (i - 1)),
+    child: [
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [],
+      },
+    ],
+  },
+  {
+    category: new Category(i++, "Category " + (i - 1)),
+    child: [
+      {
+        category: new Category(i++, "Category " + (i - 1)),
+        child: [],
+      },
+    ],
+  },
+];
 export {};

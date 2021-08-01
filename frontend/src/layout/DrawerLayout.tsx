@@ -74,8 +74,8 @@ const DrawerLayout = ({
   function timeout(delay) {
     return new Promise((res) => setTimeout(res, delay));
   }
-  async function handleTabIndexChange(index) {
-    await timeout(100);
+  function handleTabIndexChange(index) {
+    // await timeout(100);
     setTabIndex(index);
   }
 

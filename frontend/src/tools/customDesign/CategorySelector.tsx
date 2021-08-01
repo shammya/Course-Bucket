@@ -4,7 +4,7 @@ import { fade, makeStyles, withStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
-import { Category, CategoryTreeNode } from "classes/Category";
+import { Category, categoryList, CategoryTreeNode } from "classes/Category";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { animated, useSpring } from "react-spring/web.cjs"; // web.cjs is required for IE 11 support
@@ -127,209 +127,24 @@ const useStyles = makeStyles({
   },
 });
 let i = 1;
-const categoryList: Array<CategoryTreeNode> = [
-  {
-    category: new Category(i++, "Category " + i),
-    child: [
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: new Category(i++, "Category " + i),
-    child: [
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: new Category(i++, "Category " + i),
-    child: [
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: new Category(i++, "Category " + i),
-    child: [
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: new Category(i++, "Category " + i),
-    child: [
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-      {
-        category: new Category(i++, "Category " + i),
-        child: [
-          {
-            category: new Category(i++, "Category " + i),
-            child: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: new Category(i++, "Category " + i),
-    child: [
-      {
-        category: new Category(i++, "Category " + i),
-        child: [],
-      },
-    ],
-  },
-  {
-    category: new Category(i++, "Category " + i),
-    child: [
-      {
-        category: new Category(i++, "Category " + i),
-        child: [],
-      },
-    ],
-  },
-];
 
 export function CategorySelector({
   categories,
-  onCategoriesChange,
+  selectedCategories,
+  onCategorySelectionChange,
 }: {
-  categories: Array<Category>;
-  onCategoriesChange: (categories: Array<Category>) => void;
+  categories: Array<CategoryTreeNode>;
+  selectedCategories: Array<Category>;
+  onCategorySelectionChange: (
+    category: Category,
+    type: "ADD" | "REMOVE"
+  ) => void;
 }) {
   const classes = useStyles();
 
   function ExploreData({ data }: { data: Array<CategoryTreeNode> }): any {
     function handleDataChange(item: Category, checked: boolean) {
-      let array: Category[] = [];
-      if (checked) {
-        array = [...categories, new Category(item.id, item.name)];
-      } else {
-        array = [...categories];
-        array.splice(
-          categories.findIndex((cat) => cat.id === item.id),
-          1
-        );
-      }
-      onCategoriesChange(array);
+      onCategorySelectionChange(item, checked ? "ADD" : "REMOVE");
     }
     return data.map((item, index) => {
       return (
@@ -338,7 +153,7 @@ export function CategorySelector({
             <StyledTreeItem
               nodeId={item.category.id}
               label={item.category.name}
-              checked={categories.some(
+              checked={selectedCategories.some(
                 (selectedCategory) => selectedCategory.id == item.category.id
               )}
               onChange={(checked) => handleDataChange(item.category, checked)}
@@ -349,7 +164,7 @@ export function CategorySelector({
             <StyledTreeItem
               nodeId={item.category.id}
               label={item.category.name}
-              checked={categories.some(
+              checked={selectedCategories.some(
                 (selectedCategory) => selectedCategory.id == item.category.id
               )}
               onChange={(checked) => handleDataChange(item.category, checked)}
@@ -367,7 +182,7 @@ export function CategorySelector({
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}
       >
-        <ExploreData data={categoryList} />
+        <ExploreData data={categories} />
       </TreeView>
     </>
   );
