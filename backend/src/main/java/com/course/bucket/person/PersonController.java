@@ -1,6 +1,9 @@
 package com.course.bucket.person;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +26,18 @@ public class PersonController {
 	@GetMapping("/get-person-by-id/{id}")
 	public Person findPerson(@PathVariable String id){
 		return new Person(id);
+	}
+	@GetMapping("/get-new-user-admin")
+	public HashMap<Date, NewUser> getNewUserAdmin(){
+		return Person.getNewUserAdmin();
+	}
+	@GetMapping("/get-show-card-admin")
+	public ShowCard showCardAdmin(){
+		return Person.showCardAdmin();
+	}
+	@GetMapping("/get-cumulative-rating-teacher/{teacherUsername}")
+	public Vector<CumulativeRating> getCumulativeRatingTeacher(@PathVariable String teacherUsername){
+		return Person.getCumulativeRatingTeacher(teacherUsername);
 	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")

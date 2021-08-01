@@ -65,8 +65,6 @@ public class PurchaseHistory {
 //				id.toString(), course.getId().toString(), student.getUsername(), ToolKit.JDateToDDate(time),
 //				cost.toString());
 //	}
-	
-	
 
 	public static ArrayList<PurchaseHistory> getPurchasedStudentInfo(String teacherName) {
 		ArrayList<PurchaseHistory> list = new ArrayList<PurchaseHistory>();
@@ -96,8 +94,6 @@ public class PurchaseHistory {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	
 
 	public Integer getCourseId() {
 		return courseId;
@@ -154,7 +150,7 @@ public class PurchaseHistory {
 					list.add(ph);
 				}
 				lists.put(courseId, list);
-		
+
 			}
 			return lists;
 		} catch (SQLException ex) {
@@ -165,6 +161,44 @@ public class PurchaseHistory {
 
 	public static void delete(Course course) {
 		DB.execute("DELETE FROM PURCHASE_HISTORY WHERE COURSE_ID = #", course.getId().toString());
+	}
+
+	public static ArrayList<PurchaseHistoryList> getPurchaseHistoryTeacher(String teacherUsername) {
+
+		ArrayList<PurchaseHistoryList> phList = new ArrayList<>();
+		String sql = "SELECT ph.course_id,c.title, c.subtitle, fl.content\n" + " FROM purchase_history ph ,course c, files fl\n"
+				+ " WHERE ph.course_id = c.id and c.cover_id = fl.id and \n"
+				+ " ph.course_id = ANY (SELECT ID FROM COURSE WHERE TEACHER_ID = '#')\n"
+				+ " GROUP BY ph.course_id, c.title, c.subtitle, fl.content ORDER BY MAX(time) DESC";
+		ResultSet crs = DB.executeQuery(sql, teacherUsername);
+		try {
+			while (crs.next()) {
+				ResultSet phrs = DB.executeQuery("select * from purchase_history where course_id = #",
+						crs.getString("course_id"));
+				ArrayList<PurchaseHistoryInfo> phInfos = new ArrayList<>();
+				while (phrs.next()) {
+					ResultSet srs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
+									+ "where p.photo_id = f.id and p.id = '#'",
+							phrs.getString("student_id"));
+					srs.next();
+					phInfos.add(new PurchaseHistoryInfo(srs.getString("full_name"), srs.getString("content"), phrs.getTimestamp("time"),
+							phrs.getDouble("cost")));
+					
+					srs.close();
+				}
+				phrs.close();
+				phList.add(new PurchaseHistoryList(crs.getString("title"),crs.getString("subtitle"),crs.getString("content"),phInfos));
+
+			}
+			crs.close();
+			return phList;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

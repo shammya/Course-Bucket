@@ -1,8 +1,10 @@
 package com.course.bucket.person;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.course.bucket.Global;
+
 
 @RestController
+@CrossOrigin(origins = Global.HOST)
 public class StudentController {
 	
 	@PostMapping("/add-student/{edu_id}")
@@ -23,6 +28,11 @@ public class StudentController {
 	@GetMapping("/get-student/{id}")
 	public Student findStudent(@PathVariable String id){
 		return new Student(id);
+	}
+	
+	@GetMapping("/get-student-list-teacher/{id}")
+	public ArrayList<StudentList> getStudntListTeacher(@PathVariable String id){
+		return Student.getStudntListTeacher(id);
 	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")

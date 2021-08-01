@@ -2,9 +2,13 @@ package com.course.bucket.person;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,7 +92,7 @@ public class Person {
 				if (rs.getInt("CARD_ID") != 0) {
 					this.card = new CreditCard(rs.getInt("CARD_ID"));
 				}
-				//loadLanguages();
+				// loadLanguages();
 
 				rs.close();
 				System.err.println("*****reached successfully !");
@@ -424,5 +428,158 @@ public class Person {
 			DB.execute("INSERT INTO PERSON_LANGUAGE VALUES(#, '#', #)", id.toString(), person.getUsername(),
 					lang.getId().toString());
 		}
+	}
+
+	public static HashMap<Date, NewUser> getNewUserAdmin() {
+		HashMap<Date, NewUser> newUsers = new HashMap<>();
+		Date date = null;
+		String sql = "select trunc(p.signup_date) signup_date,count(*) student_count\r\n"
+				+ "from person p ,student s\r\n" + "where p.id = s.id\r\n" + "group by trunc(p.signup_date)\r\n"
+				+ "order by trunc(p.signup_date) asc";
+		ResultSet rs = DB.executeQuery(sql);
+		try {
+			while (rs.next()) {
+				date = rs.getTimestamp("signup_date");
+				NewUser newUser = new NewUser(date, rs.getInt("student_count"), 0);
+				newUsers.put(date, newUser);
+			}
+			rs.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sql = "select trunc(p.signup_date) signup_date,count(*) teacher_count\r\n" + "from person p ,teacher t\r\n"
+				+ "where p.id = t.id\r\n" + "group by trunc(p.signup_date)\r\n" + "order by trunc(p.signup_date) asc";
+		rs = DB.executeQuery(sql);
+		try {
+			while (rs.next()) {
+				date = rs.getTimestamp("signup_date");
+				if (newUsers.containsKey(date)) {
+					NewUser newUser = new NewUser(date, newUsers.get(date).getStudentCount(),
+							rs.getInt("teacher_count"));
+					newUsers.remove(date);
+					newUsers.put(date, newUser);
+				} else {
+					NewUser newUser = new NewUser(date, 0, rs.getInt("teacher_count"));
+					newUsers.put(date, newUser);
+				}
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return newUsers;
+	}
+
+	public static ShowCard showCardAdmin() {
+		ShowCard showCard;
+		Integer totalVisitor = 0;
+		Integer newCourse = 0;
+		Integer totalCourse = 0;
+		Integer newUser = 0;
+		Integer totalUser = 0;
+		Double todayIncome = 0.0;
+		Double totalIncome = 0.0;
+
+		String sql = "select count(*) as new_course\r\n" + "from course\r\n"
+				+ "where publish_date between current_date-3 and current_date  ";
+		ResultSet rs = DB.executeQuery(sql);
+		try {
+			rs.next();
+			newCourse = rs.getInt("new_course");
+
+			sql = "select count(*) as total_course\r\n" + "from course";
+			rs = DB.executeQuery(sql);
+			rs.next();
+			totalCourse = rs.getInt("total_course");
+
+			sql = "select count(*) as new_user\r\n" + "from person\r\n"
+					+ "where signup_date between current_date - 3 and current_date";
+			rs = DB.executeQuery(sql);
+			rs.next();
+			newUser = rs.getInt("new_user");
+			sql = "select count(*) as total_user\r\n" + "from person";
+			rs = DB.executeQuery(sql);
+			rs.next();
+			totalUser = rs.getInt("total_user");
+			sql = "select nvl(sum(cost),0.0) as today_cost\r\n" + "from purchase_history\r\n"
+					+ "where trunc(time) = trunc(current_date)";
+
+			rs = DB.executeQuery(sql);
+			rs.next();
+			todayIncome = rs.getDouble("today_cost");
+			sql = "select nvl(sum(cost),0.0) as total_cost\r\n" + "from purchase_history\r\n";
+			rs = DB.executeQuery(sql);
+			rs.next();
+			totalIncome = rs.getDouble("total_cost");
+
+			showCard = new ShowCard(totalVisitor, newCourse, totalCourse, newUser, totalUser, todayIncome, totalIncome);
+			return showCard;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	public static Vector<CumulativeRating> getCumulativeRatingTeacher(String teacherUsername) {
+
+		String sql = "select min(publish_date) first_date\r\n" + "from course \r\n" + "where teacher_id = '#'\r\n"
+				+ "group by teacher_id ";
+		Date firstDate;
+		HashMap<Date, RatingCount> ratingsDb = new HashMap<>();
+		ResultSet rs = DB.executeQuery(sql, teacherUsername);
+		try {
+			rs.next();
+			firstDate = rs.getDate("first_date");
+			sql = "select trunc(r.time) as time , avg(value) as rating ,count(*) as count\r\n"
+					+ "from rating r,course c\r\n" + "where c.id = r.course_id and c.teacher_id = '#'\r\n"
+					+ "group by trunc(r.time)";
+			rs = DB.executeQuery(sql, teacherUsername);
+			while (rs.next()) {
+				ratingsDb.put(rs.getDate("time"), new RatingCount(rs.getDouble("rating"), rs.getInt("count")));
+			}
+			Date lastDate = new Date();
+			long size = ToolKit.getDifferenceDays(firstDate, lastDate);
+			Vector<CumulativeRating> ratings = new Vector<>();
+			LocalDate start = ToolKit.DateToLocalDate(firstDate);
+			LocalDate end = ToolKit.DateToLocalDate(lastDate);
+			end = end.plusDays(2);
+			System.err.println("today date : " + end);
+			Date date;
+			int count = 0, idx = 0;
+			double rating = 0.0;
+
+			for (LocalDate ldate = start; ldate.isBefore(end); ldate = ldate.plusDays(1)) {
+				date = ToolKit.localDateToDate(ldate);
+				if (ratingsDb.containsKey(date)) {
+					if (idx == 0) {
+						ratings.add(idx, new CumulativeRating(date, ratingsDb.get(date).getRating()));
+					} else {
+						Double oldR = ratings.get(idx - 1).getRating() * count;
+						Double newR = ratingsDb.get(date).getRating() * ratingsDb.get(date).getCount();
+						count += ratingsDb.get(date).getCount();
+						rating = (oldR + newR) / (count);
+						ratings.add(new CumulativeRating(date, rating));
+					}
+				} else {
+					if (idx == 0) {
+						ratings.add(new CumulativeRating(date, 0.0));
+					} else {
+						ratings.add(new CumulativeRating(date, ratings.get(idx - 1).getRating()));
+					}
+				}
+				idx++;
+			}
+			return ratings;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 }

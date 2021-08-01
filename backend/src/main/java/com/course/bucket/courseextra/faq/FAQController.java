@@ -28,9 +28,9 @@ public class FAQController {
 		return FAQ. getFAQList(courseId);
 	}
 	
-	@GetMapping("/get-faq-for-teacher/{teacherName}")
-	public Map<Integer, ArrayList<FAQ>> findFAQForTeacherView(@PathVariable String teacherName) {
-		return FAQ.getFAQForTeacherView(teacherName);
+	@GetMapping("/get-faq-for-teacher/{teacherUsername}")
+	public ArrayList<FaqList> findFAQForTeacherView(@PathVariable String teacherUsername) {
+		return FAQ.getFaqListTeacher(teacherUsername);
 	}
 	
 	@GetMapping("/get-faq-student/{studentName}")

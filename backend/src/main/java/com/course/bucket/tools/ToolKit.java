@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -529,4 +530,13 @@ public class ToolKit {
 //        cl.getStyleClass().add("shadow");
 //        cl.setImage(image);
 //    }
+    
+    public static long getDifferenceDays(Date d1, Date d2) {
+        long diff = d2.getTime() - d1.getTime();
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
+    public static LocalDate dateToLocalDate(Date date) {
+    	LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    	return localDate;
+    }
 }

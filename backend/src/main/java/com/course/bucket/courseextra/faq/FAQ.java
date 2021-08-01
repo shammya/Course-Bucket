@@ -205,7 +205,7 @@ public class FAQ {
 //        return lists;
 //    }
 
-	public static Map<Integer, ArrayList<FAQ>> getFAQForStudentView(String studentName ) {
+	public static Map<Integer, ArrayList<FAQ>> getFAQForStudentView(String studentName) {
 		Map<Integer, ArrayList<FAQ>> lists = new HashMap<Integer, ArrayList<FAQ>>();
 		try {
 			ResultSet rsCourse = DB.executeQuery(
@@ -235,5 +235,52 @@ public class FAQ {
 
 	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
+	}
+
+	public static ArrayList<FaqList> getFaqListTeacher(String teacherUsername) {
+		ArrayList<FaqList> faqLists = new ArrayList<>();
+		String sql = "SELECT f.course_id, c.title, c.subtitle, fl.content\n" + " FROM FAQ f,course c, files fl\n"
+				+ " WHERE f.course_id = c.id and c.cover_id = fl.id and \n"
+				+ " COURSE_ID = ANY (SELECT ID FROM COURSE WHERE TEACHER_ID = '#')\n"
+				+ " GROUP BY f.course_id, c.title, c.subtitle, fl.content ORDER BY MAX(QUESTION_TIME) DESC";
+		ResultSet crs = DB.executeQuery(sql, teacherUsername);
+
+		try {
+			while (crs.next()) {
+				ResultSet frs = DB.executeQuery("select * from faq where course_id = #", crs.getString("course_id"));
+
+				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
+				while (frs.next()) {
+					ResultSet trs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f, course c where p.photo_id = f.id and c.teacher_id = p.id and c.id = #",
+							crs.getString("course_id"));
+					ResultSet srs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
+									+ "where p.photo_id = f.id and p.id = '#'",
+							frs.getString("student_id"));
+					trs.next();
+					srs.next();
+					faqInfos.add(new FaqInfo(srs.getString("full_name"), srs.getString("content"),
+							trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
+							frs.getTimestamp("question_time"), frs.getString("answer"),
+							frs.getTimestamp("answer_time")));
+
+					srs.close();
+					trs.close();
+				}
+				frs.close();
+
+				faqLists.add(new FaqList(crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
+						faqInfos));
+
+			}
+			crs.close();
+			return faqLists;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 }

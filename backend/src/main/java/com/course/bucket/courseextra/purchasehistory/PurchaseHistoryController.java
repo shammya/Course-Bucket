@@ -28,6 +28,11 @@ public class PurchaseHistoryController {
 		return PurchaseHistory.getPurchasedStudentInfo(teacherName);
 	}
 	
+	@GetMapping("/get-purchase-history-teacher/{teacherUsername}")
+	public ArrayList<PurchaseHistoryList> getPurchaseHistoryTeacher(@PathVariable String teacherUsername){
+		return PurchaseHistory.getPurchaseHistoryTeacher(teacherUsername);
+	}
+	
 	@GetMapping("/get-enrolled-students/{teacherName}")
 	public HashMap<Integer, ArrayList<PurchaseHistory>> findEnrolledStudentList(@PathVariable String teacherName) {
 		return PurchaseHistory.getEnrolledStudentList(teacherName);
