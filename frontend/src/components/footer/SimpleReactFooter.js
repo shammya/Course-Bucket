@@ -1,8 +1,13 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from "@material-ui/core";
 import PropTypes from "prop-types";
 import React from "react";
 import { FaPinterestSquare, FaTwitterSquare } from "react-icons/fa";
-import { ImFacebook2, ImInstagram, ImLinkedin, ImYoutube } from "react-icons/im";
+import {
+  ImFacebook2,
+  ImInstagram,
+  ImLinkedin,
+  ImYoutube,
+} from "react-icons/im";
 import "./SimpleReactFooter.sass";
 
 class SimpleReactFooter extends React.Component {
@@ -12,44 +17,164 @@ class SimpleReactFooter extends React.Component {
 
   render() {
     return (
-      <div style={{ backgroundColor: this.props.backgroundColor || "bisque" }} className="footer-container">
-
+      <div
+        style={{ backgroundColor: this.props.backgroundColor || "bisque" }}
+        className="footer-container"
+      >
         <Grid container>
           <Grid className="grid-item" item md={6} sm={12}>
-            <div style={{ color: this.props.fontColor || "black" }} className="first-title">{this.props.title}</div>
-            <div style={{ color: this.props.fontColor || "black" }} className="description">{this.props.description}</div>
+            <div
+              style={{ color: this.props.fontColor || "black" }}
+              className="first-title"
+            >
+              {this.props.title}
+            </div>
+            <div
+              style={{ color: this.props.fontColor || "black" }}
+              className="description"
+            >
+              {this.props.description}
+            </div>
           </Grid>
           <Grid container md={6}>
-            {this.props.columns.map(column => (
+            {this.props.columns.map((column) => (
               <Grid className="grid-item" item sm={3} xs={6}>
-                <div style={{ color: this.props.fontColor || "black" }} className="second-title">{column.title}</div>
-                {column.resources.map(resource => (
+                <div
+                  style={{ color: this.props.fontColor || "black" }}
+                  className="second-title"
+                >
+                  {column.title}
+                </div>
+                {column.resources.map((resource) => (
                   <div key={resource.id}>
-                    <a href={`${resource.link}`} target="_blank" style={{ color: this.props.fontColor || "black" }} className="resources">{resource.name}</a>
+                    <a
+                      href={`${resource.link}`}
+                      target="_blank"
+                      style={{ color: this.props.fontColor || "black" }}
+                      className="resources"
+                    >
+                      {resource.name}
+                    </a>
                   </div>
                 ))}
               </Grid>
             ))}
           </Grid>
         </Grid>
-        {this.props.facebook !== undefined || this.props.linkedin !== undefined || this.props.instagram !== undefined || this.props.twitter !== undefined || this.props.pinterest !== undefined || this.props.youtube !== undefined ?
+        {this.props.facebook !== undefined ||
+        this.props.linkedin !== undefined ||
+        this.props.instagram !== undefined ||
+        this.props.twitter !== undefined ||
+        this.props.pinterest !== undefined ||
+        this.props.youtube !== undefined ? (
           <div className="social-media-col">
-            <div style={{ color: this.props.fontColor || "black" }} className="stay-connected-title">Stay connected</div>
-            <div className="social-media">
-              {this.props.facebook !== undefined ? <a href={`https://www.facebook.com/${this.props.facebook}`} target="_blank" className="socialMediaLogo"><ImFacebook2 color={`${this.props.iconColor || "black"}`} size={25} /> </a> : ""}
-              {this.props.linkedin !== undefined ? <a href={`https://www.linkedin.com/in/${this.props.linkedin}`} target="_blank" className="socialMediaLogo"><ImLinkedin color={`${this.props.iconColor || "black"}`} size={25} /> </a> : ""}
-              {this.props.instagram !== undefined ? <a href={`https://www.instagram.com/${this.props.instagram}`} target="_blank" className="socialMediaLogo"><ImInstagram color={`${this.props.iconColor || "black"}`} size={25} /> </a> : ""}
-              {this.props.twitter !== undefined ? <a href={`https://www.twitter.com/${this.props.twitter}`} target="_blank" className="socialMediaLogo"><FaTwitterSquare color={`${this.props.iconColor || "black"}`} size={25} /> </a> : ""}
-              {this.props.pinterest !== undefined ? <a href={`https://www.pinterest.com/${this.props.pinterest}`} target="_blank" className="socialMediaLogo"><FaPinterestSquare color={`${this.props.iconColor || "black"}`} size={25} /> </a> : ""}
-              {this.props.youtube !== undefined ? <a href={`https://www.youtube.com/channel/${this.props.youtube}`} target="_blank" className="socialMediaLogo"><ImYoutube color={`${this.props.iconColor || "black"}`} size={25} /> </a> : ""}
+            <div
+              style={{ color: this.props.fontColor || "black" }}
+              className="stay-connected-title"
+            >
+              Stay connected
             </div>
-          </div> : ""}
+            <div className="social-media">
+              {this.props.facebook !== undefined ? (
+                <a
+                  href={`https://www.facebook.com/${this.props.facebook}`}
+                  target="_blank"
+                  className="socialMediaLogo"
+                >
+                  <ImFacebook2
+                    color={`${this.props.iconColor || "black"}`}
+                    size={25}
+                  />{" "}
+                </a>
+              ) : (
+                ""
+              )}
+              {this.props.linkedin !== undefined ? (
+                <a
+                  href={`https://www.linkedin.com/in/${this.props.linkedin}`}
+                  target="_blank"
+                  className="socialMediaLogo"
+                >
+                  <ImLinkedin
+                    color={`${this.props.iconColor || "black"}`}
+                    size={25}
+                  />{" "}
+                </a>
+              ) : (
+                ""
+              )}
+              {this.props.instagram !== undefined ? (
+                <a
+                  href={`https://www.instagram.com/${this.props.instagram}`}
+                  target="_blank"
+                  className="socialMediaLogo"
+                >
+                  <ImInstagram
+                    color={`${this.props.iconColor || "black"}`}
+                    size={25}
+                  />{" "}
+                </a>
+              ) : (
+                ""
+              )}
+              {this.props.twitter !== undefined ? (
+                <a
+                  href={`https://www.twitter.com/${this.props.twitter}`}
+                  target="_blank"
+                  className="socialMediaLogo"
+                >
+                  <FaTwitterSquare
+                    color={`${this.props.iconColor || "black"}`}
+                    size={25}
+                  />{" "}
+                </a>
+              ) : (
+                ""
+              )}
+              {this.props.pinterest !== undefined ? (
+                <a
+                  href={`https://www.pinterest.com/${this.props.pinterest}`}
+                  target="_blank"
+                  className="socialMediaLogo"
+                >
+                  <FaPinterestSquare
+                    color={`${this.props.iconColor || "black"}`}
+                    size={25}
+                  />{" "}
+                </a>
+              ) : (
+                ""
+              )}
+              {this.props.youtube !== undefined ? (
+                <a
+                  href={`https://www.youtube.com/channel/${this.props.youtube}`}
+                  target="_blank"
+                  className="socialMediaLogo"
+                >
+                  <ImYoutube
+                    color={`${this.props.iconColor || "black"}`}
+                    size={25}
+                  />{" "}
+                </a>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
 
         <div>
-          <div style={{ color: this.props.copyrightColor || "grey" }} className="copyright">Copyright &copy; {this.props.copyright}</div>
+          <div
+            style={{ color: this.props.copyrightColor || "grey" }}
+            className="copyright"
+          >
+            Copyright &copy; {this.props.copyright}
+          </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -67,16 +192,16 @@ SimpleReactFooter.propTypes = {
       resources: PropTypes.arrayOf(
         PropTypes.shape({
           name: PropTypes.string,
-          link: PropTypes.string
+          link: PropTypes.string,
         })
-      )
+      ),
     })
   ),
   copyright: PropTypes.string,
   iconColor: PropTypes.string,
   backgroundColor: PropTypes.string,
   fontColor: PropTypes.string,
-  copyrightColor: PropTypes.string
+  copyrightColor: PropTypes.string,
 };
 
 export default SimpleReactFooter;

@@ -12,7 +12,7 @@ function DesignationComponent(props) {
     {
       title: 'Designation ', field: 'type'
     },
-    { title: 'Admin', field: 'adminId' ,editable: false }
+    { title: 'Admin', field: 'adminId', editable: false }
   ])
 
   const [data, setData] = useState([])
@@ -32,10 +32,10 @@ function DesignationComponent(props) {
   }
 
   function CallgetAllDesignations() {
-    useEffect(() => { getAllDesignations()  }, []);
+    useEffect(() => { getAllDesignations() }, []);
   }
 
-  function CallupdateDesignation( designation) {
+  function CallupdateDesignation(designation) {
 
     DesignationService.updateDesignation(designation)
       .then(response => {
@@ -49,7 +49,7 @@ function DesignationComponent(props) {
 
   function CalldeleteDesignation(id) {
 
-    DesignationService.deleteDesignation( id)
+    DesignationService.deleteDesignation(id)
       .then(response => {
         ///console.log(response)
         //callData(response.data)
@@ -74,63 +74,52 @@ function DesignationComponent(props) {
   }
 
   return (
-    <Grid container style={{ height: "700px" }}>
-      <Grid item sm={3}>
-        <Drawer
-          open={false}
-        />
-      </Grid>
-      <Grid item container sm={9}
-        alignItems="center"
-        justify="center"
-        style={{ height: "100%" }}
-      >
-        <MaterialTable
-          style={{ width: "80%" }}
-          title="Designation"
-          columns={columns}
-          data={data}
-          editable={{
-            onRowAdd: newData =>
-              new Promise((resolve, reject) => {
+    <Grid container>
+      <MaterialTable
+        style={{ width: "100%" }}
+        title="Designation"
+        columns={columns}
+        data={data}
+        editable={{
+          onRowAdd: newData =>
+            new Promise((resolve, reject) => {
 
-                setTimeout(() => {
-                  //console.log(newData.id)
-                  newData.adminId = 'shammya';
-                  CalladdDesignation( newData)
-                  resolve();
-                }, 1000)
-              }),
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  // const dataUpdate = [...data];
-                  // const index = oldData.tableData.id;
-                  // dataUpdate[index] = newData;
-                  // console.log(index)
-                  // setData([...dataUpdate]);
-                  CallupdateDesignation(newData)
+              setTimeout(() => {
+                //console.log(newData.id)
+                newData.adminId = 'shammya';
+                CalladdDesignation(newData)
+                resolve();
+              }, 1000)
+            }),
+          onRowUpdate: (newData, oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                // const dataUpdate = [...data];
+                // const index = oldData.tableData.id;
+                // dataUpdate[index] = newData;
+                // console.log(index)
+                // setData([...dataUpdate]);
+                CallupdateDesignation(newData)
 
-                  resolve();
-                }, 1000)
-              }),
-            onRowDelete: oldData =>
-              new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  // const dataDelete = [...data];
-                  // const index = oldData.tableData.id;
-                  // dataDelete.splice(index, 1);
-                  // setData([...dataDelete]);
-                  CalldeleteDesignation(oldData.id);
-                  resolve();
-                }, 1000)
-              }),
-          }}
-          options={{
-            actionsColumnIndex: -1, addRowPosition: "first"
-          }}
-        />
-      </Grid>
+                resolve();
+              }, 1000)
+            }),
+          onRowDelete: oldData =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                // const dataDelete = [...data];
+                // const index = oldData.tableData.id;
+                // dataDelete.splice(index, 1);
+                // setData([...dataDelete]);
+                CalldeleteDesignation(oldData.id);
+                resolve();
+              }, 1000)
+            }),
+        }}
+        options={{
+          actionsColumnIndex: -1, addRowPosition: "first"
+        }}
+      />
     </Grid>
   )
 }

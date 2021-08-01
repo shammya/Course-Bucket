@@ -8,35 +8,35 @@ function CountryComponent(props) {
   const { useState } = React;
 
   const [columns, setColumns] = useState([
-    { title: 'Id', field: 'id',editable : false },
+    { title: 'Id', field: 'id', editable: false },
     {
       title: 'Country Name', field: 'name'
     },
-    { title: 'Admin', field: 'adminId' ,editable: false  }
+    { title: 'Admin', field: 'adminId', editable: false }
   ])
 
   const [data, setData] = useState([])
 
   CallgetAllCountries()
 
-  function getAllCountries(){
+  function getAllCountries() {
     CountryService.getAllCountries()
-        .then(response => {
-          console.log(response.data)
-          //callData(response.data)          
-          setData(response.data);
-          //setData(response.data)
-        }
-        )
+      .then(response => {
+        console.log(response.data)
+        //callData(response.data)          
+        setData(response.data);
+        //setData(response.data)
+      }
+      )
   }
 
   function CallgetAllCountries() {
-    useEffect(() => {getAllCountries()}, []);
+    useEffect(() => { getAllCountries() }, []);
   }
 
   function CallupdateCountry(country) {
 
-    CountryService.updateCountry( country)
+    CountryService.updateCountry(country)
       .then(response => {
         //console.log(response.data)
         //callData(response.data)
@@ -55,7 +55,7 @@ function CountryComponent(props) {
         getAllCountries();
       }
       );
-      
+
   }
 
   function CalladdCountry(country) {
@@ -73,8 +73,8 @@ function CountryComponent(props) {
   }
 
   return (
-    <Grid container style={{ height: "700px" }}>
-      <Grid item sm={3}>
+    <Grid container>
+      {/* <Grid item sm={3}>
         <Drawer
           open={false}
         />
@@ -83,52 +83,52 @@ function CountryComponent(props) {
         alignItems="center"
         justify="center"
         style={{ height: "100%" }}
-      >
-        <MaterialTable
-          style={{ width: "80%" }}
-          columns ={columns}
-          title="Country"
-          data={data}
-          editable={{
-            onRowAdd: newData =>
-              new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  newData.adminId = 'shammya';
-                  //console.log(newData.id)
-                  CalladdCountry(newData)
-                  resolve();
-                }, 1000)
-              }),
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  // const dataUpdate = [...data];
-                  // const index = oldData.tableData.id;
-                  // dataUpdate[index] = newData;
-                  // console.log(index)
-                  //setData([...dataUpdate]);
-                  CallupdateCountry(newData);
-                  resolve();
-                }, 1000)
-              }),
-            onRowDelete: oldData =>
-              new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  // const dataDelete = [...data];
-                  // const index = oldData.tableData.id;
-                  // dataDelete.splice(index, 1);
-                  // setData([...dataDelete])
-                  CalldeleteCountry( oldData.id);
-                  resolve();
-                }, 1000)
-              }),
-          }}
-          options={{
-            actionsColumnIndex: -1, addRowPosition: "first"
-          }}
-        />
-      </Grid>
+      > */}
+      <MaterialTable
+        style={{ width: "100%" }}
+        columns={columns}
+        title="Country"
+        data={data}
+        editable={{
+          onRowAdd: newData =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                newData.adminId = 'shammya';
+                //console.log(newData.id)
+                CalladdCountry(newData)
+                resolve();
+              }, 1000)
+            }),
+          onRowUpdate: (newData, oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                // const dataUpdate = [...data];
+                // const index = oldData.tableData.id;
+                // dataUpdate[index] = newData;
+                // console.log(index)
+                //setData([...dataUpdate]);
+                CallupdateCountry(newData);
+                resolve();
+              }, 1000)
+            }),
+          onRowDelete: oldData =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                // const dataDelete = [...data];
+                // const index = oldData.tableData.id;
+                // dataDelete.splice(index, 1);
+                // setData([...dataDelete])
+                CalldeleteCountry(oldData.id);
+                resolve();
+              }, 1000)
+            }),
+        }}
+        options={{
+          actionsColumnIndex: -1, addRowPosition: "first"
+        }}
+      />
     </Grid>
+    // </Grid>
   )
 }
 

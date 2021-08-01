@@ -60,7 +60,30 @@ Object.assign(lightTheme, {
         right: 0,
       }
     },
-  },
+    MuiTypography: {
+      root: {
+        textAlign: "justify",
+      }
+    },
+    PrivateTabIndicator: {
+      root: {
+        height: 6
+      },
+      vertical: {
+        width: 6
+      }
+    },
+    MuiFormControlLabel: {
+      root: {
+        margin: 'auto',
+        marginRight: 0,
+      }
+    }
+    // spacing: {
+    //   '&:hover': {
+    //   },
+    // }
+  }
 })
 export const darkTheme = createMuiTheme({
   palette: {

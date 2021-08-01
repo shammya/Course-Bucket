@@ -1,4 +1,7 @@
+
+import DateFnsUtils from '@date-io/date-fns';
 import { MuiThemeProvider } from '@material-ui/core';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -9,14 +12,15 @@ import reportWebVitals from './reportWebVitals';
 
 
 
-
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <MuiThemeProvider theme={lightTheme}>
       <App />
     </MuiThemeProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </MuiPickersUtilsProvider>
+  // {/* </React.StrictMode>, */ }
+  , document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

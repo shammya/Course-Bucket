@@ -35,3 +35,7 @@ code {
 /* .MUIRichTextEditor-editorContainer-35 {
   position: "relative";
 } */
+
+.MuiDialogTitle-root > .MuiTypography-root {
+  text-align: center;
+}
