@@ -36,9 +36,9 @@ export default function Auth() {
 
           <Grid
             container
-            justify="space-around"
             alignContent="center"
             className={classes.root}
+            justifyContent="center"
           >
             <Switch>
               <Route path={`${match.path}/signin`} exact component={SignIn} />

@@ -2,7 +2,6 @@ import {
   Avatar,
   Badge,
   Button,
-  Card,
   CardActionArea,
   Divider,
   Grid,
@@ -19,7 +18,9 @@ import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
 import classNames from "classnames";
-import React, { useState } from "react";
+import AuthService from "components/auth/api/AuthService";
+import PersonService from "components/person/api/PersonService";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Responsive } from "tools/responsive/Responsive";
 import SideNav from "./SideNav";
@@ -58,11 +59,144 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const isLogIn = true;
-
 export function Header() {
   const classes = useStyles();
   const history = useHistory();
+
+  function profileDetailsLoad() {
+    PersonService.getPersonSelf().then((response) => {
+      console.log("Person data from header", response);
+      history.push({
+        pathname: "/profile-details",
+        state: {
+          person: response.data,
+          registered: true,
+        },
+      });
+    });
+  }
+
+  const popUpNavProperty = {
+    admin: [
+      // { label: "My Course", link: "/my-course" },
+      // { label: "Purchase History", link: "/dashboard/purchase-history" },
+      // { label: "My Review", link: "/dashboard/review" },
+      // { label: "FAQ", link: "/dashboard/faq" },
+      // { label: "Account Setting", link: "/profile-details" },
+      // { label: "Sign out", link: "/auth/signin" },
+      // { label: "Overview", link: "/dashboard/overview" },
+      // { label: "Create a course", link: "/create-course" },
+      // { label: "Student's Review", link: "/dashboard/review" },
+      {
+        label: "Account Setting",
+        func: profileDetailsLoad,
+      },
+      {
+        label: "Sign out",
+        link: "/auth/signin",
+        func: () => {
+          AuthService.logout();
+          history.push("/auth/signin");
+        },
+      },
+    ],
+    teacher: [
+      {
+        label: "Overview",
+        func: () => {
+          history.push("/dashboard/overview");
+        },
+      },
+      {
+        label: "Create a course",
+        func: () => {
+          history.push("/create-course");
+        },
+      },
+      {
+        label: "My Course",
+        func: () => {
+          history.push("/my-course");
+        },
+      },
+      {
+        label: "Student's Review",
+        func: () => {
+          history.push("/dashboard/review");
+        },
+      },
+      {
+        label: "FAQ",
+        func: () => {
+          history.push("/dashboard/faq");
+        },
+      },
+      {
+        label: "Account Setting",
+        func: profileDetailsLoad,
+      },
+      {
+        label: "Sign out",
+        func: () => {
+          AuthService.logout();
+          history.push("/auth/signin");
+        },
+      },
+    ],
+    student: [
+      {
+        label: "My Purchased Course",
+        func: () => {
+          history.push("/my-course");
+        },
+      },
+      {
+        label: "Purchase History",
+        func: () => {
+          history.push("/dashboard/purchase-history");
+        },
+      },
+      {
+        label: "My Review",
+        func: () => {
+          history.push("/dashboard/review");
+        },
+      },
+      {
+        label: "FAQ",
+        func: () => {
+          history.push("/dashboard/faq");
+        },
+      },
+      {
+        label: "Account Setting",
+        func: profileDetailsLoad,
+      },
+      {
+        label: "Sign out",
+        func: () => {
+          AuthService.logout();
+          history.push("/auth/signin");
+        },
+      },
+    ],
+  };
+
+  const [popUpNav, setPopUpNav] = useState<any>([]);
+
+  useEffect(() => {
+    switch (AuthService.getCurrentAccountType()) {
+      case "Admin":
+        setPopUpNav(popUpNavProperty.admin);
+        break;
+      case "Student":
+        setPopUpNav(popUpNavProperty.student);
+        break;
+      case "Teacher":
+        setPopUpNav(popUpNavProperty.teacher);
+        break;
+    }
+  }, []);
 
   function Logo() {
     const classes = useStyles();
@@ -112,24 +246,13 @@ export function Header() {
       </div>
     );
   }
-  const popUpNavProperty = [
-    { label: "My Course", link: "/my-course" },
-    { label: "Purchase History", link: "/dashboard/purchase-history" },
-    { label: "My Review", link: "/dashboard/review" },
-    { label: "FAQ", link: "/dashboard/faq" },
-    { label: "Account Setting", link: "/profile-details" },
-    { label: "Sign out", link: "/auth/signin" },
-    { label: "Overview", link: "/dashboard/overview" },
-    { label: "Create a course", link: "/create-course" },
-    { label: "Student's Review", link: "/dashboard/review" },
-  ];
 
   function IconSet() {
     const [anchorRef, setAnchorRef] = useState<HTMLButtonElement | null>(null);
 
     return (
       <>
-        {isLogIn ? (
+        {AuthService.isLogin() ? (
           <>
             <IconButton>
               <Badge badgeContent={4} color="secondary">
@@ -158,7 +281,7 @@ export function Header() {
                 }}
               >
                 <Grid container direction="column">
-                  <Grid item>
+                  <Grid item onClick={profileDetailsLoad}>
                     <CardActionArea style={{ padding: 16 }}>
                       <Grid
                         container
@@ -173,9 +296,11 @@ export function Header() {
                         </Grid>
                         <Grid item>
                           <Typography>Signed in as</Typography>
-                          <Typography variant="h6">mehedi</Typography>
+                          <Typography variant="h6">
+                            {AuthService.getCurrentUser().username}
+                          </Typography>
                           <Typography variant="body1">
-                            66.mehedi@gmail.com
+                            {AuthService.getCurrentUser().email}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -184,10 +309,12 @@ export function Header() {
                   <Divider />
                   <Grid item>
                     <List>
-                      {popUpNavProperty.map((item) => (
+                      {popUpNav.map((item) => (
                         <ListItem
                           button
-                          onClick={(event) => history.push(item.link)}
+                          onClick={(event) => {
+                            item.func();
+                          }}
                         >
                           {item.label}
                         </ListItem>
@@ -200,7 +327,13 @@ export function Header() {
           </>
         ) : (
           <Responsive displayIn={["Laptop", "Tablet"]}>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(event) => {
+                history.push("/auth/signin");
+              }}
+            >
               Sign in
             </Button>
           </Responsive>

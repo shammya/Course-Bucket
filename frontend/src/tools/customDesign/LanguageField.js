@@ -7,7 +7,8 @@ import {
   Select,
   useTheme
 } from "@material-ui/core";
-import React, { useState } from "react";
+import LanguageService from "components/AdminPanel/api/LanguageService";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   chips: {
@@ -56,12 +57,13 @@ const languageItem = [
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
-function getStyles(name, personName, theme) {
+function getStyles(id, languages, theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
+      languages.some(item => item == id)
+        ? theme.typography.fontWeightMedium
+        :
+        theme.typography.fontWeightRegular,
   };
 }
 const MenuProps = {
@@ -77,21 +79,28 @@ export function LanguageField({
   objects = [],
   onObjectsChange = (languages) => console.log(languages),
 }) {
+  const [languageItem, setLanguageItem] = useState([]);
   const classes = useStyles();
   const theme = useTheme();
-  const [languages, setLanguages] = useState(objects);
+  const [languages, setLanguages] = useState([]);
   const onLanguagesChange = (event) => {
     setLanguages(event.target.value);
-    onObjectsChange(event.target.value);
+    onObjectsChange(event.target.value.map(item => languageItem.find(langItem => langItem.id == item)));
   };
+  useEffect(() => {
+    setLanguages(objects.map(item => item.id));
+    LanguageService.getAllLanguages().then(response => {
+      setLanguageItem(response.data);
+    });
+  }, [])
 
   return (
     <FormControl variant="outlined" className={classes.formControl}>
-      <InputLabel id="demo-mutiple-chip-label">Language</InputLabel>
+      <InputLabel id="demo-multiple-chip-label">Language</InputLabel>
       <Select
         label="Language"
-        labelId="demo-mutiple-chip-label"
-        id="demo-mutiple-chip"
+        labelId="demo-multiple-chip-label"
+        id="demo-multiple-chip"
         multiple
         value={languages}
         onChange={onLanguagesChange}
@@ -99,13 +108,14 @@ export function LanguageField({
         renderValue={(selected) => (
           <div className={classes.chips}>
             {
-              selected.map((value) => (
+              selected.map((id) => (
                 <Chip
-                  key={value.id}
-                  label={value.name}
+                  key={id}
+                  label={languageItem.filter(item => item.id == id)[0]?.name}
                   className={classes.chip}
                 />
-              ))
+              )
+              )
             }
           </div>
         )}
@@ -116,8 +126,8 @@ export function LanguageField({
           return (
             <MenuItem
               key={item.id}
-              value={item}
-              style={getStyles(item, languages, theme)}
+              value={item.id}
+              style={getStyles(item.id, languages, theme)}
             >
               {item.name}
             </MenuItem>

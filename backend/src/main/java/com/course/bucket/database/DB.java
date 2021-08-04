@@ -15,19 +15,17 @@ public class DB {
     public static void startConnection() {
         try {
             Class.forName("oracle.jdbc.OracleDriver").newInstance();
-//        DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
-
-            System.out.println("Driver loaded successfully...");
             if(System.getProperty("user.name").equals("ASUS")){
                 System.out.println("USER : MEHEDI");
-                con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:globaldb", "COURSE_OVERFLOW", "co");
+                con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:globaldb", "coursebucket", "cb");
             }
             else{
                 System.out.println("USER : SHAMMYA");
                 con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl", "coursebucket", "cb");
             }
             st = con.createStatement();
-//            System.out.println("Connection established");
+            st.setQueryTimeout(3);
+            System.out.println("Connection established ...");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -84,6 +82,7 @@ public class DB {
         	if(value==null)
         		value = "NULL";
             if(!value.contains("TO_DATE")) value = value.replace("'", "''");
+
             value = value.replace("#", "^^^");
             value = value.replace("$", "&&&&&");
             sql = sql.replaceFirst("#", value);
@@ -158,5 +157,60 @@ public class DB {
 			e.printStackTrace();
 		}
     	return null;
+    }
+    public static String getString(String tableName, String idColumnName, String id, String dataColumnName) {
+    	String sql = "SELECT # FROM # WHERE #='#'";
+    	ResultSet rs = DB.executeQuery(sql,dataColumnName,tableName,idColumnName, id);
+
+    	try {
+			if(rs.next()) {
+				//System.out.println("column name : "+column.toUpperCase());
+				return rs.getString(dataColumnName);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return "";
+    }
+    public static Date getDate(String tableName, String idColumnName, String id, String dataColumnName) {
+    	String sql = "SELECT # FROM # WHERE #='#'";
+    	ResultSet rs = DB.executeQuery(sql,dataColumnName,tableName,idColumnName, id);
+
+    	try {
+			if(rs.next()) {
+				//System.out.println("column name : "+column.toUpperCase());
+				return rs.getDate(dataColumnName);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
+    }
+    public static Integer getInt(String tableName, String idColumnName, String id, String dataColumnName) {
+    	String sql = "SELECT # FROM # WHERE #='#'";
+    	ResultSet rs = DB.executeQuery(sql,dataColumnName,tableName,idColumnName, id);
+
+    	try {
+			if(rs.next()) {
+				//System.out.println("column name : "+column.toUpperCase());
+				return rs.getInt(dataColumnName);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return 0;
+    }
+    public static void update(String tableName, String idColumnName, String id, String dataColumnName, String data, boolean isDate) {
+    	String sql = "UPDATE # SET # = " + (isDate ? "#" : "'#'") + " WHERE # = '#'";
+    	DB.execute(sql,tableName,dataColumnName,data,idColumnName, id);
+    }
+    public static void update(String tableName, String idColumnName, String id, String dataColumnName, String data) {
+    	update(tableName, idColumnName, id, dataColumnName, data, false);
     }
 }

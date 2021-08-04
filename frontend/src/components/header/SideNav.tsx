@@ -1,14 +1,14 @@
 import { Button, Divider, SwipeableDrawer } from "@material-ui/core";
+import AuthService from "components/auth/api/AuthService";
 import React from "react";
 import { Responsive } from "tools/responsive/Responsive";
-import { isLogIn } from "./Header";
 import { Menu, menuItems, useStyles } from "./MenuBar";
 
 function DefaultComponentOfSideNav() {
   const classes = useStyles();
   return (
     <>
-      {!isLogIn ? (
+      {!AuthService.isLogin() ? (
         <Button
           className={classes.signInBtn}
           variant="contained"

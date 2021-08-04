@@ -4,6 +4,7 @@ import { Language } from "./Language";
 
 export class Person {
   accountType: string;
+  username: string;
   email: string;
   password: string;
   firstName?: string;
@@ -11,7 +12,7 @@ export class Person {
   dob?: Date | null;
   institution?: string;
   fbURL?: string;
-  linkedInUrl?: string;
+  linkedInURL?: string;
   signupDate?: Date;
   about?: string;
   country?: Country;
@@ -20,6 +21,16 @@ export class Person {
   youtubeURL?: string;
   website?: string;
   languages?: Array<Language>;
+
+  constructor(email: string, username: string, password: string) {
+    this.email = email;
+    this.username = username;
+    this.password = password;
+  }
+
+  setUsername(username) {
+    this.username = username;
+  }
 }
 
 export class Admin extends Person {}
@@ -27,21 +38,17 @@ export class Admin extends Person {}
 export class Student extends Person {
   eduStatus: EduStatus;
 
-  constructor(email: string, password: string) {
-    super();
+  constructor(email: string, username: string, password: string) {
+    super(email, username, password);
     this.accountType = "Student";
-    this.email = email;
-    this.password = password;
   }
 }
 
 export class Teacher extends Person {
   designation: Designation;
-  constructor(email: string, password: string) {
-    super();
+  constructor(email: string, username: string, password: string) {
+    super(email, username, password);
     this.accountType = "Teacher";
-    this.email = email;
-    this.password = password;
   }
 }
 

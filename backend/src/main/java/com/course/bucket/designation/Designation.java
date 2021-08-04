@@ -50,6 +50,14 @@ public class Designation {
         this.type = type;
         this.adminId = adminId;
     }
+    
+    public static Designation getByUsername(String username) {
+        int id = DB.getInt("TEACHER", "ID", username, "DESIGNATION_ID");
+        if(id!=0) {
+        	return new Designation(id);
+        }
+        return null;
+    }
 
     public static ArrayList<Designation> getList() {
         ArrayList<Designation> list = new ArrayList<>();
