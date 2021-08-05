@@ -79,6 +79,18 @@ public class Language {
 		return adminId;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
+	}
+
 	public static void createNewLanguage(String text, String admin) {
 		String sql = "INSERT INTO LANGUAGE (ID,NAME,ADMIN_ID) VALUES(#,'#','#')";
 		boolean x = DB.execute(sql, DB.generateId("LANGUAGE").toString(), text, admin);

@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.course.bucket.database.DB;
+import com.course.bucket.designation.Designation;
 
 
 public class EduStatus {
@@ -108,5 +109,15 @@ public class EduStatus {
 //            Logger.getLogger(EduStatus.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 
+    }
+    
+
+    
+    public static EduStatus getByUsername(String username) {
+        int id = DB.getInt("STUDENT", "ID", username, "EDU_STATUS_ID");
+        if(id!=0) {
+        	return new EduStatus(id);
+        }
+        return null;
     }
 }

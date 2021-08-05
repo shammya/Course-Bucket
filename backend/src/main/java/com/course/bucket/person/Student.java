@@ -56,6 +56,11 @@ public class Student extends Person {
 		super(accountType, username, email, password, firstName, lastName, about, date);
 		DB.execute("INSERT INTO STUDENT(ID) VALUES('#')", username);
 	}
+	//Mehedi
+	public Student(AccountType accountType, String username, String email, String password) {
+		super(accountType, username, email, password);
+		DB.execute("INSERT INTO STUDENT(ID) VALUES('#')", username);
+	}
 
 	public Student(String username) {
 		super(username);
@@ -175,6 +180,18 @@ public class Student extends Person {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+//	Mehedi
+	public static void update(Person person, Integer eduStatusId) {
+		DB.execute(""
+				+ "UPDATE STUDENT SET "
+				+ "EDU_STATUS_ID = # "
+				+ "WHERE ID = '#' ",
+				eduStatusId.toString(),
+				person.getUsername()
+				);
+		Person.update(person); 
 	}
 	
 }

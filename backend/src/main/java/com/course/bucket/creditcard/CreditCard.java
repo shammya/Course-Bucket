@@ -124,6 +124,12 @@ public class CreditCard {
 				ToolKit.JDateToDDate(expireDate));
 		DB.execute("UPDATE  PERSON SET CARD_ID = # WHERE EMAIL = '#'", id.toString(), email);
 	}
+	public static Integer insertCreditCard(CreditCard card) {
+		Integer id = DB.generateId("CREDIT_CARD");
+		DB.execute("INSERT INTO CREDIT_CARD VALUES(#, '#', '#', #)", id.toString(), card.getCardNo(), card.getNameOnCard(),
+				ToolKit.JDateToDDate(card.getExpireDate()));
+		return id;
+	}
 
 	public static void changeCreditCard(String email, CreditCard newCard) {
 		CreditCard oldCard = new CreditCard(email);

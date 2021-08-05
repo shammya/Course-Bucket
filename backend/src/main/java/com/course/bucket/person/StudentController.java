@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
+import com.course.bucket.authentication.JwtUtils;
+import com.course.bucket.designation.Designation;
+import com.course.bucket.edustatus.EduStatus;
 
 
 @RestController
@@ -50,5 +55,11 @@ public class StudentController {
 	@DeleteMapping("/delete-student/{id}")
 	public void deleteStudent(@PathVariable String id) {
 		Person.deletePerson(id);
+	}
+	
+//	Mehedi
+	@PutMapping("/update-student/{eduStatusId}")
+	public void updateStudent(@PathVariable Integer eduStatusId, @RequestBody Person person) {
+		Student.update(person, eduStatusId);
 	}
 }

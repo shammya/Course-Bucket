@@ -1,4 +1,14 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -8,9 +18,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { Person, Student, Teacher } from "../../classes/Person";
+import { Person } from "../../classes/Person";
+import AuthService from "./api/AuthService";
 
 function Copyright() {
   return (
@@ -67,128 +78,227 @@ const useStyles = makeStyles((theme) => ({
 export function SignUp() {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
 
   let person: Person;
 
   const [status, setStatus] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [againPassword, setAgainPassword] = useState("");
+  const [usernameFound, setUsernameFound] = useState(false);
+  const [emailFound, setEmailFound] = useState(false);
+  const [signOut, setSignOut] = useState(true);
 
+  useEffect(() => {
+    if (AuthService.isLogin()) {
+      setSignOut(false);
+    }
+  }, []);
+
+  function isValidPassword() {
+    return password == againPassword && password != "";
+  }
   function handleSubmitClicked() {
-    // if (password == againPassword && password != "") {
-    let person;
-    if (status == "Student") person = new Student(email, password);
-    else person = new Teacher(email, password);
-    history.push({
-      pathname:
-        history.location.pathname.split("/").slice(0, -1).join("/") +
-        "/profile-details",
-      state: person,
-    });
-    // }
+    if (
+      status != "" &&
+      username != "" &&
+      email != "" &&
+      isValidPassword() &&
+      !usernameFound &&
+      !emailFound
+    ) {
+      let person: Person = new Person(email, username, password);
+      person.accountType = status;
+      history.push({
+        pathname:
+          history.location.pathname.split("/").slice(0, -1).join("/") +
+          "/profile-details",
+        state: { person: person, registered: false },
+      });
+    }
   }
   return (
-    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <FormControl
-                variant="outlined"
-                className={classes.formControl}
-                fullWidth
-              >
-                <InputLabel>Your Status</InputLabel>
-                <Select
-                  label="Your Status"
-                  variant="outlined"
-                  value={status}
-                  onChange={(event) => setStatus(event.target.value as string)}
-                >
-                  <MenuItem key="Student" value={"Student"}>
-                    Student
-                  </MenuItem>
-                  <MenuItem key="Teacher" value={"Teacher"}>
-                    Teacher
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password (Again)"
-                type="password"
-                id="password-again"
-                autoComplete="current-password"
-                onChange={(event) => setAgainPassword(event.target.value)}
-              />
-            </Grid>
-          </Grid>
-          {/* <Link
+    <>
+      {
+        <Dialog open={!signOut}>
+          <DialogTitle>{"You are already signed in!!"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Do you want to sign out and sign up again?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={(event) => {
+                setSignOut(true);
+                AuthService.logout();
+              }}
+              color="primary"
+            >
+              Yes
+            </Button>
+            <Button
+              onClick={(event) => {
+                history.goBack();
+              }}
+              color="primary"
+              autoFocus
+            >
+              No
+            </Button>
+          </DialogActions>
+        </Dialog>
+      }
+      {signOut && (
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            <form className={classes.form} noValidate>
+              <Grid container xs spacing={2}>
+                <Grid item xs={12}>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                    fullWidth
+                  >
+                    <InputLabel>Your Status</InputLabel>
+                    <Select
+                      label="Your Status"
+                      variant="outlined"
+                      value={status}
+                      onChange={(event) =>
+                        setStatus(event.target.value as string)
+                      }
+                    >
+                      <MenuItem key="Student" value={"Student"}>
+                        Student
+                      </MenuItem>
+                      <MenuItem key="Teacher" value={"Teacher"}>
+                        Teacher
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error={usernameFound}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Username"
+                    name="username"
+                    autoComplete="username"
+                    onBlur={(event) => {
+                      AuthService.existByUsername(event.target.value).then(
+                        (response) => {
+                          setUsernameFound(response.data.boolValue);
+                        }
+                      );
+                    }}
+                    onFocus={(event) => setUsernameFound(false)}
+                    onChange={(event) => setUsername(event.target.value)}
+                    helperText={usernameFound ? "Username already exist" : ""}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error={emailFound}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onBlur={(event) => {
+                      AuthService.existByEmail(event.target.value).then(
+                        (response) => {
+                          setEmailFound(response.data.boolValue);
+                        }
+                      );
+                    }}
+                    onFocus={(event) => setUsernameFound(false)}
+                    onChange={(event) => {
+                      AuthService.existByEmail(event.target.value).then(
+                        (response) => {
+                          setEmailFound(response.data.boolValue);
+                        }
+                      );
+                      setEmail(event.target.value);
+                    }}
+                    helperText={emailFound ? "E-mail already exist" : ""}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    onChange={(event) => setPassword(event.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error={password !== againPassword}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password (Again)"
+                    type="password"
+                    id="password-again"
+                    autoComplete="current-password"
+                    onChange={(event) => setAgainPassword(event.target.value)}
+                    helperText={
+                      password !== againPassword ? "Password mismatch" : ""
+                    }
+                  />
+                </Grid>
+              </Grid>
+              {/* <Link
               to={{
                 pathname: "/profile-details",
                 state: person
               }}> */}
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleSubmitClicked}
-          >
-            Sign Up
-          </Button>
-          {/* </Link> */}
-          <Grid container>
-            <Grid item>
-              <Link
-                to={
-                  useLocation().pathname.split("/").slice(0, -1).join("/") +
-                  "/signin"
-                }
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSubmitClicked}
               >
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Grid>
+                Sign Up
+              </Button>
+              {/* </Link> */}
+              <Grid container>
+                <Grid item>
+                  <Link
+                    to={
+                      location.pathname.split("/").slice(0, -1).join("/") +
+                      "/signin"
+                    }
+                  >
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+        </Grid>
+      )}
+    </>
   );
 }

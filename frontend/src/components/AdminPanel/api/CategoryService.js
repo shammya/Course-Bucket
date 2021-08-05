@@ -1,5 +1,6 @@
 import axios from "axios"
-import {global} from 'Configure.js'
+import { authHeader } from "components/auth/api/AuthService"
+import { global } from 'Configure.js'
 
 
 class CategoryService {
@@ -8,19 +9,19 @@ class CategoryService {
         return axios.get(global.HOST + '/get-categories')
     }
 
-    deleteCategory(id){
+    deleteCategory(id) {
         return axios.delete(global.HOST + `/delete-category/${id}`)
     }
 
 
     updateCategory(category) {
-        return axios.put(global.HOST + '/update-category',category)
+        return axios.put(global.HOST + '/update-category', category)
     }
 
     addCategory(category) {
-        return axios.post(global.HOST + '/add-category',category);
+        return axios.post(global.HOST + '/add-category', category);
     }
-    
+
 }
 
 export default new CategoryService()

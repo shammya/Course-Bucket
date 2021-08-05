@@ -7,7 +7,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import { Category, categoryList, CategoryTreeNode } from "classes/Category";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { animated, useSpring } from "react-spring/web.cjs"; // web.cjs is required for IE 11 support
+import { animated, useSpring } from "react-spring"; // web.cjs is required for IE 11 support
 
 function MinusSquare(props) {
   return (

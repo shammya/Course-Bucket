@@ -1,5 +1,6 @@
 package com.course.bucket.person;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,6 +13,8 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.course.bucket.country.Country;
 import com.course.bucket.course.Course;
 import com.course.bucket.creditcard.CreditCard;
@@ -23,7 +26,7 @@ import com.course.bucket.tools.ToolKit;
 
 public class Person {
 
-	public enum AccountType {
+	public enum AccountType implements Serializable {
 		Admin("Admin"), Student("Student"), Teacher("Teacher");
 
 		String name;
@@ -31,6 +34,9 @@ public class Person {
 		private AccountType(String name) {
 			this.name = name;
 		}
+
+		public String getName() {return name;}
+		public void setName(String name) {this.name = name;}		
 	}
 
 	AccountType accountType;
@@ -65,7 +71,7 @@ public class Person {
 				this.password = rs.getString("PASSWORD");
 				this.firstName = rs.getString("FIRST_NAME");
 				this.lastName = rs.getString("LAST_NAME");
-				this.dob = rs.getDate("DOB");
+				this.dob = rs.getTimestamp("DOB");
 				this.signupDate = rs.getTimestamp("SIGNUP_DATE");
 				this.about = rs.getString("ABOUT");
 				if (rs.getString("INSTITUTION") != null) {
@@ -92,31 +98,14 @@ public class Person {
 				if (rs.getInt("CARD_ID") != 0) {
 					this.card = new CreditCard(rs.getInt("CARD_ID"));
 				}
-				// loadLanguages();
+				loadLanguages();
+				accountType = AccountType.valueOf(Person.getRole(username));
 
 				rs.close();
-				System.err.println("*****reached successfully !");
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ex) { 
 			Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
 		}
-//        try {
-//            rs = DB.executeQuery("SELECT ID FROM STUDENT WHERE ID = '#'", username);
-//            if (rs.next()) {
-//                accountType = AccountType.Student;
-//            }
-//            rs = DB.executeQuery("SELECT ID FROM TEACHER WHERE ID = '#'", username);
-//            if (rs.next()) {
-//                accountType = AccountType.Teacher;
-//            }
-//            rs = DB.executeQuery("SELECT ID FROM ADMIN WHERE ID = '#'", username);
-//            if (rs.next()) {
-//                accountType = AccountType.Admin;
-//            }
-//            rs.close();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
-//        }
 	}
 
 	public Person(AccountType accountType, String username, String email, String password, String firstName,
@@ -136,6 +125,19 @@ public class Person {
 				"INSERT INTO PERSON(ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, SIGNUP_DATE, ABOUT, DOB)"
 						+ " VALUES('#', '#', '" + this.password + "', '#', '#', #, '#', #)",
 				username, email, firstName, lastName, ToolKit.getCurTimeDB(), about, ToolKit.JDateToDDate(dob));
+	}
+
+	public Person(AccountType accountType, String username, String email, String password) {
+		this.password = password;
+		System.out.println(this.password);
+		this.accountType = accountType;
+		this.username = username;
+		this.email = email;
+
+		DB.execute(
+				"INSERT INTO PERSON(ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, SIGNUP_DATE, ABOUT)"
+						+ " VALUES('#', '#', '" + this.password + "', '#', '#', #, '#')",
+				username, email, firstName, lastName, ToolKit.getCurTimeDB(), about);
 	}
 
 	private void loadLanguages() {
@@ -192,8 +194,7 @@ public class Person {
 	}
 
 	public void setPassword(String password) {
-		HashPassword hp = new HashPassword();
-		this.password = hp.hash(password);
+		this.password = password;
 		// System.out.println(this.password);
 		// DB.execute("UPDATE PERSON SET PASSWORD = '" + this.password + "' WHERE ID =
 		// '#'", username);
@@ -311,7 +312,7 @@ public class Person {
 		this.email = email;
 	}
 
-	public List<Language> getLanguages() {
+	public List<Language> getLanguagesFromDB() {
 		this.languages = new ArrayList<>();
 		String sql = "SELECT LANGUAGE_ID FROM PERSON_LANGUAGE WHERE PERSON_ID = '#'";
 		ResultSet rs = DB.executeQuery(sql, username);
@@ -337,6 +338,10 @@ public class Person {
 //        }
 //        return null;
 //    }
+
+	public List<Language> getLanguages() {
+		return languages;
+	}
 
 	public String getFullName() {
 		return firstName + " " + lastName;
@@ -400,20 +405,19 @@ public class Person {
 //    	System.err.println(" \t credit card and photo = "+person.getCard()+" and " + person.getPhoto());
 		String card_id = null, photo_id = null;
 		if (person.getCard() != null) {
-			card_id = person.getCard().getId().toString();
+			card_id = CreditCard.insertCreditCard(person.getCard()).toString();
 		}
-		if (person.getPhoto() != null) {
-			photo_id = person.getPhoto().getId().toString();
-		}
+//		if (person.getPhoto() != null) {
+//			photo_id = person.getPhoto().getId().toString();
+//		}
 
-//    	System.err.println("\t date of birth = " + person.getDob());
-//    	System.err.println("\t date of birth = " + ToolKit.JDateToDDate(person.getDob()));
-//    	System.err.println("\t dUSERNAME = " + person.getUsername());
 
+
+		
 		DB.execute(sql, person.getUsername(), person.getEmail(), person.getPassword(), person.getFirstName(),
 				person.getLastName(), ToolKit.JDateToDDate(person.getDob()), person.getInstitution(), person.getFbURL(),
-				person.getLinkedInURL(), ToolKit.JDateToDDate(person.getSignupDate()), person.getAbout(),
-				person.getCountry().getId().toString(), card_id, photo_id, person.getYoutubeURL(), person.getWebsite());
+				person.getLinkedInURL(), ToolKit.getCurTimeDB(), person.getAbout(),
+				person.getCountry().getId().toString(), photo_id, card_id, person.getYoutubeURL(), person.getWebsite());
 
 		// person language
 
@@ -423,7 +427,6 @@ public class Person {
 			return;
 		}
 		for (Language lang : person.getLanguages()) {
-			System.err.println("thik ase");
 			Integer id = DB.generateId("PERSON_LANGUAGE");
 			DB.execute("INSERT INTO PERSON_LANGUAGE VALUES(#, '#', #)", id.toString(), person.getUsername(),
 					lang.getId().toString());
@@ -684,5 +687,99 @@ public class Person {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static boolean existsByUsername(String username) {
+        return DB.valueExist("PERSON", "ID", username);
+	}
+	public static boolean existsByEmail(String email) {
+        return DB.valueExist("PERSON", "EMAIL", email);
+	}
+	public static String  getPasswordByUsername(String username) {
+		ResultSet rs = DB.executeQuery("SELECT PASSWORD FROM PERSON WHERE ID='#'", username);
+		try {
+			rs.next();
+			return rs.getString("PASSWORD");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
+	}
+	public static String getRole(String username) {
+		if(DB.valueExist("Student", "ID", username)) {
+			return "Student";
+		}
+		else if(DB.valueExist("Teacher", "ID", username)) {
+			return "Teacher";
+		}
+		else if(DB.valueExist("Admin", "ID", username)) {
+			return "Admin";
+		}
+		return "";
+	}
+
+	public static void update(Person person) {
+		if(person.getCard() != null) {
+			CreditCard card = person.getCard();
+			if(card.getId()==null) {
+				Integer id = DB.generateId("CREDIT_CARD");
+				DB.execute("INSERT INTO CREDIT_CARD(ID, CARD_NO, NAME_ON_CARD, EXPIRE_DATE) VALUES(#, '#', '#', #)", id.toString(), card.getCardNo(), card.getNameOnCard(), ToolKit.JDateToDDate(card.getExpireDate()));
+				person.getCard().setId(id);
+			}
+			else {
+				DB.execute("UPDATE CREDIT_CARD SET CARD_NO='#', NAME_ON_CARD='#', EXPIRE_DATE=# WHERE ID=#", card.getCardNo(), card.getNameOnCard(),ToolKit.JDateToDDate(card.getExpireDate()), card.getId().toString());				
+			}
+		}
+		if(person.getPhoto() != null) {
+//			CreditCard card = person.getCard();
+//			if(card.getId()==null) {
+//				Integer id = DB.generateId("CREDIT_CARD");
+//				DB.executeQuery("INSERT INTO CREDIT_CARD(ID, CARD_NO, NAME_ON_CARD, EXPIRE_DATE) VALUES(#, '#', '#', #)", id.toString(), card.getCardNo(), card.getNameOnCard(), ToolKit.JDateToDDate(card.getExpireDate()));
+//			}
+//			else {
+//				DB.executeQuery("UPDATE CREDIT_CARD SET CARD_NO='#', NAME_ON_CARD='#', EXPIRE_DATE=# WHERE ID=#", card.getCardNo(), card.getNameOnCard(),ToolKit.JDateToDDate(card.getExpireDate()), card.getId().toString());				
+//			}
+		}
+		
+		DB.execute(""
+				+ "UPDATE PERSON "
+				+ "SET "
+				+ "FIRST_NAME = '#',"
+				+ "LAST_NAME = '#',"
+				+ "DOB = #,"
+				+ "INSTITUTION = '#',"
+				+ "FB_URL = '#',"
+				+ "LINKEDIN_URL = '#',"
+				+ "ABOUT = '#',"
+				+ "COUNTRY_ID = #,"
+				+ "PHOTO_ID = #, "
+				+ "CARD_ID = #,"
+				+ "YOUTUBE_URL = '#',"
+				+ "WEBSITE = '#' "
+				+ "WHERE ID = '#'",
+				person.getFirstName(),
+				person.getLastName(),
+				ToolKit.JDateToDDate(person.getDob()),
+				person.getInstitution(),
+				person.getFbURL(),
+				person.getLinkedInURL(),
+				person.getAbout(),
+				person.getCountry().getId().toString(),
+				(person.getPhoto() == null ? "NULL" : person.getPhoto().getId().toString()),
+				(person.getCard() == null ? "NULL" : person.getCard().getId().toString()),
+				person.getYoutubeURL(),
+				person.getWebsite(),
+				person.getUsername()
+				);
+		DB.execute("DELETE PERSON_LANGUAGE WHERE PERSON_ID = '#'", person.getUsername());
+		System.out.println(person.getLanguages());
+		if(person.getLanguages().size()>0) {
+			for (Language lang : person.getLanguages()) {
+				Integer id = DB.generateId("PERSON_LANGUAGE");
+				DB.execute("INSERT INTO PERSON_LANGUAGE VALUES(#, '#', #)", id.toString(), person.getUsername(),
+						lang.getId().toString()); 
+			}
+		}
 	}
 }

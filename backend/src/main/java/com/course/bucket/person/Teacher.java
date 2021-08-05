@@ -8,6 +8,7 @@ import java.util.Date;
 import com.course.bucket.course.Course;
 import com.course.bucket.database.DB;
 import com.course.bucket.designation.Designation;
+import com.course.bucket.person.Person.AccountType;
 
 public class Teacher extends Person {
 
@@ -45,6 +46,11 @@ public class Teacher extends Person {
         DB.execute("INSERT INTO TEACHER(ID) VALUES('#')", username);
     }
 
+	//Mehedi
+	public Teacher(AccountType accountType, String username, String email, String password) {
+		super(accountType, username, email, password);
+		DB.execute("INSERT INTO TEACHER(ID) VALUES('#')", username);
+	}
     public Teacher(String username) {
         super(username);
         String sql = "SELECT DESIGNATION_ID FROM TEACHER WHERE ID = '#'";
@@ -203,4 +209,17 @@ public class Teacher extends Person {
     	Person.createNewPerson(person);
     	DB.execute("insert into teacher values('#',#)", person.getUsername(),desig_id.toString());
     }
+    
+
+//	Mehedi
+	public static void update(Person person, Integer designationId) {
+		Person.update(person);
+		DB.execute(""
+				+ "UPDATE TEACHER SET"
+				+ "DESIGNATION_ID = #"
+				+ "WHERE ID = '#'",
+				designationId.toString(),
+				person.getUsername()
+				);
+	}
 }
