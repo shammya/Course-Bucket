@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PurchaseHistoryController {
 	
-//	@PostMapping("/add-purchasehistory")
-//	public void addCountry(@RequestBody Country purchasehistory) {
-//		System.out.println("Country : "+purchasehistory.name+" "+purchasehistory.adminId);
-//		Country.createNewCountry(purchasehistory.name,purchasehistory.adminId);
-//	}
+	@PostMapping("/add-purchasehistory")
+	public void addPurchaseHistory(@RequestBody PurchaseHistoryDb phd) {
+		//System.out.println("Country : "+purchasehistory.name+" "+purchasehistory.adminId);
+		PurchaseHistory.createNewPurchaseHistory(phd);
+	}
 	
 	@GetMapping("/get-purchase-student-info/{teacherName}")
 	public ArrayList<PurchaseHistory> findPurchasedStudentInfo(@PathVariable String teacherName){

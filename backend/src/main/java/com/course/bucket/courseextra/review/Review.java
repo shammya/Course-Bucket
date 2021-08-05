@@ -282,4 +282,16 @@ public class Review {
 		return null;
 
 	}
+	
+	public static void createNewReview(ReviewDb review) {
+		Integer id = DB.generateId("review");
+		String sql = " insert into review values(#,#, '#', #,'#')";
+		DB.execute(sql,id.toString(),review.getCourseId().toString(),review.getStudentId(),ToolKit.JDateToDDate(review.getTime()),review.getText());
+	}
+	
+	public static void createNewRating(RatingDb rating) {
+		Integer id = DB.generateId("rating");
+		String sql = " insert into rating values(#,#, '#', #,#)";
+		DB.execute(sql,id.toString(),rating.getCourseId().toString(),rating.getStudentId(),rating.getValue().toString(),ToolKit.JDateToDDate(rating.getTime()));
+	}
 }

@@ -1,5 +1,5 @@
 package com.course.bucket;
 
 public class Global {
-	public static final String HOST = "http://localhost:8800";
+	public static final String HOST = "http://localhost:6600";
 }

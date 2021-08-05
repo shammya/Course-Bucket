@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
+import com.course.bucket.course.additionals.CarouselCourse;
+import com.course.bucket.course.additionals.CourseApproval;
 import com.course.bucket.course.additionals.CoursePopularity;
 import com.course.bucket.course.additionals.Filters;
 import com.course.bucket.course.additionals.IncomePerCourse;
@@ -60,6 +62,18 @@ public class CourseController {
 	@PostMapping("/get-filtered-courses")
 	public ArrayList<MiniCourse> getFilteredCourses(@RequestBody Filters filters) {
 		return Course.getFilteredCourses(filters);
+	}
+	@GetMapping("/get-carousel-courses")
+	public CarouselCourse getFilteredCourses() {
+		return Course.getCarouselCourse();
+	}
+	@GetMapping("/get-approved-courses")
+	public ArrayList<CourseApproval> getApprovedCoursesAdmin() {
+		return Course.getApprovedCoursesAdmin();
+	}
+	@GetMapping("/get-unapproved-courses")
+	public ArrayList<CourseApproval> getunApprovedCoursesAdmin() {
+		return Course.getUnapprovedCoursesAdmin();
 	}
 		
 	

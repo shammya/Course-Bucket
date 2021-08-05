@@ -20,11 +20,16 @@ import com.course.bucket.Global;
 @CrossOrigin(origins = Global.HOST)
 public class ReviewController {
 	
-//	@PostMapping("/add-review")
-//	public void addCategory(@RequestBody Category review) {
-//		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
-//		Category.createNewCategory(review);
-//	}
+	@PostMapping("/add-review")
+	public void addReview(@RequestBody ReviewDb review) {
+		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
+		Review.createNewReview(review);
+	}
+	@PostMapping("/add-rating")
+	public void addRating(@RequestBody RatingDb rating) {
+		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
+		Review.createNewRating(rating);
+	}
 	
 	@GetMapping("/get-review-teacher/{teacherUsername}")
 	public ArrayList<ReviewList> getReviewListTeacher(@PathVariable String teacherUsername){
