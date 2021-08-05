@@ -39,6 +39,8 @@ import { counterIncrement } from './property-descriptors/counter-increment';
 import { counterReset } from './property-descriptors/counter-reset';
 import { quotes } from './property-descriptors/quotes';
 import { boxShadow } from './property-descriptors/box-shadow';
+import { paintOrder } from './property-descriptors/paint-order';
+import { webkitTextStrokeWidth } from './property-descriptors/webkit-text-stroke-width';
 export declare class CSSParsedDeclaration {
     backgroundClip: ReturnType<typeof backgroundClip.parse>;
     backgroundColor: Color;
@@ -90,6 +92,7 @@ export declare class CSSParsedDeclaration {
     paddingRight: LengthPercentage;
     paddingBottom: LengthPercentage;
     paddingLeft: LengthPercentage;
+    paintOrder: ReturnType<typeof paintOrder.parse>;
     position: ReturnType<typeof position.parse>;
     textAlign: ReturnType<typeof textAlign.parse>;
     textDecorationColor: Color;
@@ -99,6 +102,8 @@ export declare class CSSParsedDeclaration {
     transform: ReturnType<typeof transform.parse>;
     transformOrigin: ReturnType<typeof transformOrigin.parse>;
     visibility: ReturnType<typeof visibility.parse>;
+    webkitTextStrokeColor: Color;
+    webkitTextStrokeWidth: ReturnType<typeof webkitTextStrokeWidth.parse>;
     wordBreak: ReturnType<typeof wordBreak.parse>;
     zIndex: ReturnType<typeof zIndex.parse>;
     constructor(declaration: CSSStyleDeclaration);

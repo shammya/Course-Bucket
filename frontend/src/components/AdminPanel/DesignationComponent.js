@@ -117,7 +117,7 @@ function DesignationComponent(props) {
             }),
         }}
         options={{
-          actionsColumnIndex: -1, addRowPosition: "first"
+          actionsColumnIndex: -1, addRowPosition: "first", pageSize: 10
         }}
       />
     </Grid>
