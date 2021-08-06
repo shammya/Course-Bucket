@@ -200,5 +200,11 @@ public class PurchaseHistory {
 		}
 		return null;
 	}
+	
+	public static void createNewPurchaseHistory(PurchaseHistoryDb phd) {
+		Integer id = DB.generateId("purchase_history");
+		String sql = "insert into purchase_history values(#, '#' , #, #)";
+		DB.execute(sql, id.toString(),phd.getCourseId().toString(),phd.getStudentId(),ToolKit.JDateToDDate(phd.getTime()),phd.getCost().toString());
+	}
 
 }

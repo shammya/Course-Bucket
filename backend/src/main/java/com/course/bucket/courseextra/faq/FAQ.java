@@ -283,4 +283,10 @@ public class FAQ {
 		return null;
 
 	}
+	public static void createNewFaq(FaqDb faq) {
+		Integer id = DB.generateId("FAQ");
+		String sql = "insert into faq values(#, #, '#', '#', #, '#', #)";
+		DB.execute(sql,id.toString(),faq.getCourseId().toString(),faq.getStudentId(),faq.getQuestion(),ToolKit.JDateToDDate(faq.getQuestionTime()),faq.getAnswer(),
+				ToolKit.JDateToDDate(faq.getAnswerTime()));
+	}
 }

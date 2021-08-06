@@ -19,6 +19,9 @@ import EduStatusComponent from "./EduStatusComponent";
 import LanguageComponent from "./LanguageComponent";
 import PopularCategoryChart from "./charts/PopularCategoryChart";
 import { PopularCourseAdminChart } from "./charts/PopurlarCourseAdminChart";
+import CourseApprovalComponent from "./CourseApprovalComponent";
+import TeacherInfoComponent from './TeacherInfoComponent';
+import StudentInfoComponent from './StudentInfoComponent';
 
 function ContentHeader({ children }) {
   return (
@@ -181,6 +184,24 @@ function AdminDashboard() {
           </Grid>
         </Grid>
       ),
+    },
+    {
+      label: "Student Info",
+      urlShort: "student-info",
+      icon: <Language />,
+      content: <StudentInfoComponent />,
+    },
+    {
+      label: "Teacher Info",
+      urlShort: "teacher-info",
+      icon: <Language />,
+      content: <TeacherInfoComponent />,
+    },
+    {
+      label: "Course Approval",
+      urlShort: "course-approval",
+      icon: <Language />,
+      content: <CourseApprovalComponent />,
     },
     {
       label: "Category",

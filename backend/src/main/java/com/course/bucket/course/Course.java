@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.course.bucket.category.Category;
+import com.course.bucket.course.additionals.CarouselCourse;
+import com.course.bucket.course.additionals.CourseApproval;
 import com.course.bucket.course.additionals.CoursePopularity;
 import com.course.bucket.course.additionals.Filters;
 import com.course.bucket.course.additionals.IncomePerCourse;
@@ -766,7 +768,7 @@ public class Course {
 		String selectStatement = "select unique(c.id) ";
 		String fromStatement = "from " + innerSql;
 		String whereStatement = "where";
-		
+
 		if (a) {
 			fromStatement += ", course_language cl";
 			whereStatement += "\n c.id = cl.course_id ";
@@ -837,41 +839,182 @@ public class Course {
 		if (!whereStatement.equals("where"))
 			sql += whereStatement;
 		sql = sql + "\n" + orderStatement;
-		
-		String finalSql = " select c.id, c.title ,\n"
-				+ "	( select concat(concat(first_name,' '),last_name) \n"
-				+ "	  from person where c.teacher_id = id\n"
-				+ "	) as name ,\n"
-				+ "	nvl(( select avg(value)\n"
-				+ "	  from rating \n"
-				+ "	  where course_id = c.id \n"
-				+ "	  group by course_id\n"
-				+ "	),0.0) as rating ,\n"
-				+ "	nvl(( select count(course_id)\n"
-				+ "	  from rating \n"
-				+ "	  where course_id = c.id\n"
-				+ "	  group by course_id\n"
-				+ "	),0) as rating_count ,\n"
-				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n"
-				+ "	\n"
-				+ "from course c , \n"+" ( "+sql + " ) a\n"
-				+ "where c.id = a.id and c.is_approved = 'T'";
-		
-		//System.err.println(finalSql);
-	 ResultSet rs = DB.executeQuery(finalSql);
-	 ArrayList<MiniCourse> miniCourses = new ArrayList<>();
-	 try {
-		while(rs.next()) {
-			 miniCourses.add(new MiniCourse(rs.getInt("id"),rs.getString("title"),rs.getString("name"),
-					 rs.getDouble("rating"),rs.getInt("rating_count"),rs.getDouble("price"),rs.getDouble("offer_price")));
-		 }
-		return miniCourses;
-	} catch (SQLException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
+
+		String finalSql = " select c.id, c.title ,\n" + "	( select concat(concat(first_name,' '),last_name) \n"
+				+ "	  from person where c.teacher_id = id\n" + "	) as name ,\n" + "	nvl(( select avg(value)\n"
+				+ "	  from rating \n" + "	  where course_id = c.id \n" + "	  group by course_id\n"
+				+ "	),0.0) as rating ,\n" + "	nvl(( select count(course_id)\n" + "	  from rating \n"
+				+ "	  where course_id = c.id\n" + "	  group by course_id\n" + "	),0) as rating_count ,\n"
+				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" + "	\n" + "from course c , \n" + " ( "
+				+ sql + " ) a\n" + "where c.id = a.id and c.is_approved = 'T'";
+
+		// System.err.println(finalSql);
+		ResultSet rs = DB.executeQuery(finalSql);
+		ArrayList<MiniCourse> miniCourses = new ArrayList<>();
+		try {
+			while (rs.next()) {
+				miniCourses.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
+						rs.getDouble("offer_price")));
+			}
+			return miniCourses;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		return null;
 	}
+
+	public static String getMiniCourseSql(String sql) {
+		String finalSql = " select c.id, c.title ,\n" + "	( select concat(concat(first_name,' '),last_name) \n"
+				+ "	  from person where c.teacher_id = id\n" + "	) as name ,\n" + "	nvl(( select avg(value)\n"
+				+ "	  from rating \n" + "	  where course_id = c.id \n" + "	  group by course_id\n"
+				+ "	),0.0) as rating ,\n" + "	nvl(( select count(course_id)\n" + "	  from rating \n"
+				+ "	  where course_id = c.id\n" + "	  group by course_id\n" + "	),0) as rating_count ,\n"
+				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" + " from ( " + sql + " ) c";
+		return finalSql;
+	}
+
+	public static CarouselCourse getCarouselCourse() {
+		CarouselCourse cc;
+		ArrayList<MiniCourse> newReleased = new ArrayList<>();
+		ArrayList<MiniCourse> bestSeller = new ArrayList<>();
+		ArrayList<MiniCourse> mostReviewed = new ArrayList<>();
+		ArrayList<MiniCourse> mostRated = new ArrayList<>();
+		ArrayList<MiniCourse> free = new ArrayList<>();
+
+		String sql = getMiniCourseSql(
+				" SELECT * FROM course WHERE publish_date BETWEEN CURRENT_DATE-7 AND CURRENT_DATE ");
+		ResultSet rs = DB.executeQuery(sql);
+		try {
+			if (rs != null) {
+				while (rs.next()) {
+					newReleased.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+							rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
+							rs.getDouble("offer_price")));
+				}
+			}
+			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n"
+					+ "	c.teacher_id ,\n"
+					+ "	( SELECT count( course_id ) FROM purchase_history WHERE course_id = c.id ) AS count \n"
+					+ "FROM\n"
+					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM purchase_history ) ) c \n"
+					+ "ORDER BY\n" + "	count DESC");
+			rs = DB.executeQuery(sql);
+			while (rs.next()) {
+				bestSeller.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
+						rs.getDouble("offer_price")));
+			}
+			sql = getMiniCourseSql(
+					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n" + "	c.teacher_id ,\n"
+							+ "	( SELECT count( course_id ) FROM rating WHERE course_id = c.id ) AS count \n" + "FROM\n"
+							+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM rating ) ) c \n"
+							+ "ORDER BY\n" + "	count DESC");
+			rs = DB.executeQuery(sql);
+			while (rs.next()) {
+				mostRated.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
+						rs.getDouble("offer_price")));
+			}
+
+			sql = getMiniCourseSql(
+					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n" + "	c.teacher_id ,\n"
+							+ "	( SELECT count( course_id ) FROM review WHERE course_id = c.id ) AS count \n" + "FROM\n"
+							+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM review ) ) c \n"
+							+ "ORDER BY\n" + "	count DESC");
+			rs = DB.executeQuery(sql);
+			while (rs.next()) {
+				mostReviewed.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
+						rs.getDouble("offer_price")));
+			}
+
+			sql = getMiniCourseSql(
+					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer \n" + "	c.teacher_id ,\n"
+							+ "FROM\n" + "	course c \n" + "WHERE\n" + "	( c.price * ( 100-c.offer ) / 100 ) = 0.0");
+			rs = DB.executeQuery(sql);
+			while (rs.next()) {
+				free.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
+						rs.getDouble("offer_price")));
+			}
+
+			rs.close();
+			cc = new CarouselCourse(newReleased, bestSeller, mostReviewed, mostRated, free);
+			return cc;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public static ArrayList<CourseApproval> getApprovedCoursesAdmin() {
+		ArrayList<CourseApproval> courses = new ArrayList<>();
+		String sql = "select \n"
+				+ "	c.id,\n"
+				+ "	c.title,\n"
+				+ "	c.publish_date,\n"
+				+ "	c.teacher_id\n"
+				+ "from \n"
+				+ "	course c\n"
+				+ "where\n"
+				+ "	c.is_approved = 'T' order by c.publish_date desc";
+		ResultSet rs = DB.executeQuery(sql);
+		Integer id ;
+		String title;
+		String teacherId;
+		Date publishDate;
+		try {
+			while(rs.next()) {
+				id = rs.getInt("id");
+				title = rs.getString("title");
+				teacherId  = rs.getString("teacher_id");
+				publishDate = rs.getDate("publish_date");
+				courses.add(new CourseApproval(id, title, teacherId, publishDate));
+			}
+			return courses;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+ 	}
+	
+	public static ArrayList<CourseApproval> getUnapprovedCoursesAdmin() {
+		ArrayList<CourseApproval> courses = new ArrayList<>();
+		String sql = "select \n"
+				+ "	c.id,\n"
+				+ "	c.title,\n"
+				+ "	c.publish_date,\n"
+				+ "	c.teacher_id\n"
+				+ "from \n"
+				+ "	course c\n"
+				+ "where\n"
+				+ "	c.is_approved = 'F' order by c.publish_date desc";
+		ResultSet rs = DB.executeQuery(sql);
+		Integer id ;
+		String title;
+		String teacherId;
+		Date publishDate;
+		try {
+			while(rs.next()) {
+				id = rs.getInt("id");
+				title = rs.getString("title");
+				teacherId  = rs.getString("teacher_id");
+				publishDate = rs.getDate("publish_date");
+				courses.add(new CourseApproval(id, title, teacherId, publishDate));
+			}
+			return courses;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+ 	}
 
 }

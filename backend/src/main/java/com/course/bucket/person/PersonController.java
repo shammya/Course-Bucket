@@ -1,5 +1,6 @@
 package com.course.bucket.person;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +25,9 @@ import com.course.bucket.Global;
 import com.course.bucket.authentication.MessageResponse;
 
 
-//@CrossOrigin(origins = Global.HOST)
+
 @RestController
-//@RequestMapping("")
+
 public class PersonController {
 	
 	@PostMapping("/add-person")
@@ -61,6 +62,18 @@ public class PersonController {
 	@GetMapping("/get-cumulative-rating-teacher/{teacherUsername}")
 	public Vector<CumulativeRating> getCumulativeRatingTeacher(@PathVariable String teacherUsername){
 		return Person.getCumulativeRatingTeacher(teacherUsername);
+	}
+	@GetMapping("/get-course-overview-admin/{id}")
+	public CourseOverview getCourseOverviewAdmin(@PathVariable Integer id){
+		return Person.getCourseOverviewAdmin(id);
+	}
+	@GetMapping("/get-teacher-info")
+	public ArrayList<TeacherInfoAdmin> getCourseOverviewAdmin(){
+		return Person.getTeacherInfoAdmin();
+	}
+	@GetMapping("/get-student-info")
+	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
+		return Person.getStudentInfoAdmin();
 	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")

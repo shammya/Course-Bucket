@@ -407,12 +407,10 @@ public class Person {
 		if (person.getCard() != null) {
 			card_id = CreditCard.insertCreditCard(person.getCard()).toString();
 		}
-//		if (person.getPhoto() != null) {
-//			photo_id = person.getPhoto().getId().toString();
-//		}
-
-
-
+		if (person.getPhoto() != null) {
+			photo_id = Files.createNewFile(person.getPhoto()).toString();
+		}
+		
 		DB.execute(sql, person.getUsername(), person.getEmail(), person.getPassword(), person.getFirstName(),
 				person.getLastName(), ToolKit.JDateToDDate(person.getDob()), person.getInstitution(), person.getFbURL(),
 				person.getLinkedInURL(), ToolKit.getCurTimeDB(), person.getAbout(),
@@ -518,6 +516,7 @@ public class Person {
 			totalIncome = rs.getDouble("total_cost");
 
 			showCard = new ShowCard(totalVisitor, newCourse, totalCourse, newUser, totalUser, todayIncome, totalIncome);
+			rs.close();
 			return showCard;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -576,6 +575,7 @@ public class Person {
 				}
 				idx++;
 			}
+			rs.close();
 			return ratings;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -584,6 +584,108 @@ public class Person {
 		return null;
 
 	}
+
+	public static CourseOverview getCourseOverviewAdmin(Integer id) {
+
+		CourseOverview courseOverview = null;
+		String sql = "select  title , publish_date from course where id = #";
+		ResultSet rs = DB.executeQuery(sql, id.toString());
+		Date date;
+		try {
+			rs.next();
+			ArrayList<OverviewContent> overviewContents = new ArrayList<>();
+			Date startDate = rs.getDate("publish_date");
+			Date endDate = new Date();
+			LocalDate start = ToolKit.DateToLocalDate(startDate);
+			LocalDate end = ToolKit.DateToLocalDate(endDate);
+			end = end.plusDays(2);
+			for (LocalDate ldate = start; ldate.isBefore(end); ldate = ldate.plusDays(1)) {
+				date = ToolKit.localDateToDate(ldate);
+				String dDate = ToolKit.JDateToDDate(date);
+				String sql1 = "SELECT c.id,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM purchase_history ph WHERE time=# AND c.id=ph.course_id) AS enr_std_count,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM review rv WHERE time=# AND c.id=rv.course_id) AS review_count,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=1 AND c.id=rt.course_id) AS one,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=2 AND c.id=rt.course_id) AS two,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=3 AND c.id=rt.course_id) AS three,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=4 AND c.id=rt.course_id) AS four,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.id= #";
+				ResultSet rs1 = DB.executeQuery(sql1, dDate, dDate, dDate, dDate, dDate, dDate, dDate, id.toString());
+				rs1.next();
+				overviewContents.add(new OverviewContent(date, rs1.getInt("enr_std_count"), rs1.getInt("review_count"),
+						rs1.getInt("one"), rs1.getInt("two"), rs1.getInt("three"), rs1.getInt("four"),
+						rs1.getInt("five")));
+
+				rs1.close();
+				courseOverview = new CourseOverview(rs.getString("title"), overviewContents);
+			}
+
+			rs.close();
+			return courseOverview;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<TeacherInfoAdmin> getTeacherInfoAdmin(){
+		ArrayList<TeacherInfoAdmin> teacherInfoAdmins = new ArrayList<>();
+		String sql = "SELECT\r\n"
+				+ "	t.id,\r\n"
+				+ "	( SELECT count( id ) FROM course WHERE teacher_id = t.id ) course_created,\r\n"
+				+ "	( SELECT count( id ) FROM purchase_history WHERE course_id IN ( SELECT id FROM course WHERE teacher_id = t.id ) ) course_purchased,\r\n"
+				+ "	(\r\n"
+				+ "	SELECT\r\n"
+				+ "		nvl( sum( cost ) * 0.9, 0 ) \r\n"
+				+ "	FROM\r\n"
+				+ "		purchase_history \r\n"
+				+ "	WHERE\r\n"
+				+ "		course_id IN ( SELECT id FROM course WHERE teacher_id = t.id ) \r\n"
+				+ "	) total_income \r\n"
+				+ "FROM\r\n"
+				+ "	teacher t";
+		ResultSet rs = DB.executeQuery(sql);
+		try {
+			while(rs.next()) {
+				teacherInfoAdmins.add(new TeacherInfoAdmin(rs.getString("id"), rs.getInt("course_created"), rs.getInt("course_purchased"), rs.getDouble("total_income")));
+			}
+			return teacherInfoAdmins;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
+		ArrayList<StudentInfoAdmin> studentInfoAdmins = new ArrayList<>();
+		String  sql = "SELECT\r\n"
+				+ "	s.id,\r\n"
+				+ "	( SELECT count( id ) FROM purchase_history WHERE course_id IN ( SELECT id FROM course WHERE student_id = s.id ) ) course_owned,\r\n"
+				+ "	(\r\n"
+				+ "	SELECT\r\n"
+				+ "		nvl( sum( cost ),0.0 ) \r\n"
+				+ "	FROM\r\n"
+				+ "		purchase_history \r\n"
+				+ "	WHERE\r\n"
+				+ "		course_id IN ( SELECT id FROM course WHERE student_id = s.id ) \r\n"
+				+ "	) money_spent\r\n"
+				+ "FROM\r\n"
+				+ "	student s";
+		ResultSet rs = DB.executeQuery(sql);
+		try {
+			while(rs.next()) {
+				studentInfoAdmins.add(new StudentInfoAdmin(rs.getString("id"), rs.getInt("course_owned"), rs.getDouble("money_spent")));
+			}
+			return studentInfoAdmins;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static boolean existsByUsername(String username) {
         return DB.valueExist("PERSON", "ID", username);
 	}
@@ -613,8 +715,7 @@ public class Person {
 		}
 		return "";
 	}
-	
-//	Mehedi
+
 	public static void update(Person person) {
 		if(person.getCard() != null) {
 			CreditCard card = person.getCard();

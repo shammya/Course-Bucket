@@ -2,14 +2,29 @@ package com.course.bucket.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.course.bucket.database.DB;
 import com.course.bucket.tools.ToolKit;
+
+/**
+ * 
+ * 1. For post api string will be sent through content field and file will be
+ * sent through file field
+ *  
+ * 2. For get api both string and path of file will be
+ * sent through content field and
+ *
+ */
 
 public class Files {
 
@@ -17,6 +32,7 @@ public class Files {
 	FileType type;
 	String title;
 	String content;
+	MultipartFile file;
 	Date uploadTime;
 	Date lastUpdateTime;
 
@@ -106,11 +122,16 @@ public class Files {
 		this.lastUpdateTime = lastUpdateTime;
 	}
 
+	public MultipartFile getFile() {
+		return file;
+	}
+
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
 //	private void updateTime(){
 //        DB.execute("UPDATE FILES SET LAST_UPDATE = # WHERE ID = #", ToolKit.getCurTimeDB(), id.toString());
 //    }
-
-    
 
 	public String deleteFile(Integer id) {
 		String path = null;
@@ -129,10 +150,13 @@ public class Files {
 	}
 
 	public static Integer createNewFile(Files files) {
-		Integer typeId = DB.getIdFromDb("FILE_TYPE", "ID", files.getType().getId().toString());
+//		Integer typeId = DB.getIdFromDb("FILE_TYPE", "ID", files.getType().getId().toString());
 		Integer id = DB.generateId("FILES");
-		String sql = "INSERT INTO FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) VALUES (#,#,'#','#',#,#)";
-		DB.executeQuery(sql, id.toString(), typeId.toString(), files.getTitle(), files.getContent(),
+		if (files.getType() == FileType.PDF || files.getType() == FileType.VIDEO) {
+			files.setContent(createNewMultipartfile(id, files.getType(), files.getFile()));
+		}
+		String sql = "INSERT INTO FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) VALUES (#,'#','#','#',#,#)";
+		DB.executeQuery(sql, id.toString(), files.getType().toString(), files.getTitle(), files.getContent(),
 				ToolKit.JDateToDDate(files.getUploadTime()), ToolKit.JDateToDDate(files.getLastUpdateTime()));
 		return id;
 	}
@@ -147,6 +171,9 @@ public class Files {
 				files.getType().getId().toString(), files.getTitle(), files.getContent(),
 				ToolKit.JDateToDDate(files.getLastUpdateTime()));
 	}
+	
+//	SLIDER => FILES_ID, ADMIN,
+//	COURSE_CATEGORY => COURSE_ID, CATEGORY_ID
 
 	public static String getPhoto(String id) {
 		ResultSet rs = DB.executeQuery("SELECT CONTENT FROM FILES f  \n" + " WHERE\n"
@@ -174,8 +201,28 @@ public class Files {
 
 	}
 
-	public void delete(){
-        DB.execute("DELETE FILES WHERE ID = #", id.toString());
-        deleteFile(this.getId());
-    }
+	public void delete() {
+		DB.execute("DELETE FILES WHERE ID = #", id.toString());
+		deleteFile(this.getId());
+	}
+
+	public static String createNewMultipartfile(Integer id, FileType type, MultipartFile file) {
+		if (!file.isEmpty()) {
+			byte[] bytes;
+			try {
+				bytes = file.getBytes();
+				String url = "/resources/" + type.getTypeName().toLowerCase() + "/" + id.toString() + "."
+						+ FilenameUtils.getExtension(file.getOriginalFilename());
+				Path path = Paths.get(url);
+				java.nio.file.Files.write(path, bytes);
+				return url;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.err.println("\terror in createNewMultipartfile");
+			}
+
+		}
+		return "";
+	}
 }
