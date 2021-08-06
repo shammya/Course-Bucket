@@ -422,7 +422,7 @@ public class Person {
 
 		// DB.execute("DELETE FROM PERSON_LANGUAGE WHERE PERSON_ID = '#'",
 		// person.getUsername());
-		if (person.getLanguages().size() == 0) {
+		if (person.getLanguages()==null || person.getLanguages().size() == 0) {
 			return;
 		}
 		for (Language lang : person.getLanguages()) {

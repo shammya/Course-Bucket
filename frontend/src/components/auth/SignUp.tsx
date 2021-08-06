@@ -8,6 +8,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
 } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -15,11 +16,11 @@ import Grid from "@material-ui/core/Grid";
 // import Link from '@material-ui/core/Link';
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
+import { ControlledTextfield } from "tools/customDesign/ControlledTextfield";
 import { Person } from "../../classes/Person";
 import AuthService from "./api/AuthService";
 
@@ -37,9 +38,9 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100vh",
-  },
+  // root: {
+  //   height: "100vh",
+  // },
   image: {
     // backgroundImage: 'url(https://source.unsplash.com/random)',
     backgroundImage:
@@ -75,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function SignUp() {
+export function SignUp({ signOut }: { signOut: boolean }) {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
@@ -89,26 +90,25 @@ export function SignUp() {
   const [againPassword, setAgainPassword] = useState("");
   const [usernameFound, setUsernameFound] = useState(false);
   const [emailFound, setEmailFound] = useState(false);
-  const [signOut, setSignOut] = useState(true);
-
-  useEffect(() => {
-    if (AuthService.isLogin()) {
-      setSignOut(false);
-    }
-  }, []);
 
   function isValidPassword() {
     return password == againPassword && password != "";
   }
+
+  function checkUsername(username: string) {
+    AuthService.existByUsername(username).then((response) => {
+      setUsernameFound(response.data.boolValue);
+    });
+  }
+  function checkEmail(email: string) {
+    AuthService.existByEmail(email).then((response) => {
+      setEmailFound(response.data.boolValue);
+    });
+  }
   function handleSubmitClicked() {
-    if (
-      status != "" &&
-      username != "" &&
-      email != "" &&
-      isValidPassword() &&
-      !usernameFound &&
-      !emailFound
-    ) {
+    checkUsername(username);
+    checkEmail(email);
+    if (isValidPassword() && !usernameFound && !emailFound) {
       let person: Person = new Person(email, username, password);
       person.accountType = status;
       history.push({
@@ -121,38 +121,8 @@ export function SignUp() {
   }
   return (
     <>
-      {
-        <Dialog open={!signOut}>
-          <DialogTitle>{"You are already signed in!!"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Do you want to sign out and sign up again?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={(event) => {
-                setSignOut(true);
-                AuthService.logout();
-              }}
-              color="primary"
-            >
-              Yes
-            </Button>
-            <Button
-              onClick={(event) => {
-                history.goBack();
-              }}
-              color="primary"
-              autoFocus
-            >
-              No
-            </Button>
-          </DialogActions>
-        </Dialog>
-      }
       {signOut && (
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={10} sm={8} md={5} component={Paper} elevation={6} square>
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
               <LockOutlinedIcon />
@@ -160,13 +130,14 @@ export function SignUp() {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-            <form className={classes.form} noValidate>
-              <Grid container xs spacing={2}>
-                <Grid item xs={12}>
+            <form className={classes.form} onSubmit={handleSubmitClicked}>
+              <Grid container spacing={2}>
+                <Grid item container>
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
                     fullWidth
+                    required
                   >
                     <InputLabel>Your Status</InputLabel>
                     <Select
@@ -186,58 +157,47 @@ export function SignUp() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
+                <Grid item container>
+                  <ControlledTextfield
                     error={usernameFound}
                     variant="outlined"
                     required
                     fullWidth
-                    id="email"
                     label="Username"
                     name="username"
-                    autoComplete="username"
                     onBlur={(event) => {
-                      AuthService.existByUsername(event.target.value).then(
-                        (response) => {
-                          setUsernameFound(response.data.boolValue);
-                        }
-                      );
+                      checkUsername(event.target.value);
                     }}
                     onFocus={(event) => setUsernameFound(false)}
-                    onChange={(event) => setUsername(event.target.value)}
+                    onChange={(event) => {
+                      checkUsername(event.target.value);
+                      setUsername(event.target.value);
+                    }}
                     helperText={usernameFound ? "Username already exist" : ""}
+                    pattern="letters-digits"
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item container>
                   <TextField
                     error={emailFound}
                     variant="outlined"
                     required
                     fullWidth
-                    id="email"
                     label="Email Address"
                     name="email"
-                    autoComplete="email"
+                    type="email"
                     onBlur={(event) => {
-                      AuthService.existByEmail(event.target.value).then(
-                        (response) => {
-                          setEmailFound(response.data.boolValue);
-                        }
-                      );
+                      checkEmail(event.target.value);
                     }}
-                    onFocus={(event) => setUsernameFound(false)}
+                    onFocus={(event) => setEmailFound(false)}
                     onChange={(event) => {
-                      AuthService.existByEmail(event.target.value).then(
-                        (response) => {
-                          setEmailFound(response.data.boolValue);
-                        }
-                      );
+                      checkEmail(event.target.value);
                       setEmail(event.target.value);
                     }}
                     helperText={emailFound ? "E-mail already exist" : ""}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item container>
                   <TextField
                     variant="outlined"
                     required
@@ -245,22 +205,18 @@ export function SignUp() {
                     name="password"
                     label="Password"
                     type="password"
-                    id="password"
-                    autoComplete="current-password"
                     onChange={(event) => setPassword(event.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item container>
                   <TextField
-                    error={password !== againPassword}
+                    error={againPassword != "" && password !== againPassword}
                     variant="outlined"
                     required
                     fullWidth
-                    name="password"
+                    name="again-password"
                     label="Password (Again)"
                     type="password"
-                    id="password-again"
-                    autoComplete="current-password"
                     onChange={(event) => setAgainPassword(event.target.value)}
                     helperText={
                       password !== againPassword ? "Password mismatch" : ""
@@ -268,22 +224,16 @@ export function SignUp() {
                   />
                 </Grid>
               </Grid>
-              {/* <Link
-              to={{
-                pathname: "/profile-details",
-                state: person
-              }}> */}
               <Button
                 fullWidth
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={handleSubmitClicked}
+                type="submit"
               >
                 Sign Up
               </Button>
-              {/* </Link> */}
-              <Grid container>
+              <Grid container justifyContent="center">
                 <Grid item>
                   <Link
                     to={
