@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @CrossOrigin("http://localhost:8081")
-public class FilesController {
+public class Files1Controller {
 
   @Autowired
   FilesStorageService storageService;

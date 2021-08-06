@@ -1,5 +1,6 @@
 import axios from "axios"
-import {global} from 'Configure.js'
+import { global } from 'Configure.js'
+import { authHeader as authHeaders } from "components/auth/api/AuthService";
 
 
 class CountryService {
@@ -8,19 +9,19 @@ class CountryService {
         return axios.get(global.HOST + '/get-countries')
     }
 
-    deleteCountry(id){
-        return axios.delete(global.HOST + `/delete-country/${id}`)
+    deleteCountry(id) {
+        return axios.delete(global.HOST + `/delete-country/${id}`, authHeaders())
     }
 
 
     updateCountry(country) {
-        return axios.put(global.HOST + '/update-country',country)
+        return axios.put(global.HOST + '/update-country', country, authHeaders())
     }
 
     addCountry(country) {
-        return axios.post(global.HOST + '/add-country',country)
+        return axios.post(global.HOST + '/add-country', country, authHeaders())
     }
-    
+
 }
 
 export default new CountryService()

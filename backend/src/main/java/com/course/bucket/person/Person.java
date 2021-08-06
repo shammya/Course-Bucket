@@ -407,12 +407,9 @@ public class Person {
 		if (person.getCard() != null) {
 			card_id = CreditCard.insertCreditCard(person.getCard()).toString();
 		}
-//		if (person.getPhoto() != null) {
-//			photo_id = person.getPhoto().getId().toString();
-//		}
-
-
-
+		if (person.getPhoto() != null) {
+			photo_id = Files.createNewFile(person.getPhoto()).toString();
+		}
 		
 		DB.execute(sql, person.getUsername(), person.getEmail(), person.getPassword(), person.getFirstName(),
 				person.getLastName(), ToolKit.JDateToDDate(person.getDob()), person.getInstitution(), person.getFbURL(),
