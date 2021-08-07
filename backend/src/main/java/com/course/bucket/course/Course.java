@@ -145,6 +145,7 @@ public class Course {
 						weekId.toString());
 			}
 		}
+		notificationCourseUpload(course.getTeacherUserame(), courseId);
 
 	}
 
@@ -1016,5 +1017,11 @@ public class Course {
 		}
 		return null;
  	}
+	
+	public static void notificationCourseUpload(String fromId,Integer courseId) {
+		Integer id = DB.generateId("notification");
+		String sql = "insert into notification values('#', 'admin', #, '#', 'F', #, 'COURSEUPLOAD' ";
+		DB.execute(sql, id.toString(),fromId,ToolKit.JDateToDDate(new Date()),courseId.toString());
+	}
 
 }

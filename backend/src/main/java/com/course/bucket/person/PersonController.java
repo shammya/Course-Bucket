@@ -34,6 +34,10 @@ public class PersonController {
 	public void addPerson(@RequestBody Person person) {
 		Person.createNewPerson(person);
 	}
+	@PostMapping("/approve-course/{courseId}")
+	public void approveCourse(@PathVariable Integer courseId) {
+		Person.approveCourse(courseId);
+	}
 
 	@GetMapping("/get-person-by-id/{id}")
 	public Person findPerson(@PathVariable String id){

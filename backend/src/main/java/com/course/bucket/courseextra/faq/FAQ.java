@@ -283,10 +283,42 @@ public class FAQ {
 		return null;
 
 	}
-	public static void createNewFaq(FaqDb faq) {
+	public static void addFaqQuestion(FaqDb faq) {
 		Integer id = DB.generateId("FAQ");
-		String sql = "insert into faq values(#, #, '#', '#', #, '#', #)";
-		DB.execute(sql,id.toString(),faq.getCourseId().toString(),faq.getStudentId(),faq.getQuestion(),ToolKit.JDateToDDate(faq.getQuestionTime()),faq.getAnswer(),
+		String sql = "insert into faq values(#, #, '#', '#', #, NULL, NULL)";
+		DB.execute(sql,id.toString(),faq.getCourseId().toString(),faq.getStudentId(),faq.getQuestion(),ToolKit.JDateToDDate(faq.getQuestionTime()),
 				ToolKit.JDateToDDate(faq.getAnswerTime()));
+	}
+	
+	public static void addFaqAnswer(FaqDb faq) {
+		DB.execute("update faq set answer = '#', answer_time = # where id = #",faq.getAnswer(),ToolKit.JDateToDDate(faq.getAnswerTime()), faq.getId().toString());
+		notificationFaqAnswer(faq);
+	}
+	
+	public static void notificationFaqQuestion(FaqDb faq) {
+		Integer id = DB.generateId("notification");
+		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQQUESTION'";
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", faq.getCourseId().toString());
+		try {
+			rs.next();
+			DB.execute(sql,id.toString(),rs.getString("teacher_id"),faq.getStudentId(),ToolKit.JDateToDDate(new Date()),faq.getCourseId().toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void notificationFaqAnswer(FaqDb faq) {
+		Integer id = DB.generateId("notification");
+		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQANSWER'";
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", faq.getCourseId().toString());
+		try {
+			rs.next();
+			DB.execute(sql,id.toString(),faq.getStudentId(),rs.getString("teacher_id"),ToolKit.JDateToDDate(new Date()),faq.getCourseId().toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

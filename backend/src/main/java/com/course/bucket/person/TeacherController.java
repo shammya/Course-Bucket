@@ -51,7 +51,7 @@ public class TeacherController {
 
 //	Mehedi
 	@PutMapping("/update-teacher/{designationId}")
-	public void updateStudent(@PathVariable Integer designationId, @RequestBody Person person) {
+	public void updateTeacher(@PathVariable Integer designationId, @RequestBody Person person) {
 		Teacher.update(person, designationId);
 	}
 }

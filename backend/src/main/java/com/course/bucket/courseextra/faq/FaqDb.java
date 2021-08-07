@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class FaqDb {
 
+	private Integer id;
 	private Integer courseId;
 	private String studentId;
 	private String question;
@@ -13,7 +14,7 @@ public class FaqDb {
 	
 	
 	
-	public FaqDb(Integer courseId, String studentId, String question, Date questionTime, String answer,
+	public FaqDb(Integer id,Integer courseId, String studentId, String question, Date questionTime, String answer,
 			Date answerTime) {
 		super();
 		this.courseId = courseId;
@@ -24,6 +25,16 @@ public class FaqDb {
 		this.answerTime = answerTime;
 	}
 
+	
+	
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 
 	public Integer getCourseId() {
