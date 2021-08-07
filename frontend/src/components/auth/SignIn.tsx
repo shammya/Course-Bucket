@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Snackbar,
-} from "@material-ui/core";
+import { Snackbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -14,10 +7,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Alert } from "tools/customDesign/Alert";
+import { ControlledTextfield } from "tools/customDesign/ControlledTextfield";
 import AuthService from "./api/AuthService";
 
 function Copyright() {
@@ -67,27 +61,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function SignIn() {
+export function SignIn({ signOut }: { signOut: boolean }) {
   const classes = useStyles();
   const history = useHistory();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [signOut, setSignOut] = useState(true);
 
-  useEffect(() => {
-    if (AuthService.isLogin()) {
-      setSignOut(false);
+  function handleSubmitClick(event) {
+    event.preventDefault();
+    console.log(username);
+    if (username == "") {
+      setMessage("Username is empty");
+      setOpen(true);
+      return;
     }
-  }, []);
-
-  function handleSubmitClick() {
+    if (password == "") {
+      setMessage("password is empty");
+      setOpen(true);
+      return;
+    }
     AuthService.signIn(username, password).then((response) => {
       if (response.data.stringValue) {
         setMessage(response.data.stringValue);
         setOpen(true);
+        console.log("don't match");
       } else if (response.data.token) {
+        console.log(username);
         localStorage.setItem("user", JSON.stringify(response.data));
         console.log(AuthService.getCurrentUser());
         history.push({ pathname: "/home" });
@@ -102,38 +103,8 @@ export function SignIn() {
   }
   return (
     <>
-      {
-        <Dialog open={!signOut}>
-          <DialogTitle>{"You are already signed in!!"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Do you want to sign out and sign in again?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={(event) => {
-                setSignOut(true);
-                AuthService.logout();
-              }}
-              color="primary"
-            >
-              Yes
-            </Button>
-            <Button
-              onClick={(event) => {
-                history.goBack();
-              }}
-              color="primary"
-              autoFocus
-            >
-              No
-            </Button>
-          </DialogActions>
-        </Dialog>
-      }
       {signOut && (
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={10} sm={8} md={5} component={Paper} elevation={6} square>
           <Snackbar
             open={open}
             onClose={handleSnackbarClose}
@@ -150,21 +121,25 @@ export function SignIn() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <form className={classes.form} noValidate>
-              <TextField
+            <form
+              className={classes.form}
+              noValidate
+              onSubmit={handleSubmitClick}
+            >
+              <ControlledTextfield
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                label="Username"
+                name="username"
+                autoComplete="username"
                 autoFocus
                 onBlur={(event) => {
                   setUsername(event.target.value);
                 }}
                 onChange={(event) => setUsername(event.target.value)}
+                pattern="letters-digits-no-space"
               />
               <TextField
                 variant="outlined"
@@ -174,22 +149,17 @@ export function SignIn() {
                 name="password"
                 label="Password"
                 type="password"
-                id="password"
                 autoComplete="current-password"
                 onBlur={(event) => {
                   setPassword(event.target.value);
                 }}
                 onChange={(event) => setPassword(event.target.value)}
               />
-              {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
               <Button
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={handleSubmitClick}
+                type="submit"
                 className={classes.submit}
               >
                 Sign In

@@ -25,6 +25,7 @@ import User from "layout/User";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Alert } from "tools/customDesign/Alert";
+import { ControlledTextfield } from "tools/customDesign/ControlledTextfield";
 import { CustomImageUploader } from "tools/customDesign/ImageUploader";
 import { LanguageField } from "tools/customDesign/LanguageField";
 import { Country } from "./../../classes/Country";
@@ -93,6 +94,7 @@ const ProfileDetails = (props) => {
     history.goBack();
   }
   const [error, setError] = useState(false);
+  const [dob, setDob] = React.useState<Date | null>(null);
   const [countryItem, setCountryItem] = useState<Array<Country>>([]);
   const [statusItem, setStatusItem] = useState<
     Array<Designation> | Array<EduStatus>
@@ -101,7 +103,7 @@ const ProfileDetails = (props) => {
   const theme = useTheme();
   const [countryId, setCountryId] = React.useState<number | undefined>();
   const [statusId, setStatusId] = React.useState<number | undefined>();
-  const [cardExpireDate, setCardExpireDate] = React.useState<Date>();
+  const [cardExpireDate, setCardExpireDate] = React.useState<Date | null>(null);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [againNewPassword, setAgainNewPassword] = useState("");
@@ -158,65 +160,54 @@ const ProfileDetails = (props) => {
   }, []);
   // Initialize - end
 
-  function handleSaveClicked() {
-    if (
-      person.firstName != "" &&
-      person.lastName != "" &&
-      person.firstName != undefined &&
-      person.lastName != undefined &&
-      person.dob != undefined &&
-      person.country != undefined &&
-      statusId != undefined
-    ) {
-      if (props.location.state.registered) {
-        console.log("Updated person ", person);
-        if (person.accountType == "Student") {
-          // @ts-ignore
-          PersonService.updateStudent(person, statusId).then((response) => {
-            if (response.data.stringValue) {
-              setMessage(response.data.stringValue);
-              setOpen(true);
-            } else {
-              props.location.state.person = person;
-              setMessage("Successfully updated.");
-              setOpen(true);
-            }
-          });
-        } else if (person.accountType == "Teacher") {
-          // @ts-ignore
-          PersonService.updateTeacher(person, statusId).then((response) => {
-            if (response.data.stringValue) {
-              setMessage(response.data.stringValue);
-              setOpen(true);
-            } else {
-              props.location.state.person = person;
-              setMessage("Successfully updated.");
-              setOpen(true);
-            }
-          });
-        }
-      } else {
-        console.log(person);
-        if (person.accountType == "Student") {
-          // @ts-ignore
-          AuthService.registerStudent(person, statusId).then((response) => {
-            if (response.data.token) {
-              localStorage.setItem("user", JSON.stringify(response.data));
-            }
-            history.push("/home");
-          });
-        } else if (person.accountType == "Teacher") {
-          // @ts-ignore
-          AuthService.registerTeacher(person, statusId).then((response) => {
-            if (response.data.token) {
-              localStorage.setItem("user", JSON.stringify(response.data));
-            }
-            history.push("/home");
-          });
-        }
+  function handleSaveClicked(event) {
+    event.preventDefault();
+    if (props.location.state.registered) {
+      console.log("Updated person ", person);
+      if (person.accountType == "Student") {
+        // @ts-ignore
+        PersonService.updateStudent(person, statusId).then((response) => {
+          if (response.data.stringValue) {
+            setMessage(response.data.stringValue);
+            setOpen(true);
+          } else {
+            props.location.state.person = person;
+            setMessage("Successfully updated.");
+            setOpen(true);
+          }
+        });
+      } else if (person.accountType == "Teacher") {
+        // @ts-ignore
+        PersonService.updateTeacher(person, statusId).then((response) => {
+          if (response.data.stringValue) {
+            setMessage(response.data.stringValue);
+            setOpen(true);
+          } else {
+            props.location.state.person = person;
+            setMessage("Successfully updated.");
+            setOpen(true);
+          }
+        });
       }
     } else {
-      setError(true);
+      console.log(person);
+      if (person.accountType == "Student") {
+        // @ts-ignore
+        AuthService.registerStudent(person, statusId).then((response) => {
+          if (response.data.token) {
+            localStorage.setItem("user", JSON.stringify(response.data));
+          }
+          history.push("/home");
+        });
+      } else if (person.accountType == "Teacher") {
+        // @ts-ignore
+        AuthService.registerTeacher(person, statusId).then((response) => {
+          if (response.data.token) {
+            localStorage.setItem("user", JSON.stringify(response.data));
+          }
+          history.push("/home");
+        });
+      }
     }
   }
 
@@ -231,8 +222,6 @@ const ProfileDetails = (props) => {
     setStatusId(event.target.value);
   };
 
-  const [dob, setDob] = React.useState(new Date());
-
   const handleDobChange = (date) => {
     setDob(date);
   };
@@ -243,27 +232,25 @@ const ProfileDetails = (props) => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  // @ts-ignore
+  console.log(person);
   function PersonalDetails() {
     return (
       <Grid container direction="column">
-        <TextField
+        <ControlledTextfield
           label="First Name"
           margin="normal"
           variant="outlined"
           color="primary"
           defaultValue={person.firstName}
-          onChange={(event) => (person.firstName = event.target.value)}
+          onChange={(event) => {
+            person.firstName = event.target.value;
+            console.log(person);
+          }}
           required
-          error={
-            error && (person.firstName == undefined || person.firstName == "")
-          }
-          helperText={
-            error && (person.firstName == undefined || person.firstName == "")
-              ? "Required"
-              : ""
-          }
+          pattern="name"
         />
-        <TextField
+        <ControlledTextfield
           label="Last Name"
           margin="normal"
           variant="outlined"
@@ -271,43 +258,21 @@ const ProfileDetails = (props) => {
           defaultValue={person.lastName}
           onChange={(event) => (person.lastName = event.target.value)}
           required
-          error={
-            error && (person.lastName == undefined || person.lastName == "")
-          }
-          helperText={
-            error && (person.lastName == undefined || person.lastName == "")
-              ? "Required"
-              : ""
-          }
-        />
-        <LanguageField
-          // @ts-ignore
-          objects={person.languages}
-          onObjectsChange={(selected) => (person.languages = selected)}
+          pattern="name"
         />
         <FormControl
           variant="outlined"
           className={classes.formControl}
           required
-          error={error && person.country == undefined}
         >
-          <InputLabel id="demo-simple-select-outlined-label">
-            Country
-          </InputLabel>
+          <InputLabel>Country</InputLabel>
           <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
             value={countryId}
             onChange={handleCountryChange}
-            label="Country"
+            label="Country *"
           >
             {countryItem.map((item) => (
-              <MenuItem
-                // @ts-ignore
-                key={item.id}
-                // @ts-ignore
-                value={item.id}
-              >
+              <MenuItem key={item.id} value={item.id}>
                 {item.name}
               </MenuItem>
             ))}
@@ -317,22 +282,19 @@ const ProfileDetails = (props) => {
           variant="outlined"
           className={classes.formControl}
           required
-          error={error && statusId == undefined}
         >
-          <InputLabel id="demo-simple-select-outlined-label">
+          <InputLabel>
             {person.accountType == "Student"
               ? "Educational Status"
               : "Designation"}
           </InputLabel>
           <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
             value={statusId}
             onChange={handleStatusChange}
             label={
               person.accountType == "Student"
-                ? "Educational Status"
-                : "Designation"
+                ? "Educational Status *"
+                : "Designation *"
             }
           >
             {statusItem.map((item) => (
@@ -343,7 +305,6 @@ const ProfileDetails = (props) => {
           </Select>
         </FormControl>
         <KeyboardDatePicker
-          // disableToolbar
           variant="inline"
           format="dd/MMM/yyyy"
           label="Date of Birth"
@@ -351,7 +312,6 @@ const ProfileDetails = (props) => {
           value={dob}
           margin="normal"
           onChange={(date) => {
-            //@ts-ignore
             setDob(date);
             person.dob = date;
           }}
@@ -359,8 +319,10 @@ const ProfileDetails = (props) => {
             "aria-label": "change date",
           }}
           required
-          error={error && person.dob == null}
-          helperText={error && person.dob == null ? "Required" : ""}
+        />
+        <LanguageField
+          objects={person.languages}
+          onObjectsChange={(selected) => (person.languages = selected)}
         />
         <TextField
           label="Institution"
@@ -377,6 +339,9 @@ const ProfileDetails = (props) => {
           color="primary"
           defaultValue={person.website}
           onChange={(event) => (person.website = event.target.value)}
+          inputProps={{
+            type: "url",
+          }}
         />
         <TextField
           label="Facebook"
@@ -516,77 +481,80 @@ const ProfileDetails = (props) => {
             {message}
           </Alert>
         </Snackbar>
-        <Accordion
-          expanded={expanded === "panel1"}
-          onChange={handleChange("panel1")}
-        >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography style={{ width: "100%", textAlign: "center" }}>
-              General settings
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <PersonalDetails />
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={expanded === "panel2"}
-          onChange={handleChange("panel2")}
-        >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography style={{ width: "100%", textAlign: "center" }}>
-              Profile Picture
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <CustomImageUploader />
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={expanded === "panel3"}
-          onChange={handleChange("panel3")}
-        >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography style={{ width: "100%", textAlign: "center" }}>
-              Credit Card Information
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <CreditCardInfo />
-          </AccordionDetails>
-        </Accordion>
-        {props.location.state.registered && (
+        <form onSubmit={handleSaveClicked}>
           <Accordion
-            expanded={expanded === "panel4"}
-            onChange={handleChange("panel4")}
+            expanded={expanded === "panel1"}
+            onChange={handleChange("panel1")}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography style={{ width: "100%", textAlign: "center" }}>
-                Security
+                General settings
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Security />
+              <PersonalDetails />
             </AccordionDetails>
           </Accordion>
-        )}
-        <Grid item container justifyContent="center" style={{ padding: 10 }}>
-          <Button
-            onClick={handleSaveClicked}
-            variant="contained"
-            color="primary"
+          <Accordion
+            expanded={expanded === "panel2"}
+            onChange={handleChange("panel2")}
           >
-            Save
-          </Button>
-          <Button
-            onClick={(event) => history.goBack()}
-            variant="contained"
-            color="secondary"
-            style={{ marginLeft: 10 }}
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography style={{ width: "100%", textAlign: "center" }}>
+                Profile Picture
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <CustomImageUploader />
+            </AccordionDetails>
+          </Accordion>
+          <Accordion
+            expanded={expanded === "panel3"}
+            onChange={handleChange("panel3")}
           >
-            Cancel
-          </Button>
-        </Grid>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography style={{ width: "100%", textAlign: "center" }}>
+                Credit Card Information
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <CreditCardInfo />
+            </AccordionDetails>
+          </Accordion>
+          {props.location.state.registered && (
+            <Accordion
+              expanded={expanded === "panel4"}
+              onChange={handleChange("panel4")}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography style={{ width: "100%", textAlign: "center" }}>
+                  Security
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Security />
+              </AccordionDetails>
+            </Accordion>
+          )}
+          <Grid item container justifyContent="center" style={{ padding: 10 }}>
+            <Button
+              // onClick={handleSaveClicked}
+              variant="contained"
+              color="primary"
+              type="submit"
+            >
+              Save
+            </Button>
+            <Button
+              onClick={(event) => history.goBack()}
+              variant="contained"
+              color="secondary"
+              style={{ marginLeft: 10 }}
+            >
+              Cancel
+            </Button>
+          </Grid>
+        </form>
       </Grid>
     );
   }
