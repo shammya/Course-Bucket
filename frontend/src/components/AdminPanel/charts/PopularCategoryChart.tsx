@@ -9,22 +9,47 @@ import {
   Tooltip,
   ZoomAndPan,
 } from "devextreme-react/chart";
-import React from "react";
+import axios from "axios";
+import { authHeader as authHeaders } from "components/auth/api/AuthService";
+import { global } from "Configure.js";
+import React, { useEffect, useState } from "react";
+
+
 
 function PopularCategoryChart() {
-  let dataSource: Array<{ categoryName: string; purchase: number }> = [];
-  for (let i = 0; i < 30; i++) {
-    dataSource.push({
-      categoryName: "Category " + (i + 1),
-      purchase: 300 + Math.random() * 10000,
-    });
-  }
+  // let dataSource: Array<{ categoryName: string; purchase: number }> = [];
+  // for (let i = 0; i < 30; i++) {
+  //   dataSource.push({
+  //     categoryName: "Category " + (i + 1),
+  //     purchase: 300 + Math.random() * 10000,
+  //   });
+  // }
+
+  const [dataSource, setDataSource] = useState([]);
+  useEffect(() => {
+    axios
+      .get(
+        global.HOST + "/get-popular-category-admin",
+        authHeaders()
+      )
+      .then((response) => {
+        console.log(response);
+        setDataSource(
+          response.data.map((item) => ({
+            categoryName:item.categoryName,
+            factor: ((item.enrolledStdCount * 0.6 + item.reviewCount * 0.1 + item.rating * item.ratingCount * 0.3))
+          }))
+        );
+      });
+  }, []);
+
+
   return (
     <Card>
       <CardContent>
         <Chart title="Popular Category" dataSource={dataSource} rotated={true}>
           <Series
-            valueField="purchase"
+            valueField="factor"
             argumentField="categoryName"
             type="bar"
             color="#199FE0"

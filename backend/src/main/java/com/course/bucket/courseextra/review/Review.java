@@ -12,6 +12,7 @@ import com.course.bucket.courseextra.faq.FaqList;
 import com.course.bucket.database.DB;
 import com.course.bucket.person.Student;
 import com.course.bucket.tools.ToolKit;
+import com.sun.nio.sctp.Notification;
 
 public class Review {
 
@@ -287,11 +288,39 @@ public class Review {
 		Integer id = DB.generateId("review");
 		String sql = " insert into review values(#,#, '#', #,'#')";
 		DB.execute(sql,id.toString(),review.getCourseId().toString(),review.getStudentId(),ToolKit.JDateToDDate(review.getTime()),review.getText());
+		notificationReview(review);
 	}
 	
 	public static void createNewRating(RatingDb rating) {
 		Integer id = DB.generateId("rating");
 		String sql = " insert into rating values(#,#, '#', #,#)";
 		DB.execute(sql,id.toString(),rating.getCourseId().toString(),rating.getStudentId(),rating.getValue().toString(),ToolKit.JDateToDDate(rating.getTime()));
+		notificationRating(rating);
+	}
+	
+	public static void notificationReview(ReviewDb review) {
+		Integer id = DB.generateId("notification");
+		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'REVIEW'";
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", review.getCourseId().toString());
+		try {
+			rs.next();
+			DB.execute(sql,id.toString(),rs.getString("teacher_id"),review.getStudentId(),ToolKit.JDateToDDate(new Date()),review.getCourseId().toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void notificationRating(RatingDb rating) {
+		Integer id = DB.generateId("notification");
+		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'RATING'";
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", rating.getCourseId().toString());
+		try {
+			rs.next();
+			DB.execute(sql,id.toString(),rs.getString("teacher_id"),rating.getStudentId(),ToolKit.JDateToDDate(new Date()),rating.getCourseId().toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

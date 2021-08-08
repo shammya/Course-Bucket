@@ -40,6 +40,10 @@ public class PersonController {
 	public void addPerson(@RequestBody Person person) {
 		Person.createNewPerson(person);
 	}
+	@PostMapping("/approve-course/{courseId}")
+	public void approveCourse(@PathVariable Integer courseId) {
+		Person.approveCourse(courseId);
+	}
 
 	@GetMapping("/get-person-by-id/{id}")
 	public Person findPerson(@PathVariable String id){
@@ -78,9 +82,9 @@ public class PersonController {
 	public Vector<CumulativeRating> getCumulativeRatingTeacher(@PathVariable String teacherUsername){
 		return Person.getCumulativeRatingTeacher(teacherUsername);
 	}
-	@GetMapping("/get-course-overview-admin/{id}")
-	public CourseOverview getCourseOverviewAdmin(@PathVariable Integer id){
-		return Person.getCourseOverviewAdmin(id);
+	@GetMapping("/get-course-overview/{id}")
+	public CourseOverview getCourseOvervie(@PathVariable Integer id){
+		return Person.getCourseOverview(id);
 	}
 	@GetMapping("/get-teacher-info")
 	public ArrayList<TeacherInfoAdmin> getCourseOverviewAdmin(){

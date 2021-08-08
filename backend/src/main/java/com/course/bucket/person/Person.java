@@ -24,6 +24,7 @@ import com.course.bucket.files.Files;
 import com.course.bucket.language.Language;
 import com.course.bucket.tools.HashPassword;
 import com.course.bucket.tools.ToolKit;
+import com.sun.nio.sctp.Notification;
 
 
 public class Person {
@@ -37,8 +38,13 @@ public class Person {
 			this.name = name;
 		}
 
-		public String getName() {return name;}
-		public void setName(String name) {this.name = name;}		
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
 	}
 
 	AccountType accountType;
@@ -104,7 +110,7 @@ public class Person {
 
 				rs.close();
 			}
-		} catch (SQLException ex) { 
+		} catch (SQLException ex) {
 			Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
@@ -396,7 +402,7 @@ public class Person {
 		if (person.getPhoto() != null) {
 			photo_id = Files.createNewFile(person.getPhoto()).toString();
 		}
-		
+
 		DB.execute(sql, person.getUsername(), person.getEmail(), person.getPassword(), person.getFirstName(),
 				person.getLastName(), ToolKit.JDateToDDate(person.getDob()), person.getInstitution(), person.getFbURL(),
 				person.getLinkedInURL(), ToolKit.getCurTimeDB(), person.getAbout(),
@@ -414,6 +420,7 @@ public class Person {
 			DB.execute("INSERT INTO PERSON_LANGUAGE VALUES(#, '#', #)", id.toString(), person.getUsername(),
 					lang.getId().toString());
 		}
+		notificationRegistration(person.getUsername());
 	}
 
 	public static HashMap<Date, NewUser> getNewUserAdmin() { 
@@ -571,7 +578,7 @@ public class Person {
 
 	}
 
-	public static CourseOverview getCourseOverviewAdmin(Integer id) {
+	public static CourseOverview getCourseOverview(Integer id) {
 
 		CourseOverview courseOverview = null;
 		String sql = "select  title , publish_date from course where id = #";
@@ -615,26 +622,64 @@ public class Person {
 		return null;
 	}
 	
-	public static ArrayList<TeacherInfoAdmin> getTeacherInfoAdmin(){
+//	public static CourseOverview getCourseOverviewTeacher(Integer id,String teacherUsername) {
+//
+//		CourseOverview courseOverview = null;
+//		String sql = "select  title , publish_date from course where id = #";
+//		ResultSet rs = DB.executeQuery(sql, id.toString());
+//		Date date;
+//		try {
+//			rs.next();
+//			ArrayList<OverviewContent> overviewContents = new ArrayList<>();
+//			Date startDate = rs.getDate("publish_date");
+//			Date endDate = new Date();
+//			LocalDate start = ToolKit.DateToLocalDate(startDate);
+//			LocalDate end = ToolKit.DateToLocalDate(endDate);
+//			end = end.plusDays(2);
+//			for (LocalDate ldate = start; ldate.isBefore(end); ldate = ldate.plusDays(1)) {
+//				date = ToolKit.localDateToDate(ldate);
+//				String dDate = ToolKit.JDateToDDate(date);
+//				String sql1 = "SELECT c.id,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM purchase_history ph WHERE time=# AND c.id=ph.course_id) AS enr_std_count,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM review rv WHERE time=# AND c.id=rv.course_id) AS review_count,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=1 AND c.id=rt.course_id) AS one,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=2 AND c.id=rt.course_id) AS two,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=3 AND c.id=rt.course_id) AS three,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=4 AND c.id=rt.course_id) AS four,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.teacher_id= #";
+//				ResultSet rs1 = DB.executeQuery(sql1, dDate, dDate, dDate, dDate, dDate, dDate, dDate, id.toString());
+//				rs1.next();
+//				overviewContents.add(new OverviewContent(date, rs1.getInt("enr_std_count"), rs1.getInt("review_count"),
+//						rs1.getInt("one"), rs1.getInt("two"), rs1.getInt("three"), rs1.getInt("four"),
+//						rs1.getInt("five")));
+//
+//				rs1.close();
+//				courseOverview = new CourseOverview(rs.getString("title"), overviewContents);
+//			}
+//
+//			rs.close();
+//			return courseOverview;
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
+
+	public static ArrayList<TeacherInfoAdmin> getTeacherInfoAdmin() {
 		ArrayList<TeacherInfoAdmin> teacherInfoAdmins = new ArrayList<>();
-		String sql = "SELECT\r\n"
-				+ "	t.id,\r\n"
+		String sql = "SELECT\r\n" + "	t.id,\r\n"
 				+ "	( SELECT count( id ) FROM course WHERE teacher_id = t.id ) course_created,\r\n"
 				+ "	( SELECT count( id ) FROM purchase_history WHERE course_id IN ( SELECT id FROM course WHERE teacher_id = t.id ) ) course_purchased,\r\n"
-				+ "	(\r\n"
-				+ "	SELECT\r\n"
-				+ "		nvl( sum( cost ) * 0.9, 0 ) \r\n"
-				+ "	FROM\r\n"
-				+ "		purchase_history \r\n"
-				+ "	WHERE\r\n"
-				+ "		course_id IN ( SELECT id FROM course WHERE teacher_id = t.id ) \r\n"
-				+ "	) total_income \r\n"
-				+ "FROM\r\n"
-				+ "	teacher t";
+				+ "	(\r\n" + "	SELECT\r\n" + "		nvl( sum( cost ) * 0.9, 0 ) \r\n" + "	FROM\r\n"
+				+ "		purchase_history \r\n" + "	WHERE\r\n"
+				+ "		course_id IN ( SELECT id FROM course WHERE teacher_id = t.id ) \r\n" + "	) total_income \r\n"
+				+ "FROM\r\n" + "	teacher t";
 		ResultSet rs = DB.executeQuery(sql);
 		try {
-			while(rs.next()) {
-				teacherInfoAdmins.add(new TeacherInfoAdmin(rs.getString("id"), rs.getInt("course_created"), rs.getInt("course_purchased"), rs.getDouble("total_income")));
+			while (rs.next()) {
+				teacherInfoAdmins.add(new TeacherInfoAdmin(rs.getString("id"), rs.getInt("course_created"),
+						rs.getInt("course_purchased"), rs.getDouble("total_income")));
 			}
 			return teacherInfoAdmins;
 		} catch (SQLException e) {
@@ -643,26 +688,20 @@ public class Person {
 		}
 		return null;
 	}
-	
-	public static ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
+
+	public static ArrayList<StudentInfoAdmin> getStudentInfoAdmin() {
 		ArrayList<StudentInfoAdmin> studentInfoAdmins = new ArrayList<>();
-		String  sql = "SELECT\r\n"
-				+ "	s.id,\r\n"
+		String sql = "SELECT\r\n" + "	s.id,\r\n"
 				+ "	( SELECT count( id ) FROM purchase_history WHERE course_id IN ( SELECT id FROM course WHERE student_id = s.id ) ) course_owned,\r\n"
-				+ "	(\r\n"
-				+ "	SELECT\r\n"
-				+ "		nvl( sum( cost ),0.0 ) \r\n"
-				+ "	FROM\r\n"
-				+ "		purchase_history \r\n"
-				+ "	WHERE\r\n"
-				+ "		course_id IN ( SELECT id FROM course WHERE student_id = s.id ) \r\n"
-				+ "	) money_spent\r\n"
-				+ "FROM\r\n"
-				+ "	student s";
+				+ "	(\r\n" + "	SELECT\r\n" + "		nvl( sum( cost ),0.0 ) \r\n" + "	FROM\r\n"
+				+ "		purchase_history \r\n" + "	WHERE\r\n"
+				+ "		course_id IN ( SELECT id FROM course WHERE student_id = s.id ) \r\n" + "	) money_spent\r\n"
+				+ "FROM\r\n" + "	student s";
 		ResultSet rs = DB.executeQuery(sql);
 		try {
-			while(rs.next()) {
-				studentInfoAdmins.add(new StudentInfoAdmin(rs.getString("id"), rs.getInt("course_owned"), rs.getDouble("money_spent")));
+			while (rs.next()) {
+				studentInfoAdmins.add(new StudentInfoAdmin(rs.getString("id"), rs.getInt("course_owned"),
+						rs.getDouble("money_spent")));
 			}
 			return studentInfoAdmins;
 		} catch (SQLException e) {
@@ -671,14 +710,16 @@ public class Person {
 		}
 		return null;
 	}
-	
+
 	public static boolean existsByUsername(String username) {
-        return DB.valueExist("PERSON", "ID", username);
+		return DB.valueExist("PERSON", "ID", username);
 	}
+
 	public static boolean existsByEmail(String email) {
-        return DB.valueExist("PERSON", "EMAIL", email);
+		return DB.valueExist("PERSON", "EMAIL", email);
 	}
-	public static String  getPasswordByUsername(String username) {
+
+	public static String getPasswordByUsername(String username) {
 		ResultSet rs = DB.executeQuery("SELECT PASSWORD FROM PERSON WHERE ID='#'", username);
 		try {
 			rs.next();
@@ -689,21 +730,20 @@ public class Person {
 		}
 		return "";
 	}
+
 	public static String getRole(String username) {
-		if(DB.valueExist("Student", "ID", username)) {
+		if (DB.valueExist("Student", "ID", username)) {
 			return "Student";
-		}
-		else if(DB.valueExist("Teacher", "ID", username)) {
+		} else if (DB.valueExist("Teacher", "ID", username)) {
 			return "Teacher";
-		}
-		else if(DB.valueExist("Admin", "ID", username)) {
+		} else if (DB.valueExist("Admin", "ID", username)) {
 			return "Admin";
 		}
 		return "";
 	}
 
 	public static void update(Person person) {
-		if(person.getCard() != null) {
+		if (person.getCard() != null) {
 			CreditCard card = person.getCard();
 			if(card.getId()==null) {
 				card.setId(CreditCard.insertCreditCard(card));
@@ -721,48 +761,58 @@ public class Person {
 				Files.updateFile(photo);
 			}
 		}
-		
-		DB.execute(""
-				+ "UPDATE PERSON "
-				+ "SET "
-				+ "FIRST_NAME = '#',"
-				+ "LAST_NAME = '#',"
-				+ "DOB = #,"
-				+ "INSTITUTION = '#',"
-				+ "FB_URL = '#',"
-				+ "LINKEDIN_URL = '#',"
-				+ "ABOUT = '#',"
-				+ "COUNTRY_ID = #,"
-				+ "PHOTO_ID = #, "
-				+ "CARD_ID = #,"
-				+ "YOUTUBE_URL = '#',"
-				+ "WEBSITE = '#' "
-				+ "WHERE ID = '#'",
-				person.getFirstName(),
-				person.getLastName(),
-				ToolKit.JDateToDDate(person.getDob()),
-				person.getInstitution(),
-				person.getFbURL(),
-				person.getLinkedInURL(),
-				person.getAbout(),
+
+		DB.execute("" + "UPDATE PERSON " + "SET " + "FIRST_NAME = '#'," + "LAST_NAME = '#'," + "DOB = #,"
+				+ "INSTITUTION = '#'," + "FB_URL = '#'," + "LINKEDIN_URL = '#'," + "ABOUT = '#'," + "COUNTRY_ID = #,"
+				+ "PHOTO_ID = #, " + "CARD_ID = #," + "YOUTUBE_URL = '#'," + "WEBSITE = '#' " + "WHERE ID = '#'",
+				person.getFirstName(), person.getLastName(), ToolKit.JDateToDDate(person.getDob()),
+				person.getInstitution(), person.getFbURL(), person.getLinkedInURL(), person.getAbout(),
 				person.getCountry().getId().toString(),
 				(person.getPhoto() == null ? "NULL" : person.getPhoto().getId().toString()),
-				(person.getCard() == null ? "NULL" : person.getCard().getId().toString()),
-				person.getYoutubeURL(),
-				person.getWebsite(),
-				person.getUsername()
-				);
+				(person.getCard() == null ? "NULL" : person.getCard().getId().toString()), person.getYoutubeURL(),
+				person.getWebsite(), person.getUsername());
 		DB.execute("DELETE PERSON_LANGUAGE WHERE PERSON_ID = '#'", person.getUsername());
 		System.out.println(person.getLanguages());
-		if(person.getLanguages().size()>0) {
+		if (person.getLanguages().size() > 0) {
 			for (Language lang : person.getLanguages()) {
 				Integer id = DB.generateId("PERSON_LANGUAGE");
 				DB.execute("INSERT INTO PERSON_LANGUAGE VALUES(#, '#', #)", id.toString(), person.getUsername(),
-						lang.getId().toString()); 
+						lang.getId().toString());
 			}
 		}
 	}
 	public static void updatePassword(String username, String newPassword) {
 		DB.execute("UPDATE PERSON SET PASSWORD = '#' WHERE ID = '#'", newPassword, username);
+	}
+	
+	public static void notificationRegistration(String userId) {
+		Integer id = DB.generateId("notification");
+		String sql = "insert into notification values(# ,'admin','#',# , 'F', NULL,'REGISTRATION'";
+		DB.execute(sql, id.toString(), userId, ToolKit.JDateToDDate(new Date()));
+	}
+
+	public static void approveCourse(Integer courseId) {
+		DB.execute("update course set is_approved = 'T' where id = ", courseId.toString());
+		notificationCourseUpload(courseId);
+	}
+	public static void notificationCourseUpload(Integer courseId) {
+		ResultSet rs = DB.executeQuery("SELECT teacher_id FROM course WHERE id = #", courseId.toString());
+		try {
+			rs.next();
+			String teacherId = rs.getString("teacher_id");
+			String sql = "SELECT\n" + "	student_id \n" + "FROM\n" + "	purchase_history \n" + "WHERE\n"
+					+ "	course_id IN ( SELECT id FROM course WHERE teacher_id = '#' )";
+			rs = DB.executeQuery(sql, teacherId);
+			while (rs.next()) {
+				Integer id = DB.generateId("notification");
+				sql = "insert into notification values(# ,'#','#',# , 'F', #,'COURSEUPLOAD'";
+				DB.execute(sql, id.toString(), rs.getString("student_id"), teacherId, ToolKit.JDateToDDate(new Date()),
+						courseId.toString());
+			}
+			rs.close();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

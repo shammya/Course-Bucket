@@ -205,6 +205,20 @@ public class PurchaseHistory {
 		Integer id = DB.generateId("purchase_history");
 		String sql = "insert into purchase_history values(#, '#' , #, #)";
 		DB.execute(sql, id.toString(),phd.getCourseId().toString(),phd.getStudentId(),ToolKit.JDateToDDate(phd.getTime()),phd.getCost().toString());
+		notificationCoursePurchase(phd);
+	}
+	
+	public static void notificationCoursePurchase(PurchaseHistoryDb phd) {
+		Integer id = DB.generateId("notification");
+		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'COURSEPURCHASE'";
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", phd.getCourseId().toString());
+		try {
+			rs.next();
+			DB.execute(sql,id.toString(),rs.getString("teacher_id"),phd.getStudentId(),ToolKit.JDateToDDate(new Date()),phd.getCourseId().toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

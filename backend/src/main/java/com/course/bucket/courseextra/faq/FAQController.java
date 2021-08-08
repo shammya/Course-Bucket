@@ -17,10 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FAQController {
 	
-	@PostMapping("/add-faq")
-	public void addFaq(@RequestBody FaqDb faq) {
+	@PostMapping("/add-faq-question")
+	public void addFaqQuestion(@RequestBody FaqDb faq) {
 		//System.out.println("Country : "+purchasehistory.name+" "+purchasehistory.adminId);
-		FAQ.createNewFaq(faq);
+		FAQ.addFaqQuestion(faq);
+	}
+	@PostMapping("/add-faq-answer")
+	public void addFaqAnswer(@RequestBody FaqDb faq) {
+		//System.out.println("Country : "+purchasehistory.name+" "+purchasehistory.adminId);
+		FAQ.addFaqAnswer(faq);
 	}
 	
 	@GetMapping("/get-faq-list/{courseId}")
