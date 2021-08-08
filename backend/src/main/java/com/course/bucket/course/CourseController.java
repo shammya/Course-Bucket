@@ -20,7 +20,7 @@ import com.course.bucket.course.additionals.CoursePopularity;
 import com.course.bucket.course.additionals.Filters;
 import com.course.bucket.course.additionals.IncomePerCourse;
 import com.course.bucket.course.additionals.MiniCourse;
-import com.course.bucket.course.additionals.PopularCourse;
+import com.course.bucket.course.additionals.PopularCategory;
 
 
 @RestController
@@ -51,13 +51,17 @@ public class CourseController {
 	public ArrayList<CoursePopularity> getCoursePopularityAdmin() {
 		return Course.getCoursePopularityAdmin();
 	}
-	@GetMapping("/get-popular-courses-admin")
-	public ArrayList<PopularCourse> getPopularCourseAdmin() {
+	@GetMapping("/get-popular-category-admin")
+	public ArrayList<PopularCategory> getPopularCourseAdmin() {
 		return Course.getPopularCourseAdmin();
 	}
 	@GetMapping("/get-income-per-course-admin")
 	public ArrayList<IncomePerCourse> getIncomePerCourse() {
-		return Course.getIncomePerCourse();
+		return Course.getIncomePerCourseAdmin();
+	}
+	@GetMapping("/get-income-per-course-teache/{id}")
+	public ArrayList<IncomePerCourse> getIncomePerCourseTeacher(@PathVariable String id) {
+		return Course.getIncomePerCourseTeacher(id);
 	}
 	@PostMapping("/get-filtered-courses")
 	public ArrayList<MiniCourse> getFilteredCourses(@RequestBody Filters filters) {

@@ -592,7 +592,7 @@ public class Person {
 
 	}
 
-	public static CourseOverview getCourseOverviewAdmin(Integer id) {
+	public static CourseOverview getCourseOverview(Integer id) {
 
 		CourseOverview courseOverview = null;
 		String sql = "select  title , publish_date from course where id = #";
@@ -635,6 +635,50 @@ public class Person {
 		}
 		return null;
 	}
+	
+//	public static CourseOverview getCourseOverviewTeacher(Integer id,String teacherUsername) {
+//
+//		CourseOverview courseOverview = null;
+//		String sql = "select  title , publish_date from course where id = #";
+//		ResultSet rs = DB.executeQuery(sql, id.toString());
+//		Date date;
+//		try {
+//			rs.next();
+//			ArrayList<OverviewContent> overviewContents = new ArrayList<>();
+//			Date startDate = rs.getDate("publish_date");
+//			Date endDate = new Date();
+//			LocalDate start = ToolKit.DateToLocalDate(startDate);
+//			LocalDate end = ToolKit.DateToLocalDate(endDate);
+//			end = end.plusDays(2);
+//			for (LocalDate ldate = start; ldate.isBefore(end); ldate = ldate.plusDays(1)) {
+//				date = ToolKit.localDateToDate(ldate);
+//				String dDate = ToolKit.JDateToDDate(date);
+//				String sql1 = "SELECT c.id,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM purchase_history ph WHERE time=# AND c.id=ph.course_id) AS enr_std_count,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM review rv WHERE time=# AND c.id=rv.course_id) AS review_count,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=1 AND c.id=rt.course_id) AS one,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=2 AND c.id=rt.course_id) AS two,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=3 AND c.id=rt.course_id) AS three,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=4 AND c.id=rt.course_id) AS four,(\r\n"
+//						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.teacher_id= #";
+//				ResultSet rs1 = DB.executeQuery(sql1, dDate, dDate, dDate, dDate, dDate, dDate, dDate, id.toString());
+//				rs1.next();
+//				overviewContents.add(new OverviewContent(date, rs1.getInt("enr_std_count"), rs1.getInt("review_count"),
+//						rs1.getInt("one"), rs1.getInt("two"), rs1.getInt("three"), rs1.getInt("four"),
+//						rs1.getInt("five")));
+//
+//				rs1.close();
+//				courseOverview = new CourseOverview(rs.getString("title"), overviewContents);
+//			}
+//
+//			rs.close();
+//			return courseOverview;
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 
 	public static ArrayList<TeacherInfoAdmin> getTeacherInfoAdmin() {
 		ArrayList<TeacherInfoAdmin> teacherInfoAdmins = new ArrayList<>();

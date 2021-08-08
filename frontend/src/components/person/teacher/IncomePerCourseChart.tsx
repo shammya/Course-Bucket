@@ -9,24 +9,36 @@ import {
   Tooltip,
   ZoomAndPan,
 } from "devextreme-react/chart";
-import React from "react";
+import axios from "axios";
+import { authHeader as authHeaders } from "components/auth/api/AuthService";
+import { global } from "Configure.js";
+import React, { useEffect, useState } from "react";
 
 function IncomePerCourseChart() {
-  let dataSource: Array<{ courseName: string; income: number }> = [];
-  for (let i = 0; i < 30; i++) {
-    dataSource.push({
-      courseName:
-        "Course anme is not known. it is very bit title for course " + (i + 1),
-      income: 300 + Math.random() * 10000,
-    });
-  }
+ const [dataSource, setDataSource] = useState([]);
+  useEffect(() => {
+    axios
+      .get(
+        global.HOST + "/get-income-per-course-teacher",
+        authHeaders()
+      )
+      .then((response) => {
+        console.log(response);
+        setDataSource(
+          response.data.map((item) => ({
+            title:item.title,
+            income:item.income 
+          }))
+        );
+      });
+  }, []);
   return (
     <Card>
       <CardContent>
         <Chart title="Income per course" dataSource={dataSource} rotated={true}>
           <Series
             valueField="income"
-            argumentField="courseName"
+            argumentField="title"
             type="bar"
             color="#199FE0"
           />

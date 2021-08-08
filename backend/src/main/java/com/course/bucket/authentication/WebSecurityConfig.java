@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //			.antMatchers("/api/auth/valid-session").authenticated()
 			.antMatchers(
 //					"/get-person-self",
+				"/**",
 				"/api/auth/**",
 				"/api/auth/signin",
 				"/api/test/**",

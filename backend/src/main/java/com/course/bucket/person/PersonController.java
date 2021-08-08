@@ -67,9 +67,9 @@ public class PersonController {
 	public Vector<CumulativeRating> getCumulativeRatingTeacher(@PathVariable String teacherUsername){
 		return Person.getCumulativeRatingTeacher(teacherUsername);
 	}
-	@GetMapping("/get-course-overview-admin/{id}")
-	public CourseOverview getCourseOverviewAdmin(@PathVariable Integer id){
-		return Person.getCourseOverviewAdmin(id);
+	@GetMapping("/get-course-overview/{id}")
+	public CourseOverview getCourseOvervie(@PathVariable Integer id){
+		return Person.getCourseOverview(id);
 	}
 	@GetMapping("/get-teacher-info")
 	public ArrayList<TeacherInfoAdmin> getCourseOverviewAdmin(){

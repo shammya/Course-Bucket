@@ -1,6 +1,6 @@
 package com.course.bucket.course.additionals;
 
-public class PopularCourse {
+public class PopularCategory {
 
 	private String categoryName;
 	private Integer enrolledStdCount;
@@ -8,11 +8,11 @@ public class PopularCourse {
 	private Double rating;
 	private Integer ratingCount;
 	
-	public PopularCourse() {
+	public PopularCategory() {
 		
 	}
 
-	public PopularCourse(String categoryName, Integer enrolledStdCount, Integer reviewCount, Double rating,
+	public PopularCategory(String categoryName, Integer enrolledStdCount, Integer reviewCount, Double rating,
 			Integer ratingCount) {
 		super();
 		this.categoryName = categoryName;

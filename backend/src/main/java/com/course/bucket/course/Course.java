@@ -12,7 +12,7 @@ import com.course.bucket.course.additionals.CoursePopularity;
 import com.course.bucket.course.additionals.Filters;
 import com.course.bucket.course.additionals.IncomePerCourse;
 import com.course.bucket.course.additionals.MiniCourse;
-import com.course.bucket.course.additionals.PopularCourse;
+import com.course.bucket.course.additionals.PopularCategory;
 import com.course.bucket.courseextra.CourseRating;
 import com.course.bucket.courseextra.PromoCode;
 import com.course.bucket.courseextra.Property;
@@ -674,32 +674,73 @@ public class Course {
 		return null;
 	}
 
-	public static ArrayList<PopularCourse> getPopularCourseAdmin() {
-		ArrayList<PopularCourse> popularCourses = new ArrayList<>();
+	public static ArrayList<PopularCategory> getPopularCourseAdmin() {
+		ArrayList<PopularCategory> popularCategories = new ArrayList<>();
 
-		String sql = "select a.name , a.rating, a.rating_count, b.std_count ,\n" + "c.review_count\n" + "from\n" + "(\n"
-				+ "	select  b.parent_id,ct.name,b.rating, b.rating_count\n" + "	from \n" + "	(\n"
-				+ "		select  ct.parent_id, avg(rt.value) as \n"
-				+ "		rating, count(rt.student_id) as rating_count\n" + "		from course c, rating rt,category ct\n"
-				+ "		where c.id = rt.course_id and ct.id = c.category_id\n" + "		group by ct.parent_id\n"
-				+ "		order by ct.parent_id\n" + "	)  b,category ct\n" + "	where b.parent_id = ct.id\n"
-				+ "	group by b.parent_id,ct.name ,b.rating, b.rating_count\n" + ") a,\n" + "(\n"
-				+ "select  ct.parent_id, count(ph.student_id) as std_count\n"
-				+ "	from course c, purchase_history ph,category ct\n"
-				+ "	where c.id = ph.course_id and ct.id = c.category_id\n" + "	group by ct.parent_id\n"
-				+ "	order by ct.parent_id\n" + ") b,\n" + "(\n"
-				+ "select  ct.parent_id, count(r.student_id) as review_count\n"
-				+ "	from course c, review r,category ct\n" + "	where c.id = r.course_id and ct.id = c.category_id\n"
-				+ "	group by ct.parent_id\n" + "	order by ct.parent_id	\n" + ") c\n"
-				+ "where a.parent_id = b.parent_id and a.parent_id = c.parent_id";
+		String sql = "select \n"
+				+ "	a.parent_id id,\n"
+				+ "	(\n"
+				+ "	select \n"
+				+ "		name \n"
+				+ "	from \n"
+				+ "		category\n"
+				+ "	where \n"
+				+ "		id = a.parent_id\n"
+				+ "	) name ,\n"
+				+ "	sum(a.review) review_count ,\n"
+				+ "	sum(a.rating_count) rating_count ,\n"
+				+ "	sum(a.enr_std_count) enr_std_count ,\n"
+				+ "	sum(a.rating) rating\n"
+				+ "from(\n"
+				+ "	select \n"
+				+ "		ct.name,ct.id,ct.parent_id,\n"
+				+ "		(\n"
+				+ "		select \n"
+				+ "			nvl(count(r.course_id),0) \n"
+				+ "		 from \n"
+				+ "			review r ,course c\n"
+				+ "		 where\n"
+				+ "			c.id = r.course_id and c.category_id = ct.id\n"
+				+ "		) review ,\n"
+				+ "		(\n"
+				+ "		select \n"
+				+ "			nvl(count(ph.course_id),0) \n"
+				+ "		 from \n"
+				+ "			purchase_history ph ,course c\n"
+				+ "		 where\n"
+				+ "			c.id = ph.course_id and c.category_id = ct.id\n"
+				+ "		) enr_std_count , \n"
+				+ "		(\n"
+				+ "		select \n"
+				+ "			nvl(count(r.course_id),0) \n"
+				+ "		 from \n"
+				+ "			rating r ,course c\n"
+				+ "		 where\n"
+				+ "			c.id = r.course_id and c.category_id = ct.id\n"
+				+ "		) rating_count ,\n"
+				+ "		(\n"
+				+ "		select \n"
+				+ "			nvl(avg(r.value),0) \n"
+				+ "		 from \n"
+				+ "			rating r ,course c\n"
+				+ "		 where\n"
+				+ "			c.id = r.course_id and c.category_id = ct.id\n"
+				+ "		) rating \n"
+				+ "	 from\n"
+				+ "	category ct\n"
+				+ "	) a\n"
+				+ "where \n"
+				+ "	a.parent_id is not null\n"
+				+ "group by\n"
+				+ "	a.parent_id";
 		ResultSet rs = DB.executeQuery(sql);
 		try {
 			while (rs.next()) {
-				popularCourses.add(new PopularCourse(rs.getString("name"), rs.getInt("std_count"),
+				popularCategories.add(new PopularCategory(rs.getString("name"), rs.getInt("enr_std_count"),
 						rs.getInt("review_count"), rs.getDouble("rating"), rs.getInt("rating_count")));
 			}
 			rs.close();
-			return popularCourses;
+			return popularCategories;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -707,12 +748,52 @@ public class Course {
 		return null;
 	}
 
-	public static ArrayList<IncomePerCourse> getIncomePerCourse() {
+	public static ArrayList<IncomePerCourse> getIncomePerCourseAdmin() {
 
 		ArrayList<IncomePerCourse> totalIncome = new ArrayList<>();
-		String sql = "select c.id,c.title as title,sum(cost) as income\n" + "from course c, purchase_history ph\n"
-				+ "where c.id = ph.course_id\n" + "group by c.id,c.title ";
+		String sql = "select \n"
+				+ "	c.id,c.title  title ,\n"
+				+ "	(\n"
+				+ "	select\n"
+				+ "	nvl(sum(cost) * 0.1,0) income\n"
+				+ "	from  purchase_history ph\n"
+				+ "	where c.id = ph.course_id \n"
+				+ "	) income\n"
+				+ "from course c\n"
+				+ "group by \n"
+				+ "	c.id,c.title \n"
+				+ "order by income desc";
 		ResultSet rs = DB.executeQuery(sql);
+		try {
+			while (rs.next()) {
+				totalIncome.add(new IncomePerCourse(rs.getString("title"), rs.getDouble("income")));
+			}
+			return totalIncome;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<IncomePerCourse> getIncomePerCourseTeacher(String teacherUsername) {
+
+		ArrayList<IncomePerCourse> totalIncome = new ArrayList<>();
+		String sql = "select \n"
+				+ "	c.id,c.title  title ,\n"
+				+ "	(\n"
+				+ "	select\n"
+				+ "	nvl(sum(cost),0) income\n"
+				+ "	from  purchase_history ph\n"
+				+ "	where c.id = ph.course_id \n"
+				+ "	) income\n"
+				+ "from course c\n"
+				+ "where\n"
+				+ "	c.teacher_id = '#'  \n"
+				+ "group by \n"
+				+ "	c.id,c.title \n"
+				+ "order by income desc";
+		ResultSet rs = DB.executeQuery(sql,teacherUsername);
 		try {
 			while (rs.next()) {
 				totalIncome.add(new IncomePerCourse(rs.getString("title"), rs.getDouble("income")));
