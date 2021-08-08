@@ -68,7 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/get-languages",
 				"/get-countries",
 				"/get-edustatus",
-				"/get-designations"
+				"/get-designations",
+				"/resources/upload",
+				"/resources/pb/**"
 				).permitAll()
 			.anyRequest().authenticated();
 

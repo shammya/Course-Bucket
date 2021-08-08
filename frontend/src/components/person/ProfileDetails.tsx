@@ -9,25 +9,28 @@ import {
   makeStyles,
   MenuItem,
   Select,
-  Snackbar,
   TextField,
   Typography,
   useTheme,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { KeyboardDatePicker } from "@material-ui/pickers";
+import axios from "axios";
+import { Files } from "classes/Files";
 import { CreditCard, Designation, EduStatus, Person } from "classes/Person";
 import CountryService from "components/AdminPanel/api/CountryService";
 import DesignationService from "components/AdminPanel/api/DesignationService";
 import EduStatusService from "components/AdminPanel/api/EduStatusService";
-import AuthService from "components/auth/api/AuthService";
+import AuthService, { authHeaders } from "components/auth/api/AuthService";
+import { global } from "Configure";
 import User from "layout/User";
+import { FileObject } from "material-ui-dropzone";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { Alert } from "tools/customDesign/Alert";
 import { ControlledTextfield } from "tools/customDesign/ControlledTextfield";
-import { CustomImageUploader } from "tools/customDesign/ImageUploader";
 import { LanguageField } from "tools/customDesign/LanguageField";
+import { FileUploader } from "tools/FileUploader";
+import { ErrorMessage } from "tools/Tools";
 import { Country } from "./../../classes/Country";
 import PersonService from "./api/PersonService";
 
@@ -87,12 +90,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfileDetails = (props) => {
   const history = useHistory();
-  let person: Person;
-  if (props.location.state) {
-    person = props.location.state.person;
-  } else {
-    history.goBack();
-  }
+  const [person, setPerson] = useState<Person>(props.location.state.person);
+  // let person: Person;
+
   const [error, setError] = useState(false);
   const [dob, setDob] = React.useState<Date | null>(null);
   const [countryItem, setCountryItem] = useState<Array<Country>>([]);
@@ -107,19 +107,59 @@ const ProfileDetails = (props) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [againNewPassword, setAgainNewPassword] = useState("");
-
+  const [files, setFiles] = useState<FileObject[]>([]);
+  const [tempFiles, setTempFiles] = useState<FileObject[]>([]);
+  const [upload, setUpload] = useState(false);
   // Snackbar control
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  function handleSnackbarClose(event?: React.SyntheticEvent, reason?: string) {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  }
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  // function handleSnackbarClose(event?: React.SyntheticEvent, reason?: string) {
+  //   if (reason === "clickaway") {
+  //     return;
+  //   }
+  //   setOpen(false);
+  // }
   // Initialize  - start
 
   useEffect(() => {
+    if (props.location.state) {
+      setPerson(props.location.state.person);
+    } else if (AuthService.getCurrentAccountType() != "") {
+      if (AuthService.getCurrentAccountType() == "Teacher") {
+        axios
+          .get(global.HOST + "/get-teacher-self", authHeaders())
+          .then((response) => {
+            console.log("Person data from header", response);
+            // history.goBack();
+            history.push({
+              pathname: "/profile-details",
+              state: {
+                person: response.data,
+                registered: true,
+              },
+            });
+          });
+      } else if (AuthService.getCurrentAccountType() == "Student") {
+        axios
+          .get(global.HOST + "/get-student-self", authHeaders())
+          .then((response) => {
+            console.log("Person data from header", response);
+            // history.goBack();
+            history.push({
+              pathname: "/profile-details",
+              state: {
+                person: response.data,
+                registered: true,
+              },
+            });
+          });
+      } else {
+        history.goBack();
+      }
+    }
+    console.log("Hello");
     CountryService.getAllCountries().then((response) => {
       setCountryItem(response.data);
     });
@@ -154,59 +194,124 @@ const ProfileDetails = (props) => {
         setCardExpireDate(person.card.expireDate);
       }
     }
+    if (!person.photo) {
+      setUpload(true);
+    }
     // if (person.dob == undefined) {
     //   person.dob = dob;
     // }
+    return () => {
+      setOldPassword("");
+      setNewPassword("");
+      setAgainNewPassword("");
+    };
   }, []);
   // Initialize - end
 
+  function passwordInfoCheck(func) {
+    if (oldPassword && newPassword && againNewPassword) {
+      if (newPassword != againNewPassword) {
+        setErrorMessage("Password mismatch");
+        setShowErrorMessage(true);
+      }
+      PersonService.changePassword(oldPassword, newPassword).then(
+        (response) => {
+          if (response.data.stringValue) {
+            setErrorMessage(response.data.stringValue);
+            setShowErrorMessage(true);
+          } else {
+            setSuccessMessage("Password change successfully");
+            setShowSuccessMessage(true);
+            func();
+          }
+        }
+      );
+    } else if (!oldPassword && !newPassword && !againNewPassword) {
+      func();
+    } else {
+      setErrorMessage("Fill up password field properly");
+      setShowErrorMessage(true);
+    }
+  }
+
+  function register() {
+    if (person.accountType == "Student") {
+      // @ts-ignore
+      AuthService.registerStudent(person, statusId).then((response) => {
+        if (response.data.token) {
+          localStorage.setItem("user", JSON.stringify(response.data));
+        }
+        console.log("done");
+        history.push("/home");
+      });
+    } else if (person.accountType == "Teacher") {
+      // @ts-ignore
+      AuthService.registerTeacher(person, statusId).then((response) => {
+        if (response.data.token) {
+          localStorage.setItem("user", JSON.stringify(response.data));
+        }
+        console.log("done");
+        history.push("/home");
+      });
+    }
+  }
+
+  function update() {
+    if (person.accountType == "Student") {
+      // @ts-ignore
+      PersonService.updateStudent(person, statusId).then((response) => {
+        if (response.data.stringValue) {
+          setErrorMessage(response.data.stringValue);
+          setShowErrorMessage(true);
+        } else {
+          props.location.state.person = person;
+          setSuccessMessage("Successfully updated.");
+          setShowSuccessMessage(true);
+        }
+      });
+    } else if (person.accountType == "Teacher") {
+      // @ts-ignore
+      PersonService.updateTeacher(person, statusId).then((response) => {
+        if (response.data.stringValue) {
+          setErrorMessage(response.data.stringValue);
+          setShowErrorMessage(true);
+        } else {
+          props.location.state.person = person;
+          setSuccessMessage("Successfully updated.");
+          setShowSuccessMessage(true);
+        }
+      });
+    }
+  }
+
   function handleSaveClicked(event) {
     event.preventDefault();
-    if (props.location.state.registered) {
-      console.log("Updated person ", person);
-      if (person.accountType == "Student") {
-        // @ts-ignore
-        PersonService.updateStudent(person, statusId).then((response) => {
-          if (response.data.stringValue) {
-            setMessage(response.data.stringValue);
-            setOpen(true);
-          } else {
-            props.location.state.person = person;
-            setMessage("Successfully updated.");
-            setOpen(true);
-          }
-        });
-      } else if (person.accountType == "Teacher") {
-        // @ts-ignore
-        PersonService.updateTeacher(person, statusId).then((response) => {
-          if (response.data.stringValue) {
-            setMessage(response.data.stringValue);
-            setOpen(true);
-          } else {
-            props.location.state.person = person;
-            setMessage("Successfully updated.");
-            setOpen(true);
-          }
-        });
+    if (person.card) {
+      if (
+        !person.card.cardNo ||
+        !person.card.expireDate ||
+        !person.card.nameOnCard
+      ) {
+        setErrorMessage("Please set all information of credit card properly");
+        setShowErrorMessage(true);
+        return;
       }
+    }
+    if (props.location.state.registered) {
+      passwordInfoCheck(() => {
+        console.log("Updated person ", person);
+        if (person.photo) {
+          person.photo.upload().then(update);
+        } else {
+          update();
+        }
+      });
     } else {
       console.log(person);
-      if (person.accountType == "Student") {
-        // @ts-ignore
-        AuthService.registerStudent(person, statusId).then((response) => {
-          if (response.data.token) {
-            localStorage.setItem("user", JSON.stringify(response.data));
-          }
-          history.push("/home");
-        });
-      } else if (person.accountType == "Teacher") {
-        // @ts-ignore
-        AuthService.registerTeacher(person, statusId).then((response) => {
-          if (response.data.token) {
-            localStorage.setItem("user", JSON.stringify(response.data));
-          }
-          history.push("/home");
-        });
+      if (person.photo) {
+        person.photo.upload().then(register);
+      } else {
+        register();
       }
     }
   }
@@ -222,9 +327,13 @@ const ProfileDetails = (props) => {
     setStatusId(event.target.value);
   };
 
-  const handleDobChange = (date) => {
-    setDob(date);
-  };
+  // function handleProfilePicChange(event) {
+  //   event.preventDefault();
+  //   setFiles(event.target.files[0]);
+  //   person.photo = new Files("PICTURE", "Profile Picture").setFile(
+  //     event.target.files[0]
+  //   );
+  // }
 
   const [expanded, setExpanded] = React.useState("panel1");
 
@@ -232,8 +341,6 @@ const ProfileDetails = (props) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  // @ts-ignore
-  console.log(person);
   function PersonalDetails() {
     return (
       <Grid container direction="column">
@@ -434,6 +541,103 @@ const ProfileDetails = (props) => {
       </Grid>
     );
   }
+  function ProfilePicture() {
+    return (
+      <>
+        {upload && (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <FileUploader
+                fileObjects={files}
+                type="picture"
+                filesLimit={1}
+                onChange={(files) => setFiles(files)}
+              />
+            </Grid>
+            <Grid
+              item
+              container
+              direction="row"
+              justifyContent="center"
+              spacing={2}
+            >
+              <Grid item>
+                <Button
+                  color="primary"
+                  onClick={(event) => {
+                    if (files[0]) {
+                      person.photo = new Files(
+                        "PICTURE",
+                        "Profile Picture"
+                      ).setFile(files[0]);
+                      setUpload(false);
+                    } else {
+                      setErrorMessage("Please upload a photo!!");
+                      setShowErrorMessage(true);
+                    }
+                  }}
+                >
+                  Set
+                </Button>
+              </Grid>
+              {person.photo && (
+                <Grid item>
+                  <Button
+                    color="secondary"
+                    onClick={(event) => setUpload(false)}
+                  >
+                    Cancel
+                  </Button>
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        )}
+        {!upload && (
+          <Grid container direction="column" spacing={1}>
+            <Grid item style={{ textAlign: "center" }}>
+              <img
+                src={
+                  person?.photo?.content.file
+                    ? URL.createObjectURL(person?.photo.content.file)
+                    : person?.photo?.content
+                }
+                style={{
+                  width: "90%",
+                  boxShadow: "rgb(0 0 0 / 12%) 0 1px 6px",
+                }}
+              />
+            </Grid>
+            <Grid
+              item
+              container
+              direction="row"
+              justifyContent="center"
+              spacing={2}
+            >
+              <Grid item>
+                <Button color="primary" onClick={(event) => setUpload(true)}>
+                  Change
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  color="secondary"
+                  onClick={(event) => {
+                    person.photo = undefined;
+                    setFiles([]);
+                    setUpload(true);
+                  }}
+                >
+                  Delete
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
+      </>
+    );
+  }
   function Security() {
     return (
       <Grid container direction="column">
@@ -450,21 +654,24 @@ const ProfileDetails = (props) => {
           margin="normal"
           variant="outlined"
           color="primary"
-          onBlur={(event) => setOldPassword(event.target.value)}
+          defaultValue={oldPassword}
+          onChange={(event) => setOldPassword(event.target.value)}
         />
         <TextField
           label="New Password"
           margin="normal"
           variant="outlined"
           color="primary"
-          onBlur={(event) => setNewPassword(event.target.value)}
+          defaultValue={newPassword}
+          onChange={(event) => setNewPassword(event.target.value)}
         />
         <TextField
           label="New Password (Again)"
           margin="normal"
           variant="outlined"
           color="primary"
-          onBlur={(event) => setAgainNewPassword(event.target.value)}
+          defaultValue={againNewPassword}
+          onChange={(event) => setAgainNewPassword(event.target.value)}
         />
       </Grid>
     );
@@ -472,16 +679,7 @@ const ProfileDetails = (props) => {
   function FullPage() {
     return (
       <Grid item xs={12} sm={8} md={5} style={{ margin: "0 auto" }}>
-        <Snackbar
-          open={open}
-          onClose={handleSnackbarClose}
-          autoHideDuration={2000}
-        >
-          <Alert onClose={handleSnackbarClose} severity="error">
-            {message}
-          </Alert>
-        </Snackbar>
-        <form onSubmit={handleSaveClicked}>
+        <form onSubmit={handleSaveClicked} encType="multipart/form-data">
           <Accordion
             expanded={expanded === "panel1"}
             onChange={handleChange("panel1")}
@@ -505,7 +703,7 @@ const ProfileDetails = (props) => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <CustomImageUploader />
+              <ProfilePicture />
             </AccordionDetails>
           </Accordion>
           <Accordion
@@ -560,6 +758,11 @@ const ProfileDetails = (props) => {
   }
   return (
     <>
+      <ErrorMessage
+        open={showErrorMessage}
+        message={errorMessage}
+        onClose={setShowErrorMessage}
+      />
       {props.location.state.registered ? (
         <User>
           <Grid container justify="center">

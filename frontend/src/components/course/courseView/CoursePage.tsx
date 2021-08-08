@@ -16,7 +16,7 @@ import {
   CheckoutDialog,
   CongratulationDialog,
 } from "components/course/courseView/Checkout";
-import { FAQBox, FAQSection } from "components/course/courseView/FAQ";
+import { FAQSection } from "components/course/courseView/FAQ";
 import InstructorShortDetailsBox from "components/course/courseView/InstructorShortDetails";
 import RatingSection from "components/course/courseView/Rating";
 import { ReviewSection } from "components/course/courseView/Review";
@@ -164,7 +164,7 @@ export function CourseView() {
             >
               <ListItemAvatar classes={{ root: classes.MuiListItemAvatarRoot }}>
                 <IconPickerItem
-                  classes={{ root: classes.MuiSvgIconRoot }}
+                  // classes={{ root: classes.MuiSvgIconRoot }}
                   //@ts-ignore
                   icon={item.icon.content}
                   containerStyles={{ fontSize: "15px" }}

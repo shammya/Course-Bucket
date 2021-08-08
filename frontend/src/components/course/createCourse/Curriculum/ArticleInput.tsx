@@ -19,7 +19,7 @@ export function ArticleInput({ file, onSave, onCancel }: LectureInputProps) {
 
   return (
     <InputLayout
-      onSave={() => onSave(new Files("ARTICLE", title, content))}
+      onSave={() => onSave(new Files("ARTICLE", title).setContent(content))}
       onCancel={onCancel}
     >
       <TextField

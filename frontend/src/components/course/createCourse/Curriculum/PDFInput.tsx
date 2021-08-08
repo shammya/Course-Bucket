@@ -16,7 +16,7 @@ export function PDFInput({ file, onSave, onCancel }: LectureInputProps) {
 
   return (
     <InputLayout
-      onSave={() => onSave(new Files("PDF", title, content))}
+      onSave={() => onSave(new Files("PDF", title).setContent(content))}
       onCancel={onCancel}
     >
       <MUIRichTextEditor

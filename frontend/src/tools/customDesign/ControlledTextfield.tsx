@@ -8,15 +8,15 @@ import { useEffect, useState } from "react";
 
 let rules = {
   lettersDigits: {
-    pattern: new RegExp(/[~!#%^_+-=?,./*|\":<>[\]{}`\\()';@&$]/),
+    pattern: new RegExp(/[~!#%^_+\-=?,./*|\":<>[\]{}`\\()';@&$]/),
     helperText: "Only digits and letters are allowed",
   },
   lettersDigitsNoSpace: {
-    pattern: new RegExp(/[~!#%^_+-=?,./*|\":<>[\]{}`\\()';@&$ ]/),
+    pattern: new RegExp(/[~!#%^_+\-=?,./*|\":<>[\]{}`\\()';@&$ ]/),
     helperText: "Only digits and letters are allowed. No space allowed.",
   },
   letters: {
-    pattern: new RegExp(/[~!#%^_+-=?,./*|\":<>[\]{}`\\()';@&$0-9]/),
+    pattern: new RegExp(/[~!#%^_+\-=?,./*|\":<>[\]{}`\\()';@&$0-9]/),
     helperText: "Only letters are allowed",
   },
   lettersDigitsSomeSChars: {

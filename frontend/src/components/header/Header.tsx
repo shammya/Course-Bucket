@@ -17,9 +17,10 @@ import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
+import axios from "axios";
 import classNames from "classnames";
-import AuthService from "components/auth/api/AuthService";
-import PersonService from "components/person/api/PersonService";
+import AuthService, { authHeaders } from "components/auth/api/AuthService";
+import { global } from "Configure";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Responsive } from "tools/responsive/Responsive";
@@ -64,16 +65,43 @@ export function Header() {
   const history = useHistory();
 
   function profileDetailsLoad() {
-    PersonService.getPersonSelf().then((response) => {
-      console.log("Person data from header", response);
-      history.push({
-        pathname: "/profile-details",
-        state: {
-          person: response.data,
-          registered: true,
-        },
-      });
-    });
+    if (AuthService.getCurrentAccountType() == "Teacher") {
+      axios
+        .get(global.HOST + "/get-teacher-self", authHeaders())
+        .then((response) => {
+          console.log("Person data from header", response);
+          history.push({
+            pathname: "/profile-details",
+            state: {
+              person: response.data,
+              registered: true,
+            },
+          });
+        });
+    } else if (AuthService.getCurrentAccountType() == "Student") {
+      axios
+        .get(global.HOST + "/get-student-self", authHeaders())
+        .then((response) => {
+          console.log("Person data from header", response);
+          history.push({
+            pathname: "/profile-details",
+            state: {
+              person: response.data,
+              registered: true,
+            },
+          });
+        });
+    }
+    // PersonService.getPersonSelf().then((response) => {
+    //   console.log("Person data from header", response);
+    //   history.push({
+    //     pathname: "/profile-details",
+    //     state: {
+    //       person: response.data,
+    //       registered: true,
+    //     },
+    //   });
+    // });
   }
 
   const popUpNavProperty = {

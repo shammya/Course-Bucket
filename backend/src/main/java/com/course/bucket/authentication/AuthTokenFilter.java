@@ -37,8 +37,8 @@ public class AuthTokenFilter extends OncePerRequestFilter  {
 		response.setHeader("Access-Control-Allow-Origin", Global.HOST);
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, Authorization, content-type, xsrf-token");
-        response.addHeader("Access-Control-Expose-Headers", "Origin, Authorization, xsrf-token");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, Authorization, Content-Type, Accept,  xsrf-token");
+        response.addHeader("Access-Control-Expose-Headers", "Origin, Authorization,Content-Type, Accept,  xsrf-token");
         if(request.getMethod().equals("OPTIONS")) {
         	response.setStatus(HttpServletResponse.SC_OK);
         	return;

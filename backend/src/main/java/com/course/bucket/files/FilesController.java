@@ -1,19 +1,101 @@
 package com.course.bucket.files;
 
-import java.util.List;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.course.bucket.Global;
 
 
+@CrossOrigin(value=Global.HOST)
+@RequestMapping("/resources")
 @RestController
 public class FilesController {
+	
+
+	@Autowired
+	private FileStorageService fileStorageService;
+	
+	@PutMapping("/upload")
+	public ResponseEntity<FileResponse> uploadFile(
+			@RequestParam("file") MultipartFile file, 
+			@RequestParam("type") String type,  
+			@RequestParam("secure") Boolean secure){
+		
+		System.out.println("param " +type);
+		String fileName = fileStorageService.storeFile(file, type, secure);	// Getting filename
+		
+		String path = "/resources/pb/";
+		if(secure) path = "/resources/pv/";
+		String uri = ServletUriComponentsBuilder.fromCurrentContextPath()		// Generating URI
+				.path(path)
+				.path(fileName)
+				.toUriString();
+		
+		FileResponse fileResponse = new FileResponse(fileName, uri, file.getContentType(), file.getSize());
+		return new ResponseEntity<FileResponse>(fileResponse,HttpStatus.OK);
+	}
+	
+	@GetMapping("/pb/{fileName:.+}")
+	public ResponseEntity<?> publicFile(@PathVariable String fileName,HttpServletRequest request){
+		Resource resource = fileStorageService.loadFileAsResource(fileName, false);
+		if(resource == null) {
+			return ResponseEntity.badRequest().body("");
+		}
+		String contentType = null; 
+		try {
+			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+		}catch(IOException ex) {
+			System.out.println("Could not determine fileType");
+		}
+		
+		if(contentType==null) {
+			contentType = "application/octet-stream";
+		}
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.body(resource);
+	}
+	
+
+	@GetMapping("/pv/{fileName:.+}")
+	public ResponseEntity<?> privateFile(@PathVariable String fileName,HttpServletRequest request){
+		Resource resource = fileStorageService.loadFileAsResource(fileName, true);
+		if(resource == null) {
+			return ResponseEntity.badRequest().body("");
+		}
+		String contentType = null; 
+		try {
+			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+		}catch(IOException ex) {
+			System.out.println("Could not determine fileType");
+		}
+		
+		if(contentType==null) {
+			contentType = "application/octet-stream";
+		}
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.body(resource);
+	}
 	
 //	@PostMapping("/add-coursePreview-photo-by-id/{id}")
 //	public void addFiles(@RequestBody Files files,@PathVariable Integer id) {
@@ -45,5 +127,10 @@ public class FilesController {
 	@DeleteMapping("/delete-photo-by-id/{personId,photoId}")
 	public void deleteFiles(@PathVariable Integer personId,@PathVariable Integer photoId) {
 		Files.deletePhoto(personId,photoId);
+	}
+	
+	@PostMapping("/insert-files")
+	public void insertFiles(@RequestBody Files files) {
+		Files.createNewFile(files);
 	}
 }

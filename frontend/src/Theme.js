@@ -51,13 +51,23 @@ Object.assign(lightTheme, {
         justifyContent: "space-around",
       },
       imageContainer: {
-        width: "100%",
-        maxWidth: "100%",
         flexBasis: "100%",
+        maxWidth: "90%",
+      },
+      image: {
+        height: -1
       },
       removeButton: {
         top: 0,
         right: 0,
+      },
+    },
+    MuiDropzoneArea: {
+      root: {
+        minHeight: 0,
+      },
+      text: {
+        textAlign: "center"
       }
     },
     MuiTypography: {

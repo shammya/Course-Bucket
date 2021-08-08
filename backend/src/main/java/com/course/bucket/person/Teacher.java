@@ -60,29 +60,27 @@ public class Teacher extends Person {
             if (rs.getInt("DESIGNATION_ID") != 0) {
                 designation = new Designation(rs.getInt("DESIGNATION_ID"));
             }
-        sql = "SELECT ID FROM COURSE WHERE TEACHER_ID = '#'";
-        ResultSet rs2 = DB.executeQuery(sql, username);
-        int count = 0;
-        while(rs2.next())
-        {
-            count++;
-        }
-        rs2.close();
-        this.courseCreated = new Integer(count);
-        count=0;
-        sql = "SELECT c.TEACHER_ID,COUNT(DISTINCT(p.COURSE_ID)) " +
-        " FROM PURCHASE_HISTORY p,COURSE c" +
-        " WHERE p.COURSE_ID = c.ID AND c.TEACHER_ID = '#'" +
-        " GROUP BY c.TEACHER_ID";
-        ResultSet rs1 = DB.executeQuery(sql, username);
-        while(rs1.next())
-        {
-            count++;
-        }
-        this.coursePurchased = count;
-        rs1.close();
-           // System.out.println(courseCreated);
-            //System.out.println(coursePurchased);
+//        sql = "SELECT ID FROM COURSE WHERE TEACHER_ID = '#'";
+//        ResultSet rs2 = DB.executeQuery(sql, username);
+//        int count = 0;
+//        while(rs2.next())
+//        {
+//            count++;
+//        }
+//        rs2.close();
+//        this.courseCreated = new Integer(count);
+//        count=0;
+//        sql = "SELECT c.TEACHER_ID,COUNT(DISTINCT(p.COURSE_ID)) " +
+//        " FROM PURCHASE_HISTORY p,COURSE c" +
+//        " WHERE p.COURSE_ID = c.ID AND c.TEACHER_ID = '#'" +
+//        " GROUP BY c.TEACHER_ID";
+//        ResultSet rs1 = DB.executeQuery(sql, username);
+//        while(rs1.next())
+//        {
+//            count++;
+//        }
+//        this.coursePurchased = count;
+//        rs1.close();
         } catch (SQLException ex) {
         	System.err.println("error in Teacher");
         }
@@ -215,8 +213,8 @@ public class Teacher extends Person {
 	public static void update(Person person, Integer designationId) {
 		Person.update(person);
 		DB.execute(""
-				+ "UPDATE TEACHER SET"
-				+ "DESIGNATION_ID = #"
+				+ "UPDATE TEACHER SET "
+				+ "DESIGNATION_ID = # "
 				+ "WHERE ID = '#'",
 				designationId.toString(),
 				person.getUsername()

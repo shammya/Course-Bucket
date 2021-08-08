@@ -16,7 +16,7 @@ export function LinkInput({ file, onSave, onCancel }: LectureInputProps) {
 
   return (
     <InputLayout
-      onSave={() => onSave(new Files("LINK", link, content))}
+      onSave={() => onSave(new Files("LINK", link).setContent(content))}
       onCancel={onCancel}
     >
       <MUIRichTextEditor

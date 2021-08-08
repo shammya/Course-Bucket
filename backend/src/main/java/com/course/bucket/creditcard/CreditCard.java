@@ -138,4 +138,10 @@ public class CreditCard {
 				oldCard.getId().toString());
 
 	}
+	
+	public static void updateCreditCard(CreditCard card) {
+		DB.execute("UPDATE CREDIT_CARD SET CARD_NO = '#' , NAME_ON_CARD = '#' , EXPIRE_DATE = #  WHERE ID = # ",
+				card.getCardNo(), card.getNameOnCard(), ToolKit.JDateToDDate(card.getExpireDate()),
+				card.getId().toString());
+	}
 }

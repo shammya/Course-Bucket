@@ -56,6 +56,8 @@ public class DB {
     public static ResultSet executeQuery(String sql, String... arg) { // Replace # mark with value
         
         for (String value : arg) {
+        	if(value==null)
+        		value = "NULL";
             if(!value.contains("TO_DATE")) value = value.replace("'", "''");
             value = value.replace("#", "^^^");
             value = value.replace("$", "&&&&&");
@@ -66,7 +68,7 @@ public class DB {
         
         try {
             System.err.println(sql);System.out.println("");
-            st = con.createStatement();
+            st = con.createStatement(); 
             rs = st.executeQuery(sql);
         } catch (SQLException ex) {
 //            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,7 +82,7 @@ public class DB {
         for (String value : arg) {
         	//System.out.println("value : "+ value);
         	if(value==null)
-        		value = "NULL";
+        		value = "NULL"; 
             if(!value.contains("TO_DATE")) value = value.replace("'", "''");
 
             value = value.replace("#", "^^^");
