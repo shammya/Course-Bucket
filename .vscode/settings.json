@@ -3,5 +3,9 @@
     "*.cpp": "cpp",
     "*.l": "lex",
     "iostream": "cpp"
-  }
+  },
+  "cSpell.words": [
+    "mehedi",
+    "t"
+  ]
 }

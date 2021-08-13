@@ -1,9 +1,9 @@
 package com.course.bucket.person;
 
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.course.bucket.Global;
 import com.course.bucket.authentication.MessageResponse;
 
 
@@ -29,6 +27,9 @@ import com.course.bucket.authentication.MessageResponse;
 @RestController
 
 public class PersonController {
+
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
 	@PostMapping("/add-person")
@@ -57,13 +58,24 @@ public class PersonController {
 		Person person = new Person(userDetails.getUsername());
 //		Person person = new Person("newTeacher");
 		person.setPassword("");
-		System.out.println("About "+person.getAbout());
 		return ResponseEntity.ok(person);
 	}
+
 	
 	
 	
 	@PreAuthorize("hasRole('Admin')")
+	@PutMapping("/change-password")
+	public ResponseEntity<?> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword){
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String passFromDB = Person.getPasswordByUsername(userDetails.getUsername());
+		if(!encoder.matches(oldPassword, passFromDB)) {
+			return ResponseEntity.ok(new MessageResponse("Old password is incorrect"));
+		}
+		Person.updatePassword(userDetails.getUsername(), encoder.encode(newPassword));
+		return ResponseEntity.ok("");
+	}
+
 	@GetMapping("/get-new-user-admin")
 	public HashMap<Date, NewUser> getNewUserAdmin(){
 		return Person.getNewUserAdmin();

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +37,14 @@ public class StudentController {
 	@GetMapping("/get-student")
 	public Student findStudent(@PathVariable String id){
 			return new Student(ToolKit.getCurrentUserName());
+	}
+
+	@GetMapping("/get-student-self")
+	public ResponseEntity<?> getStudentSelf(){
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Student person = new Student(userDetails.getUsername());
+		person.setPassword("");
+		return ResponseEntity.ok(person);
 	}
 	
 	@PreAuthorize("hasRole('Teacher')")

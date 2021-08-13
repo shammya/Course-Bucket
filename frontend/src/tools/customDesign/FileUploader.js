@@ -2,7 +2,7 @@ import { Grid } from '@material-ui/core';
 import { DropzoneAreaBase } from 'material-ui-dropzone';
 import React, { useState } from 'react';
 
-export function FileUploader(props) {
+export function FileUploader() {
   // const handlePreviewIcon = (fileObject, classes) => {
   //   const { type } = fileObject.file
   //   const iconProps = {
@@ -36,9 +36,9 @@ export function FileUploader(props) {
         maxFileSize={100000000}
         styles={{ position: "relative" }}
 
-        onAdd={newFileObjs => {
-          console.log('onAdd', newFileObjs);
-          setFileObjects([].concat(fileObjects, newFileObjs));
+        onAdd={newFileObjects => {
+          console.log('onAdd', newFileObjects);
+          // setFileObjects(multiFile ? [].concat(fileObjects, newFileObjects) : newFileObjects);
         }}
         onDelete={deleteFileObj => {
           console.log('onDelete', deleteFileObj);

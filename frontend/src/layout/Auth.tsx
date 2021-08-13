@@ -52,7 +52,7 @@ export default function Auth() {
             backgroundColor: "#1E293B",
             backgroundSize: "100vw",
             backgroundImage:
-              "url(" + require("assets/img/register_bg_2.png").default + ")",
+              "url(http://localhost:8800/files/Messenger%20Group%20Photo%20SSC'21%20.png)",
           }}
         >
           {/* <Login /> */}

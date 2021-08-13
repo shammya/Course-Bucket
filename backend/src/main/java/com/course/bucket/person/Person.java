@@ -14,6 +14,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.course.bucket.country.Country;
@@ -24,6 +25,7 @@ import com.course.bucket.files.Files;
 import com.course.bucket.language.Language;
 import com.course.bucket.tools.HashPassword;
 import com.course.bucket.tools.ToolKit;
+
 
 
 public class Person {
@@ -75,7 +77,6 @@ public class Person {
 		try {
 			if (rs.next()) {
 				this.email = rs.getString("EMAIL");
-				this.password = rs.getString("PASSWORD");
 				this.firstName = rs.getString("FIRST_NAME");
 				this.lastName = rs.getString("LAST_NAME");
 				this.dob = rs.getTimestamp("DOB");
@@ -319,21 +320,6 @@ public class Person {
 		this.email = email;
 	}
 
-	public List<Language> getLanguagesFromDB() {
-		this.languages = new ArrayList<>();
-		String sql = "SELECT LANGUAGE_ID FROM PERSON_LANGUAGE WHERE PERSON_ID = '#'";
-		ResultSet rs = DB.executeQuery(sql, username);
-		try {
-			while (rs.next()) {
-				this.languages.add(new Language(rs.getInt("LANGUAGE_ID")));
-			}
-			rs.close();
-		} catch (SQLException ex) {
-			Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return this.languages;
-	}
-
 	public void setLanguages(List<Language> languages) {
 		this.languages = languages;
 
@@ -438,7 +424,7 @@ public class Person {
 		notificationRegistration(person.getUsername());
 	}
 
-	public static HashMap<Date, NewUser> getNewUserAdmin() {
+	public static HashMap<Date, NewUser> getNewUserAdmin() { 
 		HashMap<Date, NewUser> newUsers = new HashMap<>();
 		Date date = null;
 		String sql = "select trunc(p.signup_date) signup_date,count(*) student_count\r\n"
@@ -760,27 +746,21 @@ public class Person {
 	public static void update(Person person) {
 		if (person.getCard() != null) {
 			CreditCard card = person.getCard();
-			if (card.getId() == null) {
-				Integer id = DB.generateId("CREDIT_CARD");
-				DB.execute("INSERT INTO CREDIT_CARD(ID, CARD_NO, NAME_ON_CARD, EXPIRE_DATE) VALUES(#, '#', '#', #)",
-						id.toString(), card.getCardNo(), card.getNameOnCard(),
-						ToolKit.JDateToDDate(card.getExpireDate()));
-				person.getCard().setId(id);
-			} else {
-				DB.execute("UPDATE CREDIT_CARD SET CARD_NO='#', NAME_ON_CARD='#', EXPIRE_DATE=# WHERE ID=#",
-						card.getCardNo(), card.getNameOnCard(), ToolKit.JDateToDDate(card.getExpireDate()),
-						card.getId().toString());
+			if(card.getId()==null) {
+				card.setId(CreditCard.insertCreditCard(card));
+			}
+			else {
+				CreditCard.updateCreditCard(card);
 			}
 		}
-		if (person.getPhoto() != null) {
-//			CreditCard card = person.getCard();
-//			if(card.getId()==null) {
-//				Integer id = DB.generateId("CREDIT_CARD");
-//				DB.executeQuery("INSERT INTO CREDIT_CARD(ID, CARD_NO, NAME_ON_CARD, EXPIRE_DATE) VALUES(#, '#', '#', #)", id.toString(), card.getCardNo(), card.getNameOnCard(), ToolKit.JDateToDDate(card.getExpireDate()));
-//			}
-//			else {
-//				DB.executeQuery("UPDATE CREDIT_CARD SET CARD_NO='#', NAME_ON_CARD='#', EXPIRE_DATE=# WHERE ID=#", card.getCardNo(), card.getNameOnCard(),ToolKit.JDateToDDate(card.getExpireDate()), card.getId().toString());				
-//			}
+		if(person.getPhoto() != null) {
+			Files photo = person.getPhoto();
+			if(photo.getId()==null) {
+				photo.setId(Files.createNewFile(photo));
+			}
+			else {
+				Files.updateFile(photo);
+			}
 		}
 
 		DB.execute("" + "UPDATE PERSON " + "SET " + "FIRST_NAME = '#'," + "LAST_NAME = '#'," + "DOB = #,"
@@ -802,7 +782,10 @@ public class Person {
 			}
 		}
 	}
-
+	public static void updatePassword(String username, String newPassword) {
+		DB.execute("UPDATE PERSON SET PASSWORD = '#' WHERE ID = '#'", newPassword, username);
+	}
+	
 	public static void notificationRegistration(String userId) {
 		Integer id = DB.generateId("notification");
 		String sql = "insert into notification values(# ,'admin','#',# , 'F', NULL,'REGISTRATION'";

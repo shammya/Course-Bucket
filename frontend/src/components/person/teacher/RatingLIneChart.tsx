@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@material-ui/core";
 import axios from "axios";
-import { authHeader as authHeaders } from "components/auth/api/AuthService";
+import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 import { global } from "Configure.js";
 import {
   Chart,

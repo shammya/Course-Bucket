@@ -3,61 +3,75 @@ package com.course.bucket.files;
 
 
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.course.bucket.database.DB;
 
 
-public enum FileType {
-    PICTURE("Picture"),
-    VIDEO("Video"),
+public enum FileType  implements Serializable {
+	ICON("ICON"),
+	VIDEO("VIDEO"),
+    PICTURE("PICTURE"),
     PDF("PDF"),
-    ARTICLE("Article"),
-    LINK("Link"),
-    FONT_AWESOME_ICON("FontAwesomeIcon"),
+    ARTICLE("ARTICLE"),
+    LINK("LINK"),
+    
     MATERIAL_ICON("MaterialIcon"),
     SVG("SVG"),
     MESSAGE("Message"),
     ;
-    
+    String name;
     Integer id;
-    String typeName;
-    String adminId;
 
-    private FileType(String typeName) {
-        this.typeName = typeName;
-        ResultSet rs = DB.executeQuery("SELECT * FROM FILE_TYPE WHERE TYPE = '#'", typeName);
+    private FileType(String name) {
+        this.name = name;
+        ResultSet rs = DB.executeQuery("SELECT ID FROM FILE_TYPE WHERE UPPER(TYPE)='#'", name);
         try {
-            if (rs.next()) {
-                id = rs.getInt("ID");
-                adminId = rs.getString("ADMIN_ID");
-            } else {
-                System.err.println("no file data found");
-            }
-            rs.close();
-        } catch (SQLException ex) {
-        	System.err.println("sql exception in file type");
-        }
+			if(rs.next()) {
+				this.id = rs.getInt("ID");
+			}
+	        rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
-    public static FileType valueOf(Integer id) {
-        for(FileType v : values())
-            if(v.getId() ==  id) return v;
-        throw new IllegalArgumentException();
+    public static FileType createFromId(Integer id) {
+    	FileType type = null;
+        ResultSet rs = DB.executeQuery("SELECT TYPE FROM FILE_TYPE WHERE ID = #", id.toString());
+        try {
+			if(rs.next()) {
+				System.out.println(rs.getString("TYPE").toUpperCase());
+				type = FileType.valueOf(rs.getString("TYPE").toUpperCase());
+			}
+	        rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return type;
     }
 
-    public Integer getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public String getTypeName() {
-        return typeName;
-    }
 
-    public String getAdminId() {
-        return adminId;
-    }
-    
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
  
 }

@@ -1,6 +1,7 @@
-import { Slide } from "@material-ui/core";
+import { Slide, Snackbar } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
-import React from "react";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import React, { useEffect, useState } from "react";
 
 export function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -21,3 +22,38 @@ export const SlidingUpTransition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+export function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+export function ErrorMessage({ open, message, onClose }) {
+  function handleSnackbarClose(event?: React.SyntheticEvent, reason?: string) {
+    if (reason === "clickaway") {
+      return;
+    }
+    onClose(false);
+  }
+  return (
+    <Snackbar open={open} onClose={handleSnackbarClose} autoHideDuration={2000}>
+      <Alert onClose={handleSnackbarClose} severity="error">
+        {message}
+      </Alert>
+    </Snackbar>
+  );
+}
+export function SuccessMessage({ open, message, onClose }) {
+  function handleSnackbarClose(event?: React.SyntheticEvent, reason?: string) {
+    if (reason === "clickaway") {
+      return;
+    }
+    onClose(false);
+  }
+  return (
+    <Snackbar open={open} onClose={handleSnackbarClose} autoHideDuration={2000}>
+      <Alert onClose={handleSnackbarClose} severity="success">
+        {message}
+      </Alert>
+    </Snackbar>
+  );
+}

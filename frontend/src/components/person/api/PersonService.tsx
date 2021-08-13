@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Person } from "classes/Person";
-import { authHeader as authHeaders } from "components/auth/api/AuthService";
+import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 import { global } from "Configure.js";
 
 class PersonController {
@@ -29,6 +29,12 @@ class PersonController {
       person,
       authHeaders()
     );
+  }
+  changePassword(oldPassword: string, newPassword: string) {
+    let formData = new FormData();
+    formData.append("oldPassword", oldPassword);
+    formData.append("newPassword", newPassword);
+    return axios.put(global.HOST + "/change-password", formData, authHeaders());
   }
 }
 export default new PersonController();

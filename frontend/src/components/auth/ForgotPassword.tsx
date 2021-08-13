@@ -11,8 +11,8 @@ import { KeyboardDatePicker } from "@material-ui/pickers";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { Alert } from "tools/customDesign/Alert";
 import { ControlledTextfield } from "tools/customDesign/ControlledTextfield";
+import { Alert } from "tools/Tools";
 import AuthService from "./api/AuthService";
 
 function Copyright() {

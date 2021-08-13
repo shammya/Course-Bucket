@@ -2,6 +2,7 @@ package com.course.bucket.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
@@ -16,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.course.bucket.database.DB;
 import com.course.bucket.tools.ToolKit;
 
+import ch.qos.logback.core.subst.Token.Type;
+
 /**
  * 
  * 1. For post api string will be sent through content field and file will be
@@ -26,20 +29,16 @@ import com.course.bucket.tools.ToolKit;
  *
  */
 
-public class Files {
+public class Files{
 
 	Integer id;
 	FileType type;
 	String title;
 	String content;
-	MultipartFile file;
 	Date uploadTime;
 	Date lastUpdateTime;
 
-	public Files() {
-
-	}
-
+	public Files() {}
 	public Files(Integer id) {
 		this.id = id;
 		ResultSet rs = DB.executeQuery("SELECT * FROM FILES WHERE ID = #", id.toString());
@@ -48,7 +47,7 @@ public class Files {
 				rs.close();
 				return;
 			}
-			type = FileType.valueOf(rs.getInt("TYPE"));
+			type = FileType.createFromId(rs.getInt("TYPE"));
 			title = rs.getString("TITLE");
 			content = rs.getString("CONTENT");
 			uploadTime = rs.getTimestamp("UPLOAD_TIME");
@@ -121,14 +120,6 @@ public class Files {
 	public void setLastUpdateTime(Date lastUpdateTime) {
 		this.lastUpdateTime = lastUpdateTime;
 	}
-
-	public MultipartFile getFile() {
-		return file;
-	}
-
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
 //	private void updateTime(){
 //        DB.execute("UPDATE FILES SET LAST_UPDATE = # WHERE ID = #", ToolKit.getCurTimeDB(), id.toString());
 //    }
@@ -150,15 +141,19 @@ public class Files {
 	}
 
 	public static Integer createNewFile(Files files) {
-//		Integer typeId = DB.getIdFromDb("FILE_TYPE", "ID", files.getType().getId().toString());
 		Integer id = DB.generateId("FILES");
-		if (files.getType() == FileType.PDF || files.getType() == FileType.VIDEO) {
-			files.setContent(createNewMultipartfile(id, files.getType(), files.getFile()));
-		}
-		String sql = "INSERT INTO FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) VALUES (#,'#','#','#',#,#)";
-		DB.executeQuery(sql, id.toString(), files.getType().toString(), files.getTitle(), files.getContent(),
-				ToolKit.JDateToDDate(files.getUploadTime()), ToolKit.JDateToDDate(files.getLastUpdateTime()));
+		String currentDate = ToolKit.getCurTimeDB();
+		String sql = "INSERT INTO FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) VALUES (#,#,'#','#',#,#)";
+		DB.executeQuery(sql, id.toString(), files.getType().getId().toString(), files.getTitle(), files.getContent(),
+				currentDate, currentDate);
 		return id;
+	}
+
+	public static void updateFile(Files files) {
+		String currentDate = ToolKit.getCurTimeDB();
+		DB.execute("UPDATE FILES SET TYPE = #,TITLE = '#' ,CONTENT = '#',LAST_UPDATE_TIME = # WHERE ID = #",
+				files.getType().getId().toString(), files.getTitle(), files.getContent(),
+				currentDate);
 	}
 
 	public static void createPhoto(Files files, String email) {
@@ -166,15 +161,10 @@ public class Files {
 		DB.execute("UPDATE PERSON SET PHOTO_ID = # WHERE EMAIL = '#' ", id.toString(), email);
 	}
 
-	public static void updateFile(Files files) {
-		DB.execute("UPDATE FILES SET TYPE = '#',TITLE = '' ,CONTENT = '#',LAST_UPDATE_TIME = #",
-				files.getType().getId().toString(), files.getTitle(), files.getContent(),
-				ToolKit.JDateToDDate(files.getLastUpdateTime()));
-	}
-	
-//	SLIDER => FILES_ID, ADMIN,
-//	COURSE_CATEGORY => COURSE_ID, CATEGORY_ID
-
+//	
+////	SLIDER => FILES_ID, ADMIN,
+////	COURSE_CATEGORY => COURSE_ID, CATEGORY_ID
+//
 	public static String getPhoto(String id) {
 		ResultSet rs = DB.executeQuery("SELECT CONTENT FROM FILES f  \n" + " WHERE\n"
 				+ " f.ID = (SELECT PHOTO_ID from PERSON p WHERE p.ID = '#')", id);
@@ -205,24 +195,24 @@ public class Files {
 		DB.execute("DELETE FILES WHERE ID = #", id.toString());
 		deleteFile(this.getId());
 	}
-
-	public static String createNewMultipartfile(Integer id, FileType type, MultipartFile file) {
-		if (!file.isEmpty()) {
-			byte[] bytes;
-			try {
-				bytes = file.getBytes();
-				String url = "/resources/" + type.getTypeName().toLowerCase() + "/" + id.toString() + "."
-						+ FilenameUtils.getExtension(file.getOriginalFilename());
-				Path path = Paths.get(url);
-				java.nio.file.Files.write(path, bytes);
-				return url;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.err.println("\terror in createNewMultipartfile");
-			}
-
-		}
-		return "";
-	}
+//
+//	public static String createNewMultipartfile(Integer id, FileType type, MultipartFile file) {
+//		if (!file.isEmpty()) {
+//			byte[] bytes;
+//			try {
+//				bytes = file.getBytes();
+//				String url = "/resources/" + type.getName().toLowerCase() + "/" + id.toString() + "."
+//						+ FilenameUtils.getExtension(file.getOriginalFilename());
+//				Path path = Paths.get(url);
+//				java.nio.file.Files.write(path, bytes);
+//				return url;
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				System.err.println("\terror in createNewMultipartfile");
+//			}
+//
+//		}
+//		return "";
+//	}
 }

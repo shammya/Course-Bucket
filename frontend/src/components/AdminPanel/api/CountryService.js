@@ -1,6 +1,6 @@
 import axios from "axios"
 import { global } from 'Configure.js'
-import { authHeader as authHeaders } from "components/auth/api/AuthService";
+import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 
 
 class CountryService {

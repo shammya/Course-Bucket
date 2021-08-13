@@ -16,7 +16,7 @@ export function VideoInput({ file, onSave, onCancel }: LectureInputProps) {
 
   return (
     <InputLayout
-      onSave={() => onSave(new Files("VIDEO", title, content))}
+      onSave={() => onSave(new Files("VIDEO", title).setContent(content))}
       onCancel={onCancel}
     >
       <MUIRichTextEditor

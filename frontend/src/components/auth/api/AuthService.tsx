@@ -21,7 +21,8 @@ class AuthService {
   registerTeacher(teacher: Person, designationId: Number) {
     return axios.post(
       global.HOST + this.prefix + `/register-teacher/${designationId}`,
-      teacher
+      teacher,
+      authHeaders()
     );
   }
   signIn(username: string, password: string) {
@@ -71,11 +72,15 @@ class AuthService {
     } else return "";
   }
 }
-export function authHeader() {
+export function authHeaders() {
   const user = JSON.parse(localStorage.getItem("user") + "");
 
   if (user && user.token) {
-    return { headers: { Authorization: "Bearer " + user.token } };
+    return {
+      headers: {
+        Authorization: "Bearer " + user.token,
+      },
+    };
   } else {
     return { headers: {} };
   }

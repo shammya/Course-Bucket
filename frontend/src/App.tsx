@@ -7,6 +7,7 @@ import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
 import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { FileUploader } from "tools/FileUploader";
 import AdminDashboard from "./components/AdminPanel/AdminDashboard";
 import { CourseView } from "./components/course/courseView/CoursePage";
 import Dashboard from "./components/person/Dashboard";
@@ -45,6 +46,7 @@ function App() {
             <Route path="/my-course" component={MyCourse} />
             <Route path="/admin" component={AdminDashboard} />
 
+            <Route path="/file-upload" component={FileUploader} />
             <Route path="/test" component={Auth} />
             <Redirect from="/" to="/test" />
           </Switch>

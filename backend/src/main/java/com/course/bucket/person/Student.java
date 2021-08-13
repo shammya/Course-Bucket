@@ -70,14 +70,14 @@ public class Student extends Person {
 			rs.next();
 			if (rs.getInt("EDU_STATUS_ID") != 0)
 				eduStatus = new EduStatus(rs.getInt("EDU_STATUS_ID"));
-			sql = "SELECT ID FROM PURCHASE_HISTORY WHERE STUDENT_ID = '#'";
-			ResultSet rs1 = DB.executeQuery(sql, username);
-			int count = 0;
-			while (rs1.next()) {
-				count++;
-			}
-			this.courseOwned = new Integer(count);
-			rs1.close();
+//			sql = "SELECT ID FROM PURCHASE_HISTORY WHERE STUDENT_ID = '#'";
+//			ResultSet rs1 = DB.executeQuery(sql, username);
+//			int count = 0;
+//			while (rs1.next()) {
+//				count++;
+//			}
+//			this.courseOwned = new Integer(count);
+//			rs1.close();
 		} catch (SQLException ex) {
 			System.err.println("error in student");
 		}

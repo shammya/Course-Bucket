@@ -1,10 +1,17 @@
 package com.course.bucket;
 
 import org.springframework.boot.SpringApplication;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import com.course.bucket.database.DB;
+import com.course.bucket.files.FileStorageProperties;
 
+
+@EnableConfigurationProperties({
+	FileStorageProperties.class
+})
 @SpringBootApplication
 public class BucketApplication {
 

@@ -100,7 +100,7 @@ export class Property {
 
   constructor(text: string = "", iconName: string = "FaIcons") {
     this.text = text;
-    this.icon = new Files("ICON", "PROPERTY", iconName);
+    this.icon = new Files("ICON", "PROPERTY").setContent(iconName);
   }
 }
 
