@@ -21,6 +21,7 @@ import com.course.bucket.authentication.JwtUtils;
 @CrossOrigin(origins = "http://localhost:6600")
 public class DesignationController {
 	
+	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/add-designation")
 	public void addDesignation(@RequestBody Designation designation) {
 		//System.out.println("Designation : "+designation.ge+" "+designation.adminId);
@@ -38,12 +39,13 @@ public class DesignationController {
 		return designation;
 	}
 		
-	
+	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/update-designation")
 	public void updateDesignation(@RequestBody Designation  designation) {
 		Designation.changeDesignationName(designation);
 	}
 	
+	@PreAuthorize("hasRole('Admin')")
 	@DeleteMapping("/delete-designation/{id}")
 	public void deleteDesignation(@PathVariable Integer id) {
 		Designation.deleteDesignation(id);

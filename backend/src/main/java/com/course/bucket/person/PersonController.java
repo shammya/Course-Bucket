@@ -30,22 +30,27 @@ import com.course.bucket.authentication.MessageResponse;
 
 public class PersonController {
 	
+	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
 	@PostMapping("/add-person")
 	public void addPerson(@RequestBody Person person) {
 		Person.createNewPerson(person);
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/approve-course/{courseId}")
 	public void approveCourse(@PathVariable Integer courseId) {
 		Person.approveCourse(courseId);
 	}
 
+	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
 	@GetMapping("/get-person-by-id/{id}")
 	public Person findPerson(@PathVariable String id){
 		Person person = new Person(id);
 		person.setPassword("");
 		return person;
 	}
-//	@PreAuthorize("hasRole('Teacher') or hasRole('TEACHER') or hasRole('ROLE_Teacher')")
+	
+	@PreAuthorize("hasRole('Teacher') or hasRole('Student') or hasRole('Admin')")
 	@GetMapping("/get-person-self")
 	public ResponseEntity<?> getPersonSelf(){
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -55,26 +60,40 @@ public class PersonController {
 		System.out.println("About "+person.getAbout());
 		return ResponseEntity.ok(person);
 	}
+	
+	
+	
+	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-new-user-admin")
 	public HashMap<Date, NewUser> getNewUserAdmin(){
 		return Person.getNewUserAdmin();
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-show-card-admin")
 	public ShowCard showCardAdmin(){
 		return Person.showCardAdmin();
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-cumulative-rating-teacher/{teacherUsername}")
 	public Vector<CumulativeRating> getCumulativeRatingTeacher(@PathVariable String teacherUsername){
 		return Person.getCumulativeRatingTeacher(teacherUsername);
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-course-overview/{id}")
 	public CourseOverview getCourseOvervie(@PathVariable Integer id){
 		return Person.getCourseOverview(id);
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-teacher-info")
-	public ArrayList<TeacherInfoAdmin> getCourseOverviewAdmin(){
+	public ArrayList<TeacherInfoAdmin> getTeacherInfoAdmin(){
 		return Person.getTeacherInfoAdmin();
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-student-info")
 	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
 		return Person.getStudentInfoAdmin();
@@ -92,6 +111,8 @@ public class PersonController {
 //		Person.changePersonName(oldName, newName);
 //	}
 //	
+	
+	@PreAuthorize("hasRole('Admin')")
 	@DeleteMapping("/delete-person/{name}")
 	public void deletePerson(@PathVariable String name) {
 		Person.deletePerson(name);
