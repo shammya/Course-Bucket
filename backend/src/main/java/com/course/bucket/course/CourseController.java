@@ -43,9 +43,14 @@ public class CourseController {
 //		return Course.getAllCategories();
 //	}
 	
-	@GetMapping("/get-course-by-id/{id}")
-	public Course findById(@PathVariable Integer id) {
+	@GetMapping("/get-course-for-update/{id}")
+	public Course getCourseForUpdate(@PathVariable Integer id) {
 		return new Course(id);
+	}
+	@GetMapping("/get-course-to-show/{id}")
+	public Course getCourseToShow(@PathVariable Integer id) {
+		Course course = new Course(id);
+		return course;
 	}
 	
 	@GetMapping("/get-course-popularity-teacher/{teacherUsername}")

@@ -1,5 +1,7 @@
 package com.course.bucket.course.additionals;
 
+import com.course.bucket.database.DB;
+
 public class MiniCourse {
 	private Integer id;
 	private String title;
@@ -9,7 +11,11 @@ public class MiniCourse {
 	private Double price;
 	private Double offeredPrice;
 
-
+	public MiniCourse() {}
+	
+	public MiniCourse (Integer id) {
+		
+	}
 	
 	public MiniCourse(Integer id, String title, String teacherName, Double rating, Integer ratingCount, Double price,
 			Double offeredPrice) {

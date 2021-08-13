@@ -17,13 +17,15 @@ import Typography from "@material-ui/core/Typography";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
+import { Files } from "classes/Files";
 import classNames from "classnames";
 import AuthService, { authHeaders } from "components/auth/api/AuthService";
+import PersonService from "components/person/api/PersonService";
 import { GLOBAL } from "Configure";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Responsive } from "tools/responsive/Responsive";
-import { TopNav, SideNav } from "./NavBar";
+import { TopNav } from "./NavBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,6 +74,13 @@ const useStyles = makeStyles((theme) => ({
 export function Header() {
   const classes = useStyles();
   const history = useHistory();
+  const [photo, setPhoto] = useState<Files>();
+  useEffect(() => {
+    PersonService.getProfilePhoto().then((response) => {
+      console.log("Profile photo fetched", response.data);
+      setPhoto(response.data);
+    });
+  }, []);
 
   function profileDetailsLoad() {
     if (AuthService.getCurrentAccountType() == "Teacher") {
@@ -305,7 +314,7 @@ export function Header() {
                   setAnchorRef(event.currentTarget)
                 }
               >
-                <Avatar />
+                <Avatar src={photo?.content} />
               </IconButton>
               <Popover
                 open={Boolean(anchorRef)}
@@ -331,7 +340,7 @@ export function Header() {
                         spacing={1}
                       >
                         <Grid item>
-                          <Avatar />
+                          <Avatar src={photo?.content} />
                         </Grid>
                         <Grid item>
                           <Typography>Signed in as</Typography>

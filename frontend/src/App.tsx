@@ -42,7 +42,7 @@ function App() {
             <Route path="/profile-details" component={ProfileDetails} />
             <Route path="/create-course" exact component={CreateCourse} />
             <Route path="/create-course/:courseId" component={CreateCourse} />
-            <Route path="/course" component={CourseView} />
+            <Route path="/course/:courseId" component={CourseView} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/my-course" component={MyCourse} />
             <Route path="/admin" component={AdminDashboard} />

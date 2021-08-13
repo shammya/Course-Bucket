@@ -14,7 +14,7 @@ function RatingBox() {
   return (
     <Card style={{ width: "100%" }}>
       <CardContent>
-        <Grid container direction="column" xs spacing={3}>
+        <Grid container direction="column" spacing={3}>
           <Grid item container>
             <Grid item md={2} xs={3} container direction="column">
               <Grid item>
@@ -26,8 +26,9 @@ function RatingBox() {
               </Grid>
             </Grid>
             <Grid item md={10} xs={9} container direction="column">
-              {[5, 4, 3, 2, 1].map((value) => (
+              {[5, 4, 3, 2, 1].map((value, index) => (
                 <Grid
+                  key={index}
                   container
                   direction="row"
                   wrap="nowrap"
@@ -41,7 +42,11 @@ function RatingBox() {
                     />
                   </Grid>
                   <Grid item>
-                    <Rating value={value} readOnly />
+                    <Rating
+                      name="course-rating-output"
+                      value={value}
+                      readOnly
+                    />
                   </Grid>
                   <Grid item>
                     <Typography>{value}</Typography>
@@ -72,6 +77,7 @@ function RatingBox() {
               </Grid>
               <Grid item>
                 <Rating
+                  name="course-rating-input"
                   value={ratingValue}
                   onChange={(event, value) => setRatingValue(value)}
                 />

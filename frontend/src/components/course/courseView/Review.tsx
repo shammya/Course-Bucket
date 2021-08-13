@@ -22,7 +22,7 @@ export function ReviewSection() {
   return (
     <Card>
       <CardContent>
-        <Grid container direction="column" xs spacing={2}>
+        <Grid container direction="column" spacing={2}>
           <Grid item container direction="row" justifyContent="space-between">
             <Grid item>
               <Typography variant="h4" align="center">
@@ -43,13 +43,13 @@ export function ReviewSection() {
               />
             </Grid>
           </Grid>
-          {[1, 2, 3, 4].map((item) => (
-            <>
+          {[1, 2, 3, 4].map((item, index) => (
+            <Grid key={index}>
               <Divider />
               <Grid item>
                 <ReviewBox />
               </Grid>
-            </>
+            </Grid>
           ))}
         </Grid>
       </CardContent>
@@ -58,7 +58,7 @@ export function ReviewSection() {
 }
 export function ReviewBox() {
   return (
-    <Grid container direction="row" wrap="nowrap" xs spacing={2}>
+    <Grid container direction="row" wrap="nowrap" spacing={2}>
       <Grid item>
         <Avatar />
       </Grid>
@@ -66,9 +66,9 @@ export function ReviewBox() {
         <Grid>
           <Typography variant="h5">Reviewer Name</Typography>
         </Grid>
-        <Grid item container direction="row" xs spacing={2}>
+        <Grid item container direction="row" spacing={2}>
           <Grid item>
-            <Rating value={3} />
+            <Rating value={3} name="rating-input" />
           </Grid>
           <Grid item>
             <Typography variant="subtitle1">4 weeks ago</Typography>
@@ -92,7 +92,7 @@ function ReviewInputDialog({ open, onClose }) {
     >
       <DialogTitle>Write a review</DialogTitle>
       <DialogContent>
-        <Grid container direction="column" xs spacing={3}>
+        <Grid container direction="column" spacing={3}>
           <Grid
             item
             container
@@ -106,7 +106,7 @@ function ReviewInputDialog({ open, onClose }) {
               <Typography variant="body1">Give a rating </Typography>
             </Grid>
             <Grid item>
-              <Rating />
+              <Rating name="rating-input" />
             </Grid>
           </Grid>
         </Grid>
@@ -115,7 +115,7 @@ function ReviewInputDialog({ open, onClose }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Grid container direction="row" justifyContent="center" xs spacing={2}>
+        <Grid container direction="row" justifyContent="center" spacing={2}>
           <Grid item>
             <Button
               variant="contained"

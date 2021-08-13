@@ -4,9 +4,15 @@ import { authHeaders } from "components/auth/api/AuthService";
 import { GLOBAL } from "Configure.js";
 
 class CourseService {
-  getCourse(courseId: number) {
+  getCourseForUpdate(courseId: number) {
     return axios.get(
-      GLOBAL.HOST + `/get-course-by-id/${courseId}`,
+      GLOBAL.HOST + `/get-course-for-update/${courseId}`,
+      authHeaders()
+    );
+  }
+  getCourseToShow(courseId: number) {
+    return axios.get(
+      GLOBAL.HOST + `/get-course-to-show/${courseId}`,
       authHeaders()
     );
   }

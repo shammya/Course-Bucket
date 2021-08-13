@@ -815,4 +815,17 @@ public class Person {
 			e1.printStackTrace();
 		}
 	}
+
+	public static Files getPhoto(String username) {
+		ResultSet rs = DB.executeQuery("SELECT PHOTO_ID FROM PERSON WHERE ID = '#'", username);
+		try {
+			if(rs.next()) {
+				return new Files(rs.getInt("PHOTO_ID"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

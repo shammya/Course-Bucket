@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.course.bucket.Global;
 import com.course.bucket.authentication.MessageResponse;
+import com.course.bucket.files.Files;
 
 
 
@@ -93,6 +94,11 @@ public class PersonController {
 	@GetMapping("/get-student-info")
 	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
 		return Person.getStudentInfoAdmin();
+	}
+	@GetMapping("/get-profile-photo")
+	public Files getProfilePhoto() {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return Person.getPhoto(userDetails.getUsername());
 	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")

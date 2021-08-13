@@ -20,7 +20,7 @@ function CreateCourse(props) {
 
   useEffect(() => {
     if (courseId != undefined) {
-      CourseService.getCourse(courseId).then((response) => {
+      CourseService.getCourseForUpdate(courseId).then((response) => {
         console.log("Course fetched", response.data);
         let cover = response.data.cover;
         response.data.cover = new Files(cover.type, cover.title)

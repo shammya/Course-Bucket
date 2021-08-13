@@ -22,10 +22,12 @@ import RatingSection from "components/course/courseView/Rating";
 import { ReviewSection } from "components/course/courseView/Review";
 import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
 import User from "layout/User";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IconPickerItem } from "react-fa-icon-picker";
+import { useParams } from "react-router-dom";
 import { Sticky, StickyContainer } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
+import CourseService from "../api/CourseService";
 
 export const lorem =
   "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid magni adipisci, a quibusdam deserunt cupiditate. Reprehenderit, molestiae quas minima corporis non nulla perspiciatis esse nostrum in harum eveniet. Repellendus, animi!";
@@ -97,9 +99,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function CourseView() {
+  const { courseId } = useParams();
   const classes = useStyles();
   const [checkout, setCheckout] = useState(false);
   const [purchased, setPurchased] = useState(false);
+  const [course, setCourse] = useState<Course>(new Course());
+
+  useEffect(() => {
+    if (courseId) {
+      CourseService.getCourseToShow(courseId).then((response) => {
+        console.log("Course fetched", response.data);
+        setCourse(response.data);
+      });
+    }
+  }, []);
 
   function Price() {
     return (
@@ -107,10 +120,9 @@ export function CourseView() {
         <Grid item>
           <Typography variant="h5">
             ৳
-            {
-              (course.mainPrice -
-                (course.mainPrice * course.off) / 100) as Number
-            }
+            {course?.mainPrice
+              ? course?.mainPrice - (course?.mainPrice * course?.off) / 100
+              : ""}
           </Typography>
         </Grid>
         <Grid item>
@@ -118,11 +130,11 @@ export function CourseView() {
             variant="body2"
             style={{ textDecoration: "line-through" }}
           >
-            ৳{course.mainPrice}
+            ৳{course?.mainPrice}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="body1">{course.off}% off</Typography>
+          <Typography variant="body1">{course?.off}% off</Typography>
         </Grid>
       </>
     );
@@ -131,18 +143,18 @@ export function CourseView() {
     return (
       <>
         <Grid item>
-          <Typography variant="h4">{course.title}</Typography>
+          <Typography variant="h4">{course?.title}</Typography>
         </Grid>
         <Grid item>
-          <Typography variant="h6">{course.subTitle}</Typography>
+          <Typography variant="h6">{course?.subTitle}</Typography>
         </Grid>
         <Grid item container direction="row">
           <Grid item>{/* <Rating></Rating> */}</Grid>
           <Grid item>118001 ratings 1090034 students</Grid>
         </Grid>
-        <Grid item>Created by {course.teacherName}</Grid>
+        <Grid item>Created by {course?.teacherName}</Grid>
         <Grid item container direction="row">
-          <Grid item>Last updated {course.lastUpdate}</Grid>
+          <Grid item>Last updated {course?.lastUpdate}</Grid>
           <Grid item>languages</Grid>
         </Grid>
       </>
@@ -155,8 +167,9 @@ export function CourseView() {
           <Typography variant="h6">This course includes:</Typography>
         </Grid>
         <List dense={true}>
-          {course.properties.map((item) => (
+          {course?.properties.map((item, index) => (
             <ListItem
+              key={item.id ? item.id : index}
               classes={{
                 root: classes.MuiListItemRoot,
                 gutters: classes.MuiListItemGutters,
@@ -189,7 +202,7 @@ export function CourseView() {
       >
         <CardContent>
           <Grid container direction="row">
-            <Grid item md={8} xs={12} direction="column">
+            <Grid item container md={8} xs={12} direction="column">
               <TitleSection />
             </Grid>
             <Grid
@@ -254,12 +267,16 @@ export function CourseView() {
     return (
       <Card>
         <CardContent>
-          <Grid container direction="column" xs spacing={1}>
+          <Grid container direction="column" spacing={1}>
             <Grid item>
               <Image />
             </Grid>
-            <TitleSection />
-            <CourseProperties />
+            <Grid item>
+              <TitleSection />
+            </Grid>
+            <Grid item>
+              <CourseProperties />
+            </Grid>
             <Grid
               item
               container
@@ -322,8 +339,9 @@ export function CourseView() {
                   <Typography variant="h5">What you'll learn</Typography>
                 </Grid>
                 <List dense={false}>
-                  {course.outcomes.map((item) => (
+                  {course?.outcomes.map((item, index) => (
                     <ListItem
+                      key={index}
                       classes={{
                         root: classes.MuiListItemRoot,
                         gutters: classes.MuiListItemGutters,
@@ -347,8 +365,9 @@ export function CourseView() {
             <CardContent>
               <Typography variant="h5">Requirements</Typography>
               <List dense={false}>
-                {course.prerequisites.map((item) => (
+                {course?.prerequisites.map((item, index) => (
                   <ListItem
+                    key={index}
                     classes={{
                       root: classes.MuiListItemRoot,
                       gutters: classes.MuiListItemGutters,
@@ -372,7 +391,7 @@ export function CourseView() {
           <Card>
             <CardContent>
               <Typography variant="h5">Description</Typography>
-              <Typography>{course.description}</Typography>
+              <Typography>{course?.description}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -401,7 +420,7 @@ export function CourseView() {
   return (
     <User>
       <StickyContainer>
-        <Grid container direction="column" xs spacing={2}>
+        <Grid container direction="column" spacing={2}>
           <Grid item>
             <Responsive displayIn="Laptop">
               <PCHeader />

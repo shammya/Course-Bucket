@@ -40,6 +40,16 @@ export class Course {
   }
 }
 
+export class MiniCourse {
+  id: number;
+  title: string;
+  teacherName: string;
+  rating: number;
+  ratingCount: number;
+  price: number;
+  offeredPrice: number;
+}
+
 export class Lecture {
   id: number;
   lectureNo: number;

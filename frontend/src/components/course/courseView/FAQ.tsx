@@ -17,11 +17,11 @@ import React, { useState } from "react";
 import { SlidingUpTransition } from "tools/Tools";
 
 export function FAQSection() {
-  const [writeFAQ, setWriteFAQ] = useState(true);
+  const [writeFAQ, setWriteFAQ] = useState(false);
   return (
     <Card>
       <CardContent>
-        <Grid container direction="column" xs spacing={2}>
+        <Grid container direction="column" spacing={2}>
           <Grid item container direction="row" justifyContent="space-between">
             <Grid item>
               <Typography variant="h4" align="center">
@@ -42,13 +42,13 @@ export function FAQSection() {
               />
             </Grid>
           </Grid>
-          {[1, 2, 3, 4].map((item) => (
-            <>
+          {[1, 2, 3, 4].map((item, index) => (
+            <Grid key={index}>
               <Divider />
               <Grid item>
                 <FAQBox />
               </Grid>
-            </>
+            </Grid>
           ))}
         </Grid>
       </CardContent>
@@ -58,7 +58,7 @@ export function FAQSection() {
 
 export function FAQBox() {
   return (
-    <Grid container direction="row" wrap="nowrap" xs spacing={2}>
+    <Grid container direction="row" wrap="nowrap" spacing={2}>
       <Grid item>
         <Avatar />
       </Grid>
@@ -73,7 +73,7 @@ export function FAQBox() {
           <Typography variant="body1">{lorem + lorem}</Typography>
         </Grid>
         <Grid item style={{ marginTop: 20 }}>
-          <Grid container direction="row" wrap="nowrap" xs spacing={2}>
+          <Grid container direction="row" wrap="nowrap" spacing={2}>
             <Grid item>
               <Avatar />
             </Grid>
@@ -108,7 +108,7 @@ function FAQInputQuestionDialog({ open, onClose }) {
         <MUIRichTextEditor />
       </DialogContent>
       <DialogActions>
-        <Grid container direction="row" justifyContent="center" xs spacing={2}>
+        <Grid container direction="row" justifyContent="center" spacing={2}>
           <Grid item>
             <Button
               variant="contained"
@@ -141,7 +141,7 @@ function FAQInputAnswerDialog({ open, onClose }) {
     >
       <DialogTitle>Reply this question</DialogTitle>
       <DialogContent>
-        <Grid container direction="column" xs spacing={2}>
+        <Grid container direction="column" spacing={2}>
           <Grid item>
             <Typography>Question will be here...</Typography>
           </Grid>
@@ -152,7 +152,7 @@ function FAQInputAnswerDialog({ open, onClose }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Grid container direction="row" justifyContent="center" xs spacing={2}>
+        <Grid container direction="row" justifyContent="center" spacing={2}>
           <Grid item>
             <Button
               variant="contained"

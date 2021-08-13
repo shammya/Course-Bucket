@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.course.bucket.course.Course;
+import com.course.bucket.course.additionals.MiniCourse;
 import com.course.bucket.database.DB;
 import com.course.bucket.designation.Designation;
 import com.course.bucket.person.Person.AccountType;
@@ -159,14 +160,13 @@ public class Teacher extends Person {
         return value;
     }
     
-    public static ArrayList<Course> getCreatedCourses(String tchname) {
+    public static ArrayList<MiniCourse> getCreatedCourses(String teacherName) {
         String sql = "SELECT ID FROM COURSE WHERE TEACHER_ID = '#' ";
-        ResultSet rs = DB.executeQuery(sql, tchname);
-        ArrayList<Course> courses = new ArrayList<Course>();
-
+        ResultSet rs = DB.executeQuery(sql, teacherName);
+        ArrayList<MiniCourse> courses = new ArrayList<MiniCourse>();
         try {
             while (rs.next()) {
-                courses.add(new Course(Integer.valueOf(rs.getString("ID"))));
+                courses.add(new MiniCourse(rs.getInt("ID")));
             }
         } catch (SQLException ex) {
         	System.err.println("error in getNumOfReview");

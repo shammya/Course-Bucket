@@ -1,5 +1,6 @@
 package com.course.bucket.person;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.authentication.JwtUtils;
 import com.course.bucket.designation.Designation;
-
+import com.course.bucket.course.additionals.MiniCourse;
+import com.course.bucket.database.DB;
 
 @RestController
 public class TeacherController {
@@ -40,6 +42,12 @@ public class TeacherController {
 		Teacher person = new Teacher(userDetails.getUsername());
 		person.setPassword("");
 		return ResponseEntity.ok(person);
+	}
+	
+	@GetMapping("/get-created-courses")
+	public ArrayList<MiniCourse> getCreatedCourses(){
+		String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		return null;
 	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")

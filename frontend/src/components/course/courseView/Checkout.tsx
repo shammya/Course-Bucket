@@ -35,7 +35,6 @@ export function CongratulationDialog({
               wrap="nowrap"
               justifyContent="space-between"
               alignItems="center"
-              xs
               spacing={1}
             >
               <Grid
@@ -98,7 +97,7 @@ export function CheckoutDialog({
     >
       <DialogTitle>Checkout</DialogTitle>
       <DialogContent>
-        <Grid direction="column" xs spacing={2}>
+        <Grid container direction="column" spacing={2}>
           <Grid item container direction="row" wrap="nowrap" xs spacing={4}>
             <Grid item container direction="column" xs spacing={1}>
               <Grid item>
@@ -209,7 +208,6 @@ export function CheckoutDialog({
                   wrap="nowrap"
                   justifyContent="space-between"
                   alignItems="center"
-                  xs
                   spacing={1}
                 >
                   <Grid
