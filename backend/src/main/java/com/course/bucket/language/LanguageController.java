@@ -3,6 +3,7 @@ package com.course.bucket.language;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import com.course.bucket.Global;
 @CrossOrigin(origins = Global.HOST)
 public class LanguageController {
 	
+	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/add-language")
 	public void addLanguage(@RequestBody Language language) {
 		//System.out.println("Language : "+language.name+" "+language.adminId);
@@ -37,11 +39,13 @@ public class LanguageController {
 	}
 		
 	
+	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/update-language/")
 	public void updateLanguage(@RequestBody Language language) {
 		Language.changeLanguageName(language);
 	}
 	
+	@PreAuthorize("hasRole('Admin')")
 	@DeleteMapping("/delete-language/{id}")
 	public void deleteLanguage(@PathVariable Integer id) {
 		Language.deleteLanguage(id);

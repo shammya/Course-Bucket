@@ -22,6 +22,8 @@ import com.course.bucket.authentication.JwtUtils;
 import com.course.bucket.designation.Designation;
 import com.course.bucket.course.additionals.MiniCourse;
 import com.course.bucket.database.DB;
+import com.course.bucket.tools.ToolKit;
+
 
 @RestController
 public class TeacherController {
@@ -31,9 +33,9 @@ public class TeacherController {
 		Teacher.createNewTeacher(person,desig_id);
 	}
 	
-	@GetMapping("/get-teacher/{id}")
+	@GetMapping("/get-teacher")
 	public Teacher findTeacher(@PathVariable String id){
-		return new Teacher(id);
+		return new Teacher(ToolKit.getCurrentUserName());
 	}
 
 	@GetMapping("/get-teacher-self")
@@ -62,6 +64,7 @@ public class TeacherController {
 //		Person.changePersonName(oldName, newName);
 //	}
 //	
+	@PreAuthorize("hasRole('Admin')")
 	@DeleteMapping("/delete-teacher/{id}")
 	public void deleteTeacher(@PathVariable String id) {
 		Person.deletePerson(id);
@@ -69,6 +72,7 @@ public class TeacherController {
 	
 
 //	Mehedi
+	@PreAuthorize("hasRole('Teacher')")
 	@PutMapping("/update-teacher/{designationId}")
 	public void updateTeacher(@PathVariable Integer designationId, @RequestBody Person person) {
 		Teacher.update(person, designationId);

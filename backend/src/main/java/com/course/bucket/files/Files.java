@@ -194,11 +194,11 @@ public class Files{
 //		deleteFile(this.getId());
 	}
 
-//	public static void createPhoto(Files files, String email) {
-//		Integer id = createNewFile(files);
-//		DB.execute("UPDATE PERSON SET PHOTO_ID = # WHERE EMAIL = '#' ", id.toString(), email);
-//	}
-//
+	public static void createPhoto(Files files, String email) {
+		Integer id = createNewFile(files);
+		DB.execute("UPDATE PERSON SET PHOTO_ID = # WHERE EMAIL = '#' ", id.toString(), email);
+	}
+
 //	
 ////	SLIDER => FILES_ID, ADMIN,
 ////	COURSE_CATEGORY => COURSE_ID, CATEGORY_ID
@@ -229,6 +229,11 @@ public class Files{
 //
 //	}
 //
+
+	public void delete() {
+		DB.execute("DELETE FILES WHERE ID = #", id.toString());
+		deleteFile(this.getId());
+	}
 //
 //	public static String createNewMultipartfile(Integer id, FileType type, MultipartFile file) {
 //		if (!file.isEmpty()) {

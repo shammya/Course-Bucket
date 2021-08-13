@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,26 +15,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
+import com.course.bucket.tools.ToolKit;
 
 
 @RestController
 @CrossOrigin(origins = Global.HOST)
 public class ReviewController {
 	
+	@PreAuthorize("hasRole('Student')")
 	@PostMapping("/add-review")
 	public void addReview(@RequestBody ReviewDb review) {
 		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
 		Review.createNewReview(review);
 	}
+	
+	
+	@PreAuthorize("hasRole('Student')")
 	@PostMapping("/add-rating")
 	public void addRating(@RequestBody RatingDb rating) {
 		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
 		Review.createNewRating(rating);
 	}
 	
-	@GetMapping("/get-review-teacher/{teacherUsername}")
-	public ArrayList<ReviewList> getReviewListTeacher(@PathVariable String teacherUsername){
-		return Review.getReviewListTeacher(teacherUsername);
+	
+	@PreAuthorize("hasRole('Teacher')")
+	@GetMapping("/get-review-teacher")
+	public ArrayList<ReviewList> getReviewListTeacher(){
+		return Review.getReviewListTeacher(ToolKit.getCurrentUserName());
 	}
 	
 //	@GetMapping("/get-review-by-name/{id}")

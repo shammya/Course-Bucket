@@ -21,20 +21,22 @@ import com.course.bucket.Global;
 import com.course.bucket.authentication.JwtUtils;
 import com.course.bucket.designation.Designation;
 import com.course.bucket.edustatus.EduStatus;
+import com.course.bucket.tools.ToolKit;
 
 
 @RestController
 @CrossOrigin(origins = Global.HOST)
 public class StudentController {
 	
+	
 	@PostMapping("/add-student/{edu_id}")
 	public void addStudent(@RequestBody Person person,@PathVariable Integer edu_id) {
 		Student.createNewStudent(person,edu_id);
 	}
 	
-	@GetMapping("/get-student/{id}")
+	@GetMapping("/get-student")
 	public Student findStudent(@PathVariable String id){
-		return new Student(id);
+			return new Student(ToolKit.getCurrentUserName());
 	}
 
 	@GetMapping("/get-student-self")
@@ -45,9 +47,10 @@ public class StudentController {
 		return ResponseEntity.ok(person);
 	}
 	
-	@GetMapping("/get-student-list-teacher/{id}")
-	public ArrayList<StudentList> getStudntListTeacher(@PathVariable String id){
-		return Student.getStudntListTeacher(id);
+	@PreAuthorize("hasRole('Teacher')")
+	@GetMapping("/get-student-list-teacher")
+	public ArrayList<StudentList> getStudntListTeacher(){
+		return Student.getStudntListTeacher(ToolKit.getCurrentUserName());
 	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")
@@ -62,12 +65,15 @@ public class StudentController {
 //		Person.changePersonName(oldName, newName);
 //	}
 //	
+	@PreAuthorize("hasRole('Admin')")
 	@DeleteMapping("/delete-student/{id}")
 	public void deleteStudent(@PathVariable String id) {
 		Person.deletePerson(id);
 	}
 	
 //	Mehedi
+	
+	@PreAuthorize("hasRole('Student')")
 	@PutMapping("/update-student/{eduStatusId}")
 	public void updateStudent(@PathVariable Integer eduStatusId, @RequestBody Person person) {
 		Student.update(person, eduStatusId);

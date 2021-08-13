@@ -22,6 +22,7 @@ import com.course.bucket.authentication.JwtUtils;
 @CrossOrigin(origins = Global.HOST)
 public class EduStatusController {
 	
+	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/add-edustatus")
 	public void addEduStatus(@RequestBody EduStatus edustatus) {
 		//System.out.println("EduStatus : "+edustatus.getType()+" "+edustatus.adminId);
@@ -39,12 +40,13 @@ public class EduStatusController {
 		return edustatus;
 	}
 		
-	
+	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/update-edustatus")
 	public void updateEduStatus(@RequestBody EduStatus edustatus) {
 		EduStatus.changeEduStatusName(edustatus);
 	}
 	
+	@PreAuthorize("hasRole('Admin')")
 	@DeleteMapping("/delete-edustatus/{id}")
 	public void deleteEduStatus(@PathVariable Integer id) {
 		EduStatus.deleteEduStatus(id);
