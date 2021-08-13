@@ -57,6 +57,13 @@ export interface IDrawerLayoutObject {
   content: JSX.Element;
 }
 
+function TabPanel({ children, value, index, ...other }) {
+  return (
+    <div role="tabpanel" hidden={value != index} {...other}>
+      {value === index && children}
+    </div>
+  );
+}
 const DrawerLayout = ({
   objects,
   defaultTabIndex = 0,
@@ -98,13 +105,6 @@ const DrawerLayout = ({
       </div>
     );
   }
-  function TabPanel({ children, value, index, ...other }) {
-    return (
-      <div role="tabpanel" hidden={value != index} {...other}>
-        {value === index && children}
-      </div>
-    );
-  }
   return (
     <User>
       <StickyContainer>
@@ -129,7 +129,7 @@ const DrawerLayout = ({
                       scrollButtons="auto"
                     >
                       {objects.map((item, idx) => (
-                        <Tab label={item.label} icon={item.icon} />
+                        <Tab label={item.label} icon={item.icon} key={idx} />
                       ))}
                     </Tabs>
                   </Drawer>
@@ -138,7 +138,7 @@ const DrawerLayout = ({
             </Grid>
             <Grid item className={classes.content}>
               {objects.map((item, idx) => (
-                <TabPanel value={tabIndex} index={idx}>
+                <TabPanel value={tabIndex} index={idx} key={idx}>
                   {item.content}
                 </TabPanel>
               ))}
@@ -161,7 +161,7 @@ const DrawerLayout = ({
                   scrollButtons="auto"
                 >
                   {objects.map((item, idx) => (
-                    <Tab label={item.label} />
+                    <Tab label={item.label} key={idx} />
                   ))}
                 </Tabs>
               </AppBar>
@@ -175,6 +175,7 @@ const DrawerLayout = ({
               style={{
                 padding: 15,
               }}
+              key={idx}
             >
               {item.content}
             </TabPanel>

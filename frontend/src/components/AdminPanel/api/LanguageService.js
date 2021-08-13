@@ -1,25 +1,25 @@
 import axios from "axios"
-import {global} from 'Configure.js'
+import { GLOBAL } from 'Configure.js'
 
 class LanguageService {
 
     getAllLanguages() {
-        return axios.get(global.HOST + '/get-languages')
+        return axios.get(GLOBAL.HOST + '/get-languages')
     }
 
     deleteLanguage(id) {
-        return axios.delete(global.HOST + `/delete-language/${id}`)
+        return axios.delete(GLOBAL.HOST + `/delete-language/${id}`)
     }
 
 
     updateLanguage(language) {
-        return axios.put(global.HOST + '/update-language',language)
+        return axios.put(GLOBAL.HOST + '/update-language', language)
     }
 
     addLanguage(language) {
-        return axios.post(global.HOST + '/add-language',language)
+        return axios.post(GLOBAL.HOST + '/add-language', language)
     }
-    
+
 }
 
 export default new LanguageService()

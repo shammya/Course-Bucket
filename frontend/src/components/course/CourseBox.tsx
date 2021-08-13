@@ -1,12 +1,20 @@
-import { Card, CardActionArea, CardContent, CardMedia, Grid, makeStyles, Typography } from '@material-ui/core';
-import { Rating } from '@material-ui/lab';
-import classNames from 'classnames';
-import React from 'react';
-import { useStyles } from 'Theme';
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Grid,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
+import { Rating } from "@material-ui/lab";
+import classNames from "classnames";
+import React from "react";
+import { useStyles } from "Theme";
 
-const localStyles = makeStyles(theme => ({
+const localStyles = makeStyles((theme) => ({
   titleBox: {
-    height: "115px"
+    height: "115px",
   },
   title: {
     marginBottom: "5px",
@@ -16,32 +24,67 @@ const localStyles = makeStyles(theme => ({
   },
   offPrice: {
     textDecoration: "line-through",
-  }
-}))
+  },
+}));
 
 function CourseBox({ courseData }) {
   const global = useStyles();
   const local = localStyles();
   return (
     <div>
-      <CardActionArea style={{
-        maxWidth: "200px",
-      }}>
+      <CardActionArea
+        style={{
+          maxWidth: "200px",
+        }}
+      >
         <Card>
           <CardMedia style={{ height: 135 }} image={courseData.image} />
           <CardContent style={{ padding: "0px 10px 10px 10px" }}>
-            <Grid container className={local.titleBox} wrap="nowrap" direction="column" justify="flex-start">
-              <Typography className={classNames(local.title, global.medium, global.bold)} align="left">{courseData.title}</Typography>
-              <Typography variant="subtitle2" align="left">{courseData.teacherName}</Typography>
+            <Grid
+              container
+              className={local.titleBox}
+              wrap="nowrap"
+              direction="column"
+              justifyContent="flex-start"
+            >
+              <Typography
+                className={classNames(local.title, global.medium, global.bold)}
+                align="left"
+              >
+                {courseData.title}
+              </Typography>
+              <Typography variant="subtitle2" align="left">
+                {courseData.teacherName}
+              </Typography>
             </Grid>
-            <Grid container direction="row" justify="flex-end" alignItems="center" spacing={1}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+              spacing={1}
+            >
               <Rating size="small" value={courseData.rating} readOnly />
-              <Grid item className={global.medium}>{courseData.rating}</Grid>
-              <Grid item className={global.tiny}>({courseData.numOfRating})</Grid>
+              <Grid item className={global.medium}>
+                {courseData.rating}
+              </Grid>
+              <Grid item className={global.tiny}>
+                ({courseData.numOfRating})
+              </Grid>
             </Grid>
-            <Grid container direction="row" justify="flex-end" alignItems="center" spacing={1}>
-              <Grid item className={classNames(global.medium, local.offPrice)}>{courseData.price * (1 - courseData.off / 100)}</Grid>
-              <Grid item className={classNames(global.big, global.bold)}>{courseData.price}</Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+              spacing={1}
+            >
+              <Grid item className={classNames(global.medium, local.offPrice)}>
+                {courseData.price * (1 - courseData.off / 100)}
+              </Grid>
+              <Grid item className={classNames(global.big, global.bold)}>
+                {courseData.price}
+              </Grid>
             </Grid>
           </CardContent>
         </Card>
@@ -50,8 +93,7 @@ function CourseBox({ courseData }) {
   );
 }
 
-export default CourseBox
-
+export default CourseBox;
 
 // import React from 'react';
 // import { makeStyles } from '@material-ui/core/styles';
@@ -179,4 +221,3 @@ export default CourseBox
 //     </Card>
 //   );
 // }
-

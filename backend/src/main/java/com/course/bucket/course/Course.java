@@ -20,6 +20,7 @@ import com.course.bucket.courseextra.faq.FAQ;
 import com.course.bucket.courseextra.purchasehistory.PurchaseHistory;
 import com.course.bucket.courseextra.review.Review;
 import com.course.bucket.database.DB;
+import com.course.bucket.files.Files;
 import com.course.bucket.language.Language;
 import com.course.bucket.person.Student;
 import com.course.bucket.person.Teacher;
@@ -41,7 +42,7 @@ public class Course {
 	Date lastUpdate;
 	boolean isApproved;
 	Teacher teacher;
-	// Files imageFile;
+	 Files cover;
 	Category mainCategory;
 	Category subCategory;
 
@@ -51,8 +52,8 @@ public class Course {
 	ArrayList<Review> reveiws;
 
 	Integer numOfStudents;
-	String[] prerequisites;
-	String[] outcomes;
+	ArrayList<String> prerequisites;
+	ArrayList<String> outcomes;
 
 	ArrayList<Week> weeks;
 //    CourseContent content;
@@ -61,7 +62,59 @@ public class Course {
 	PromoCode promo;
 
 	public Course() {
+		this.rating = 0.0;
+	}
 
+	public String getTeacherUsername() {
+		return teacherUsername;
+	}
+
+	public void setTeacherUsername(String teacherUsername) {
+		this.teacherUsername = teacherUsername;
+	}
+
+	public ArrayList<String> getPrerequisites() {
+		return prerequisites;
+	}
+
+	public void setPrerequisites(ArrayList<String> prerequisites) {
+		this.prerequisites = prerequisites;
+	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
+	public PromoCode getPromo() {
+		return promo;
+	}
+
+	public void setPromo(PromoCode promo) {
+		this.promo = promo;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
+	}
+
+	public void setApproved(boolean isApproved) {
+		this.isApproved = isApproved;
+	}
+
+	public void setMainCategory(Category mainCategory) {
+		this.mainCategory = mainCategory;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
+	}
+
+	public void setOutcomes(ArrayList<String> outcomes) {
+		this.outcomes = outcomes;
 	}
 
 	public Course(Integer id) {
@@ -81,7 +134,7 @@ public class Course {
 			teacher = new Teacher(rs.getString("TEACHER_ID"));
 			teacherName = teacher.getFirstName();
 			teacherUsername = teacher.getUsername();
-			// imageFile = new Files(rs.getInt("COVER_ID"));
+			cover = new Files(rs.getInt("COVER_ID"));
 			subCategory = new Category(rs.getInt("CATEGORY_ID"));
 			mainCategory = new Category(subCategory.getParentId());
 
@@ -93,64 +146,145 @@ public class Course {
 //            Rating will be added
 //            Review will be added
 			if (rs.getString("OUTCOMES") != null) {
-				outcomes = rs.getString("OUTCOMES").split("><");
+				outcomes = new ArrayList();
+				String[] ara = rs.getString("OUTCOMES").split("><");
+				for(int i=0; i<ara.length; i++) {
+					outcomes.add(ara[i]);
+				}
 			} else {
-				outcomes = new String[0];
+				outcomes = new ArrayList();
 			}
 			if (rs.getString("PREREQUISITES") != null) {
-				prerequisites = rs.getString("PREREQUISITES").split("><");
+				prerequisites = new ArrayList();
+				String[] ara = rs.getString("PREREQUISITES").split("><");
+				for(int i=0; i<ara.length; i++) {
+					prerequisites.add(ara[i]);
+				}
 			} else {
-				prerequisites = new String[0];
+				prerequisites = new ArrayList();
 			}
 			rs.close();
 		} catch (SQLException ex) {
 			System.err.println("error in course constructor");
 		}
 	}
-
-	public static void createNewCourse(Course course) {
+	
+	public static void createNewCourse(String teacherUsername, Course course) {
 		Integer courseId = DB.generateId("COURSE");
-//		this.title = title;
-//		this.subTitle = subTitle;
-//		this.description = description;
-//		this.mainPrice = price;
-//		this.imageFile = cover;
-//		this.subCategory = subCategory;
-//		this.mainCategory = subCategory.getParent();
-//		this.publishDate = ToolKit.getCurTime();
-//		this.isApproved = false;
-//		this.teacher = GLOBAL.TEACHER;
-//		this.properties = new ArrayList<Property>();
-
 		course.setId(courseId);
-		String prerequisites = formatString(course.getPrerequisitives());
+		
+		Files.createNewFile(course.cover);
+		String prerequisites = formatString(course.getPrerequisites());
 		String outcomes = formatString(course.getOutcomes());
+		
+		DB.execute(""
+				+ "INSERT INTO COURSE("
+				+ "ID, TITLE, SUBTITLE, "
+				+ "DESCRIPTION, PRICE, OFFER, "
+				+ "PUBLISH_DATE, IS_APPROVED, TEACHER_ID, "
+				+ "COVER_ID, CATEGORY_ID, PREREQUISITES, "
+				+ "OUTCOMES"
+				+ ") VALUES("
+				+ "#, '#', '#', "
+				+ "'#', #, #, "
+				+ "#, '#', '#',"
+				+ "#, #,'#',"
+				+ "'#')", 
+				courseId.toString(), 
+				course.getTitle(), 
+				course.getSubTitle(),
+				
+				course.getDescription(),
+				course.getMainPrice().toString(), 
+				course.getOff().toString(),
+				
+				ToolKit.getCurTimeDB(), 
+				ToolKit.JBoolToDBool(false),
+				teacherUsername, 
+				
+				course.cover.getId().toString(),
+				course.getSubCategory().getId().toString(), 
+				prerequisites, 
 
-		String sql = "INSERT INTO COURSE(ID, TITLE, SUBTITLE, DESCRIPTION, PRICE, OFFER, PUBLISH_DATE, IS_APPROVED, TEACHER_ID, COVER_ID, CATEGORY_ID, PREREQUISITES, OUTCOMES) VALUES(#, '#', '#', '#', #, #, '#', '#', #,NULL,#,'#','#')";
-		DB.execute(sql, courseId.toString(), course.getTitle(), course.getSubTitle(), course.getDescription(),
-				course.getMainPrice().toString(), course.getOff().toString(),
-				ToolKit.JDateToDDate(course.getPublishDate()), ToolKit.JBoolToDBool(course.getIsApproved()),
-				course.getTeacherUserame(), course.getSubCategory().getId().toString(), prerequisites, outcomes);
+				outcomes);
 
-		for (Week week : course.getWeeks()) {
-			Integer weekId = DB.generateId("week");
-			String weekSql = "insert into week(id,week_no,title,last_update,course_id) values(#,#,'#','#',#)";
-			DB.execute(weekSql, weekId.toString(), week.getWeekNo().toString(), week.getTitle(),
-					ToolKit.JDateToDDate(week.getLastUpdate()), courseId.toString());
-			for (Lecture lecture : week.getLectures()) {
-				Integer lectureId = DB.generateId("lecture");
-				String lectureSql = "insert into lecture(id,lecture_no,title,last_update,is_preview,week_id,file_id) values(#,#,'#','#','#',#,NULL)";
-				DB.execute(lectureSql, lectureId.toString(), lecture.getLectureNo().toString(), lecture.getTitle(),
-						ToolKit.JDateToDDate(lecture.getLastUpdate()), ToolKit.JBoolToDBool(lecture.isIsPreview()),
-						weekId.toString());
-			}
-		}
+		// After Course Insert
+		course.weeks.forEach(week -> {
+			week.upload(courseId);
+		});
+		course.uploadLanguages();
+		course.properties.forEach(property -> {
+			property.upload(courseId);
+		});
 		notificationCourseUpload(course.getTeacherUserame(), courseId);
+		System.out.println("Course upload done of id: "+courseId);
+	}
+	
+	public static void update(Course course) {
+		Course currentCourseState = new Course(course.getId());
+		course.cover.update();
+		String prerequisites = formatString(course.getPrerequisites());
+		String outcomes = formatString(course.getOutcomes());
+		
+		DB.execute(""
+				+ "UPDATE COURSE SET "
+				+ "TITLE = '#', "
+				+ "SUBTITLE = '#', "
+				+ "DESCRIPTION = '#', "
+				+ "PRICE = #, "
+				+ "OFFER = #, "
+				+ "CATEGORY_ID = #, "
+				+ "PREREQUISITES = '#', "
+				+ "OUTCOMES = '#' "
+				+ "WHERE ID = #" ,
+				course.getTitle(),
+				course.getSubTitle(),
+				course.description,
+				course.getMainPrice().toString(),
+				course.getOff().toString(),
+				course.getSubCategory().getId().toString(),
+				prerequisites,
+				outcomes,
+				course.getId().toString());
 
+		// After Course Update
+		for(Week week : currentCourseState.weeks) {
+			boolean found = false;
+			for(Week updatedWeek : course.weeks) {
+				if(updatedWeek.getId() == week.getId()) {
+					found = true;
+					for(Lecture lecture : week.getLectures()) {
+						boolean lecFound = false;
+						for(Lecture updatedLecture : updatedWeek.getLectures()) {
+							if(updatedLecture.getId() == lecture.getId()) {
+								lecFound = true;
+								break;
+							}
+						}
+						if(!lecFound) lecture.delete();
+					}
+				}
+			}
+			if(!found) week.delete();
+		}
+		
+		course.weeks.forEach(week -> {
+			if(week.getId() == null) {
+				week.upload(course.getId());
+			}
+			else {
+				week.update();				
+			}
+		});
+		course.updateLanguages();
+		course.properties.forEach(property -> {
+			property.update();
+		});
 	}
 
-	public static String formatString(String[] strarr) {
-		int len = strarr.length;
+	public static String formatString(ArrayList<String> strarr) {
+		if(strarr == null) return "";
+		int len = strarr.size();
 		String str = "";
 		int i = 0;
 		for (String unitString : strarr) {
@@ -186,11 +320,11 @@ public class Course {
 	}
 
 	public void setSubTitle(String subTitle) {
-		if (this.subTitle.equals(subTitle)) {
-			return;
-		}
+//		if (this.subTitle.equals(subTitle)) {
+//			return;
+//		}
 		this.subTitle = subTitle;
-		DB.execute("UPDATE COURSE SET SUBTITLE = '#' WHERE ID = #", subTitle, id.toString());
+//		DB.execute("UPDATE COURSE SET SUBTITLE = '#' WHERE ID = #", subTitle, id.toString());
 	}
 
 	public Double getRating() {
@@ -209,14 +343,6 @@ public class Course {
 		this.teacher = teacher;
 	}
 
-	public String[] getPrerequisitive() {
-		return prerequisites;
-	}
-
-	public void setPrerequisitive(String requisitive) {
-		this.prerequisites = requisitive.split("><", 0);
-		DB.execute("UPDATE COURSE SET PREREQUISITES = '#' WHERE ID = #", requisitive, id.toString());
-	}
 
 	public ArrayList<Review> getReveiws() {
 		return reveiws;
@@ -239,22 +365,22 @@ public class Course {
 	}
 
 	public void setSubCategory(Category subCategory) {
-		if (this.subCategory != null) {
-			if (this.subCategory.equals(subCategory)) {
-				return;
-			}
-		}
+//		if (this.subCategory != null) {
+//			if (this.subCategory.equals(subCategory)) {
+//				return;
+//			}
+//		}
 		this.subCategory = subCategory;
-		this.mainCategory = new Category(subCategory.getParentId());
-		DB.execute("UPDATE COURSE SET CATEGORY_ID = # WHERE ID = #", subCategory.getId().toString(), id.toString());
+//		this.mainCategory = new Category(subCategory.getParentId());
+//		DB.execute("UPDATE COURSE SET CATEGORY_ID = # WHERE ID = #", subCategory.getId().toString(), id.toString());
 	}
 
 	public void setTitle(String title) {
-		if (this.title.equals(title)) {
-			return;
-		}
+//		if (this.title.equals(title)) {
+//			return;
+//		}
 		this.title = title;
-		DB.execute("UPDATE COURSE SET TITLE = '#' WHERE ID = #", title, id.toString());
+//		DB.execute("UPDATE COURSE SET TITLE = '#' WHERE ID = #", title, id.toString());
 	}
 
 	public Integer getNumOfStudents() {
@@ -279,13 +405,13 @@ public class Course {
 	}
 
 	public void setMainPrice(Double mainPrice) {
-		if (this.mainPrice != null) {
-			if (this.mainPrice.equals(mainPrice)) {
-				return;
-			}
-		}
+//		if (this.mainPrice != null) {
+//			if (this.mainPrice.equals(mainPrice)) {
+//				return;
+//			}
+//		}
 		this.mainPrice = mainPrice;
-		DB.execute("UPDATE COURSE SET PRICE = # WHERE ID = #", mainPrice.toString(), id.toString());
+//		DB.execute("UPDATE COURSE SET PRICE = # WHERE ID = #", mainPrice.toString(), id.toString());
 	}
 
 	public Double getOff() {
@@ -293,13 +419,13 @@ public class Course {
 	}
 
 	public void setOff(Double off) {
-		if (this.off != null) {
-			if (this.off.equals(off)) {
-				return;
-			}
-		}
+//		if (this.off != null) {
+//			if (this.off.equals(off)) {
+//				return;
+//			}
+//		}
 		this.off = off;
-		DB.execute("UPDATE COURSE SET OFFER = # WHERE ID = #", off.toString(), id.toString());
+//		DB.execute("UPDATE COURSE SET OFFER = # WHERE ID = #", off.toString(), id.toString());
 	}
 
 	public Category getMainCategory() {
@@ -316,7 +442,7 @@ public class Course {
 
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
-		DB.execute("UPDATE COURSE SET LAST_UPDATE = # WHERE ID = #", ToolKit.JDateToDDate(lastUpdate), id.toString());
+//		DB.execute("UPDATE COURSE SET LAST_UPDATE = # WHERE ID = #", ToolKit.JDateToDDate(lastUpdate), id.toString());
 	}
 
 	public ArrayList<Language> getLanguages() {
@@ -324,39 +450,40 @@ public class Course {
 	}
 
 	public void setLanguages(ArrayList<Language> languages) {
-		if (this.languages != null) {
-			if (this.languages.equals(languages)) {
-				return;
-			}
-		}
+//		if (this.languages != null) {
+//			if (this.languages.equals(languages)) {
+//				return;
+//			}
+//		}
 		this.languages = languages;
-		deleteCourseLanguage();
-		for (Language lang : languages) {
-			Integer id = DB.generateId("COURSE_LANGUAGE");
-			DB.execute("INSERT INTO COURSE_LANGUAGE VALUES(#, '#', #)", id.toString(), this.id.toString(),
-					lang.getId().toString());
-		}
+//		deleteCourseLanguage();
+//		for (Language lang : languages) {
+//			Integer id = DB.generateId("COURSE_LANGUAGE");
+//			DB.execute("INSERT INTO COURSE_LANGUAGE VALUES(#, '#', #)", id.toString(), this.id.toString(),
+//					lang.getId().toString());
+//		}
 	}
 
-	public String[] getOutcomes() {
+	public ArrayList<String> getOutcomes() {
 		return outcomes;
 	}
+	
 
-	public void setOutcomes(String outcome) {
-		this.outcomes = outcome.split("><", 0);
-		DB.execute("UPDATE COURSE SET OUTCOMES = '#' WHERE ID = #", outcome, id.toString());
-	}
+//	public void setOutcomes(String outcome) {
+//		this.outcomes = outcome.split("><", 0);
+//		DB.execute("UPDATE COURSE SET OUTCOMES = '#' WHERE ID = #", outcome, id.toString());
+//	}
 
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
-		if (this.description.equals(description)) {
-			return;
-		}
+//		if (this.description.equals(description)) {
+//			return;
+//		}
 		this.description = description;
-		DB.execute("UPDATE COURSE SET DESCRIPTION = '#' WHERE ID = #", description, id.toString());
+//		DB.execute("UPDATE COURSE SET DESCRIPTION = '#' WHERE ID = #", description, id.toString());
 	}
 
 //    public Files getCourseImage() {
@@ -384,12 +511,12 @@ public class Course {
 		this.isApproved = isApproved;
 	}
 
-	public String[] getPrerequisitives() {
-		return this.prerequisites;
+	public Files getCover() {
+		return cover;
 	}
 
-	public void setPrerequisitives(String[] prerequisites) {
-		this.prerequisites = prerequisites;
+	public void setCover(Files cover) {
+		this.cover = cover;
 	}
 
 	public ArrayList<Week> getWeeks() {
@@ -409,7 +536,7 @@ public class Course {
 	}
 
 	public void delete() {
-		deleteCourseLanguage();
+		this.deleteCourseLanguage();
 		for (Property property : properties) {
 			property.delete();
 		}
@@ -421,6 +548,7 @@ public class Course {
 		Review.delete(this);
 		CourseRating.delete(this);
 		PurchaseHistory.delete(this);
+		cover.delete();
 		DB.execute("DELETE FROM COURSE WHERE ID = #", id.toString());
 		// imageFile.delete();
 	}
@@ -1104,5 +1232,17 @@ public class Course {
 		String sql = "insert into notification values('#', 'admin', #, '#', 'F', #, 'COURSEUPLOAD' ";
 		DB.execute(sql, id.toString(),fromId,ToolKit.JDateToDDate(new Date()),courseId.toString());
 	}
-
+	
+	
+	public void uploadLanguages() {
+		for (Language lang : languages) {
+			Integer id = DB.generateId("COURSE_LANGUAGE");
+			DB.execute("INSERT INTO COURSE_LANGUAGE VALUES(#, #, #)", id.toString(), this.id.toString(),
+					lang.getId().toString());
+		}
+	}
+	public void updateLanguages() {
+		this.deleteCourseLanguage();
+		this.uploadLanguages();
+	}
 }

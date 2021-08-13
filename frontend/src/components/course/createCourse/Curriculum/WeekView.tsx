@@ -19,6 +19,7 @@ import AddCircle from "@material-ui/icons/AddCircle";
 import { Lecture, Week } from "classes/Course";
 import React, { useEffect, useState } from "react";
 import { LectureView } from "./LectureView";
+import { useSnackbar } from "notistack";
 
 const defaultLecture = {
   id: 0,
@@ -34,76 +35,126 @@ export function WeekView({
   week,
   onWeekChange,
   onWeekRemove,
+  weekNo,
 }: {
   week: Week;
   onWeekChange: (Week) => void;
   onWeekRemove: () => void;
+  weekNo: number;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const [lectures, setLectures] = useState(week.lectures);
   const [editMode, setEditMode] = useState(false);
   const [fieldValue, setFieldValue] = useState(week.title);
 
   useEffect(() => {
     setFieldValue(week.title);
-  }, [week.title]);
+    // handleOnLectureAdd;
+  }, []);
 
   function handleOnLectureChange(index, lecture) {
     week.lectures.splice(index, 1, lecture);
     onWeekChange({ ...week, lectures: week.lectures });
+    setLectures(week.lectures);
   }
   function handleOnLectureAdd() {
-    onWeekChange({ ...week, lectures: [...week.lectures, new Lecture()] });
+    let lectures = [
+      ...week.lectures,
+      new Lecture().setLectureNo(week.lectures.length + 1),
+    ];
+    onWeekChange({ ...week, lectures: lectures });
+    setLectures(lectures);
   }
   function handleOnLectureRemove(index) {
+    if (lectures.length == 1) {
+      enqueueSnackbar("There must be at least one lecture in a week", {
+        variant: "warning",
+      });
+      return;
+    }
     week.lectures.splice(index, 1);
     onWeekChange({ ...week, lectures: week.lectures });
+    setLectures(week.lectures);
   }
 
   return (
-    <Accordion expanded={expanded} style={{ width: "100%" }}>
-      <AccordionSummary
-        expandIcon={<ExpandMore onClick={(event) => setExpanded(!expanded)} />}
-      >
+    <Accordion style={{ width: "100%" }}>
+      <AccordionSummary expandIcon={<ExpandMore />}>
         {/* <IconButton>
           <ImportExport />
         </IconButton> */}
         {!editMode && (
-          <>
-            <IconButton onClick={(event) => setEditMode(true)}>
-              <Edit />
-            </IconButton>
-            <IconButton onClick={onWeekRemove}>
-              <DeleteForever />
-            </IconButton>
-            <Typography>Week {10} :</Typography>
-            <Typography> {fieldValue}</Typography>
-          </>
+          <Grid container alignItems="center" direction="row" wrap="nowrap">
+            <Grid item>
+              <IconButton
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setEditMode(true);
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton
+                onClick={(event) => {
+                  onWeekRemove();
+                  event.stopPropagation();
+                }}
+              >
+                <DeleteForever />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <Typography style={{ whiteSpace: "nowrap", marginRight: 10 }}>
+                Week {weekNo} :
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography> {fieldValue}</Typography>
+            </Grid>
+          </Grid>
         )}
         {editMode && (
-          <>
-            <TextField
-              variant="outlined"
-              fullWidth
-              defaultValue={fieldValue}
-              onBlur={(event) => setFieldValue(event.target.value)}
-            />
-            <IconButton
-              onClick={(event) => {
-                onWeekChange({ ...week, title: fieldValue });
-                setEditMode(false);
-              }}
-            >
-              <CheckCircle />
-            </IconButton>
-            <IconButton
-              onClick={(event) => {
-                setEditMode(false);
-                setFieldValue(week.title);
-              }}
-            >
-              <Cancel />
-            </IconButton>
-          </>
+          <Grid container direction="row" alignItems="center" wrap="nowrap">
+            <Grid item container wrap="nowrap">
+              <TextField
+                variant="outlined"
+                fullWidth
+                defaultValue={fieldValue}
+                onBlur={(event) => setFieldValue(event.target.value)}
+                onClick={(event) => event.stopPropagation()}
+              />
+            </Grid>
+            <Grid item>
+              <IconButton
+                onClick={(event) => {
+                  event.stopPropagation();
+                  if (!fieldValue) {
+                    enqueueSnackbar("Week name can not be empty", {
+                      variant: "warning",
+                    });
+                    return;
+                  }
+                  onWeekChange({ ...week, title: fieldValue });
+                  setEditMode(false);
+                }}
+              >
+                <CheckCircle />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton
+                onClick={(event) => {
+                  setEditMode(false);
+                  setFieldValue(week.title);
+                  event.stopPropagation();
+                }}
+              >
+                <Cancel />
+              </IconButton>
+            </Grid>
+          </Grid>
         )}
       </AccordionSummary>
       <AccordionDetails>
@@ -112,10 +163,17 @@ export function WeekView({
             list={lectures}
             setList={setLectures}
           > */}
-          {week.lectures.map((item, index) => (
-            <Grid item container>
+
+          {/* <ReactSortable
+            list={lectures}
+            setList={setLectures}
+            style={{ width: "100%" }}
+          > */}
+          {lectures.map((item, index) => (
+            <Grid item container key={index} style={{ marginBottom: 12 }}>
               <LectureView
                 lecture={item}
+                lectureNo={index + 1}
                 onLectureChange={(lecture) =>
                   handleOnLectureChange(index, lecture)
                 }
@@ -123,7 +181,13 @@ export function WeekView({
               />
             </Grid>
           ))}
-          <Grid item container justify="center" style={{ marginTop: 10 }}>
+          {/* </ReactSortable> */}
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ marginTop: 10 }}
+          >
             <Button
               variant="contained"
               color="primary"

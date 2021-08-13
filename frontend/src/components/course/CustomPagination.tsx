@@ -1,19 +1,19 @@
-import { Grid, Typography } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
-import CourseBox from 'components/course/CourseBox';
-import React, { useState } from 'react';
+import { Grid, Typography } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
+import CourseBox from "components/course/CourseBox";
+import React, { useState } from "react";
 
 const CourseBoxContainer = ({ courses }) => {
   return (
     <>
-      <Grid container direction="row" justify="space-between">
-        {courses.map(course => (
+      <Grid container direction="row" justifyContent="space-between">
+        {courses.map((course) => (
           <CourseBox courseData={course} />
         ))}
       </Grid>
     </>
-  )
-}
+  );
+};
 const CoursePagination = ({ courses, title }) => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,7 +26,12 @@ const CoursePagination = ({ courses, title }) => {
   const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <Grid container direction="column" alignItems="center" justify="space-between">
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justifyContent="space-between"
+    >
       <Typography variant="h4">{title}</Typography>
       <CourseBoxContainer courses={currentCourses} />
       <Pagination
@@ -37,12 +42,8 @@ const CoursePagination = ({ courses, title }) => {
         siblingCount={3}
         size="large"
       />
-    </Grid >
+    </Grid>
   );
 };
 
 export default CoursePagination;
-
-
-
-

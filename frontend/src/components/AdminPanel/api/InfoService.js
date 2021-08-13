@@ -1,15 +1,15 @@
 import axios from "axios"
-import {global} from 'Configure.js'
+import { GLOBAL } from 'Configure.js'
 
 
-class InfoService{
+class InfoService {
 
     getTeacherInfo() {
-        return axios.get(global.HOST + '/get-teacher-info')
+        return axios.get(GLOBAL.HOST + '/get-teacher-info')
     }
 
     getStudentInfo() {
-        return axios.get(global.HOST + '/get-student-info')
+        return axios.get(GLOBAL.HOST + '/get-student-info')
     }
 
     // deleteCountry(id){
@@ -24,7 +24,7 @@ class InfoService{
     // addCountry(country) {
     //     return axios.post(global.HOST + '/add-country',country)
     // }
-    
+
 }
 
 export default new InfoService()

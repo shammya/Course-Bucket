@@ -8,11 +8,9 @@ import {
   DialogTitle,
   Divider,
   Grid,
-  Slide,
   TextField,
   Typography,
 } from "@material-ui/core";
-import { TransitionProps } from "@material-ui/core/transitions";
 import { Image } from "@material-ui/icons";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import React, { useState } from "react";
@@ -35,7 +33,7 @@ export function CongratulationDialog({
               container
               direction="row"
               wrap="nowrap"
-              justify="space-between"
+              justifyContent="space-between"
               alignItems="center"
               xs
               spacing={1}
@@ -145,7 +143,7 @@ export function CheckoutDialog({
                 item
                 container
                 direction="row"
-                justify="space-between"
+                justifyContent="space-between"
                 wrap="nowrap"
               >
                 <Grid item>
@@ -159,7 +157,7 @@ export function CheckoutDialog({
                 item
                 container
                 direction="row"
-                justify="space-between"
+                justifyContent="space-between"
                 wrap="nowrap"
               >
                 <Grid item>
@@ -174,7 +172,7 @@ export function CheckoutDialog({
                 item
                 container
                 direction="row"
-                justify="space-between"
+                justifyContent="space-between"
                 wrap="nowrap"
               >
                 <Grid item>
@@ -209,7 +207,7 @@ export function CheckoutDialog({
                   container
                   direction="row"
                   wrap="nowrap"
-                  justify="space-between"
+                  justifyContent="space-between"
                   alignItems="center"
                   xs
                   spacing={1}

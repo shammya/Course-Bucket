@@ -1,18 +1,18 @@
 import { TextField } from "@material-ui/core";
 import { Files } from "classes/Files";
-import { convertToRaw } from "draft-js";
-import MUIRichTextEditor from "mui-rte";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import TextEditor from "tools/customDesign/TextEditor";
 import { InputLayout, LectureInputProps } from "./InputLayout";
 
 export function ArticleInput({ file, onSave, onCancel }: LectureInputProps) {
   const [title, setTitle] = useState(file?.title);
   const [content, setContent] = useState(file?.content);
 
-  function handleBodyChange(event) {
-    const rteContent = convertToRaw(event.getCurrentContent());
-    rteContent.blocks[0].text !== "" && setContent(JSON.stringify(rteContent));
-  }
+  useEffect(() => {
+    setTitle(file?.title);
+    setContent(file?.content);
+  }, [file?.title, file?.content]);
+
   function handleTitleChange(event) {
     setTitle(event.target.value);
   }
@@ -29,10 +29,9 @@ export function ArticleInput({ file, onSave, onCancel }: LectureInputProps) {
         defaultValue={title}
         onBlur={handleTitleChange}
       />
-      <MUIRichTextEditor
-        label="Start typing here..."
-        defaultValue={content}
-        onChange={handleBodyChange}
+      <TextEditor
+        value={file?.content}
+        onChange={(value) => setContent(value)}
       />
     </InputLayout>
   );

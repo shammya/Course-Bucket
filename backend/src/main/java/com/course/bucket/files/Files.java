@@ -142,6 +142,7 @@ public class Files{
 
 	public static Integer createNewFile(Files files) {
 		Integer id = DB.generateId("FILES");
+		files.setId(id);
 		String currentDate = ToolKit.getCurTimeDB();
 		String sql = "INSERT INTO FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) VALUES (#,#,'#','#',#,#)";
 		DB.executeQuery(sql, id.toString(), files.getType().getId().toString(), files.getTitle(), files.getContent(),
@@ -153,7 +154,44 @@ public class Files{
 		String currentDate = ToolKit.getCurTimeDB();
 		DB.execute("UPDATE FILES SET TYPE = #,TITLE = '#' ,CONTENT = '#',LAST_UPDATE_TIME = # WHERE ID = #",
 				files.getType().getId().toString(), files.getTitle(), files.getContent(),
-				currentDate);
+				currentDate, files.getId().toString());
+	}
+	
+	public String toString() {
+		return title + ", " + content + ", "+ type.toString();
+	}
+	public void deleteContent(FileType type, String content) {
+		switch(type) {
+			case VIDEO:
+			case PDF:
+			case PICTURE: FileStorageService.deleteFile(content);
+		}		
+	}
+	public void deleteContent() {
+		ResultSet rs = DB.executeQuery("SELECT CONTENT, TYPE FROM FILES WHERE ID = #", id.toString());
+		try {
+			if(rs.next()) {
+				String content = rs.getString("CONTENT");
+				FileType type = FileType.createFromId(rs.getInt("TYPE"));
+				deleteContent(type, content);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void update() {
+		this.deleteContent();
+		DB.execute("UPDATE FILES SET TYPE = #,TITLE = '#' ,CONTENT = '#',LAST_UPDATE = # WHERE ID = #",
+				this.getType().getId().toString(), this.getTitle(), this.getContent(),
+				ToolKit.getCurTimeDB(), this.id.toString());
+	}
+	
+	public void delete() {
+		this.deleteContent(type, content);
+		DB.execute("DELETE FILES WHERE ID = #", id.toString());
+//		deleteFile(this.getId());
 	}
 
 //	public static void createPhoto(Files files, String email) {
@@ -191,10 +229,6 @@ public class Files{
 //
 //	}
 //
-//	public void delete() {
-//		DB.execute("DELETE FILES WHERE ID = #", id.toString());
-//		deleteFile(this.getId());
-//	}
 //
 //	public static String createNewMultipartfile(Integer id, FileType type, MultipartFile file) {
 //		if (!file.isEmpty()) {

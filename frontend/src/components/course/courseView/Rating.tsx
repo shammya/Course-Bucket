@@ -63,7 +63,7 @@ function RatingBox() {
               container
               direction="row"
               wrap="nowrap"
-              justify="center"
+              justifyContent="center"
               xs
               spacing={2}
             >
@@ -81,7 +81,7 @@ function RatingBox() {
               item
               container
               direction="row"
-              justify="center"
+              justifyContent="center"
               xs
               spacing={2}
               style={{ display: ratingValue === 0 ? "none" : "flex" }}

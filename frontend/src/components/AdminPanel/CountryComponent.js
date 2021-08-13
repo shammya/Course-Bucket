@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
-import MaterialTable from 'material-table'
-import CountryService from '../AdminPanel/api/CountryService.js'
-import { Drawer, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import MaterialTable from 'material-table';
+import React, { useEffect } from 'react';
+import CountryService from '../AdminPanel/api/CountryService.js';
 
 
 function CountryComponent(props) {
@@ -81,7 +81,7 @@ function CountryComponent(props) {
       </Grid>
       <Grid item container sm={9}
         alignItems="center"
-        justify="center"
+        justifyContent="center"
         style={{ height: "100%" }}
       > */}
       <MaterialTable

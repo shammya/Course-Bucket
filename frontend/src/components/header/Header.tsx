@@ -14,24 +14,34 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
 import classNames from "classnames";
 import AuthService, { authHeaders } from "components/auth/api/AuthService";
-import { global } from "Configure";
+import { GLOBAL } from "Configure";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Responsive } from "tools/responsive/Responsive";
-import SideNav from "./SideNav";
-import TopNav from "./TopNav";
+import { TopNav, SideNav } from "./NavBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "green",
+    backgroundColor: "#2D394B",
     flexGrow: 1,
-    padding: theme.spacing(2),
+    padding: 5,
+    "& > *": {
+      color: "white",
+    },
+    "& input": {
+      color: "white",
+    },
+    "& fieldset": {
+      border: "2px solid white",
+    },
+    "& fieldset:focus": {
+      border: "2px solid gray",
+    },
   },
   logo: {
     width: 50,
@@ -53,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
   inputRoot: {
     flexGrow: 1,
     color: "inherit",
-    border: "1px solid black",
     borderRadius: "35px",
     padding: theme.spacing(0, 2, 0, 3),
     margin: theme.spacing(0, 3),
@@ -67,7 +76,7 @@ export function Header() {
   function profileDetailsLoad() {
     if (AuthService.getCurrentAccountType() == "Teacher") {
       axios
-        .get(global.HOST + "/get-teacher-self", authHeaders())
+        .get(GLOBAL.HOST + "/get-teacher-self", authHeaders())
         .then((response) => {
           console.log("Person data from header", response);
           history.push({
@@ -80,7 +89,7 @@ export function Header() {
         });
     } else if (AuthService.getCurrentAccountType() == "Student") {
       axios
-        .get(global.HOST + "/get-student-self", authHeaders())
+        .get(GLOBAL.HOST + "/get-student-self", authHeaders())
         .then((response) => {
           console.log("Person data from header", response);
           history.push({
@@ -261,10 +270,13 @@ export function Header() {
             <TextField
               placeholder="Search course..."
               fullWidth
-              margin="normal"
               InputLabelProps={{
                 shrink: true,
               }}
+              inputProps={{
+                type: "search",
+              }}
+              variant="outlined"
             />
           </Grid>
           <IconButton>
@@ -288,12 +300,12 @@ export function Header() {
               </Badge>
             </IconButton>
             <Grid style={{ display: "flex" }}>
-              <IconButton>
-                <Avatar
-                  onClick={(event: React.MouseEvent<any>) =>
-                    setAnchorRef(event.currentTarget)
-                  }
-                />
+              <IconButton
+                onClick={(event: React.MouseEvent<any>) =>
+                  setAnchorRef(event.currentTarget)
+                }
+              >
+                <Avatar />
               </IconButton>
               <Popover
                 open={Boolean(anchorRef)}
@@ -316,7 +328,6 @@ export function Header() {
                         direction="row"
                         alignItems="center"
                         wrap="nowrap"
-                        xs
                         spacing={1}
                       >
                         <Grid item>
@@ -339,6 +350,7 @@ export function Header() {
                     <List>
                       {popUpNav.map((item) => (
                         <ListItem
+                          key={item.label}
                           button
                           onClick={(event) => {
                             item.func();
@@ -366,11 +378,11 @@ export function Header() {
             </Button>
           </Responsive>
         )}
-        <SideNav>
+        {/* <SideNav>
           <IconButton>
             <MenuIcon fontSize="large" />
           </IconButton>
-        </SideNav>
+        </SideNav> */}
       </>
     );
   }
@@ -383,7 +395,7 @@ export function Header() {
               container
               direction="row"
               alignItems="center"
-              justify="flex-end"
+              justifyContent="flex-end"
             >
               <Logo />
               <Responsive displayIn={["Laptop", "Tablet"]}>

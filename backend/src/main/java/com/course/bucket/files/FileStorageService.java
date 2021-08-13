@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.course.bucket.Global;
+
 @Service
 public class FileStorageService {
 
@@ -35,14 +37,14 @@ public class FileStorageService {
 		}
 	}
 	
-	private final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	private final String publicKey = "TjErja";
-	private final String privateKey = "JRyFyk";
-	private final Integer keyPosition = 13;
-	private final Integer typePosition = 29;
-	private final Integer extPosition = 46;
-	private final Integer randomStrSize = 60;
-	static SecureRandom rnd = new SecureRandom();
+	private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	private static final String publicKey = "TjErja";
+	private static final String privateKey = "JRyFyk";
+	private static final Integer keyPosition = 13;
+	private static final Integer typePosition = 29;
+	private static final Integer extPosition = 46;
+	private static final Integer randomStrSize = 60;
+	private static SecureRandom rnd = new SecureRandom();
 
 	String randomString(){
 	   StringBuilder sb = new StringBuilder(randomStrSize);
@@ -51,7 +53,7 @@ public class FileStorageService {
 	   return sb.toString();
 	}
 	
-	String encodeFileName(String name,String extension,String type, boolean secure) {
+	public static String encodeFileName(String name,String extension,String type, boolean secure) {
 		StringBuilder sb = new StringBuilder(name);
 		
 		// Extension build
@@ -74,7 +76,7 @@ public class FileStorageService {
 	    System.out.println(sb.toString());
 	    return sb.toString();
 	}
-	String decodeFileName(String link, boolean secure) {
+	public static String decodeFileName(String link, boolean secure) {
 		
 		StringBuilder sb = new StringBuilder(link);
 		if((secure && sb.substring(keyPosition,keyPosition+ privateKey.length()).equals(privateKey)) || 
@@ -101,6 +103,19 @@ public class FileStorageService {
 			return fileName;
 		}
 		return "";
+	}
+	
+	public static void deleteFile(String link) {
+		boolean secure = link.contains("pv");
+		String fileName = "";
+		if(secure) fileName = link.replace(Global.HOST + "/pv/", link);
+		else fileName = link.replace(Global.HOST + "/pb/", link);
+		String decodedName = decodeFileName(fileName, secure);
+		if(decodedName == "") return;
+
+		File file = new File("/upload/"+decodedName);
+		file.delete();
+		System.out.println(decodedName + " is deleted");
 	}
 	
 //	function to store the file

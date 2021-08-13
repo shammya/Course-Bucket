@@ -1,6 +1,6 @@
 import axios from "axios";
 import { authHeaders } from "components/auth/api/AuthService";
-import { global } from "Configure.js";
+import { GLOBAL } from "Configure.js";
 import { FileObject } from "material-ui-dropzone";
 
 export class Files {
@@ -31,6 +31,10 @@ export class Files {
     this.content = content;
     return this;
   }
+  setId(id: number): Files {
+    this.id = id;
+    return this;
+  }
   async upload() {
     if (this.type == "VIDEO" || this.type == "PICTURE" || this.type == "PDF") {
       if (this.content.file) {
@@ -39,16 +43,11 @@ export class Files {
         formData.append("type", this.type);
         formData.append("secure", this.type != "PICTURE" ? "true" : "false");
         await axios
-          .put(global.HOST + `/resources/upload`, formData, authHeaders())
+          .put(GLOBAL.HOST + `/resources/upload`, formData, authHeaders())
           .then((response) => {
             this.content = response.data.uri;
             console.log(1);
             console.log("File url: ", response.data);
-          });
-        axios
-          .get(global.HOST + `/get-countries`, authHeaders())
-          .then((response) => {
-            console.log(2);
           });
       }
     }

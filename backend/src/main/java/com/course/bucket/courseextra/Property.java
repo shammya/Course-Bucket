@@ -14,8 +14,14 @@ public class Property {
     Files icon;
     String text;
     Integer position;
+    
+    public Property() {}
 
-    public Property(Integer id) {
+    public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Property(Integer id) {
         this.id = id;
         ResultSet rs = DB.executeQuery("SELECT * FROM COURSE_PROPERTIES WHERE ID = #", id.toString());
         try {
@@ -69,21 +75,38 @@ public class Property {
 
     public void setPosition(Integer position) {
         this.position = position;
-        DB.execute("UPDATE COURSE_PROPERTIES SET POSITION = # WHERE ID = #", position.toString(), id.toString());
+//        DB.execute("UPDATE COURSE_PROPERTIES SET POSITION = # WHERE ID = #", position.toString(), id.toString());
     }
 
     public void setIcon(Files icon) {
         this.icon = icon;
-        DB.execute("UPDATE COURSE_PROPERTIES SET ICON_ID = # WHERE ID = #", icon.getId().toString(), id.toString());
+//        DB.execute("UPDATE COURSE_PROPERTIES SET ICON_ID = # WHERE ID = #", icon.getId().toString(), id.toString());
     }
 
     public void setText(String text) {
         this.text = text;
-        DB.execute("UPDATE COURSE_PROPERTIES SET TEXT = '#' WHERE ID = #", text, id.toString());
+//        DB.execute("UPDATE COURSE_PROPERTIES SET TEXT = '#' WHERE ID = #", text, id.toString());
     }
 
     public void delete(){
         DB.execute("DELETE COURSE_PROPERTIES WHERE ID = #", id.toString());
         icon.delete();
+    }
+    
+    public void upload(Integer courseId) {
+    	Files.createNewFile(icon);
+    	id = DB.generateId("COURSE_PROPERTIES");
+    	DB.execute("INSERT INTO COURSE_PROPERTIES(ID, ICON_ID, COURSE_ID, TEXT, POSITION) VALUES(#, #, #, '#', #)", id.toString(), icon.getId().toString(), courseId.toString(), text, position.toString());
+    }
+    public void update() {
+    	icon.update();
+    	DB.execute(""
+    			+ "UPDATE COURSE_PROPERTIES SET "
+    			+ "TEXT = '#', "
+    			+ "POSITION = # "
+    			+ "WHERE ID = #",
+    			text,
+    			position.toString(),
+    			id.toString());
     }
 }

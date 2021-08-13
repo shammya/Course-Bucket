@@ -19,6 +19,8 @@ public class Week {
     String title;
     Date lastUpdate;
     ArrayList<Lecture> lectures;
+    
+    public Week() {}
 
     public Week(Integer id){
         this.id = id;
@@ -62,7 +64,15 @@ public class Week {
         return weeks;
     }
 
-    public Integer getId() {
+    public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -72,8 +82,8 @@ public class Week {
 
     public void setWeekNo(Integer weekNo) {
         this.weekNo = weekNo;
-        DB.execute("UPDATE WEEK SET WEEK_NO = # WHERE ID = #", weekNo.toString(), id.toString());
-        updateTime();
+//        DB.execute("UPDATE WEEK SET WEEK_NO = # WHERE ID = #", weekNo.toString(), id.toString());
+//        updateTime();
     }
 
     public String getTitle() {
@@ -82,8 +92,8 @@ public class Week {
 
     public void setTitle(String title) {
         this.title = title;
-        DB.execute("UPDATE WEEK SET TITLE = '#' WHERE ID = #", title, id.toString());
-        updateTime();
+//        DB.execute("UPDATE WEEK SET TITLE = '#' WHERE ID = #", title, id.toString());
+//        updateTime();
     }
 
     public Date getLastUpdate() {
@@ -112,5 +122,35 @@ public class Week {
     
     public void addLecture(Lecture lecture){
         this.lectures.add(lecture);
+    }
+    
+    public void upload(Integer courseId) {
+    	id = DB.generateId("WEEK");
+    	String weekSql = "insert into week(id,week_no,title,last_update,course_id) values(#,#,'#',#,#)";
+		DB.execute(weekSql, id.toString(), weekNo.toString(), title,
+				ToolKit.getCurTimeDB(), courseId.toString());
+		lectures.forEach(lecture -> {
+			lecture.upload(id);
+		});
+    }
+    public void update() {
+    	DB.execute(""
+    			+ "UPDATE WEEK SET "
+    			+ "WEEK_NO = #, "
+    			+ "TITLE = '#', "
+    			+ "LAST_UPDATE = # "
+    			+ "WHERE ID = #",
+    			weekNo.toString(),
+    			title,
+    			ToolKit.getCurTimeDB(),
+    			id.toString());
+    	lectures.forEach(lecture -> {
+    		if(lecture.getId() == null) {
+    			lecture.upload(id);
+    		}
+    		else {
+    			lecture.update();    			
+    		}
+		});
     }
 }

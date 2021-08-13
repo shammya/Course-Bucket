@@ -10,24 +10,21 @@ import {
   ZoomAndPan,
 } from "devextreme-react/chart";
 import axios from "axios";
-import { authHeader as authHeaders } from "components/auth/api/AuthService";
-import { global } from "Configure.js";
+import { authHeaders } from "components/auth/api/AuthService";
+import { GLOBAL } from "Configure.js";
 import React, { useEffect, useState } from "react";
 
 function IncomePerCourseChart() {
- const [dataSource, setDataSource] = useState([]);
+  const [dataSource, setDataSource] = useState([]);
   useEffect(() => {
     axios
-      .get(
-        global.HOST + "/get-income-per-course-teacher",
-        authHeaders()
-      )
+      .get(GLOBAL.HOST + "/get-income-per-course-teacher", authHeaders())
       .then((response) => {
         console.log(response);
         setDataSource(
           response.data.map((item) => ({
-            title:item.title,
-            income:item.income 
+            title: item.title,
+            income: item.income,
           }))
         );
       });

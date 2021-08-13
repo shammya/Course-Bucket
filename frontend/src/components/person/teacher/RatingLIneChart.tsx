@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@material-ui/core";
 import axios from "axios";
-import { authHeaders as authHeaders } from "components/auth/api/AuthService";
-import { global } from "Configure.js";
+import { authHeaders } from "components/auth/api/AuthService";
+import { GLOBAL } from "Configure.js";
 import {
   Chart,
   CommonSeriesSettings,
@@ -43,7 +43,7 @@ export function RatingLineChart() {
   useEffect(() => {
     axios
       .get(
-        global.HOST + "/get-cumulative-rating-teacher/mehediT",
+        GLOBAL.HOST + "/get-cumulative-rating-teacher/mehediT",
         authHeaders()
       )
       .then((response) => {

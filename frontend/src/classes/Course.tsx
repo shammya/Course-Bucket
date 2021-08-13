@@ -12,21 +12,32 @@ export class Course {
   description: string;
   mainPrice: number;
   off: number;
+  cover: Files;
   publishDate: Date;
   lastUpdate: Date;
   isApproved: Boolean;
   teacher: Teacher;
-  categories: Array<Category>;
+  mainCategory: Category;
+  subCategory: Category;
   languages: Array<Language>;
   properties: Array<Property>;
   rating: number;
   reviews: Array<Review>;
   numOfStudents: number;
-  prerequisite: Array<string>;
+  prerequisites: Array<string>;
   outcomes: Array<string>;
   weeks: Array<Week>;
   level: string;
   promo: PromoCode;
+
+  constructor() {
+    this.mainPrice = 0;
+    this.languages = [];
+    this.properties = [];
+    this.prerequisites = [];
+    this.outcomes = [];
+    this.weeks = [new Week().setWeekNo(1)];
+  }
 }
 
 export class Lecture {
@@ -41,6 +52,10 @@ export class Lecture {
     this.isPreview = false;
     this.title = title;
   }
+  setLectureNo(lectureNo: number) {
+    this.lectureNo = lectureNo;
+    return this;
+  }
 }
 
 export class Week {
@@ -52,7 +67,11 @@ export class Week {
 
   constructor(title: string = "Week Title") {
     this.title = title;
-    this.lectures = [new Lecture()];
+    this.lectures = [new Lecture().setLectureNo(1)];
+  }
+  setWeekNo(weekNo: number) {
+    this.weekNo = weekNo;
+    return this;
   }
 }
 

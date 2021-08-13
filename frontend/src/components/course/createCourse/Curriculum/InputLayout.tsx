@@ -22,7 +22,7 @@ export function InputLayout({
       <Grid item container direction="column">
         {children}
       </Grid>
-      <Grid item container direction="row" justify="center">
+      <Grid item container direction="row" justifyContent="center">
         <Button color="primary" variant="outlined" onClick={onSave}>
           Save
         </Button>

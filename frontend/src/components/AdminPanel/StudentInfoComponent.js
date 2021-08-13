@@ -1,8 +1,8 @@
 
-import React, { useEffect } from 'react'
-import MaterialTable from 'material-table'
-import InfoService from '../AdminPanel/api/InfoService.js'
-import { Drawer, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import MaterialTable from 'material-table';
+import React, { useEffect } from 'react';
+import InfoService from '../AdminPanel/api/InfoService.js';
 
 
 function StudentInfoComponent(props) {
@@ -39,7 +39,7 @@ function StudentInfoComponent(props) {
       </Grid>
       <Grid item container sm={9}
         alignItems="center"
-        justify="center"
+        justifyContent="center"
         style={{ height: "100%" }}
       > */}
             <Grid item container>

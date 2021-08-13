@@ -126,7 +126,7 @@ export function OverviewBarChart() {
           <ScrollBar visible={true} position="bottom" />
           <ZoomAndPan argumentAxis="both" />
         </Chart>
-        <Grid container direction="row" justify="center" xs spacing={1}>
+        <Grid container direction="row" justifyContent="center" xs spacing={1}>
           <Grid item>
             <Select
               value={viewType}

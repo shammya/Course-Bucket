@@ -10,11 +10,9 @@ import {
   ZoomAndPan,
 } from "devextreme-react/chart";
 import axios from "axios";
-import { authHeader as authHeaders } from "components/auth/api/AuthService";
-import { global } from "Configure.js";
+import { authHeaders } from "components/auth/api/AuthService";
+import { GLOBAL } from "Configure.js";
 import React, { useEffect, useState } from "react";
-
-
 
 function PopularCategoryChart() {
   // let dataSource: Array<{ categoryName: string; purchase: number }> = [];
@@ -28,21 +26,20 @@ function PopularCategoryChart() {
   const [dataSource, setDataSource] = useState([]);
   useEffect(() => {
     axios
-      .get(
-        global.HOST + "/get-popular-category-admin",
-        authHeaders()
-      )
+      .get(GLOBAL.HOST + "/get-popular-category-admin", authHeaders())
       .then((response) => {
         console.log(response);
         setDataSource(
           response.data.map((item) => ({
-            categoryName:item.categoryName,
-            factor: ((item.enrolledStdCount * 0.6 + item.reviewCount * 0.1 + item.rating * item.ratingCount * 0.3))
+            categoryName: item.categoryName,
+            factor:
+              item.enrolledStdCount * 0.6 +
+              item.reviewCount * 0.1 +
+              item.rating * item.ratingCount * 0.3,
           }))
         );
       });
   }, []);
-
 
   return (
     <Card>

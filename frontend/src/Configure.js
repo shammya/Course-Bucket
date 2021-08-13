@@ -1,6 +1,6 @@
 
 
-export const global = {
+export const GLOBAL = {
     HOST: 'http://localhost:8800',
 
 }

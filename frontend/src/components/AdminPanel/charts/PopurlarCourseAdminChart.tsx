@@ -9,19 +9,15 @@ import PieChart, {
   Tooltip,
 } from "devextreme-react/pie-chart";
 import axios from "axios";
-import { authHeader as authHeaders } from "components/auth/api/AuthService";
-import { global } from "Configure.js";
+import { authHeaders } from "components/auth/api/AuthService";
+import { GLOBAL } from "Configure.js";
 import React, { useEffect, useState } from "react";
 
 export function PopularCourseAdminChart() {
-
   const [dataSource, setDataSource] = useState([]);
   useEffect(() => {
     axios
-      .get(
-        global.HOST + "/get-course-popularity-admin",
-        authHeaders()
-      )
+      .get(GLOBAL.HOST + "/get-course-popularity-admin", authHeaders())
       .then((response) => {
         console.log(response);
         setDataSource(
@@ -30,7 +26,7 @@ export function PopularCourseAdminChart() {
             rating: item.rating,
             ratingCount: item.ratingCount,
             enrolledStudentCount: item.enrolledStudentCount,
-            reviewCount: item.reviewCount
+            reviewCount: item.reviewCount,
           }))
         );
       });
@@ -50,7 +46,9 @@ export function PopularCourseAdminChart() {
         <Typography variant="h6">{data.courseName}</Typography>
         <Typography variant="body2">{`Rating: ${data.rating} (${data.ratingCount})`}</Typography>
         <Typography variant="body2">Review: {data.reviewCount}</Typography>
-        <Typography variant="body2">Purchase: {data.enrolledStudentCount}</Typography>
+        <Typography variant="body2">
+          Purchase: {data.enrolledStudentCount}
+        </Typography>
       </Grid>
     );
   }

@@ -1,30 +1,30 @@
 import { Files } from "classes/Files";
-import { convertToRaw } from "draft-js";
-import MUIRichTextEditor from "mui-rte";
-import React, { useState } from "react";
-import { FileUploader } from "tools/customDesign/FileUploader";
+import React, { useEffect, useState } from "react";
+import TextEditor from "tools/customDesign/TextEditor";
+import { FileUploader } from "tools/FileUploader";
 import { InputLayout, LectureInputProps } from "./InputLayout";
 
 export function VideoInput({ file, onSave, onCancel }: LectureInputProps) {
-  const [title, setTile] = useState(file?.title);
+  const [title, setTitle] = useState(file?.title);
   const [content, setContent] = useState(file?.content);
 
-  function handleContentChange(event) {
-    const rteContent = convertToRaw(event.getCurrentContent());
-    rteContent.blocks[0].text !== "" && setContent(JSON.stringify(rteContent));
-  }
-
+  useEffect(() => {
+    setTitle(file?.title);
+    setContent(file?.content);
+  }, [file?.title, file?.content]);
+  console.log(content);
   return (
     <InputLayout
       onSave={() => onSave(new Files("VIDEO", title).setContent(content))}
       onCancel={onCancel}
     >
-      <MUIRichTextEditor
-        label="Start typing here..."
-        value={content}
-        onChange={handleContentChange}
+      <FileUploader
+        fileObjects={file?.content?.file ? [file.content] : []}
+        filesLimit={1}
+        type="video"
+        onChange={(files) => setContent(files[0])}
       />
-      <FileUploader />
+      <TextEditor value={title} onChange={(value) => setTitle(value)} />
     </InputLayout>
   );
 }

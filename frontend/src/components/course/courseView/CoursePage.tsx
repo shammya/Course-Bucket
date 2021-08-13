@@ -51,7 +51,7 @@ course = {
     lorem,
     lorem,
   ],
-  prerequisite: [
+  prerequisites: [
     lorem,
     lorem,
     lorem,
@@ -212,7 +212,7 @@ export function CourseView() {
                         container
                         direction="row"
                         alignItems="center"
-                        justify="center"
+                        justifyContent="center"
                         spacing={1}
                       >
                         <Price />
@@ -277,7 +277,7 @@ export function CourseView() {
                   container
                   direction="row"
                   alignItems="center"
-                  justify="center"
+                  justifyContent="center"
                   spacing={1}
                 >
                   <Price />
@@ -347,7 +347,7 @@ export function CourseView() {
             <CardContent>
               <Typography variant="h5">Requirements</Typography>
               <List dense={false}>
-                {course.prerequisite.map((item) => (
+                {course.prerequisites.map((item) => (
                   <ListItem
                     classes={{
                       root: classes.MuiListItemRoot,

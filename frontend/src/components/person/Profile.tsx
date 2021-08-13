@@ -76,14 +76,14 @@ const Profile = () => {
         item
         container
         direction="row"
-        justify="space-around"
+        justifyContent="space-around"
         alignItems="center"
       >
         <Grid item sm={3}>
           <Avatar className={classes.avatar}>M</Avatar>
         </Grid>
         <Grid item sm container direction="column" alignItems="center">
-          <Grid item sm container justify="space-around">
+          <Grid item sm container justifyContent="space-around">
             <Card>
               <CardHeader title="6,234" />
               <CardContent>Students</CardContent>
@@ -113,7 +113,7 @@ const Profile = () => {
   }
   const SocialMedia = () => {
     return (
-      <Grid item container direction="row" justify="space-around">
+      <Grid item container direction="row" justifyContent="space-around">
         {data.socialMediaData.map((item) => (
           <Link href="#">
             <IconButton>

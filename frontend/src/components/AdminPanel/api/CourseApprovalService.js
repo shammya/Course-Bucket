@@ -1,15 +1,15 @@
 import axios from "axios"
-import {global} from 'Configure.js'
+import { GLOBAL } from 'Configure.js'
 
 
 class CourseApprovalService {
 
     getApprovedCourses() {
-        return axios.get(global.HOST + '/get-approved-courses')
+        return axios.get(GLOBAL.HOST + '/get-approved-courses')
     }
 
     getUnapprovedCourses() {
-        return axios.get(global.HOST + '/get-unapproved-courses')
+        return axios.get(GLOBAL.HOST + '/get-unapproved-courses')
     }
 
     // deleteCountry(id){
@@ -24,7 +24,7 @@ class CourseApprovalService {
     // addCountry(country) {
     //     return axios.post(global.HOST + '/add-country',country)
     // }
-    
+
 }
 
 export default new CourseApprovalService()

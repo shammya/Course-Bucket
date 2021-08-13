@@ -1,7 +1,7 @@
 import { Slide, Snackbar } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 export function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));

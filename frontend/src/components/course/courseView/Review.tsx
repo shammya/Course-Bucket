@@ -23,7 +23,7 @@ export function ReviewSection() {
     <Card>
       <CardContent>
         <Grid container direction="column" xs spacing={2}>
-          <Grid item container direction="row" justify="space-between">
+          <Grid item container direction="row" justifyContent="space-between">
             <Grid item>
               <Typography variant="h4" align="center">
                 Review
@@ -98,7 +98,7 @@ function ReviewInputDialog({ open, onClose }) {
             container
             direction="row"
             wrap="nowrap"
-            justify="center"
+            justifyContent="center"
             xs
             spacing={2}
           >
@@ -115,7 +115,7 @@ function ReviewInputDialog({ open, onClose }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Grid container direction="row" justify="center" xs spacing={2}>
+        <Grid container direction="row" justifyContent="center" xs spacing={2}>
           <Grid item>
             <Button
               variant="contained"

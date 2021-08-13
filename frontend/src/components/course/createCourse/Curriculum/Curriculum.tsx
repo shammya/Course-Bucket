@@ -1,36 +1,39 @@
 import { Button, Grid } from "@material-ui/core";
 import AddCircle from "@material-ui/icons/AddCircle";
-import { Course, Week } from "classes/Course";
-import React, { useState } from "react";
+import { Week } from "classes/Course";
+import React, { useEffect, useState } from "react";
+import { ReactSortable } from "react-sortablejs";
 import { WeekView } from "./WeekView";
+import { useSnackbar } from "notistack";
 
-export function Curriculum({
-  course,
-  onCourseAttrChange,
-}: {
-  course: Course;
-  onCourseAttrChange: ({ week: Week }) => void;
-}) {
-  const [weeks, setWeeks] = useState(
-    course.weeks == undefined ? [new Week()] : course.weeks
-  );
+export function Curriculum({ course, onCourseAttrChange }) {
+  const { enqueueSnackbar } = useSnackbar();
+  const [weeks, setWeeks] = useState(course.weeks);
+
+  useEffect(() => {
+    // handleOnWeekAdd();
+  }, []);
 
   function onWeekChange(index, week) {
     let updWeeks = [...weeks];
     updWeeks[index] = week;
     setWeeks(updWeeks);
-    onCourseAttrChange({ week: updWeeks });
+    onCourseAttrChange({ weeks: updWeeks });
   }
   function handleOnWeekAdd() {
-    let updWeeks = [...weeks, new Week()];
+    let updWeeks = [...weeks, new Week().setWeekNo(weeks.length + 1)];
     setWeeks(updWeeks);
-    onCourseAttrChange({ week: updWeeks });
+    onCourseAttrChange({ weeks: updWeeks });
   }
 
   function handleOnWeekRemove(index) {
+    if (weeks.length == 1) {
+      enqueueSnackbar("There must be at least a week", { variant: "warning" });
+      return;
+    }
     let updWeeks = [...weeks];
     updWeeks.splice(index, 1);
-    onCourseAttrChange({ week: updWeeks });
+    onCourseAttrChange({ weeks: updWeeks });
     setWeeks([...updWeeks]);
   }
   return (
@@ -39,19 +42,23 @@ export function Curriculum({
         list={weeks}
         setList={setWeeks}
       > */}
+
+      {/* <ReactSortable list={weeks} setList={setWeeks} style={{ width: "100%" }}> */}
       {weeks.map((item, index) => (
         // <div key={item.id}>
-        <Grid item container>
+        <Grid item container key={index} style={{ marginBottom: 12 }}>
           <WeekView
             week={item}
             onWeekChange={(week) => onWeekChange(index, week)}
             onWeekRemove={() => handleOnWeekRemove(index)}
+            weekNo={index + 1}
             // setWeek={(week) => onWeekChange(index, week)}
             // onWeekAdd={() => handleOnWeekAdd(index)}
           />
         </Grid>
       ))}
-      <Grid item container justify="center" style={{ marginTop: 10 }}>
+      {/* </ReactSortable> */}
+      <Grid item container justifyContent="center" style={{ marginTop: 10 }}>
         <Button
           variant="contained"
           color="primary"

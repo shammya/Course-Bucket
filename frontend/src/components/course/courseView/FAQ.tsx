@@ -1,20 +1,19 @@
 import {
   Avatar,
-  CardContent,
-  Grid,
-  Typography,
-  Card,
   Button,
+  Card,
+  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  Grid,
+  Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
 import { lorem } from "components/course/courseView/CoursePage";
-import { Rating } from "@material-ui/lab";
 import MUIRichTextEditor from "mui-rte";
+import React, { useState } from "react";
 import { SlidingUpTransition } from "tools/Tools";
 
 export function FAQSection() {
@@ -23,7 +22,7 @@ export function FAQSection() {
     <Card>
       <CardContent>
         <Grid container direction="column" xs spacing={2}>
-          <Grid item container direction="row" justify="space-between">
+          <Grid item container direction="row" justifyContent="space-between">
             <Grid item>
               <Typography variant="h4" align="center">
                 FAQ
@@ -109,7 +108,7 @@ function FAQInputQuestionDialog({ open, onClose }) {
         <MUIRichTextEditor />
       </DialogContent>
       <DialogActions>
-        <Grid container direction="row" justify="center" xs spacing={2}>
+        <Grid container direction="row" justifyContent="center" xs spacing={2}>
           <Grid item>
             <Button
               variant="contained"
@@ -153,7 +152,7 @@ function FAQInputAnswerDialog({ open, onClose }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Grid container direction="row" justify="center" xs spacing={2}>
+        <Grid container direction="row" justifyContent="center" xs spacing={2}>
           <Grid item>
             <Button
               variant="contained"

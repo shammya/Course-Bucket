@@ -82,7 +82,7 @@ export function UserRegistrationChart() {
           <ScrollBar visible={true} position="bottom" />
           <ZoomAndPan argumentAxis="both" />
         </Chart>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Select
             value={viewType}
             onChange={(event) => setViewType(event.target.value as string)}

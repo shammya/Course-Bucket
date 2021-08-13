@@ -70,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/get-countries",
 				"/get-edustatus",
 				"/get-designations",
+				"/get-categories",
 				"/resources/upload",
 				"/resources/pb/**"
 				).permitAll()

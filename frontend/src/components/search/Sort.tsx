@@ -1,10 +1,22 @@
-import { Button, Dialog, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, makeStyles, Radio, RadioGroup, Typography } from '@material-ui/core';
-import SortIcon from '@material-ui/icons/Sort';
-import React, { useState } from 'react';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  makeStyles,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@material-ui/core";
+import SortIcon from "@material-ui/icons/Sort";
+import React, { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   button: {
-    display: 'block',
+    display: "block",
     marginTop: theme.spacing(2),
   },
   formControl: {
@@ -18,9 +30,8 @@ const sortTypes = [
   "Most reviewed",
   "Most rated",
   "Price low to high",
-  "Price high to low"
-]
-
+  "Price high to low",
+];
 
 const CustomSelect = ({ data, title, open, selected, onClose, onChange }) => {
   const classes = useStyles();
@@ -31,26 +42,20 @@ const CustomSelect = ({ data, title, open, selected, onClose, onChange }) => {
   }
 
   return (
-    <Dialog
-      onClose={onClose}
-      open={open}
-      style={{ padding: 10 }}
-    >
+    <Dialog onClose={onClose} open={open} style={{ padding: 10 }}>
       <DialogTitle style={{ textAlign: "center" }}>{title}</DialogTitle>
       <DialogContent>
         <FormControl component="fieldset">
-          <RadioGroup >
-            {
-              data.map(item => (
-                <FormControlLabel
-                  checked={item === selected}
-                  value={item}
-                  control={<Radio />}
-                  label={item}
-                  onClick={handleChange}
-                />
-              ))
-            }
+          <RadioGroup>
+            {data.map((item) => (
+              <FormControlLabel
+                checked={item === selected}
+                value={item}
+                control={<Radio />}
+                label={item}
+                onClick={handleChange}
+              />
+            ))}
           </RadioGroup>
         </FormControl>
       </DialogContent>
@@ -58,9 +63,8 @@ const CustomSelect = ({ data, title, open, selected, onClose, onChange }) => {
         Cancel
       </Button>
     </Dialog>
-  )
-}
-
+  );
+};
 
 function Sort() {
   const [open, setOpen] = useState(false);
@@ -68,26 +72,20 @@ function Sort() {
   const handleChange = (value) => {
     setSortType(value);
     setOpen(false);
-  }
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleOpen = () => {
-    setOpen(true)
-  }
-
+    setOpen(true);
+  };
 
   return (
     <Grid sm={12} xs={6} container>
-      <Grid container
-        justify="space-between"
-        onClick={handleOpen}
-      >
-        <Typography variant="h6">
-          Sort by
-        </Typography>
+      <Grid container justifyContent="space-between" onClick={handleOpen}>
+        <Typography variant="h6">Sort by</Typography>
         <SortIcon />
       </Grid>
       <CustomSelect
@@ -99,7 +97,7 @@ function Sort() {
         onChange={handleChange}
       />
     </Grid>
-  )
+  );
 }
 
-export default Sort
+export default Sort;

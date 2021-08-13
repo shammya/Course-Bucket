@@ -24,19 +24,22 @@ public enum FileType  implements Serializable {
     ;
     String name;
     Integer id;
-
-    private FileType(String name) {
-        this.name = name;
-        ResultSet rs = DB.executeQuery("SELECT ID FROM FILE_TYPE WHERE UPPER(TYPE)='#'", name);
+    private void generateId() {
+    	ResultSet rs = DB.executeQuery("SELECT ID FROM FILE_TYPE WHERE UPPER(TYPE)='#'", name);
         try {
 			if(rs.next()) {
 				this.id = rs.getInt("ID");
+				System.out.println(this.id);
 			}
 	        rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    }
+    private FileType(String name) {
+        this.name = name;
+        generateId();
     }
     
     public static FileType createFromId(Integer id) {
@@ -66,12 +69,19 @@ public enum FileType  implements Serializable {
 
 
 	public Integer getId() {
+		if(id==null) {
+			generateId();
+		}
 		return id;
 	}
 
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public String toString() {
+		return "id: " + id + ", name: " + name;
 	}
  
 }

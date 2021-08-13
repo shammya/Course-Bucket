@@ -1,5 +1,8 @@
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { Chart, Series } from "devextreme-react/chart";
+import axios from "axios";
+import { authHeaders } from "components/auth/api/AuthService";
+import { GLOBAL } from "Configure.js";
+import { Series } from "devextreme-react/chart";
 import PieChart, {
   Connector,
   Export,
@@ -8,9 +11,6 @@ import PieChart, {
   Legend,
   Tooltip,
 } from "devextreme-react/pie-chart";
-import axios from "axios";
-import { authHeader as authHeaders } from "components/auth/api/AuthService";
-import { global } from "Configure.js";
 import React, { useEffect, useState } from "react";
 
 export function CoursePopularityPieChart() {
@@ -91,7 +91,7 @@ export function CoursePopularityPieChart() {
   useEffect(() => {
     axios
       .get(
-        global.HOST + "/get-course-popularity-teacher/mehediT",
+        GLOBAL.HOST + "/get-course-popularity-teacher/mehediT",
         authHeaders()
       )
       .then((response) => {

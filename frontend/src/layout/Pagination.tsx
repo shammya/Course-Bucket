@@ -47,7 +47,13 @@ function CustomPagination({
     );
   } else if (type == "calculate-by-width") {
     elements = (
-      <Grid container direction="row" justify="space-between" xs spacing={2}>
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        xs
+        spacing={2}
+      >
         {currentPageObjects.map((item) => (
           <Grid item>{item}</Grid>
         ))}
@@ -68,7 +74,7 @@ function CustomPagination({
         container
         direction="column"
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
       >
         {elements}
         <Pagination

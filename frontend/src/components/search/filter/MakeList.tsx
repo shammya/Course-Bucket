@@ -5,11 +5,9 @@ import {
   ListItem,
   ListItemText,
 } from "@material-ui/core";
-import { TrainRounded } from "@material-ui/icons";
 import { Category, categoryList } from "classes/Category";
 import React, { useState } from "react";
 import { CategorySelector } from "tools/customDesign/CategorySelector";
-import { timeout } from "tools/Tools";
 import {
   IFilteredValue,
   IFilterType as IFilterType,
@@ -111,7 +109,7 @@ export function GenerateFilterValue({
         style={{ height: "100%" }}
         container
         alignItems="center"
-        justify="center"
+        justifyContent="center"
       >
         <FilterSlider
           //@ts-ignore

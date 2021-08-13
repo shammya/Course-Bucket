@@ -92,7 +92,11 @@ export function LanguageField({
     LanguageService.getAllLanguages().then(response => {
       setLanguageItem(response.data);
     });
-  }, [])
+    return () => {
+      setLanguages([]);
+      setLanguageItem([]);
+    }
+  }, [objects])
 
   return (
     <FormControl variant="outlined" className={classes.formControl}>

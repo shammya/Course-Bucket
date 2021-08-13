@@ -30,7 +30,12 @@ public class CourseController {
 	@PostMapping("/add-course")
 	public void addCourse(@RequestBody Course course) {
 		//System.out.println("\t course : "+course.getName()+" "+course.getParentName()+" "+course.getAdminId());
-		Course.createNewCourse(course);
+		Course.createNewCourse("newTeacher", course);
+	}
+
+	@PutMapping("/update-course")
+	public void updateCourse(@RequestBody Course course) {
+		Course.update(course);
 	}
 	
 //	@GetMapping("/get-categories")
@@ -81,10 +86,6 @@ public class CourseController {
 	}
 		
 	
-//	@PutMapping("/update-course")
-//	public void updateCourse(@RequestBody Course course) {
-//		Course.updateCourse(course);
-//	}
 //	
 //	@DeleteMapping("/delete-course/{id}")
 //	public void deleteCourse(@PathVariable Integer id) {

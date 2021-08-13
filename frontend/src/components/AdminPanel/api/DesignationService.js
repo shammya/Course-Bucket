@@ -1,26 +1,26 @@
 import axios from "axios"
-import {global} from 'Configure.js'
+import { GLOBAL } from 'Configure.js'
 
 
 class DesignationService {
 
     getAllDesignation() {
-        return axios.get(global.HOST + '/get-designations')
+        return axios.get(GLOBAL.HOST + '/get-designations')
     }
 
     deleteDesignation(id) {
-        return axios.delete(global.HOST + `/delete-designation/${id}`)
+        return axios.delete(GLOBAL.HOST + `/delete-designation/${id}`)
     }
 
 
     updateDesignation(designation) {
-        return axios.put(global.HOST + '/update-designation',designation)
+        return axios.put(GLOBAL.HOST + '/update-designation', designation)
     }
 
     addDesignation(designation) {
-        return axios.post(global.HOST + '/add-designation',designation)
+        return axios.post(GLOBAL.HOST + '/add-designation', designation)
     }
-    
+
 }
 
 export default new DesignationService()

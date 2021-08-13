@@ -1,10 +1,10 @@
 import { Checkbox, FormControlLabel, Typography } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
-import { fade, makeStyles, withStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles, withStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
-import { Category, categoryList, CategoryTreeNode } from "classes/Category";
+import { Category, CategoryTreeNode } from "classes/Category";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { animated, useSpring } from "react-spring"; // web.cjs is required for IE 11 support
@@ -73,7 +73,7 @@ const StyledTreeItem = withStyles((theme) => ({
   group: {
     marginLeft: 7,
     paddingLeft: 18,
-    borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`,
+    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
 }))(
   (props: {
@@ -82,6 +82,7 @@ const StyledTreeItem = withStyles((theme) => ({
     onChange: (checked: boolean) => void;
     nodeId: number;
     children?: any;
+    key: number;
   }) => {
     const [checked, setChecked] = useState(false);
     useEffect(() => {
@@ -90,6 +91,7 @@ const StyledTreeItem = withStyles((theme) => ({
 
     return (
       <TreeItem
+        key={props.key}
         children={props.children}
         nodeId={props.nodeId + ""}
         onLabelClick={(event) => {
@@ -146,33 +148,31 @@ export function CategorySelector({
     function handleDataChange(item: Category, checked: boolean) {
       onCategorySelectionChange(item, checked ? "ADD" : "REMOVE");
     }
-    return data.map((item, index) => {
-      return (
-        <>
-          {item.child.length > 0 ? (
-            <StyledTreeItem
-              nodeId={item.category.id}
-              label={item.category.name}
-              checked={selectedCategories.some(
-                (selectedCategory) => selectedCategory.id == item.category.id
-              )}
-              onChange={(checked) => handleDataChange(item.category, checked)}
-            >
-              <ExploreData data={item.child} />
-            </StyledTreeItem>
-          ) : (
-            <StyledTreeItem
-              nodeId={item.category.id}
-              label={item.category.name}
-              checked={selectedCategories.some(
-                (selectedCategory) => selectedCategory.id == item.category.id
-              )}
-              onChange={(checked) => handleDataChange(item.category, checked)}
-            />
+    return data.map((item, index) =>
+      item.child.length > 0 ? (
+        <StyledTreeItem
+          key={item.category.id}
+          nodeId={item.category.id}
+          label={item.category.name}
+          checked={selectedCategories.some(
+            (selectedCategory) => selectedCategory.id == item.category.id
           )}
-        </>
-      );
-    });
+          onChange={(checked) => handleDataChange(item.category, checked)}
+        >
+          <ExploreData data={item.child} />
+        </StyledTreeItem>
+      ) : (
+        <StyledTreeItem
+          key={item.category.id}
+          nodeId={item.category.id}
+          label={item.category.name}
+          checked={selectedCategories.some(
+            (selectedCategory) => selectedCategory.id == item.category.id
+          )}
+          onChange={(checked) => handleDataChange(item.category, checked)}
+        />
+      )
+    );
   }
   return (
     <>

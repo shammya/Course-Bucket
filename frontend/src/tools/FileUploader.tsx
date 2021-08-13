@@ -25,8 +25,7 @@ export function FileUploader(props: IFileUploader) {
     acceptedFiles,
     Icon,
     type,
-    showPreviews,
-    dropzoneText,
+    ...rest
   } = props;
   const [state, setState] = useState({
     icon: Icon,
@@ -35,12 +34,15 @@ export function FileUploader(props: IFileUploader) {
   });
 
   useEffect(() => {
-    switch (type) {
+    const abortController = new AbortController();
+    switch (type?.toLowerCase()) {
       case "video":
+        console.log("in use effect");
         setState({
           ...state,
           icon: <VideoCall />,
           acceptedFiles: [".mp4", ".3gp"],
+          fileObjects: fileObjects,
         });
         break;
       case "pdf":
@@ -48,6 +50,7 @@ export function FileUploader(props: IFileUploader) {
           ...state,
           icon: <PictureAsPdf />,
           acceptedFiles: [".pdf"],
+          fileObjects: fileObjects,
         });
         break;
       case "picture":
@@ -55,6 +58,7 @@ export function FileUploader(props: IFileUploader) {
           ...state,
           icon: <InsertPhoto />,
           acceptedFiles: [".jpg", ".png", ".bmp", ".gif"],
+          fileObjects: fileObjects,
         });
         break;
       default:
@@ -62,10 +66,11 @@ export function FileUploader(props: IFileUploader) {
           ...state,
           icon: <AttachFile />,
           acceptedFiles: [],
+          fileObjects: fileObjects,
         });
     }
-    setState({ ...state, fileObjects: fileObjects });
-  }, []);
+    return () => abortController.abort();
+  }, [type]);
 
   function handleChange(files: FileObject[]) {
     if (filesLimit)
@@ -73,11 +78,10 @@ export function FileUploader(props: IFileUploader) {
     setState({ ...state, fileObjects: files });
     if (onChange) onChange(files);
   }
-
   return (
     <Grid item container>
       <DropzoneAreaBase
-        {...props}
+        {...rest}
         //@ts-ignore
         Icon={state.Icon}
         classes={{ icon: state.fileObjects ? "display-none" : "" }}

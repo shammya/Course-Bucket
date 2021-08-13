@@ -1,44 +1,44 @@
 import axios from "axios";
 import { Person } from "classes/Person";
-import { global } from "Configure.js";
+import { GLOBAL } from "Configure.js";
 
 class AuthService {
   prefix = "/api/auth";
   existByEmail(email: string) {
-    return axios.post(global.HOST + this.prefix + `/validity-email/${email}`);
+    return axios.post(GLOBAL.HOST + this.prefix + `/validity-email/${email}`);
   }
   existByUsername(username: string) {
     return axios.post(
-      global.HOST + this.prefix + `/validity-username/${username}`
+      GLOBAL.HOST + this.prefix + `/validity-username/${username}`
     );
   }
   registerStudent(student: Person, eduStatusId: Number) {
     return axios.post(
-      global.HOST + this.prefix + `/register-student/${eduStatusId}`,
+      GLOBAL.HOST + this.prefix + `/register-student/${eduStatusId}`,
       student
     );
   }
   registerTeacher(teacher: Person, designationId: Number) {
     return axios.post(
-      global.HOST + this.prefix + `/register-teacher/${designationId}`,
+      GLOBAL.HOST + this.prefix + `/register-teacher/${designationId}`,
       teacher,
       authHeaders()
     );
   }
   signIn(username: string, password: string) {
-    return axios.post(global.HOST + this.prefix + `/signin`, {
+    return axios.post(GLOBAL.HOST + this.prefix + `/signin`, {
       username,
       password,
     });
   }
   requestChangePassword(username: string, dob: Date) {
     return axios.post(
-      global.HOST + this.prefix + `/request-password-change/${username}`,
+      GLOBAL.HOST + this.prefix + `/request-password-change/${username}`,
       dob
     );
   }
   changePassword(username: string, password: string) {
-    return axios.post(global.HOST + this.prefix + `/password-change`, {
+    return axios.post(GLOBAL.HOST + this.prefix + `/password-change`, {
       username,
       password,
     });

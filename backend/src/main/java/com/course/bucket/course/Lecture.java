@@ -18,6 +18,8 @@ public class Lecture {
     Files file;
     boolean isPreview;
     
+    public Lecture() {}
+    
     public Lecture(Integer id){
         this.id = id;
         ResultSet rs = DB.executeQuery("SELECT * FROM LECTURE WHERE ID = #", id.toString());
@@ -75,14 +77,30 @@ public class Lecture {
         return id;
     }
 
-    public Integer getLectureNo() {
+    public boolean isPreview() {
+		return isPreview;
+	}
+
+	public void setPreview(boolean isPreview) {
+		this.isPreview = isPreview;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public Integer getLectureNo() {
         return lectureNo;
     }
 
     public void setLectureNo(Integer lectureNo) {
         this.lectureNo = lectureNo;
-        DB.execute("UPDATE LECTURE SET LECTURE_NO = # WHERE ID = #", lectureNo.toString(), id.toString());
-        updateTime();
+//        DB.execute("UPDATE LECTURE SET LECTURE_NO = # WHERE ID = #", lectureNo.toString(), id.toString());
+//        updateTime();
     }
 
     public String getTitle() {
@@ -91,8 +109,8 @@ public class Lecture {
 
     public void setTitle(String title) {
         this.title = title;
-        DB.execute("UPDATE LECTURE SET TITLE = '#' WHERE ID = #", title, id.toString());
-        updateTime();
+//        DB.execute("UPDATE LECTURE SET TITLE = '#' WHERE ID = #", title, id.toString());
+//        updateTime();
     }
 
     public Date getLastUpdate() {
@@ -110,13 +128,37 @@ public class Lecture {
 
     public void setIsPreview(boolean isPreview) {
         this.isPreview = isPreview;
-        DB.execute("UPDATE LECTURE SET IS_PREVIEW = '#' WHERE ID = #", ToolKit.JBoolToDBool(isPreview), id.toString());
-        updateTime();
+//        DB.execute("UPDATE LECTURE SET IS_PREVIEW = '#' WHERE ID = #", ToolKit.JBoolToDBool(isPreview), id.toString());
+//        updateTime();
     }
     
-    public String  delete(){
+    public void delete(){
         DB.execute("DELETE LECTURE WHERE ID = #", id.toString());
-       return  file.deleteFile(this.id);
+        file.delete();
+    }
+    
+    public void upload(Integer weekId) {
+    	Files.createNewFile(file);
+    	id = DB.generateId("lecture");
+		String lectureSql = "insert into lecture(id,lecture_no,title,last_update,is_preview,week_id,file_id) values(#,#,'#',#,'#',#,#)";
+		DB.execute(lectureSql, id.toString(), lectureNo.toString(), title,
+				ToolKit.getCurTimeDB(), ToolKit.JBoolToDBool(isPreview),
+				weekId.toString(), file.getId().toString());
+    }
+    public void update() {
+    	file.update();
+    	DB.execute(""
+    			+ "UPDATE LECTURE SET "
+    			+ "LECTURE_NO = #, "
+    			+ "TITLE = '#', "
+    			+ "LAST_UPDATE = #, "
+    			+ "IS_PREVIEW = '#' "
+    			+ "WHERE ID = #",
+    			lectureNo.toString(),
+    			title,
+    			ToolKit.getCurTimeDB(),
+    			ToolKit.JBoolToDBool(isPreview),
+    			id.toString());
     }
     
 }

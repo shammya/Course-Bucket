@@ -13,10 +13,10 @@ import {
 import { Cancel } from "@material-ui/icons";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import React from "react";
-import { Sticky, StickyContainer } from "react-sticky";
+import { Sticky } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
 import { GenerateFilterValue, MakeList } from "./filter/MakeList";
-import { IFilterType, IFilteredValue } from "./SearchPage";
+import { IFilteredValue, IFilterType } from "./SearchPage";
 
 const useStyle = makeStyles((theme) => ({
   dialog: {
@@ -127,7 +127,7 @@ function Filter({
               <Grid
                 container
                 direction="row"
-                justify="space-between"
+                justifyContent="space-between"
                 alignItems="center"
               >
                 <IconButton onClick={(event) => setOpenDrawer(false)}>
@@ -186,7 +186,7 @@ function Filter({
         sm={12}
         xs={6}
         container
-        justify="space-between"
+        justifyContent="space-between"
         onClick={(event) => setOpenDrawer(true)}
       >
         <Typography variant="h6">Filter by</Typography>

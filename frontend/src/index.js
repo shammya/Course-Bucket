@@ -3,6 +3,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiThemeProvider } from '@material-ui/core';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { lightTheme } from 'Theme';
@@ -16,7 +17,9 @@ ReactDOM.render(
   // <React.StrictMode>
   <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <MuiThemeProvider theme={lightTheme}>
-      <App />
+      <SnackbarProvider maxSnack={12}>
+        <App />
+      </SnackbarProvider>
     </MuiThemeProvider>
   </MuiPickersUtilsProvider>
   // {/* </React.StrictMode>, */ }

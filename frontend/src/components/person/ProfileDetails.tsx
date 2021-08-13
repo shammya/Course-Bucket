@@ -16,20 +16,19 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import axios from "axios";
-import { Files } from "classes/Files";
 import { CreditCard, Designation, EduStatus, Person } from "classes/Person";
 import CountryService from "components/AdminPanel/api/CountryService";
 import DesignationService from "components/AdminPanel/api/DesignationService";
 import EduStatusService from "components/AdminPanel/api/EduStatusService";
 import AuthService, { authHeaders } from "components/auth/api/AuthService";
-import { global } from "Configure";
+import { GLOBAL } from "Configure";
 import User from "layout/User";
 import { FileObject } from "material-ui-dropzone";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { ControlledTextfield } from "tools/customDesign/ControlledTextfield";
+import { ImageUploader } from "tools/customDesign/ImageUploader";
 import { LanguageField } from "tools/customDesign/LanguageField";
-import { FileUploader } from "tools/FileUploader";
 import { ErrorMessage } from "tools/Tools";
 import { Country } from "./../../classes/Country";
 import PersonService from "./api/PersonService";
@@ -107,9 +106,9 @@ const ProfileDetails = (props) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [againNewPassword, setAgainNewPassword] = useState("");
-  const [files, setFiles] = useState<FileObject[]>([]);
+  // const [files, setFiles] = useState<FileObject[]>([]);
   const [tempFiles, setTempFiles] = useState<FileObject[]>([]);
-  const [upload, setUpload] = useState(false);
+
   // Snackbar control
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -124,12 +123,13 @@ const ProfileDetails = (props) => {
   // Initialize  - start
 
   useEffect(() => {
+    console.log("heheh");
     if (props.location.state) {
       setPerson(props.location.state.person);
     } else if (AuthService.getCurrentAccountType() != "") {
       if (AuthService.getCurrentAccountType() == "Teacher") {
         axios
-          .get(global.HOST + "/get-teacher-self", authHeaders())
+          .get(GLOBAL.HOST + "/get-teacher-self", authHeaders())
           .then((response) => {
             console.log("Person data from header", response);
             // history.goBack();
@@ -143,7 +143,7 @@ const ProfileDetails = (props) => {
           });
       } else if (AuthService.getCurrentAccountType() == "Student") {
         axios
-          .get(global.HOST + "/get-student-self", authHeaders())
+          .get(GLOBAL.HOST + "/get-student-self", authHeaders())
           .then((response) => {
             console.log("Person data from header", response);
             // history.goBack();
@@ -159,7 +159,6 @@ const ProfileDetails = (props) => {
         history.goBack();
       }
     }
-    console.log("Hello");
     CountryService.getAllCountries().then((response) => {
       setCountryItem(response.data);
     });
@@ -193,9 +192,6 @@ const ProfileDetails = (props) => {
       if (person.card && person.card.expireDate) {
         setCardExpireDate(person.card.expireDate);
       }
-    }
-    if (!person.photo) {
-      setUpload(true);
     }
     // if (person.dob == undefined) {
     //   person.dob = dob;
@@ -541,101 +537,22 @@ const ProfileDetails = (props) => {
       </Grid>
     );
   }
+
   function ProfilePicture() {
     return (
-      <>
-        {upload && (
-          <Grid container direction="column" spacing={1}>
-            <Grid item>
-              <FileUploader
-                fileObjects={files}
-                type="picture"
-                filesLimit={1}
-                onChange={(files) => setFiles(files)}
-              />
-            </Grid>
-            <Grid
-              item
-              container
-              direction="row"
-              justifyContent="center"
-              spacing={2}
-            >
-              <Grid item>
-                <Button
-                  color="primary"
-                  onClick={(event) => {
-                    if (files[0]) {
-                      person.photo = new Files(
-                        "PICTURE",
-                        "Profile Picture"
-                      ).setFile(files[0]);
-                      setUpload(false);
-                    } else {
-                      setErrorMessage("Please upload a photo!!");
-                      setShowErrorMessage(true);
-                    }
-                  }}
-                >
-                  Set
-                </Button>
-              </Grid>
-              {person.photo && (
-                <Grid item>
-                  <Button
-                    color="secondary"
-                    onClick={(event) => setUpload(false)}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
-              )}
-            </Grid>
-          </Grid>
-        )}
-        {!upload && (
-          <Grid container direction="column" spacing={1}>
-            <Grid item style={{ textAlign: "center" }}>
-              <img
-                src={
-                  person?.photo?.content.file
-                    ? URL.createObjectURL(person?.photo.content.file)
-                    : person?.photo?.content
-                }
-                style={{
-                  width: "90%",
-                  boxShadow: "rgb(0 0 0 / 12%) 0 1px 6px",
-                }}
-              />
-            </Grid>
-            <Grid
-              item
-              container
-              direction="row"
-              justifyContent="center"
-              spacing={2}
-            >
-              <Grid item>
-                <Button color="primary" onClick={(event) => setUpload(true)}>
-                  Change
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  color="secondary"
-                  onClick={(event) => {
-                    person.photo = undefined;
-                    setFiles([]);
-                    setUpload(true);
-                  }}
-                >
-                  Delete
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
-      </>
+      <ImageUploader
+        title="Profile Picture"
+        onSetClick={(file) => {
+          //@ts-ignore
+          setPerson({ ...person, photo: file });
+          setErrorMessage("");
+        }}
+        onDeleteClick={() => {
+          person.photo = undefined;
+          setErrorMessage("");
+        }}
+        imageDestination={person?.photo}
+      />
     );
   }
   function Security() {
@@ -649,29 +566,32 @@ const ProfileDetails = (props) => {
           disabled
           defaultValue={person.email}
         />
-        <TextField
+        <ControlledTextfield
           label="Old Password"
           margin="normal"
           variant="outlined"
           color="primary"
           defaultValue={oldPassword}
           onChange={(event) => setOldPassword(event.target.value)}
+          type="password"
         />
-        <TextField
+        <ControlledTextfield
           label="New Password"
           margin="normal"
           variant="outlined"
           color="primary"
           defaultValue={newPassword}
           onChange={(event) => setNewPassword(event.target.value)}
+          type="password"
         />
-        <TextField
+        <ControlledTextfield
           label="New Password (Again)"
           margin="normal"
           variant="outlined"
           color="primary"
           defaultValue={againNewPassword}
           onChange={(event) => setAgainNewPassword(event.target.value)}
+          type="password"
         />
       </Grid>
     );
@@ -765,7 +685,7 @@ const ProfileDetails = (props) => {
       />
       {props.location.state.registered ? (
         <User>
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             <FullPage />
           </Grid>
         </User>

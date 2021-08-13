@@ -102,15 +102,15 @@ public class FilesController {
 //		Files.createPhoto(files, email);
 //	}
 	
-	@PostMapping("/add-photo-by-email/{email}")
-	public void addPhoto(@RequestBody Files files,@PathVariable String email) {
-		Files.createPhoto(files, email);
-	}
-	
-	@GetMapping("/get-photo-by-id/{id}")
-	public String  findPhoto(@PathVariable String id){
-		return Files.getPhoto(id);
-	}
+//	@PostMapping("/add-photo-by-email/{email}")
+//	public void addPhoto(@RequestBody Files files,@PathVariable String email) {
+//		Files.createPhoto(files, email);
+//	}
+//	
+//	@GetMapping("/get-photo-by-id/{id}")
+//	public String  findPhoto(@PathVariable String id){
+//		return Files.getPhoto(id);
+//	}
 //	
 //	@GetMapping("/get-files-by-name/{name}")
 //	public Files findById(@PathVariable String name) {
@@ -118,16 +118,16 @@ public class FilesController {
 //		return files;
 //	}
 		
-	
-	@PutMapping("/update-photo")
-	public void updateFiles(@RequestBody Files files) {
-		Files.changePhoto(files);
-	}
-	
-	@DeleteMapping("/delete-photo-by-id/{personId,photoId}")
-	public void deleteFiles(@PathVariable Integer personId,@PathVariable Integer photoId) {
-		Files.deletePhoto(personId,photoId);
-	}
+//	
+//	@PutMapping("/update-photo")
+//	public void updateFiles(@RequestBody Files files) {
+//		Files.changePhoto(files);
+//	}
+//	
+//	@DeleteMapping("/delete-photo-by-id/{personId,photoId}")
+//	public void deleteFiles(@PathVariable Integer personId,@PathVariable Integer photoId) {
+//		Files.deletePhoto(personId,photoId);
+//	}
 	
 	@PostMapping("/insert-files")
 	public void insertFiles(@RequestBody Files files) {

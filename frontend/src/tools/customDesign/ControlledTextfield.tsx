@@ -61,9 +61,18 @@ export type IControlledTextField =
   | IControlledFilledTTextField
   | IControlledOutlinedTextField;
 export function ControlledTextfield(props: IControlledTextField) {
-  const { pattern, onChange, onBlur, onFocus, helperText, defaultValue } =
-    props;
-  const [value, setValue] = useState(defaultValue == null ? "" : defaultValue);
+  const {
+    pattern,
+    onChange,
+    onBlur,
+    onFocus,
+    helperText,
+    defaultValue,
+    ...rest
+  } = props;
+  const [value, setValue] = useState(
+    defaultValue == undefined ? "" : defaultValue
+  );
   const [showError, setShowError] = useState(false);
   const [showHelperText, setShowHelperText] = useState(false);
   const [statePattern, setPattern] = useState<RegExp | null>(null);
@@ -153,7 +162,7 @@ export function ControlledTextfield(props: IControlledTextField) {
   // }
   return (
     <TextField
-      {...props}
+      {...rest}
       value={value}
       error={props.error ? true : showError}
       onChange={handleOnChange}

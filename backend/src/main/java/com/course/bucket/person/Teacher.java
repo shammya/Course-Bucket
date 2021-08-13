@@ -40,6 +40,10 @@ public class Teacher extends Person {
         this.designation = designation;
         DB.execute("UPDATE TEACHER SET DESIGNATION_ID = '#'", designation.getId().toString());
     }
+    
+    public Teacher() {
+    	super();
+    }
 
     public Teacher(AccountType accountType, String username, String email, String password, String firstName, String lastName, String about, Date dob){
         super(accountType, username, email, password, firstName, lastName, about, dob);

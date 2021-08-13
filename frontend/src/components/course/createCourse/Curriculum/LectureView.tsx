@@ -3,10 +3,13 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  Checkbox,
   Grid,
   IconButton,
   TextField,
+  Tooltip,
   Typography,
+  Zoom,
 } from "@material-ui/core";
 import {
   Cancel,
@@ -20,6 +23,7 @@ import {
 } from "@material-ui/icons";
 import LinkIcon from "@material-ui/icons/Link";
 import { Lecture } from "classes/Course";
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { ArticleInput } from "./ArticleInput";
 import { ArticleOutput } from "./ArticleOutput";
@@ -32,10 +36,12 @@ import { VideoOutput } from "./VideoOutput";
 
 export function LectureView({
   lecture,
+  lectureNo,
   onLectureChange,
   onLectureRemove,
 }: {
   lecture: Lecture;
+  lectureNo: number;
   onLectureChange: (Lecture) => void;
   onLectureRemove: () => void;
 }) {
@@ -43,8 +49,13 @@ export function LectureView({
   const [editMode, setEditMode] = useState(false);
   const [fieldValue, setFieldValue] = useState(lecture.title);
   const [body, setBody] = useState("LECTURE_TYPE");
+  const [preview, setPreview] = useState(false);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   useEffect(() => {
-    setFieldValue(lecture.title);
+    setBody(
+      lecture?.file?.type ? lecture?.file?.type + "_OUTPUT" : "LECTURE_TYPE"
+    );
   }, [lecture.title]);
 
   // function handleBodyChange(body) {
@@ -58,6 +69,44 @@ export function LectureView({
   // }
   function handleOnSave(file) {
     console.log(file);
+    let error = false;
+    if (file.title == "" || file.title == undefined) {
+      error = true;
+      switch (file.type) {
+        case "ARTICLE":
+          enqueueSnackbar("Title is missing", { variant: "error" });
+          break;
+        case "VIDEO":
+          enqueueSnackbar("Lecture body is missing", { variant: "error" });
+          break;
+        case "PDF":
+          enqueueSnackbar("Lecture body is missing", { variant: "error" });
+          break;
+        case "LINK":
+          enqueueSnackbar("Link is missing", { variant: "error" });
+          break;
+      }
+    }
+    if (file.content == undefined) {
+      error = true;
+      switch (file.type) {
+        case "ARTICLE":
+          enqueueSnackbar("Content is missing", { variant: "error" });
+          break;
+        case "VIDEO":
+          enqueueSnackbar("VIDEO file is missing", { variant: "error" });
+          break;
+        case "PDF":
+          enqueueSnackbar("PDF file is missing", { variant: "error" });
+          break;
+        case "LINK":
+          enqueueSnackbar("Link details is missing", { variant: "error" });
+          break;
+      }
+    }
+    if (error) {
+      return;
+    }
     onLectureChange({ ...lecture, file: file });
     setBody(file.type + "_OUTPUT");
   }
@@ -69,13 +118,17 @@ export function LectureView({
   function handleOnUpdate() {
     setBody(lecture.file.type + "_INPUT");
   }
+  function handlePreviewChange(event) {
+    setPreview(!preview);
+    onLectureChange({ ...lecture, isPreview: !preview });
+  }
 
   function LectureType() {
     return (
       <Grid
         container
         direction="row"
-        justify="space-around"
+        justifyContent="space-around"
         alignItems="center"
       >
         <IconButton onClick={(event) => setBody("ARTICLE_INPUT")}>
@@ -110,61 +163,116 @@ export function LectureView({
     return (
       <>
         {!editMode && (
-          <>
-            <IconButton onClick={(event) => setEditMode(true)}>
-              <Edit />
-            </IconButton>
-            <IconButton onClick={onLectureRemove}>
-              <DeleteForever />
-            </IconButton>
-            <Typography>Lecture {11} :</Typography>
-            <Typography> {lecture.title}</Typography>
-            {!expanded && lecture.file == undefined && (
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={(event) => setExpanded(!expanded)}
+          <Grid container direction="row" alignItems="center" wrap="nowrap">
+            <Grid item>
+              <Tooltip
+                title={
+                  preview
+                    ? "This lecture is set as preview"
+                    : "Do you want to set this lecture as preview?"
+                }
+                TransitionComponent={Zoom}
+                arrow
               >
-                Content +
-              </Button>
-            )}
-            {expanded && lecture.file == undefined && (
+                <span onClick={(event) => event.stopPropagation()}>
+                  <Checkbox checked={preview} onChange={handlePreviewChange} />
+                </span>
+              </Tooltip>
+            </Grid>
+            <Grid item>
               <IconButton
                 onClick={(event) => {
-                  setExpanded(!expanded);
-                  setBody("LECTURE_TYPE");
+                  setEditMode(true);
+                  event.stopPropagation();
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton
+                onClick={(event) => {
+                  onLectureRemove();
+                  event.stopPropagation();
+                }}
+              >
+                <DeleteForever />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <Typography style={{ whiteSpace: "nowrap", marginRight: 10 }}>
+                Lecture {lectureNo} :
+              </Typography>
+            </Grid>
+            <Grid item container>
+              <Typography> {lecture.title}</Typography>
+            </Grid>
+            {!expanded && lecture.file == undefined && (
+              <Grid item>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  style={{ marginLeft: 10 }}
+                >
+                  <Typography style={{ whiteSpace: "nowrap" }}>
+                    Content +
+                  </Typography>
+                </Button>
+              </Grid>
+            )}
+            {expanded && lecture.file == undefined && (
+              <Grid item>
+                <IconButton
+                  onClick={(event) => {
+                    setBody("LECTURE_TYPE");
+                  }}
+                >
+                  <Cancel />
+                </IconButton>
+              </Grid>
+            )}
+          </Grid>
+        )}
+        {editMode && (
+          <Grid container direction="row" alignItems="center" wrap="nowrap">
+            <Grid item container>
+              <TextField
+                variant="outlined"
+                fullWidth
+                defaultValue={lecture.title}
+                onBlur={(event) => setFieldValue(event.target.value)}
+                onClick={(event) => event.stopPropagation()}
+              />
+            </Grid>
+            <Grid item>
+              <IconButton
+                onClick={(event) => {
+                  event.stopPropagation();
+                  if (!fieldValue) {
+                    enqueueSnackbar("Lecture name can not be empty", {
+                      variant: "warning",
+                    });
+                    return;
+                  }
+                  onLectureChange({ ...lecture, title: fieldValue });
+                  setEditMode(false);
+                }}
+              >
+                <CheckCircle />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton
+                onClick={(event) => {
+                  setEditMode(false);
+                  setFieldValue(lecture.title);
+                  event.stopPropagation();
                 }}
               >
                 <Cancel />
               </IconButton>
-            )}
-          </>
-        )}
-        {editMode && (
-          <>
-            <TextField
-              variant="outlined"
-              fullWidth
-              defaultValue={lecture.title}
-              onBlur={(event) => setFieldValue(event.target.value)}
-            />
-            <IconButton
-              onClick={(event) => {
-                onLectureChange({ ...lecture, title: fieldValue });
-                setEditMode(false);
-              }}
-            >
-              <CheckCircle />
-            </IconButton>
-            <IconButton
-              onClick={(event) => {
-                setEditMode(false);
-                setFieldValue(lecture.title);
-              }}
-            >
-              <Cancel />
-            </IconButton>
-          </>
+            </Grid>
+          </Grid>
         )}
       </>
     );
@@ -177,11 +285,8 @@ export function LectureView({
       style={{ backgroundColor: "pink", width: "100%" }}
     >
       <AccordionSummary
-        expandIcon={
-          lecture.file != undefined && (
-            <ExpandMore onClick={(event) => setExpanded(!expanded)} />
-          )
-        }
+        expandIcon={lecture.file != undefined && <ExpandMore />}
+        onClick={() => setExpanded(!expanded)}
       >
         <LectureRow />
       </AccordionSummary>
