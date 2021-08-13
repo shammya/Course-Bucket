@@ -10,7 +10,8 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { DoneAll, Image, LabelImportant } from "@material-ui/icons";
+import { DoneAll, LabelImportant } from "@material-ui/icons";
+import { Rating } from "@material-ui/lab";
 import { Course, Property, Week } from "classes/Course";
 import {
   CheckoutDialog,
@@ -149,12 +150,14 @@ export function CourseView() {
           <Typography variant="h6">{course?.subTitle}</Typography>
         </Grid>
         <Grid item container direction="row">
-          <Grid item>{/* <Rating></Rating> */}</Grid>
+          <Grid item>
+            <Rating value={2} readOnly name="rating" /> (2)
+          </Grid>
           <Grid item>118001 ratings 1090034 students</Grid>
         </Grid>
         <Grid item>Created by {course?.teacherName}</Grid>
         <Grid item container direction="row">
-          <Grid item>Last updated {course?.lastUpdate}</Grid>
+          <Grid item>Published date: {course?.publishDate}</Grid>
           <Grid item>languages</Grid>
         </Grid>
       </>
@@ -219,7 +222,7 @@ export function CourseView() {
                 {({ style }) => (
                   <Card style={{ ...style, zIndex: 999, marginLeft: 16 }}>
                     <CardContent>
-                      <Image />
+                      <img src={course?.cover?.content} />
                       <Grid
                         item
                         container
@@ -269,7 +272,7 @@ export function CourseView() {
         <CardContent>
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <Image />
+              <img src={course?.cover?.content} />
             </Grid>
             <Grid item>
               <TitleSection />
@@ -331,8 +334,8 @@ export function CourseView() {
   function Info() {
     return (
       <>
-        <Grid item>
-          <Card>
+        <Grid item container>
+          <Card style={{ width: "100%" }}>
             <CardContent>
               <Grid container direction="column">
                 <Grid item>
@@ -360,8 +363,8 @@ export function CourseView() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item>
-          <Card>
+        <Grid item container>
+          <Card style={{ width: "100%" }}>
             <CardContent>
               <Typography variant="h5">Requirements</Typography>
               <List dense={false}>
@@ -387,8 +390,8 @@ export function CourseView() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item>
-          <Card>
+        <Grid item container>
+          <Card style={{ width: "100%" }}>
             <CardContent>
               <Typography variant="h5">Description</Typography>
               <Typography>{course?.description}</Typography>
@@ -422,7 +425,7 @@ export function CourseView() {
       <StickyContainer>
         <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Responsive displayIn="Laptop">
+            <Responsive displayIn={["Laptop", "Tablet"]}>
               <PCHeader />
             </Responsive>
           </Grid>
@@ -437,10 +440,7 @@ export function CourseView() {
             md={8}
           >
             <Grid item>
-              <Responsive displayIn="Tablet">
-                <MobileHeader />
-              </Responsive>
-              <Responsive displayIn="Mobile">
+              <Responsive displayIn={["Mobile"]}>
                 <MobileHeader />
               </Responsive>
             </Grid>

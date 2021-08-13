@@ -44,10 +44,11 @@ export class MiniCourse {
   id: number;
   title: string;
   teacherName: string;
+  coverContent: string;
   rating: number;
   ratingCount: number;
   price: number;
-  offeredPrice: number;
+  off: number;
 }
 
 export class Lecture {

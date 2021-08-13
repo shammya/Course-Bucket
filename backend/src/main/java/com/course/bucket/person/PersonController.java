@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.course.bucket.authentication.MessageResponse;
 import com.course.bucket.files.Files;
+import com.course.bucket.person.Person.AccountType;
 
 
 
@@ -45,10 +46,16 @@ public class PersonController {
 	}
 
 	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
-	@GetMapping("/get-person-by-id/{id}")
-	public Person findPerson(@PathVariable String id){
-		Person person = new Person(id);
-		person.setPassword("");
+	@GetMapping("/get-person-by-username/{username}")
+	public Person findPerson(@PathVariable String username){
+		String role = Person.getRole(username);
+		Person person = null;
+		if(role.toLowerCase().equals("student")) {
+			person = new Student(username);
+		}
+		else if(role.toLowerCase().equals("teacher")) {
+			person = new Teacher(username);
+		}
 		return person;
 	}
 	
@@ -111,11 +118,11 @@ public class PersonController {
 	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
 		return Person.getStudentInfoAdmin();
 	}
-	@GetMapping("/get-profile-photo")
-	public Files getProfilePhoto() {
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return Person.getPhoto(userDetails.getUsername());
-	}
+//	@GetMapping("/get-profile-photo")
+//	public Files getProfilePhoto() {
+//		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		return Person.getPhoto(userDetails.getUsername());
+//	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")
 //	public Person findById(@PathVariable String name) {

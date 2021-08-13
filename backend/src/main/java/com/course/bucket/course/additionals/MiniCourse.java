@@ -1,20 +1,30 @@
 package com.course.bucket.course.additionals;
 
+import com.course.bucket.course.Course;
 import com.course.bucket.database.DB;
 
 public class MiniCourse {
 	private Integer id;
 	private String title;
 	private String teacherName;
+	private String coverContent;
 	private Double rating;
 	private Integer ratingCount;
 	private Double price;
-	private Double offeredPrice;
+	private Double off;
 
 	public MiniCourse() {}
 	
 	public MiniCourse (Integer id) {
-		
+		Course course = new Course(id);
+		this.id = id;
+		this.title = course.getTitle();
+		this.teacherName = course.getTeacherName();
+		this.coverContent = course.getCover().getContent();
+		this.rating = course.getRating();
+		this.ratingCount = course.getNumOfRating();
+		this.price = course.getMainPrice();
+		this.off = course.getOff();
 	}
 	
 	public MiniCourse(Integer id, String title, String teacherName, Double rating, Integer ratingCount, Double price,
@@ -26,7 +36,15 @@ public class MiniCourse {
 		this.rating = rating;
 		this.ratingCount = ratingCount;
 		this.price = price;
-		this.offeredPrice = offeredPrice;
+		this.off = offeredPrice;
+	}
+
+	public String getCoverContent() {
+		return coverContent;
+	}
+
+	public void setCoverContent(String coverContent) {
+		this.coverContent = coverContent;
 	}
 
 	public Integer getId() {
@@ -78,13 +96,13 @@ public class MiniCourse {
 	}
 
 
-	public Double getOfferedPrice() {
-		return offeredPrice;
+	public Double getOff() {
+		return off;
 	}
 
 
-	public void setOfferedPrice(Double offeredPrice) {
-		this.offeredPrice = offeredPrice;
+	public void setOff(Double offeredPrice) {
+		this.off = offeredPrice;
 	}
 
 	public Integer getRatingCount() {

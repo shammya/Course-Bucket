@@ -38,7 +38,7 @@ function App() {
             <Route path="/auth" component={Auth} />
             <Route path="/home" component={Home} />
             <Route path="/search" component={Search} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/profile/:username" component={Profile} />
             <Route path="/profile-details" component={ProfileDetails} />
             <Route path="/create-course" exact component={CreateCourse} />
             <Route path="/create-course/:courseId" component={CreateCourse} />

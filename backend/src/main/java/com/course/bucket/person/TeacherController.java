@@ -32,10 +32,14 @@ public class TeacherController {
 	public void addTeacher(@ModelAttribute Person person,@PathVariable Integer desig_id) {
 		Teacher.createNewTeacher(person,desig_id);
 	}
-	
+
 	@GetMapping("/get-teacher")
 	public Teacher findTeacher(@PathVariable String id){
 		return new Teacher(ToolKit.getCurrentUserName());
+	}
+	@GetMapping("/get-teacher-mini/{username}")
+	public TeacherMiniInfo getTeacherMiniByUsername(@PathVariable String username){
+		return new TeacherMiniInfo(username);
 	}
 
 	@GetMapping("/get-teacher-self")
@@ -45,12 +49,18 @@ public class TeacherController {
 		person.setPassword("");
 		return ResponseEntity.ok(person);
 	}
-	
+
 	@GetMapping("/get-created-courses")
 	public ArrayList<MiniCourse> getCreatedCourses(){
 		String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		return null;
+		return getCreatedCoursesByUsername(username);
 	}
+	@GetMapping("/get-created-courses/{username}")
+	public ArrayList<MiniCourse> getCreatedCoursesByUsername(@PathVariable String username){
+		return Teacher.getCreatedCourses(username);
+	}
+	
+	
 //	
 //	@GetMapping("/get-person-by-name/{name}")
 //	public Person findById(@PathVariable String name) {
