@@ -131,3 +131,4 @@ public class PersonController {
 	public void deletePerson(@PathVariable String name) {
 		Person.deletePerson(name);
 	}
+}
