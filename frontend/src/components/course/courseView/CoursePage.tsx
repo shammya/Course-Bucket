@@ -22,13 +22,16 @@ import InstructorShortDetailsBox from "components/course/courseView/InstructorSh
 import RatingSection from "components/course/courseView/Rating";
 import { ReviewSection } from "components/course/courseView/Review";
 import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
+import TeacherService from "components/person/api/TeacherService";
 import User from "layout/User";
 import React, { useEffect, useState } from "react";
 import { IconPickerItem } from "react-fa-icon-picker";
+import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import { Sticky, StickyContainer } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
 import CourseService from "../api/CourseService";
+import { TeacherMiniInfo } from "./../../../classes/Person";
 
 export const lorem =
   "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid magni adipisci, a quibusdam deserunt cupiditate. Reprehenderit, molestiae quas minima corporis non nulla perspiciatis esse nostrum in harum eveniet. Repellendus, animi!";
@@ -101,19 +104,39 @@ const useStyles = makeStyles((theme) => ({
 
 export function CourseView() {
   const { courseId } = useParams();
+  const history = useHistory();
   const classes = useStyles();
-  const [checkout, setCheckout] = useState(false);
-  const [purchased, setPurchased] = useState(false);
+  const [checkoutShow, setCheckoutShow] = useState(false);
+  const [congratulationShow, setCongratulationShow] = useState(false);
   const [course, setCourse] = useState<Course>(new Course());
-
+  const [teacherInfo, setTeacherInfo] = useState<TeacherMiniInfo>();
   useEffect(() => {
     if (courseId) {
       CourseService.getCourseToShow(courseId).then((response) => {
         console.log("Course fetched", response.data);
         setCourse(response.data);
+        TeacherService.getMiniInfo(response.data.teacherUsername).then(
+          (response) => {
+            setTeacherInfo(response.data);
+          }
+        );
       });
     }
   }, []);
+
+  function handleCongratulationClose() {
+    setCongratulationShow(false);
+    history.push(`/course/${courseId}`);
+  }
+
+  function handleOnPurchase() {
+    CourseService.purchase(courseId).then((response) => {
+      if (response.status == 200) {
+        setCheckoutShow(false);
+        setCongratulationShow(true);
+      }
+    });
+  }
 
   function Price() {
     return (
@@ -234,7 +257,7 @@ export function CourseView() {
                         <Price />
                       </Grid>
                       <Grid item>
-                        <div onClick={() => setCheckout(true)}>
+                        <div onClick={() => setCheckoutShow(true)}>
                           <Button
                             variant="contained"
                             color="primary"
@@ -244,15 +267,15 @@ export function CourseView() {
                           </Button>
                         </div>
                         <CheckoutDialog
-                          open={checkout}
-                          onClose={() => setCheckout(false)}
-                          onPurchase={() => setPurchased(true)}
+                          open={checkoutShow}
+                          course={course}
+                          onClose={() => setCheckoutShow(false)}
+                          onPurchase={handleOnPurchase}
                         />
                         <CongratulationDialog
-                          open={purchased}
-                          onClose={() => {
-                            setPurchased(false);
-                          }}
+                          open={congratulationShow}
+                          course={course}
+                          onClose={handleCongratulationClose}
                         />
                       </Grid>
                       <CourseProperties />
@@ -304,7 +327,7 @@ export function CourseView() {
                 </Grid>
               </Grid>
               <Grid item xs={6}>
-                <div onClick={() => setCheckout(true)}>
+                <div onClick={() => setCheckoutShow(true)}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -314,15 +337,15 @@ export function CourseView() {
                   </Button>
                 </div>
                 <CheckoutDialog
-                  open={checkout}
-                  onClose={() => setCheckout(false)}
-                  onPurchase={() => setPurchased(true)}
+                  open={checkoutShow}
+                  course={course}
+                  onClose={() => setCheckoutShow(false)}
+                  onPurchase={handleOnPurchase}
                 />
                 <CongratulationDialog
-                  open={purchased}
-                  onClose={() => {
-                    setPurchased(false);
-                  }}
+                  open={congratulationShow}
+                  course={course}
+                  onClose={handleCongratulationClose}
                 />
               </Grid>
             </Grid>
@@ -418,7 +441,7 @@ export function CourseView() {
     );
   }
   function InstructorDetails() {
-    return <InstructorShortDetailsBox />;
+    return <InstructorShortDetailsBox details={teacherInfo} />;
   }
   return (
     <User>
@@ -448,7 +471,7 @@ export function CourseView() {
             <Grid item container>
               <Content />
             </Grid>
-            <Grid item>
+            <Grid item container>
               <InstructorDetails />
             </Grid>
             <Grid item container>

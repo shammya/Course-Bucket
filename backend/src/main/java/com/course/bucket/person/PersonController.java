@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.course.bucket.authentication.MessageResponse;
+import com.course.bucket.creditcard.CreditCard;
 import com.course.bucket.files.Files;
 import com.course.bucket.person.Person.AccountType;
+import com.course.bucket.tools.ToolKit;
 
 
 
@@ -70,9 +72,6 @@ public class PersonController {
 	}
 
 	
-	
-	
-	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/change-password")
 	public ResponseEntity<?> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword){
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -117,6 +116,13 @@ public class PersonController {
 	@GetMapping("/get-student-info")
 	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
 		return Person.getStudentInfoAdmin();
+	}
+	
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/get-credit-card")
+	public CreditCard getCreditCardDetails(){
+		String username = ToolKit.getCurrentUserName();
+		return new CreditCard(username);
 	}
 //	@GetMapping("/get-profile-photo")
 //	public Files getProfilePhoto() {

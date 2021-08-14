@@ -1,4 +1,6 @@
 import {
+  Card,
+  CardActionArea,
   CardContent,
   Grid,
   List,
@@ -6,53 +8,80 @@ import {
   ListItemAvatar,
   ListItemText,
   Typography,
-  Card,
 } from "@material-ui/core";
-import { Star, Image } from "@material-ui/icons";
+import { Star } from "@material-ui/icons";
 import React from "react";
-import { lorem } from "components/course/courseView/CoursePage";
+import { useHistory } from "react-router";
+import { TeacherMiniInfo } from "./../../../classes/Person";
 
-function InstructorShortDetailsBox() {
+function InstructorShortDetailsBox({
+  details,
+}: {
+  details: TeacherMiniInfo | undefined;
+}) {
+  const history = useHistory();
   return (
-    <Card>
+    <Card style={{ width: "100%" }}>
       <CardContent>
-        <Grid container direction="column">
-          <Grid item container direction="row">
-            <Image />
-            <Grid item>
-              <Grid container direction="column">
-                <List dense={true}>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Star />
-                    </ListItemAvatar>
-                    <ListItemText>4.6 Instructor Rating</ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Star />
-                    </ListItemAvatar>
-                    <ListItemText>... Reviews</ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Star />
-                    </ListItemAvatar>
-                    <ListItemText>... Students</ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Star />
-                    </ListItemAvatar>
-                    <ListItemText>... Courses</ListItemText>
-                  </ListItem>
-                </List>
-              </Grid>
-            </Grid>
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <Typography variant="h5">{details?.teacherName}</Typography>
           </Grid>
           <Grid item>
+            <CardActionArea
+              onClick={(event) => history.push(`/profile/${details?.username}`)}
+            >
+              <Grid container direction="row" wrap="nowrap">
+                <Grid item lg={4} md={5} sm={7} xs={12}>
+                  <img src={details?.photoContent} />
+                </Grid>
+                <Grid item lg={8} md={7} sm={5} xs={12}>
+                  <Grid
+                    container
+                    direction="column"
+                    justifyContent="space-around"
+                  >
+                    <List dense={true}>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Star />
+                        </ListItemAvatar>
+                        <ListItemText>{details?.rating} Rating</ListItemText>
+                      </ListItem>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Star />
+                        </ListItemAvatar>
+                        <ListItemText>
+                          {details?.reviewCount} Reviews
+                        </ListItemText>
+                      </ListItem>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Star />
+                        </ListItemAvatar>
+                        <ListItemText>
+                          {details?.studentCount} Students
+                        </ListItemText>
+                      </ListItem>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Star />
+                        </ListItemAvatar>
+                        <ListItemText>
+                          {details?.courseCount} Courses
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Grid>
+
+          <Grid item>
             <Typography variant="h6">About</Typography>
-            <Typography>{lorem}</Typography>
+            <Typography>{details?.about}</Typography>
           </Grid>
         </Grid>
       </CardContent>

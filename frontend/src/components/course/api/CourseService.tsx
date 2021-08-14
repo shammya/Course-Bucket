@@ -56,24 +56,31 @@ class CourseService {
             console.log(response);
           });
       });
-    // } else {
-    //   course.weeks.forEach((week) => {
-    //     new Promise(() => {
-    //       week.lectures.forEach(async (lecture) => {
-    //         if (lecture.file.content.file) {
-    //           await lecture.file.upload();
-    //         }
-    //       });
-    //     }).then(() => {
-    //       console.log("Course update starting", course);
-    //       axios
-    //         .put(GLOBAL.HOST + "/update-course", course, authHeaders())
-    //         .then((response) => {
-    //           console.log(response);
-    //         });
-    //     });
-    //   });
-    // }
   }
+  purchase(courseId: number) {
+    return axios.post(
+      GLOBAL.HOST + `/add-purchase-history/${courseId}`,
+      {},
+      authHeaders()
+    );
+  }
+  // } else {
+  //   course.weeks.forEach((week) => {
+  //     new Promise(() => {
+  //       week.lectures.forEach(async (lecture) => {
+  //         if (lecture.file.content.file) {
+  //           await lecture.file.upload();
+  //         }
+  //       });
+  //     }).then(() => {
+  //       console.log("Course update starting", course);
+  //       axios
+  //         .put(GLOBAL.HOST + "/update-course", course, authHeaders())
+  //         .then((response) => {
+  //           console.log(response);
+  //         });
+  //     });
+  //   });
+  // }
 }
 export default new CourseService();

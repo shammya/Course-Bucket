@@ -1,25 +1,20 @@
 import { MiniCourse } from "classes/Course";
-import CourseBox from "components/course/CourseBox";
-import { courseData } from "Data";
-import CustomPagination from "layout/Pagination";
+import CoursePagination from "components/course/CustomPagination";
 import User from "layout/User";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import TeacherService from "./api/TeacherService";
 
 function MyCourse() {
   const [courses, setCourses] = useState<MiniCourse>();
-
+  useEffect(() => {
+    TeacherService.getCreateCourse().then((response) => {
+      console.log("Created course fetched", response.data);
+      setCourses(response.data);
+    });
+  }, []);
   return (
     <User>
-      <CustomPagination type="calculate-by-width" title="My Course">
-        {[
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1,
-        ].map((item) => (
-          <CourseBox courseData={courseData} />
-        ))}
-      </CustomPagination>
+      <CoursePagination courses={courses} title="My courses" />
     </User>
   );
 }

@@ -18,5 +18,8 @@ class PersonController {
       authHeaders()
     );
   }
+  getCreateCourse() {
+    return axios.get(GLOBAL.HOST + `/get-created-courses`, authHeaders());
+  }
 }
 export default new PersonController();

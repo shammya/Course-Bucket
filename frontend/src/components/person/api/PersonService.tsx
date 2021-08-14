@@ -42,6 +42,9 @@ class PersonController {
       authHeaders()
     );
   }
+  getCreditCardDetails() {
+    return axios.get(GLOBAL.HOST + `/get-credit-card`, authHeaders());
+  }
   // getProfilePhoto() {
   //   return axios.get(GLOBAL.HOST + "/get-profile-photo", authHeaders());
   // }

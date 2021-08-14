@@ -208,6 +208,22 @@ public class DB {
 		}
     	return 0;
     }
+    public static Double getDouble(String tableName, String idColumnName, String id, String dataColumnName) {
+    	String sql = "SELECT # FROM # WHERE #='#'";
+    	ResultSet rs = DB.executeQuery(sql,dataColumnName,tableName,idColumnName, id);
+
+    	try {
+			if(rs.next()) {
+				//System.out.println("column name : "+column.toUpperCase());
+				return rs.getDouble(dataColumnName);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return 0.0;
+    }
     public static void update(String tableName, String idColumnName, String id, String dataColumnName, String data, boolean isDate) {
     	String sql = "UPDATE # SET # = " + (isDate ? "#" : "'#'") + " WHERE # = '#'";
     	DB.execute(sql,tableName,dataColumnName,data,idColumnName, id);
