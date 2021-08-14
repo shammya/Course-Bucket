@@ -22,6 +22,7 @@ import com.course.bucket.course.additionals.Filters;
 import com.course.bucket.course.additionals.IncomePerCourse;
 import com.course.bucket.course.additionals.MiniCourse;
 import com.course.bucket.course.additionals.PopularCategory;
+import com.course.bucket.courseextra.PublicResponse;
 import com.course.bucket.person.Admin;
 import com.course.bucket.tools.ToolKit;
 
@@ -54,6 +55,11 @@ public class CourseController {
 	public Course getCourseToShow(@PathVariable Integer id) {
 		Course course = new Course(id);
 		return course;
+	}
+	@GetMapping("/get-course-public-response/{courseId}")
+	public PublicResponse getCoursePublicResponse(@PathVariable Integer courseId) {
+		
+		return Course.getPublicResponse(courseId);
 	}
 	
 	

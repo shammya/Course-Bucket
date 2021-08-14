@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import com.course.bucket.category.Category;
 import com.course.bucket.course.additionals.CarouselCourse;
@@ -30,6 +31,7 @@ import com.course.bucket.person.Teacher;
 import com.course.bucket.tools.ToolKit;
 
 import ch.qos.logback.core.filter.Filter;
+import sun.security.mscapi.CKeyPairGenerator.RSA;
 
 public class Course {
 
@@ -1009,18 +1011,18 @@ public class Course {
 		}
 		return null;
 	}
-	
-	public static ArrayList<Integer> ratingByNumberList(Integer courseId){
-		ArrayList<Integer> ratingsByNumber = new  ArrayList<>();
+
+	public static ArrayList<Integer> ratingByNumberList(Integer courseId) {
+		ArrayList<Integer> ratingsByNumber = new ArrayList<>();
 		String sql = "SELECT c.id,(\r\n"
 				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=1 AND c.id=rt.course_id) AS one,(\r\n"
 				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=2 AND c.id=rt.course_id) AS two,(\r\n"
 				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=3 AND c.id=rt.course_id) AS three,(\r\n"
 				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=4 AND c.id=rt.course_id) AS four,(\r\n"
 				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.id= #";
-		ResultSet rs = DB.executeQuery(sql,courseId.toString());
+		ResultSet rs = DB.executeQuery(sql, courseId.toString());
 		try {
-			if(rs.next()) {
+			if (rs.next()) {
 				ratingsByNumber.add(0);
 				ratingsByNumber.add(rs.getInt("one"));
 				ratingsByNumber.add(rs.getInt("two"));
@@ -1035,17 +1037,47 @@ public class Course {
 		}
 		return null;
 	}
-	
-	
 
 	public static PublicResponse getPublicResponse(Integer courseId) {
-		
+
 		Integer enrolledStudentCount = Course.enrolledStudentCount(courseId);
 		ArrayList<Integer> ratingByNumber = ratingByNumberList(courseId);
 		Double ratingValue = Course.avgRatingValue(courseId);
 		Integer ratingCount = Course.ratingCount(courseId);
 		ArrayList<ReviewList> reviews = Review.getReviewListCourse(courseId);
 		ArrayList<FaqList> faqs = FAQ.getFaqListCourse(courseId);
-		return new  PublicResponse(enrolledStudentCount, ratingByNumber, ratingValue, ratingCount, reviews, faqs);
+		return new PublicResponse(enrolledStudentCount, ratingByNumber, ratingValue, ratingCount, reviews, faqs);
+	}
+
+	public Course getCourseAfterAuthentication(String username, Integer courseId) {
+		String sql = "select teacher_id person from course where id = # and teacher_id = '#'\r\n" + "union\r\n"
+				+ "select student_id person from purchase_history where course_id = #  and student_id = '#'\r\n"
+				+ "union \r\n" + "select id person from admin where id = '#'\r\n" + "	";
+		ResultSet rs = DB.executeQuery(sql, courseId.toString(), username, courseId.toString(), username, username);
+		try {
+			if (rs.next()) {
+				return new Course(courseId);
+			}
+			else {
+				Course course  = new Course(courseId);
+				for(Week week : course.getWeeks())
+				{
+					for(Lecture lecture : week.getLectures())
+					{
+						if(!lecture.isPreview)
+						{
+							lecture.setFile(null);
+						}
+							
+					}
+				}
+				return course;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 }
