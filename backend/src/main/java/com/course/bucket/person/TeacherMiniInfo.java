@@ -18,7 +18,7 @@ public class TeacherMiniInfo {
 		this.about = teacher.getAbout();
 		if(teacher.getPhoto() != null) this.photoContent = teacher.getPhoto().getContent();
 		this.teacherName = teacher.getFirstName() + " " + teacher.getLastName();
-//		this.rating = teacher.rat
+		this.rating = teacher.getRating();
 		this.ratingCount = teacher.getNumOfRating();
 		this.reviewCount = teacher.getNumOfReview();
 		this.studentCount = teacher.getNumOfStudent();

@@ -88,11 +88,11 @@ public class PersonController {
 	
 	
 	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-student-info")
-	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
-		return Person.getStudentInfoAdmin();
-	}
+//	@PreAuthorize("hasRole('Admin')")
+//	@GetMapping("/get-student-info")
+//	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
+//		return Person.getStudentInfoAdmin();
+//	}
 	
 	@PreAuthorize("hasRole('Student')")
 	@GetMapping("/get-credit-card")

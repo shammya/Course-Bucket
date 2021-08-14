@@ -300,6 +300,7 @@ public class Review {
 				+ "	AND c.cover_id = fl.id \n";
 		ResultSet crs = DB.executeQuery(sql, courseId.toString());
 		try {
+				crs.next();
 				ResultSet rvrs = DB.executeQuery("select * from review where course_id = #",courseId.toString());
 
 				ArrayList<ReviewInfo> reviewInfos = new ArrayList<>();
@@ -341,6 +342,10 @@ public class Review {
 		String sql = " insert into rating values(#,#, '#', #,#)";
 		DB.execute(sql,id.toString(),rating.getCourseId().toString(),rating.getStudentId(),rating.getValue().toString(),ToolKit.JDateToDDate(rating.getTime()));
 		notificationRating(rating);
+	}
+	
+	public static void createNewRating(Integer courseId, String username, Double ratingValue) {
+		createNewRating(new RatingDb(courseId, username, ratingValue, ToolKit.getCurTime()));
 	}
 	
 	public static void notificationReview(ReviewDb review) {

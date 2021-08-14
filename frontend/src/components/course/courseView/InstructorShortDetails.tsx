@@ -46,7 +46,9 @@ function InstructorShortDetailsBox({
                         <ListItemAvatar>
                           <Star />
                         </ListItemAvatar>
-                        <ListItemText>{details?.rating} Rating</ListItemText>
+                        <ListItemText>
+                          ({details?.rating}) {details?.ratingCount} Rating
+                        </ListItemText>
                       </ListItem>
                       <ListItem>
                         <ListItemAvatar>

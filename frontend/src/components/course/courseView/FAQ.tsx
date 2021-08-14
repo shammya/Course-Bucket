@@ -11,15 +11,15 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import { lorem } from "components/course/courseView/CoursePage";
+import { FaqInfo } from "classes/Course";
 import MUIRichTextEditor from "mui-rte";
 import React, { useState } from "react";
 import { SlidingUpTransition } from "tools/Tools";
 
-export function FAQSection() {
+export function FAQSection({ faqs }: { faqs: FaqInfo[] | undefined }) {
   const [writeFAQ, setWriteFAQ] = useState(false);
   return (
-    <Card>
+    <Card style={{ width: "100%" }}>
       <CardContent>
         <Grid container direction="column" spacing={2}>
           <Grid item container direction="row" justifyContent="space-between">
@@ -42,50 +42,58 @@ export function FAQSection() {
               />
             </Grid>
           </Grid>
-          {[1, 2, 3, 4].map((item, index) => (
-            <Grid key={index}>
-              <Divider />
-              <Grid item>
-                <FAQBox />
+          <Grid item container direction="column">
+            {faqs?.map((faq, index) => (
+              <Grid item container key={index}>
+                <Grid item container>
+                  <Divider />
+                </Grid>
+                <Grid item container>
+                  <FAQBox faq={faq} />
+                </Grid>
               </Grid>
-            </Grid>
-          ))}
+            ))}
+          </Grid>
         </Grid>
       </CardContent>
     </Card>
   );
 }
 
-export function FAQBox() {
+export function FAQBox({ faq }: { faq: FaqInfo | undefined }) {
   return (
     <Grid container direction="row" wrap="nowrap" spacing={2}>
       <Grid item>
-        <Avatar />
+        <Avatar src={faq?.studentImage} />
       </Grid>
       <Grid item container direction="column">
         <Grid>
-          <Typography variant="h5">Questioner</Typography>
+          <Typography variant="h5">{faq?.studentName}</Typography>
         </Grid>
         <Grid item>
-          <Typography variant="subtitle1">4 weeks ago</Typography>
+          <Typography variant="subtitle1">
+            {new Date(faq?.questionDate + "").toLocaleString()}
+          </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="body1">{lorem + lorem}</Typography>
+          <Typography variant="body1">{faq?.question}</Typography>
         </Grid>
         <Grid item style={{ marginTop: 20 }}>
           <Grid container direction="row" wrap="nowrap" spacing={2}>
             <Grid item>
-              <Avatar />
+              <Avatar src={faq?.teacherImage} />
             </Grid>
             <Grid item container direction="column">
               <Grid>
-                <Typography variant="h5">Respondent</Typography>
+                <Typography variant="h5">{faq?.teacherName}</Typography>
               </Grid>
               <Grid item>
-                <Typography variant="subtitle1">4 weeks ago</Typography>
+                <Typography variant="subtitle1">
+                  {new Date(faq?.answerDate + "").toLocaleString()}
+                </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="body1">{lorem + lorem}</Typography>
+                <Typography variant="body1">{faq?.answer}</Typography>
               </Grid>
             </Grid>
           </Grid>

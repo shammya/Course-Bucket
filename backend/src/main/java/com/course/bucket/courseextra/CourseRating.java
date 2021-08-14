@@ -92,8 +92,16 @@ public class CourseRating {
     }
     
     public static Integer getValue(Course course, Student student) {
-        ResultSet rs = DB.executeQuery("SELECT VALUE FROM RATING WHERE COURSE_ID = # AND STUDENT_ID = '#'", course.getId().toString(), student.getUsername());
-        Integer result = 0;
+        return getRatingByStudent(course.getId(), student.getUsername());
+    }
+    
+    public static void delete(Course course) {
+        DB.execute("DELETE FROM RATING WHERE COURSE_ID = #", course.getId().toString());
+    }
+    
+    public static Integer getRatingByStudent(Integer courseId, String username) {
+    	ResultSet rs = DB.executeQuery("SELECT VALUE FROM RATING WHERE COURSE_ID = # AND STUDENT_ID = '#'", courseId.toString(), username);
+    	Integer result = 0;
         try {
             if(rs.next()){
                 result = rs.getInt("VALUE");
@@ -102,10 +110,6 @@ public class CourseRating {
         } catch (SQLException ex) {
         	System.err.println("Error inside CourseRating");        }
         return result;
-    }
-    
-    public static void delete(Course course) {
-        DB.execute("DELETE FROM RATING WHERE COURSE_ID = #", course.getId().toString());
     }
     
     public Integer getId() {

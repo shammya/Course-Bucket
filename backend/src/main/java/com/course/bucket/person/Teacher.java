@@ -12,6 +12,7 @@ import com.course.bucket.course.Course;
 import com.course.bucket.course.additionals.CoursePopularity;
 import com.course.bucket.course.additionals.IncomePerCourse;
 import com.course.bucket.course.additionals.MiniCourse;
+import com.course.bucket.courseextra.CourseRating;
 import com.course.bucket.database.DB;
 import com.course.bucket.designation.Designation;
 import com.course.bucket.person.Person.AccountType;
@@ -144,9 +145,9 @@ public class Teacher extends Person {
         return value;
     }
     
-//    public Double getRating(){
-//        return CourseRating.getValue(this);
-//    }
+    public Double getRating(){
+        return CourseRating.getValue(this);
+    }
 //
 //    public ArrayList<Course> getCourses() {
 //        return Course.coursesOf(this);

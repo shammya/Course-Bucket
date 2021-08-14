@@ -8,19 +8,18 @@ import {
 } from "@material-ui/core";
 import { Image, Looks, RateReview } from "@material-ui/icons";
 import { FAQBox } from "components/course/courseView/FAQ";
+import { ReviewBox } from "components/course/courseView/Review";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import CustomPagination from "layout/Pagination";
 import MaterialTable from "material-table";
 import React, { useState } from "react";
 import { FaChalkboardTeacher, FaDollarSign, FaQq } from "react-icons/fa";
+import { Redirect, Route, Switch } from "react-router";
+import { useRouteMatch } from "react-router-dom";
 import IncomePerCourseChart from "./teacher/IncomePerCourseChart";
 import { OverviewBarChart } from "./teacher/Overview";
-import { UserRegistrationChart } from "../AdminPanel/charts/UserRegistrationChart";
-import { useRouteMatch } from "react-router-dom";
-import { Redirect, Route, Switch } from "react-router";
 import { CoursePopularityPieChart } from "./teacher/PopularityPieChart";
 import { RatingLineChart } from "./teacher/RatingLIneChart";
-import { ReviewBox } from "components/course/courseView/Review";
 
 function ContentHeader({ children }) {
   return (
@@ -127,7 +126,7 @@ function Dashboard() {
               <ContentHeader>
                 <CustomPagination type="two-item-per-line" objectsPerPage={2}>
                   {[1, 2, 3, 4, 5].map((item) => (
-                    <ReviewBox />
+                    <ReviewBox review={undefined} />
                   ))}
                 </CustomPagination>
               </ContentHeader>
@@ -147,7 +146,7 @@ function Dashboard() {
               <ContentHeader>
                 <CustomPagination type="one-item-per-line" objectsPerPage={2}>
                   {[1, 2, 3, 4, 5].map((item) => (
-                    <FAQBox />
+                    <FAQBox faq={undefined} />
                   ))}
                 </CustomPagination>
               </ContentHeader>

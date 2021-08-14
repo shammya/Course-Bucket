@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Grid,
   List,
   ListItem,
@@ -12,7 +13,7 @@ import {
 } from "@material-ui/core";
 import { DoneAll, LabelImportant } from "@material-ui/icons";
 import { Rating } from "@material-ui/lab";
-import { Course, Property, Week } from "classes/Course";
+import { Course, Property, PublicResponse, Week } from "classes/Course";
 import {
   CheckoutDialog,
   CongratulationDialog,
@@ -23,6 +24,7 @@ import RatingSection from "components/course/courseView/Rating";
 import { ReviewSection } from "components/course/courseView/Review";
 import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
 import TeacherService from "components/person/api/TeacherService";
+import { format } from "date-fns";
 import User from "layout/User";
 import React, { useEffect, useState } from "react";
 import { IconPickerItem } from "react-fa-icon-picker";
@@ -110,16 +112,14 @@ export function CourseView() {
   const [congratulationShow, setCongratulationShow] = useState(false);
   const [course, setCourse] = useState<Course>(new Course());
   const [teacherInfo, setTeacherInfo] = useState<TeacherMiniInfo>();
+  const [publicResponse, setPublicResponse] = useState<PublicResponse>();
+
   useEffect(() => {
     if (courseId) {
       CourseService.getCourseToShow(courseId).then((response) => {
         console.log("Course fetched", response.data);
         setCourse(response.data);
-        TeacherService.getMiniInfo(response.data.teacherUsername).then(
-          (response) => {
-            setTeacherInfo(response.data);
-          }
-        );
+        handleReloadPublicResponse(response.data.teacherUsername);
       });
     }
   }, []);
@@ -135,6 +135,16 @@ export function CourseView() {
         setCheckoutShow(false);
         setCongratulationShow(true);
       }
+    });
+  }
+
+  function handleReloadPublicResponse(teacherUsername: string) {
+    TeacherService.getMiniInfo(teacherUsername).then((response) => {
+      setTeacherInfo(response.data);
+    });
+    CourseService.courseRatingReview(courseId).then((response) => {
+      console.log("Course additional property fetched", response.data);
+      setPublicResponse(response.data);
     });
   }
 
@@ -164,6 +174,11 @@ export function CourseView() {
     );
   }
   function TitleSection() {
+    let date = new Date(course?.publishDate);
+    let formattedDate = "";
+    if (course.publishDate)
+      formattedDate = format(date as Date, "hh:mm a - dd MMMM, yyyy");
+    console.log(formattedDate);
     return (
       <>
         <Grid item>
@@ -172,16 +187,40 @@ export function CourseView() {
         <Grid item>
           <Typography variant="h6">{course?.subTitle}</Typography>
         </Grid>
-        <Grid item container direction="row">
+        <Grid item container direction="row" alignItems="center" spacing={1}>
           <Grid item>
-            <Rating value={2} readOnly name="rating" /> (2)
+            <Rating
+              value={publicResponse?.ratingValue}
+              readOnly
+              name="rating"
+            />
           </Grid>
-          <Grid item>118001 ratings 1090034 students</Grid>
+          <Grid item>
+            <Typography>
+              ({publicResponse?.ratingCount} rating
+              {publicResponse?.ratingCount && publicResponse?.ratingCount > 1
+                ? "s"
+                : ""}
+              )
+            </Typography>
+          </Grid>
+          <Grid item>
+            {publicResponse?.enrolledStudentCount} student enrolled
+          </Grid>
         </Grid>
         <Grid item>Created by {course?.teacherName}</Grid>
         <Grid item container direction="row">
-          <Grid item>Published date: {course?.publishDate}</Grid>
-          <Grid item>languages</Grid>
+          <Grid item>Published date: {formattedDate}</Grid>
+          <Grid item container direction="row" alignItems="center" spacing={1}>
+            <Grid item>
+              <Typography>Languages:</Typography>
+            </Grid>
+            {course?.languages.map((lang) => (
+              <Grid item key={lang.id}>
+                <Chip variant="outlined" color="primary" label={lang.name} />
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
       </>
     );
@@ -475,13 +514,31 @@ export function CourseView() {
               <InstructorDetails />
             </Grid>
             <Grid item container>
-              <RatingSection />
+              <RatingSection
+                courseId={courseId}
+                data={publicResponse}
+                onRatingSubmit={() =>
+                  handleReloadPublicResponse(course?.teacherUsername)
+                }
+              />
             </Grid>
-            <Grid item>
-              <ReviewSection />
+            <Grid item container>
+              <ReviewSection
+                reviews={
+                  publicResponse?.reviews
+                    ? publicResponse?.reviews[0].reviewInfos
+                    : undefined
+                }
+              />
             </Grid>
-            <Grid item>
-              <FAQSection />
+            <Grid item container>
+              <FAQSection
+                faqs={
+                  publicResponse?.faqs
+                    ? publicResponse?.faqs[0].faqInfos
+                    : undefined
+                }
+              />
             </Grid>
           </Grid>
         </Grid>
