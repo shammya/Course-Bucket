@@ -34,7 +34,7 @@ public class FAQController {
 		FAQ.addFaqAnswer(faq);
 	}
 	
-	@PreAuthorize("hasRole('Teacher')")
+
 	@GetMapping("/get-faq-list/{courseId}")
 	public ArrayList<FAQ> findFAQList(@PathVariable Integer courseId){
 		return FAQ. getFAQList(courseId);

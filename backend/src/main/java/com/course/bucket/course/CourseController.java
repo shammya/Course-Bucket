@@ -56,37 +56,6 @@ public class CourseController {
 		return course;
 	}
 	
-	@PreAuthorize("hasRole('Teacher')")
-	@GetMapping("/get-course-popularity-teacher")
-	public ArrayList<CoursePopularity> getCoursePopularityTeacher() {
-		
-		return Course.getCoursePopularityTeacher(ToolKit.getCurrentUserName());
-	}
-	
-	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-course-popularity-admin")
-	public ArrayList<CoursePopularity> getCoursePopularityAdmin() {
-		return Course.getCoursePopularityAdmin();
-	}
-	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-popular-category-admin")
-	public ArrayList<PopularCategory> getPopularCourseAdmin() {
-		return Course.getPopularCourseAdmin();
-	}
-	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-income-per-course-admin")
-	public ArrayList<IncomePerCourse> getIncomePerCourse() {
-		return Course.getIncomePerCourseAdmin();
-	}
-	
-	@PreAuthorize("hasRole('Teacher')")
-	@GetMapping("/get-income-per-course-teacher")
-	public ArrayList<IncomePerCourse> getIncomePerCourseTeacher() {
-		return Course.getIncomePerCourseTeacher(ToolKit.getCurrentUserName());
-	}
 	
 	
 	@PostMapping("/get-filtered-courses")
@@ -100,19 +69,6 @@ public class CourseController {
 		return Course.getCarouselCourse();
 	}
 	
-	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-approved-courses")
-	public ArrayList<CourseApproval> getApprovedCoursesAdmin() {
-		return Course.getApprovedCoursesAdmin();
-	}
-	
-	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-unapproved-courses")
-	public ArrayList<CourseApproval> getunApprovedCoursesAdmin() {
-		return Course.getUnapprovedCoursesAdmin();
-	}
 		
 	
 //	

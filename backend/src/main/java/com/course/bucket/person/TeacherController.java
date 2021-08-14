@@ -2,6 +2,7 @@ package com.course.bucket.person;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.authentication.JwtUtils;
 import com.course.bucket.designation.Designation;
+import com.course.bucket.course.Course;
+import com.course.bucket.course.additionals.CoursePopularity;
+import com.course.bucket.course.additionals.IncomePerCourse;
 import com.course.bucket.course.additionals.MiniCourse;
 import com.course.bucket.database.DB;
 import com.course.bucket.tools.ToolKit;
@@ -60,7 +64,24 @@ public class TeacherController {
 		return Teacher.getCreatedCourses(username);
 	}
 	
+	@PreAuthorize("hasRole('Admin')")
+	@GetMapping("/get-cumulative-rating-teacher/{teacherUsername}")
+	public Vector<CumulativeRating> getCumulativeRatingTeacher(@PathVariable String teacherUsername){
+		return Teacher.getCumulativeRatingTeacher(teacherUsername);
+	}
 	
+	@PreAuthorize("hasRole('Teacher')")
+	@GetMapping("/get-course-popularity-teacher")
+	public ArrayList<CoursePopularity> getCoursePopularityTeacher() {
+		
+		return Teacher.getCoursePopularityTeacher(ToolKit.getCurrentUserName());
+	}
+	
+	@PreAuthorize("hasRole('Teacher')")
+	@GetMapping("/get-income-per-course-teacher")
+	public ArrayList<IncomePerCourse> getIncomePerCourseTeacher() {
+		return Teacher.getIncomePerCourseTeacher(ToolKit.getCurrentUserName());
+	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")
 //	public Person findById(@PathVariable String name) {

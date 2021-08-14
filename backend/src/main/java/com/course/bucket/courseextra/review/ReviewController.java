@@ -38,7 +38,6 @@ public class ReviewController {
 	}
 	
 	
-	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-review-teacher")
 	public ArrayList<ReviewList> getReviewListTeacher(){
 		return Review.getReviewListTeacher(ToolKit.getCurrentUserName());

@@ -188,11 +188,11 @@ public class Files{
 				ToolKit.getCurTimeDB(), this.id.toString());
 	}
 	
-	public void delete() {
-		this.deleteContent(type, content);
-		DB.execute("DELETE FILES WHERE ID = #", id.toString());
-//		deleteFile(this.getId());
-	}
+//	public void delete() {
+//		this.deleteContent(type, content);
+//		DB.execute("DELETE FILES WHERE ID = #", id.toString());
+////		deleteFile(this.getId());
+//	}
 
 	public static void createPhoto(Files files, String email) {
 		Integer id = createNewFile(files);
@@ -203,32 +203,32 @@ public class Files{
 ////	SLIDER => FILES_ID, ADMIN,
 ////	COURSE_CATEGORY => COURSE_ID, CATEGORY_ID
 //
-//	public static String getPhoto(String id) {
-//		ResultSet rs = DB.executeQuery("SELECT CONTENT FROM FILES f  \n" + " WHERE\n"
-//				+ " f.ID = (SELECT PHOTO_ID from PERSON p WHERE p.ID = '#')", id);
-//		try {
-//			if (rs.next()) {
-//				return rs.getString("CONTENT");
-//			}
-//			return null;
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-//
-//	public static void changePhoto(Files files) {
-//		DB.execute("UPDATE FILES SET CONTENT = '#', LAST_UPDATE = # WHERE ID = #", files.getContent(),
-//				ToolKit.JDateToDDate(files.getLastUpdateTime()), files.getId().toString());
-//	}
-//
-//	public static void deletePhoto(Integer personId, Integer photoId) {
-//		DB.execute("UPDATE  PERSON SET PHOTO_ID =NULL WHERE ID = # ", personId.toString());
-//		DB.execute("DELETE FROM FILES WHERE ID = ", photoId.toString());
-//
-//	}
-//
+	public static String getPhoto(String id) {
+		ResultSet rs = DB.executeQuery("SELECT CONTENT FROM FILES f  \n" + " WHERE\n"
+				+ " f.ID = (SELECT PHOTO_ID from PERSON p WHERE p.ID = '#')", id);
+		try {
+			if (rs.next()) {
+				return rs.getString("CONTENT");
+			}
+			return null;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static void changePhoto(Files files) {
+		DB.execute("UPDATE FILES SET CONTENT = '#', LAST_UPDATE = # WHERE ID = #", files.getContent(),
+				ToolKit.JDateToDDate(files.getLastUpdateTime()), files.getId().toString());
+	}
+
+	public static void deletePhoto(Integer personId, Integer photoId) {
+		DB.execute("UPDATE  PERSON SET PHOTO_ID =NULL WHERE ID = # ", personId.toString());
+		DB.execute("DELETE FROM FILES WHERE ID = ", photoId.toString());
+
+	}
+
 
 	public void delete() {
 		DB.execute("DELETE FILES WHERE ID = #", id.toString());
