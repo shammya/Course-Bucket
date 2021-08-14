@@ -285,6 +285,50 @@ public class Review {
 
 	}
 	
+	public static ArrayList<ReviewList> getReviewListCourse(Integer courseId) {
+		ArrayList<ReviewList> reviewLists = new ArrayList<>();
+		String sql = "SELECT\n"
+				+ "	c.id,\n"
+				+ "	c.title,\n"
+				+ "	c.subtitle,\n"
+				+ "	fl.content \n"
+				+ "FROM\n"
+				+ "	course c,\n"
+				+ "	files fl \n"
+				+ "WHERE\n"
+				+ "	c.id = #\n"
+				+ "	AND c.cover_id = fl.id \n";
+		ResultSet crs = DB.executeQuery(sql, courseId.toString());
+		try {
+				ResultSet rvrs = DB.executeQuery("select * from review where course_id = #",courseId.toString());
+
+				ArrayList<ReviewInfo> reviewInfos = new ArrayList<>();
+				while (rvrs.next()) {
+					ResultSet srs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
+									+ "where p.photo_id = f.id and p.id = '#'",rvrs.getString("student_id"));
+					ResultSet rtrs = DB.executeQuery("select value from rating where course_id = #",courseId.toString());
+					srs.next();
+					rtrs.next();
+					reviewInfos.add(new ReviewInfo(srs.getString("full_name"),srs.getString("content"),rvrs.getTimestamp("time"),rtrs.getInt("value"),rvrs.getString("text")));
+
+					srs.close();
+					rtrs.close();
+				}
+				rvrs.close();
+
+				reviewLists.add(new ReviewList(crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
+						reviewInfos));
+			crs.close();
+			return reviewLists;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
 	public static void createNewReview(ReviewDb review) {
 		Integer id = DB.generateId("review");
 		String sql = " insert into review values(#,#, '#', #,'#')";

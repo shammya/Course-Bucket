@@ -283,6 +283,52 @@ public class FAQ {
 		return null;
 
 	}
+	
+	public static ArrayList<FaqList> getFaqListCourse(Integer courseId) {
+		ArrayList<FaqList> faqLists = new ArrayList<>();
+		String sql = "SELECT c.id,c.title,c.subtitle,fl.content FROM course c,files fl WHERE c.id=# AND c.cover_id=fl.id";
+		ResultSet crs = DB.executeQuery(sql, courseId.toString());
+
+		try {
+			while (crs.next()) {
+				ResultSet frs = DB.executeQuery("select * from faq where course_id = #", crs.getString("course_id"));
+
+				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
+				while (frs.next()) {
+					ResultSet trs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f, course c where p.photo_id = f.id and c.teacher_id = p.id and c.id = #",
+							crs.getString("course_id"));
+					ResultSet srs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
+									+ "where p.photo_id = f.id and p.id = '#'",
+							frs.getString("student_id"));
+					trs.next();
+					srs.next();
+					faqInfos.add(new FaqInfo(srs.getString("full_name"), srs.getString("content"),
+							trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
+							frs.getTimestamp("question_time"), frs.getString("answer"),
+							frs.getTimestamp("answer_time")));
+
+					srs.close();
+					trs.close();
+				}
+				frs.close();
+
+				faqLists.add(new FaqList(crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
+						faqInfos));
+
+			}
+			crs.close();
+			return faqLists;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	
 	public static void addFaqQuestion(FaqDb faq) {
 		Integer id = DB.generateId("FAQ");
 		String sql = "insert into faq values(#, #, '#', '#', #, NULL, NULL)";

@@ -2,14 +2,20 @@ package com.course.bucket.person;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Vector;
 
 import com.course.bucket.course.Course;
+import com.course.bucket.course.additionals.CoursePopularity;
+import com.course.bucket.course.additionals.IncomePerCourse;
 import com.course.bucket.course.additionals.MiniCourse;
 import com.course.bucket.database.DB;
 import com.course.bucket.designation.Designation;
 import com.course.bucket.person.Person.AccountType;
+import com.course.bucket.tools.ToolKit;
 
 public class Teacher extends Person {
 
@@ -223,5 +229,120 @@ public class Teacher extends Person {
 				designationId.toString(),
 				person.getUsername()
 				);
+	}
+	
+	public static Vector<CumulativeRating> getCumulativeRatingTeacher(String teacherUsername) {
+
+		String sql = "select min(publish_date) first_date\r\n" + "from course \r\n" + "where teacher_id = '#'\r\n"
+				+ "group by teacher_id ";
+		Date firstDate;
+		HashMap<Date, RatingCount> ratingsDb = new HashMap<>();
+		ResultSet rs = DB.executeQuery(sql, teacherUsername);
+		try {
+			rs.next();
+			firstDate = rs.getDate("first_date");
+			sql = "select trunc(r.time) as time , avg(value) as rating ,count(*) as count\r\n"
+					+ "from rating r,course c\r\n" + "where c.id = r.course_id and c.teacher_id = '#'\r\n"
+					+ "group by trunc(r.time)";
+			rs = DB.executeQuery(sql, teacherUsername);
+			while (rs.next()) {
+				ratingsDb.put(rs.getDate("time"), new RatingCount(rs.getDouble("rating"), rs.getInt("count")));
+			}
+			Date lastDate = new Date();
+			long size = ToolKit.getDifferenceDays(firstDate, lastDate);
+			Vector<CumulativeRating> ratings = new Vector<>();
+			LocalDate start = ToolKit.DateToLocalDate(firstDate);
+			LocalDate end = ToolKit.DateToLocalDate(lastDate);
+			end = end.plusDays(2);
+			System.err.println("today date : " + end);
+			Date date;
+			int count = 0, idx = 0;
+			double rating = 0.0;
+
+			for (LocalDate ldate = start; ldate.isBefore(end); ldate = ldate.plusDays(1)) {
+				date = ToolKit.localDateToDate(ldate);
+				if (ratingsDb.containsKey(date)) {
+					if (idx == 0) {
+						ratings.add(idx, new CumulativeRating(date, ratingsDb.get(date).getRating()));
+					} else {
+						Double oldR = ratings.get(idx - 1).getRating() * count;
+						Double newR = ratingsDb.get(date).getRating() * ratingsDb.get(date).getCount();
+						count += ratingsDb.get(date).getCount();
+						rating = (oldR + newR) / (count);
+						ratings.add(new CumulativeRating(date, rating));
+					}
+				} else {
+					if (idx == 0) {
+						ratings.add(new CumulativeRating(date, 0.0));
+					} else {
+						ratings.add(new CumulativeRating(date, ratings.get(idx - 1).getRating()));
+					}
+				}
+				idx++;
+			}
+			rs.close();
+			return ratings;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public static ArrayList<CoursePopularity> getCoursePopularityTeacher(String teacherUsername) {
+		ArrayList<CoursePopularity> coursePopularities = new ArrayList<>();
+		String sql = "select id, title, rating, rating_count, enr_std_count,review_count\n" + "from \n" + "(\n"
+				+ "	select c.id as id, c.teacher_id, c.title as title, avg(rt.value) as rating, count(rt.student_id) as rating_count\n"
+				+ "	from course c, rating rt\n" + "	where c.id = rt.course_id \n"
+				+ "	group by c.id, c.title, c.teacher_id\n" + "	order by rating desc\n" + ") a,\n"
+				+ "(	select course_id, count(ph.student_id) as enr_std_count\n" + "	from purchase_history ph\n"
+				+ "	group by course_id\n" + ") b,\n" + "(\n"
+				+ "	select course_id, count(rv.student_id) as review_count\n" + "	from review rv\n"
+				+ "	group by course_id\n" + ") c\n"
+				+ "where a.id = b.course_id and a.id = c.course_id and a.teacher_id = '#'";
+		ResultSet rs = DB.executeQuery(sql, teacherUsername);
+		try {
+			while (rs.next()) {
+				coursePopularities.add(new CoursePopularity(rs.getString("title"), rs.getDouble("rating"),
+						rs.getInt("rating_count"), rs.getInt("enr_std_count"), rs.getInt("review_count")));
+			}
+			rs.close();
+			return coursePopularities;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<IncomePerCourse> getIncomePerCourseTeacher(String teacherUsername) {
+
+		ArrayList<IncomePerCourse> totalIncome = new ArrayList<>();
+		String sql = "select \n"
+				+ "	c.id,c.title  title ,\n"
+				+ "	(\n"
+				+ "	select\n"
+				+ "	nvl(sum(cost),0) income\n"
+				+ "	from  purchase_history ph\n"
+				+ "	where c.id = ph.course_id \n"
+				+ "	) income\n"
+				+ "from course c\n"
+				+ "where\n"
+				+ "	c.teacher_id = '#'  \n"
+				+ "group by \n"
+				+ "	c.id,c.title \n"
+				+ "order by income desc";
+		ResultSet rs = DB.executeQuery(sql,teacherUsername);
+		try {
+			while (rs.next()) {
+				totalIncome.add(new IncomePerCourse(rs.getString("title"), rs.getDouble("income")));
+			}
+			return totalIncome;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

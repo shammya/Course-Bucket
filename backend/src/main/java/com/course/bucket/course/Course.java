@@ -16,9 +16,12 @@ import com.course.bucket.course.additionals.PopularCategory;
 import com.course.bucket.courseextra.CourseRating;
 import com.course.bucket.courseextra.PromoCode;
 import com.course.bucket.courseextra.Property;
+import com.course.bucket.courseextra.PublicResponse;
 import com.course.bucket.courseextra.faq.FAQ;
+import com.course.bucket.courseextra.faq.FaqList;
 import com.course.bucket.courseextra.purchasehistory.PurchaseHistory;
 import com.course.bucket.courseextra.review.Review;
+import com.course.bucket.courseextra.review.ReviewList;
 import com.course.bucket.database.DB;
 import com.course.bucket.files.Files;
 import com.course.bucket.language.Language;
@@ -42,7 +45,7 @@ public class Course {
 	Date lastUpdate;
 	boolean isApproved;
 	Teacher teacher;
-	 Files cover;
+	Files cover;
 	Category mainCategory;
 	Category subCategory;
 
@@ -148,7 +151,7 @@ public class Course {
 			if (rs.getString("OUTCOMES") != null) {
 				outcomes = new ArrayList();
 				String[] ara = rs.getString("OUTCOMES").split("><");
-				for(int i=0; i<ara.length; i++) {
+				for (int i = 0; i < ara.length; i++) {
 					outcomes.add(ara[i]);
 				}
 			} else {
@@ -157,7 +160,7 @@ public class Course {
 			if (rs.getString("PREREQUISITES") != null) {
 				prerequisites = new ArrayList();
 				String[] ara = rs.getString("PREREQUISITES").split("><");
-				for(int i=0; i<ara.length; i++) {
+				for (int i = 0; i < ara.length; i++) {
 					prerequisites.add(ara[i]);
 				}
 			} else {
@@ -168,43 +171,25 @@ public class Course {
 			System.err.println("error in course constructor");
 		}
 	}
-	
+
 	public static void createNewCourse(String teacherUsername, Course course) {
 		Integer courseId = DB.generateId("COURSE");
 		course.setId(courseId);
-		
+
 		Files.createNewFile(course.cover);
 		String prerequisites = formatString(course.getPrerequisites());
 		String outcomes = formatString(course.getOutcomes());
-		
-		DB.execute(""
-				+ "INSERT INTO COURSE("
-				+ "ID, TITLE, SUBTITLE, "
-				+ "DESCRIPTION, PRICE, OFFER, "
-				+ "PUBLISH_DATE, IS_APPROVED, TEACHER_ID, "
-				+ "COVER_ID, CATEGORY_ID, PREREQUISITES, "
-				+ "OUTCOMES"
-				+ ") VALUES("
-				+ "#, '#', '#', "
-				+ "'#', #, #, "
-				+ "#, '#', '#',"
-				+ "#, #,'#',"
-				+ "'#')", 
-				courseId.toString(), 
-				course.getTitle(), 
-				course.getSubTitle(),
-				
-				course.getDescription(),
-				course.getMainPrice().toString(), 
-				course.getOff().toString(),
-				
-				ToolKit.getCurTimeDB(), 
-				ToolKit.JBoolToDBool(false),
-				teacherUsername, 
-				
-				course.cover.getId().toString(),
-				course.getSubCategory().getId().toString(), 
-				prerequisites, 
+
+		DB.execute("" + "INSERT INTO COURSE(" + "ID, TITLE, SUBTITLE, " + "DESCRIPTION, PRICE, OFFER, "
+				+ "PUBLISH_DATE, IS_APPROVED, TEACHER_ID, " + "COVER_ID, CATEGORY_ID, PREREQUISITES, " + "OUTCOMES"
+				+ ") VALUES(" + "#, '#', '#', " + "'#', #, #, " + "#, '#', '#'," + "#, #,'#'," + "'#')",
+				courseId.toString(), course.getTitle(), course.getSubTitle(),
+
+				course.getDescription(), course.getMainPrice().toString(), course.getOff().toString(),
+
+				ToolKit.getCurTimeDB(), ToolKit.JBoolToDBool(false), teacherUsername,
+
+				course.cover.getId().toString(), course.getSubCategory().getId().toString(), prerequisites,
 
 				outcomes);
 
@@ -217,63 +202,51 @@ public class Course {
 			property.upload(courseId);
 		});
 		notificationCourseUpload(course.getTeacherUserame(), courseId);
-		System.out.println("Course upload done of id: "+courseId);
+		System.out.println("Course upload done of id: " + courseId);
 	}
-	
+
 	public static void update(Course course) {
 		Course currentCourseState = new Course(course.getId());
 		course.cover.update();
 		String prerequisites = formatString(course.getPrerequisites());
 		String outcomes = formatString(course.getOutcomes());
-		
-		DB.execute(""
-				+ "UPDATE COURSE SET "
-				+ "TITLE = '#', "
-				+ "SUBTITLE = '#', "
-				+ "DESCRIPTION = '#', "
-				+ "PRICE = #, "
-				+ "OFFER = #, "
-				+ "CATEGORY_ID = #, "
-				+ "PREREQUISITES = '#', "
-				+ "OUTCOMES = '#' "
-				+ "WHERE ID = #" ,
-				course.getTitle(),
-				course.getSubTitle(),
-				course.description,
-				course.getMainPrice().toString(),
-				course.getOff().toString(),
-				course.getSubCategory().getId().toString(),
-				prerequisites,
-				outcomes,
+
+		DB.execute(
+				"" + "UPDATE COURSE SET " + "TITLE = '#', " + "SUBTITLE = '#', " + "DESCRIPTION = '#', " + "PRICE = #, "
+						+ "OFFER = #, " + "CATEGORY_ID = #, " + "PREREQUISITES = '#', " + "OUTCOMES = '#' "
+						+ "WHERE ID = #",
+				course.getTitle(), course.getSubTitle(), course.description, course.getMainPrice().toString(),
+				course.getOff().toString(), course.getSubCategory().getId().toString(), prerequisites, outcomes,
 				course.getId().toString());
 
 		// After Course Update
-		for(Week week : currentCourseState.weeks) {
+		for (Week week : currentCourseState.weeks) {
 			boolean found = false;
-			for(Week updatedWeek : course.weeks) {
-				if(updatedWeek.getId() == week.getId()) {
+			for (Week updatedWeek : course.weeks) {
+				if (updatedWeek.getId() == week.getId()) {
 					found = true;
-					for(Lecture lecture : week.getLectures()) {
+					for (Lecture lecture : week.getLectures()) {
 						boolean lecFound = false;
-						for(Lecture updatedLecture : updatedWeek.getLectures()) {
-							if(updatedLecture.getId() == lecture.getId()) {
+						for (Lecture updatedLecture : updatedWeek.getLectures()) {
+							if (updatedLecture.getId() == lecture.getId()) {
 								lecFound = true;
 								break;
 							}
 						}
-						if(!lecFound) lecture.delete();
+						if (!lecFound)
+							lecture.delete();
 					}
 				}
 			}
-			if(!found) week.delete();
+			if (!found)
+				week.delete();
 		}
-		
+
 		course.weeks.forEach(week -> {
-			if(week.getId() == null) {
+			if (week.getId() == null) {
 				week.upload(course.getId());
-			}
-			else {
-				week.update();				
+			} else {
+				week.update();
 			}
 		});
 		course.updateLanguages();
@@ -283,7 +256,8 @@ public class Course {
 	}
 
 	public static String formatString(ArrayList<String> strarr) {
-		if(strarr == null) return "";
+		if (strarr == null)
+			return "";
 		int len = strarr.size();
 		String str = "";
 		int i = 0;
@@ -342,7 +316,6 @@ public class Course {
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
-
 
 	public ArrayList<Review> getReveiws() {
 		return reveiws;
@@ -467,7 +440,6 @@ public class Course {
 	public ArrayList<String> getOutcomes() {
 		return outcomes;
 	}
-	
 
 //	public void setOutcomes(String outcome) {
 //		this.outcomes = outcome.split("><", 0);
@@ -751,189 +723,6 @@ public class Course {
 				"SELECT ID FROM COURSE WHERE IS_APPROVED = 'T' AND (PRICE - PRICE*OFFER/100) = 0 ORDER BY PUBLISH_DATE DESC");
 	}
 
-	public static ArrayList<CoursePopularity> getCoursePopularityTeacher(String teacherUsername) {
-		ArrayList<CoursePopularity> coursePopularities = new ArrayList<>();
-		String sql = "select id, title, rating, rating_count, enr_std_count,review_count\n" + "from \n" + "(\n"
-				+ "	select c.id as id, c.teacher_id, c.title as title, avg(rt.value) as rating, count(rt.student_id) as rating_count\n"
-				+ "	from course c, rating rt\n" + "	where c.id = rt.course_id \n"
-				+ "	group by c.id, c.title, c.teacher_id\n" + "	order by rating desc\n" + ") a,\n"
-				+ "(	select course_id, count(ph.student_id) as enr_std_count\n" + "	from purchase_history ph\n"
-				+ "	group by course_id\n" + ") b,\n" + "(\n"
-				+ "	select course_id, count(rv.student_id) as review_count\n" + "	from review rv\n"
-				+ "	group by course_id\n" + ") c\n"
-				+ "where a.id = b.course_id and a.id = c.course_id and a.teacher_id = '#'";
-		ResultSet rs = DB.executeQuery(sql, teacherUsername);
-		try {
-			while (rs.next()) {
-				coursePopularities.add(new CoursePopularity(rs.getString("title"), rs.getDouble("rating"),
-						rs.getInt("rating_count"), rs.getInt("enr_std_count"), rs.getInt("review_count")));
-			}
-			rs.close();
-			return coursePopularities;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static ArrayList<CoursePopularity> getCoursePopularityAdmin() {
-		ArrayList<CoursePopularity> coursePopularities = new ArrayList<>();
-		String sql = "select id, title, rating, rating_count, enr_std_count,review_count\n" + "from \n" + "(\n"
-				+ "	select c.id as id, c.title as title, avg(rt.value) as rating, count(rt.student_id) as rating_count\n"
-				+ "	from course c, rating rt\n" + "	where c.id = rt.course_id \n"
-				+ "	group by c.id, c.title, c.teacher_id\n" + "	order by rating desc\n" + ") a,\n"
-				+ "(	select course_id, count(ph.student_id) as enr_std_count\n" + "	from purchase_history ph\n"
-				+ "	group by course_id\n" + ") b,\n" + "(\n"
-				+ "	select course_id, count(rv.student_id) as review_count\n" + "	from review rv\n"
-				+ "	group by course_id\n" + ") c\n" + "where a.id = b.course_id and a.id = c.course_id ";
-		ResultSet rs = DB.executeQuery(sql);
-		try {
-			while (rs.next()) {
-				coursePopularities.add(new CoursePopularity(rs.getString("title"), rs.getDouble("rating"),
-						rs.getInt("rating_count"), rs.getInt("enr_std_count"), rs.getInt("review_count")));
-			}
-			rs.close();
-			return coursePopularities;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static ArrayList<PopularCategory> getPopularCourseAdmin() {
-		ArrayList<PopularCategory> popularCategories = new ArrayList<>();
-
-		String sql = "select \n"
-				+ "	a.parent_id id,\n"
-				+ "	(\n"
-				+ "	select \n"
-				+ "		name \n"
-				+ "	from \n"
-				+ "		category\n"
-				+ "	where \n"
-				+ "		id = a.parent_id\n"
-				+ "	) name ,\n"
-				+ "	sum(a.review) review_count ,\n"
-				+ "	sum(a.rating_count) rating_count ,\n"
-				+ "	sum(a.enr_std_count) enr_std_count ,\n"
-				+ "	sum(a.rating) rating\n"
-				+ "from(\n"
-				+ "	select \n"
-				+ "		ct.name,ct.id,ct.parent_id,\n"
-				+ "		(\n"
-				+ "		select \n"
-				+ "			nvl(count(r.course_id),0) \n"
-				+ "		 from \n"
-				+ "			review r ,course c\n"
-				+ "		 where\n"
-				+ "			c.id = r.course_id and c.category_id = ct.id\n"
-				+ "		) review ,\n"
-				+ "		(\n"
-				+ "		select \n"
-				+ "			nvl(count(ph.course_id),0) \n"
-				+ "		 from \n"
-				+ "			purchase_history ph ,course c\n"
-				+ "		 where\n"
-				+ "			c.id = ph.course_id and c.category_id = ct.id\n"
-				+ "		) enr_std_count , \n"
-				+ "		(\n"
-				+ "		select \n"
-				+ "			nvl(count(r.course_id),0) \n"
-				+ "		 from \n"
-				+ "			rating r ,course c\n"
-				+ "		 where\n"
-				+ "			c.id = r.course_id and c.category_id = ct.id\n"
-				+ "		) rating_count ,\n"
-				+ "		(\n"
-				+ "		select \n"
-				+ "			nvl(avg(r.value),0) \n"
-				+ "		 from \n"
-				+ "			rating r ,course c\n"
-				+ "		 where\n"
-				+ "			c.id = r.course_id and c.category_id = ct.id\n"
-				+ "		) rating \n"
-				+ "	 from\n"
-				+ "	category ct\n"
-				+ "	) a\n"
-				+ "where \n"
-				+ "	a.parent_id is not null\n"
-				+ "group by\n"
-				+ "	a.parent_id";
-		ResultSet rs = DB.executeQuery(sql);
-		try {
-			while (rs.next()) {
-				popularCategories.add(new PopularCategory(rs.getString("name"), rs.getInt("enr_std_count"),
-						rs.getInt("review_count"), rs.getDouble("rating"), rs.getInt("rating_count")));
-			}
-			rs.close();
-			return popularCategories;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static ArrayList<IncomePerCourse> getIncomePerCourseAdmin() {
-
-		ArrayList<IncomePerCourse> totalIncome = new ArrayList<>();
-		String sql = "select \n"
-				+ "	c.id,c.title  title ,\n"
-				+ "	(\n"
-				+ "	select\n"
-				+ "	nvl(sum(cost) * 0.1,0) income\n"
-				+ "	from  purchase_history ph\n"
-				+ "	where c.id = ph.course_id \n"
-				+ "	) income\n"
-				+ "from course c\n"
-				+ "group by \n"
-				+ "	c.id,c.title \n"
-				+ "order by income desc";
-		ResultSet rs = DB.executeQuery(sql);
-		try {
-			while (rs.next()) {
-				totalIncome.add(new IncomePerCourse(rs.getString("title"), rs.getDouble("income")));
-			}
-			return totalIncome;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public static ArrayList<IncomePerCourse> getIncomePerCourseTeacher(String teacherUsername) {
-
-		ArrayList<IncomePerCourse> totalIncome = new ArrayList<>();
-		String sql = "select \n"
-				+ "	c.id,c.title  title ,\n"
-				+ "	(\n"
-				+ "	select\n"
-				+ "	nvl(sum(cost),0) income\n"
-				+ "	from  purchase_history ph\n"
-				+ "	where c.id = ph.course_id \n"
-				+ "	) income\n"
-				+ "from course c\n"
-				+ "where\n"
-				+ "	c.teacher_id = '#'  \n"
-				+ "group by \n"
-				+ "	c.id,c.title \n"
-				+ "order by income desc";
-		ResultSet rs = DB.executeQuery(sql,teacherUsername);
-		try {
-			while (rs.next()) {
-				totalIncome.add(new IncomePerCourse(rs.getString("title"), rs.getDouble("income")));
-			}
-			return totalIncome;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public static ArrayList<MiniCourse> getFilteredCourses(Filters filters) {
 
 		String[] searchKeys = filters.getSearchKey().split(" ");
@@ -1162,78 +951,13 @@ public class Course {
 		return null;
 
 	}
-	
-	public static ArrayList<CourseApproval> getApprovedCoursesAdmin() {
-		ArrayList<CourseApproval> courses = new ArrayList<>();
-		String sql = "select \n"
-				+ "	c.id,\n"
-				+ "	c.title,\n"
-				+ "	c.publish_date,\n"
-				+ "	c.teacher_id\n"
-				+ "from \n"
-				+ "	course c\n"
-				+ "where\n"
-				+ "	c.is_approved = 'T' order by c.publish_date desc";
-		ResultSet rs = DB.executeQuery(sql);
-		Integer id ;
-		String title;
-		String teacherId;
-		Date publishDate;
-		try {
-			while(rs.next()) {
-				id = rs.getInt("id");
-				title = rs.getString("title");
-				teacherId  = rs.getString("teacher_id");
-				publishDate = rs.getDate("publish_date");
-				courses.add(new CourseApproval(id, title, teacherId, publishDate));
-			}
-			return courses;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
- 	}
-	
-	public static ArrayList<CourseApproval> getUnapprovedCoursesAdmin() {
-		ArrayList<CourseApproval> courses = new ArrayList<>();
-		String sql = "select \n"
-				+ "	c.id,\n"
-				+ "	c.title,\n"
-				+ "	c.publish_date,\n"
-				+ "	c.teacher_id\n"
-				+ "from \n"
-				+ "	course c\n"
-				+ "where\n"
-				+ "	c.is_approved = 'F' order by c.publish_date desc";
-		ResultSet rs = DB.executeQuery(sql);
-		Integer id ;
-		String title;
-		String teacherId;
-		Date publishDate;
-		try {
-			while(rs.next()) {
-				id = rs.getInt("id");
-				title = rs.getString("title");
-				teacherId  = rs.getString("teacher_id");
-				publishDate = rs.getDate("publish_date");
-				courses.add(new CourseApproval(id, title, teacherId, publishDate));
-			}
-			return courses;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
- 	}
-	
-	public static void notificationCourseUpload(String fromId,Integer courseId) {
+
+	public static void notificationCourseUpload(String fromId, Integer courseId) {
 		Integer id = DB.generateId("notification");
 		String sql = "insert into notification values('#', 'admin', #, '#', 'F', #, 'COURSEUPLOAD' ";
-		DB.execute(sql, id.toString(),fromId,ToolKit.JDateToDDate(new Date()),courseId.toString());
+		DB.execute(sql, id.toString(), fromId, ToolKit.JDateToDDate(new Date()), courseId.toString());
 	}
-	
-	
+
 	public void uploadLanguages() {
 		for (Language lang : languages) {
 			Integer id = DB.generateId("COURSE_LANGUAGE");
@@ -1241,8 +965,87 @@ public class Course {
 					lang.getId().toString());
 		}
 	}
+
 	public void updateLanguages() {
 		this.deleteCourseLanguage();
 		this.uploadLanguages();
+	}
+
+	public static Integer enrolledStudentCount(Integer courseId) {
+		ResultSet rs = DB.executeQuery("select nvl(count(*),0) count  from purchase_history where course_id = #",
+				courseId.toString());
+		try {
+			if (rs.next())
+				return rs.getInt("count");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Integer ratingCount(Integer courseId) {
+		ResultSet rs = DB.executeQuery("select nvl(count(*),0) count  from rating where course_id = #",
+				courseId.toString());
+		try {
+			if (rs.next())
+				return rs.getInt("count");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Double avgRatingValue(Integer courseId) {
+		ResultSet rs = DB.executeQuery("select nvl(avg(value),0) rating  from rating where course_id = #",
+				courseId.toString());
+		try {
+			if (rs.next())
+				return rs.getDouble("rating");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<Integer> ratingByNumberList(Integer courseId){
+		ArrayList<Integer> ratingsByNumber = new  ArrayList<>();
+		String sql = "SELECT c.id,(\r\n"
+				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=1 AND c.id=rt.course_id) AS one,(\r\n"
+				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=2 AND c.id=rt.course_id) AS two,(\r\n"
+				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=3 AND c.id=rt.course_id) AS three,(\r\n"
+				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=4 AND c.id=rt.course_id) AS four,(\r\n"
+				+ "SELECT nvl(count(value),0) FROM rating rt WHERE value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.id= #";
+		ResultSet rs = DB.executeQuery(sql,courseId.toString());
+		try {
+			if(rs.next()) {
+				ratingsByNumber.add(0);
+				ratingsByNumber.add(rs.getInt("one"));
+				ratingsByNumber.add(rs.getInt("two"));
+				ratingsByNumber.add(rs.getInt("three"));
+				ratingsByNumber.add(rs.getInt("four"));
+				ratingsByNumber.add(rs.getInt("five"));
+			}
+			return ratingsByNumber;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+
+	public static PublicResponse getPublicResponse(Integer courseId) {
+		
+		Integer enrolledStudentCount = Course.enrolledStudentCount(courseId);
+		ArrayList<Integer> ratingByNumber = ratingByNumberList(courseId);
+		Double ratingValue = Course.avgRatingValue(courseId);
+		Integer ratingCount = Course.ratingCount(courseId);
+		ArrayList<ReviewList> reviews = Review.getReviewListCourse(courseId);
+		ArrayList<FaqList> faqs = FAQ.getFaqListCourse(courseId);
+		return new  PublicResponse(enrolledStudentCount, ratingByNumber, ratingValue, ratingCount, reviews, faqs);
 	}
 }

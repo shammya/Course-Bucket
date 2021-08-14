@@ -77,40 +77,14 @@ public class PersonController {
 		return ResponseEntity.ok("");
 	}
 
-	@GetMapping("/get-new-user-admin")
-	public HashMap<Date, NewUser> getNewUserAdmin(){
-		return Person.getNewUserAdmin();
-	}
 	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-show-card-admin")
-	public ShowCard showCardAdmin(){
-		return Person.showCardAdmin();
-	}
 	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-cumulative-rating-teacher/{teacherUsername}")
-	public Vector<CumulativeRating> getCumulativeRatingTeacher(@PathVariable String teacherUsername){
-		return Person.getCumulativeRatingTeacher(teacherUsername);
-	}
 	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-course-overview/{id}")
-	public CourseOverview getCourseOvervie(@PathVariable Integer id){
-		return Person.getCourseOverview(id);
-	}
 	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-teacher-info")
-	public ArrayList<TeacherInfoAdmin> getTeacherInfoAdmin(){
-		return Person.getTeacherInfoAdmin();
-	}
 	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-student-info")
-	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
-		return Person.getStudentInfoAdmin();
-	}
+	
+	
+	
 	@GetMapping("/get-profile-photo")
 	public Files getProfilePhoto() {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
