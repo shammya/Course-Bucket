@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import MaterialTable from 'material-table'
 import CourseApprovalService from '../AdminPanel/api/CourseApprovalService.js'
 import { Drawer, Grid } from '@material-ui/core';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import { useHistory } from "react-router";
 
 
 function CourseApproval(props) {
@@ -43,29 +45,49 @@ function CourseApproval(props) {
     getUnapprovedCourses()
   }, []);
 
-
+  const history = useHistory();
   return (
     <Grid container xs spacing={3}>
       <Grid item container>
         <MaterialTable
           style={{ width: "100%" }}
           columns={columns}
-          title="Approved Courses"
+          title="Unapproved Courses"
           data={data1}
           options={{
             actionsColumnIndex: -1, addRowPosition: "first"
           }}
+          actions={[
+            {
+              icon: 'visibility',
+              tooltip: 'see course',
+              onClick: (event, rowData) => {
+                console.log(rowData)
+                history.push(`/course/${rowData.id}`)
+              }
+            }
+          ]}
         />
       </Grid>
       <Grid item container>
         <MaterialTable
           style={{ width: "100%" }}
           columns={columns}
-          title="Unapproved Courses"
+          title="Approved Courses"
           data={data2}
           options={{
             actionsColumnIndex: -1, addRowPosition: "first"
           }}
+          actions={[
+            {
+              icon: 'visibility',
+              tooltip: 'see course',
+              onClick: (event, rowData) => {
+                console.log(rowData)
+                history.push(`/course/${rowData.id}`)
+              }
+            }
+          ]}
         />
       </Grid>
 

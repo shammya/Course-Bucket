@@ -169,18 +169,26 @@ public class Admin extends Person{
     
     public static ArrayList<TeacherInfoAdmin> getTeacherInfoAdmin() {
 		ArrayList<TeacherInfoAdmin> teacherInfoAdmins = new ArrayList<>();
-		String sql = "SELECT\r\n" + "	t.id,\r\n"
+		String sql = "SELECT\r\n"
+				+ "	t.id,\r\n"
 				+ "	( SELECT count( id ) FROM course WHERE teacher_id = t.id ) course_created,\r\n"
 				+ "	( SELECT count( id ) FROM purchase_history WHERE course_id IN ( SELECT id FROM course WHERE teacher_id = t.id ) ) course_purchased,\r\n"
-				+ "	(\r\n" + "	SELECT\r\n" + "		nvl( sum( cost ) * 0.9, 0 ) \r\n" + "	FROM\r\n"
-				+ "		purchase_history \r\n" + "	WHERE\r\n"
-				+ "		course_id IN ( SELECT id FROM course WHERE teacher_id = t.id ) \r\n" + "	) total_income \r\n"
-				+ "FROM\r\n" + "	teacher t";
+				+ "	(\r\n"
+				+ "	SELECT\r\n"
+				+ "		nvl( sum( cost ) * 0.9, 0 ) \r\n"
+				+ "	FROM\r\n"
+				+ "		purchase_history \r\n"
+				+ "	WHERE\r\n"
+				+ "		course_id IN ( SELECT id FROM course WHERE teacher_id = t.id ) \r\n"
+				+ "	) total_income ,\r\n"
+				+ "	( SELECT content FROM files f, person p WHERE p.id = t.id AND p.photo_id = f.id ) content \r\n"
+				+ "FROM\r\n"
+				+ "	teacher t";
 		ResultSet rs = DB.executeQuery(sql);
 		try {
 			while (rs.next()) {
 				teacherInfoAdmins.add(new TeacherInfoAdmin(rs.getString("id"), rs.getInt("course_created"),
-						rs.getInt("course_purchased"), rs.getDouble("total_income")));
+						rs.getInt("course_purchased"), rs.getDouble("total_income"),rs.getString("content")));
 			}
 			return teacherInfoAdmins;
 		} catch (SQLException e) {
@@ -192,17 +200,25 @@ public class Admin extends Person{
 
 	public static ArrayList<StudentInfoAdmin> getStudentInfoAdmin() {
 		ArrayList<StudentInfoAdmin> studentInfoAdmins = new ArrayList<>();
-		String sql = "SELECT\r\n" + "	s.id,\r\n"
+		String sql = "SELECT\r\n"
+				+ "	s.id,\r\n"
 				+ "	( SELECT count( id ) FROM purchase_history WHERE course_id IN ( SELECT id FROM course WHERE student_id = s.id ) ) course_owned,\r\n"
-				+ "	(\r\n" + "	SELECT\r\n" + "		nvl( sum( cost ),0.0 ) \r\n" + "	FROM\r\n"
-				+ "		purchase_history \r\n" + "	WHERE\r\n"
-				+ "		course_id IN ( SELECT id FROM course WHERE student_id = s.id ) \r\n" + "	) money_spent\r\n"
-				+ "FROM\r\n" + "	student s";
+				+ "	(\r\n"
+				+ "	SELECT\r\n"
+				+ "		nvl( sum( cost ), 0.0 ) \r\n"
+				+ "	FROM\r\n"
+				+ "		purchase_history \r\n"
+				+ "	WHERE\r\n"
+				+ "		course_id IN ( SELECT id FROM course WHERE student_id = s.id ) \r\n"
+				+ "	) money_spent,\r\n"
+				+ "	( SELECT content FROM files f, person p WHERE p.id = s.id AND p.photo_id = f.id ) content \r\n"
+				+ "FROM\r\n"
+				+ "	student s";
 		ResultSet rs = DB.executeQuery(sql);
 		try {
 			while (rs.next()) {
 				studentInfoAdmins.add(new StudentInfoAdmin(rs.getString("id"), rs.getInt("course_owned"),
-						rs.getDouble("money_spent")));
+						rs.getDouble("money_spent"),rs.getString("content")));
 			}
 			return studentInfoAdmins;
 		} catch (SQLException e) {

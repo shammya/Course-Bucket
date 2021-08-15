@@ -203,7 +203,7 @@ public class Course {
 		course.properties.forEach(property -> {
 			property.upload(courseId);
 		});
-		notificationCourseUpload(course.getTeacherUserame(), courseId);
+		notificationCourseUpload(teacherUsername, courseId);
 		System.out.println("Course upload done of id: " + courseId);
 	}
 
@@ -956,7 +956,7 @@ public class Course {
 
 	public static void notificationCourseUpload(String fromId, Integer courseId) {
 		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values('#', 'admin', #, '#', 'F', #, 'COURSEUPLOAD' ";
+		String sql = "insert into notification values(#, 'admin', '#', #, 'F', #, 'COURSEUPLOAD') ";
 		DB.execute(sql, id.toString(), fromId, ToolKit.JDateToDDate(new Date()), courseId.toString());
 	}
 
@@ -1049,7 +1049,7 @@ public class Course {
 		return new PublicResponse(enrolledStudentCount, ratingByNumber, ratingValue, ratingCount, reviews, faqs);
 	}
 
-	public Course getCourseAfterAuthentication(String username, Integer courseId) {
+	public static Course getCourseAfterAuthentication(String username, Integer courseId) {
 		String sql = "select teacher_id person from course where id = # and teacher_id = '#'\r\n" + "union\r\n"
 				+ "select student_id person from purchase_history where course_id = #  and student_id = '#'\r\n"
 				+ "union \r\n" + "select id person from admin where id = '#'\r\n" + "	";

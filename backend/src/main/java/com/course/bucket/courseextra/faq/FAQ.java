@@ -343,7 +343,7 @@ public class FAQ {
 	
 	public static void notificationFaqQuestion(FaqDb faq) {
 		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQQUESTION'";
+		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQQUESTION')";
 		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", faq.getCourseId().toString());
 		try {
 			rs.next();
@@ -357,7 +357,7 @@ public class FAQ {
 	
 	public static void notificationFaqAnswer(FaqDb faq) {
 		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQANSWER'";
+		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQANSWER')";
 		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", faq.getCourseId().toString());
 		try {
 			rs.next();

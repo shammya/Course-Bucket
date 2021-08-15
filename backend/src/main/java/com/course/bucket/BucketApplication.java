@@ -24,7 +24,7 @@ public class BucketApplication {
 //		func(sam);
 //		System.out.println(sam[0]+sam[1]);
 	}
-	
+		
 //	public static void func(String[] str) {
 //		str[0]="shammya";
 //		str[1] = "mehedi";
