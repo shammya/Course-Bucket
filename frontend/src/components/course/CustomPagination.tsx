@@ -6,9 +6,16 @@ import React, { useState } from "react";
 const CourseBoxContainer = ({ courses }) => {
   return (
     <>
-      <Grid container direction="row" justifyContent="space-between">
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        spacing={2}
+      >
         {courses.map((course) => (
-          <CourseBox courseData={course} />
+          <Grid item key={course.id}>
+            <CourseBox courseData={course} />
+          </Grid>
         ))}
       </Grid>
     </>
@@ -19,6 +26,7 @@ const CoursePagination = ({ courses, title }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(8);
 
+  if (courses == undefined) return <></>;
   const indexOfLastCourse = currentPage * postsPerPage;
   const indexOfFirstCourse = indexOfLastCourse - postsPerPage;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.course.bucket.database.DB;
 import com.course.bucket.tools.ToolKit;
 
 
@@ -21,10 +22,14 @@ public class PurchaseHistoryController {
 	
 	
 	@PreAuthorize("hasRole('Student')")
-	@PostMapping("/add-purchasehistory")
-	public void addPurchaseHistory(@RequestBody PurchaseHistoryDb phd) {
-		//System.out.println("Country : "+purchasehistory.name+" "+purchasehistory.adminId);
-		PurchaseHistory.createNewPurchaseHistory(phd);
+	@PostMapping("/add-purchase-history/{courseId}")
+	public void addPurchaseHistory(@PathVariable Integer courseId) {
+		String username = ToolKit.getCurrentUserName();
+		Double mainPrice = DB.getDouble("COURSE", "ID", courseId.toString(), "PRICE");
+		Double off = DB.getDouble("COURSE", "ID", courseId.toString(), "OFFER");
+		Double cost = mainPrice - mainPrice*off/100;
+		PurchaseHistoryDb pdb = new PurchaseHistoryDb(courseId, username, ToolKit.getCurTime(), cost);
+		PurchaseHistory.createNewPurchaseHistory(pdb);
 	}
 	
 	@PreAuthorize("hasRole('Teacher')")

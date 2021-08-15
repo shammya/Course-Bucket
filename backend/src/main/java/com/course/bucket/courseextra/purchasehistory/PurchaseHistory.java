@@ -55,17 +55,6 @@ public class PurchaseHistory {
 		}
 	}
 
-//	public PurchaseHistory(Course course, Student student, Double cost) {
-//		this.id = DB.generateId("PURCHASE_HISTORY");
-//		this.course = course;
-//		this.student = student;
-//		this.time = ToolKit.getCurTime();
-//		this.cost = cost;
-//		DB.execute("INSERT INTO PURCHASE_HISTORY(ID, COURSE_ID, STUDENT_ID, TIME, COST) VALUES(#, #, '#', #, #)",
-//				id.toString(), course.getId().toString(), student.getUsername(), ToolKit.JDateToDDate(time),
-//				cost.toString());
-//	}
-
 	public static ArrayList<PurchaseHistory> getPurchasedStudentInfo(String teacherName) {
 		ArrayList<PurchaseHistory> list = new ArrayList<PurchaseHistory>();
 		try {
@@ -203,7 +192,7 @@ public class PurchaseHistory {
 	
 	public static void createNewPurchaseHistory(PurchaseHistoryDb phd) {
 		Integer id = DB.generateId("purchase_history");
-		String sql = "insert into purchase_history values(#, '#' , #, #)";
+		String sql = "insert into purchase_history values(#, # , '#', #, #)";
 		DB.execute(sql, id.toString(),phd.getCourseId().toString(),phd.getStudentId(),ToolKit.JDateToDDate(phd.getTime()),phd.getCost().toString());
 		notificationCoursePurchase(phd);
 	}

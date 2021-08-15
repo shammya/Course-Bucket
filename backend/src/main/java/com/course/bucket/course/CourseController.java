@@ -58,7 +58,6 @@ public class CourseController {
 	}
 	@GetMapping("/get-course-public-response/{courseId}")
 	public PublicResponse getCoursePublicResponse(@PathVariable Integer courseId) {
-		
 		return Course.getPublicResponse(courseId);
 	}
 	

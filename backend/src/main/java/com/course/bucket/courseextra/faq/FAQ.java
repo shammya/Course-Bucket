@@ -291,7 +291,7 @@ public class FAQ {
 
 		try {
 			while (crs.next()) {
-				ResultSet frs = DB.executeQuery("select * from faq where course_id = #", crs.getString("course_id"));
+				ResultSet frs = DB.executeQuery("select * from faq where course_id = #", crs.getString("id"));
 
 				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
 				while (frs.next()) {
@@ -309,7 +309,7 @@ public class FAQ {
 							frs.getTimestamp("question_time"), frs.getString("answer"),
 							frs.getTimestamp("answer_time")));
 
-					srs.close();
+					srs.close(); 
 					trs.close();
 				}
 				frs.close();

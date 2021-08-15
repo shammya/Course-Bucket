@@ -54,7 +54,7 @@ export function ImageUploader({
                   if (files[0]) {
                     let file = new Files("PICTURE", title)
                       .setFile(files[0])
-                      .setId(imageDestination.id);
+                      .setId(imageDestination?.id);
                     onSetClick(file);
                     setUpload(false);
                   } else {

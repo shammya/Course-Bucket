@@ -2,18 +2,38 @@ package com.course.bucket.authentication;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.course.bucket.files.Files;
+import com.course.bucket.person.Person;
+
 public class JwtResponse {
-	private String token;
 	private String type = "Bearer";
+	private String token;
+	
 	private String username;
 	private String email;
 	private String accountType;
+	private Files photo;
 
-	public JwtResponse(String accessToken, String username, String email, String roles) {
-		this.token = accessToken;
-		this.username = username;
-		this.email = email;
-		this.accountType = roles;
+	public JwtResponse(String token, String username) {
+		this(token, new Person(username));
+	}
+	public JwtResponse(String token, Person person) {
+		this.token = token;
+		
+		this.username = person.getUsername();
+		this.email = person.getEmail();
+		this.photo = person.getPhoto();
+		this.accountType = person.getAccountType().toString();
+	}
+
+	public Files getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(Files photo) {
+		this.photo = photo;
 	}
 
 	public String getToken() {

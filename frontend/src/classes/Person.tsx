@@ -52,6 +52,17 @@ export class Teacher extends Person {
   }
 }
 
+export class TeacherMiniInfo {
+  username: string;
+  about: string;
+  photoContent: string;
+  teacherName: string;
+  rating: number;
+  ratingCount: number;
+  reviewCount: number;
+  studentCount: number;
+  courseCount: number;
+}
 export class CreditCard {
   id?: number;
   cardNo?: string;

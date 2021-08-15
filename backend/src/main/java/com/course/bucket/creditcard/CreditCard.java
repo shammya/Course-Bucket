@@ -40,8 +40,8 @@ public class CreditCard {
 		}
 	}
 
-	public CreditCard(String email) {
-		ResultSet rs = DB.executeQuery("SELECT CARD_ID FROM PERSON WHERE EMAIL = '#'", email);
+	public CreditCard(String username) {
+		ResultSet rs = DB.executeQuery("SELECT CARD_ID FROM PERSON WHERE ID = '#'", username);
 		Integer id;
 		try {
 			if (rs.next()) {

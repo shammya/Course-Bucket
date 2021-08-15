@@ -4,26 +4,37 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Grid,
-  IconButton,
-  Link,
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import EmailIcon from "@material-ui/icons/Email";
+import { LinkedIn, WorkOutlined } from "@material-ui/icons";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import TwitterIcon from "@material-ui/icons/Twitter";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import { Rating } from "@material-ui/lab";
+import { MiniCourse } from "classes/Course";
+import { Person, Student, Teacher } from "classes/Person";
 import CoursePagination from "components/course/CustomPagination";
-import { courses } from "Data";
 import User from "layout/User";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { TeacherMiniInfo } from "./../../classes/Person";
+import PersonService from "./api/PersonService";
+import TeacherService from "./api/TeacherService";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
     width: "200px",
     height: "200px",
+  },
+  cardHeader: {
+    fontSize: "2.5rem",
+    textAlign: "center",
+  },
+  cardContent: {
+    textAlign: "center",
+    fontSize: "1.5rem",
   },
 }));
 
@@ -69,91 +80,224 @@ const data = {
 
 const Profile = () => {
   const classes = useStyles();
+  const { username } = useParams();
+  const [person, setPerson] = useState<Student | Teacher | Person>();
+  const [courses, setCourses] = useState<Array<MiniCourse>>();
+  const [miniInfo, setMiniInfo] = useState<TeacherMiniInfo>();
 
-  function TopHeader() {
+  useEffect(() => {
+    PersonService.getPersonToShow(username).then((response) => {
+      console.log("Fetched person", response.data);
+      setPerson(response.data);
+    });
+    TeacherService.getCreateCourseByUsername(username).then((response) => {
+      console.log("Fetched created course list", response.data);
+      setCourses(response.data);
+    });
+    TeacherService.getMiniInfo(username).then((response) => {
+      console.log("Teacher mini info ", response.data);
+      setMiniInfo(response.data);
+    });
+  }, []);
+  function LeftComponent() {
     return (
-      <Grid
-        item
-        container
-        direction="row"
-        justifyContent="space-around"
-        alignItems="center"
-      >
-        <Grid item sm={3}>
-          <Avatar className={classes.avatar}>M</Avatar>
-        </Grid>
-        <Grid item sm container direction="column" alignItems="center">
-          <Grid item sm container justifyContent="space-around">
+      <Card>
+        <CardContent>
+          <Grid container direction="column" spacing={3}>
+            <Grid item container justifyContent="center">
+              <Avatar className={classes.avatar} src={person?.photo?.content} />
+            </Grid>
+            <Grid item container>
+              <Details />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
+  }
+  function RightComponent() {
+    return (
+      <Grid container direction="column" spacing={2}>
+        <Grid item container justifyContent="space-around" spacing={2}>
+          <Grid item md={3} xs={12}>
             <Card>
-              <CardHeader title="6,234" />
-              <CardContent>Students</CardContent>
-            </Card>
-            <Card>
-              <CardHeader title="12,364,094" />
-              <CardContent>Review</CardContent>
-            </Card>
-            <Card>
-              <CardHeader title="1,234" />
-              <CardContent>
-                <Rating value={3.5} precision={0.01} readOnly />
+              <CardHeader
+                title={miniInfo?.courseCount}
+                classes={{ title: classes.cardHeader }}
+              />
+              <CardContent classes={{ root: classes.cardContent }}>
+                Course
               </CardContent>
             </Card>
           </Grid>
-          <Grid item>
-            <Button color="primary" variant="contained">
-              Send Message
-            </Button>
+          <Grid item md={3} xs={12}>
+            <Card>
+              <CardHeader
+                title={miniInfo?.studentCount}
+                classes={{ title: classes.cardHeader }}
+              />
+              <CardContent classes={{ root: classes.cardContent }}>
+                Students
+              </CardContent>
+            </Card>
           </Grid>
-          <Grid item>
-            <SocialMedia />
+          <Grid item md={3} xs={12}>
+            <Card>
+              <CardHeader
+                title={miniInfo?.reviewCount}
+                classes={{ title: classes.cardHeader }}
+              />
+              <CardContent classes={{ root: classes.cardContent }}>
+                Review
+              </CardContent>
+            </Card>
           </Grid>
+          <Grid item md={3} xs={12}>
+            <Card>
+              <CardHeader
+                title={miniInfo?.ratingCount}
+                classes={{ title: classes.cardHeader }}
+              />
+              <CardContent classes={{ root: classes.cardContent }}>
+                <Rating value={miniInfo?.rating} precision={0.1} readOnly />
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid item container>
+          <CoursePagination courses={courses} title="Courses" />
         </Grid>
       </Grid>
     );
   }
-  const SocialMedia = () => {
-    return (
-      <Grid item container direction="row" justifyContent="space-around">
-        {data.socialMediaData.map((item) => (
-          <Link href="#">
-            <IconButton>
-              <Icon iconName={item.type} />
-            </IconButton>
-          </Link>
-        ))}
-      </Grid>
-    );
-  };
 
-  function Icon({ iconName }) {
-    if (iconName === "Email") return <EmailIcon />;
-    else if (iconName === "Facebook") return <FacebookIcon />;
-    else if (iconName === "Twitter") return <TwitterIcon />;
-    else if (iconName === "YouTube") return <YouTubeIcon />;
-    return null;
-  }
+  // const SocialMedia = () => {
+  //   return (
+  //     <Grid item container direction="row" justifyContent="space-around">
+  //       {data.socialMediaData.map((item) => (
+  //         <Link href="#">
+  //           <IconButton>
+  //             <Icon iconName={item.type} />
+  //           </IconButton>
+  //         </Link>
+  //       ))}
+  //     </Grid>
+  //   );
+  // };
+
+  // function Icon({ iconName }) {
+  //   if (iconName === "Email") return <EmailIcon />;
+  //   else if (iconName === "Facebook") return <FacebookIcon />;
+  //   else if (iconName === "Twitter") return <TwitterIcon />;
+  //   else if (iconName === "YouTube") return <YouTubeIcon />;
+  //   return null;
+  // }
   function Details() {
-    return (
-      <Grid item container sm={3} direction="column">
-        {data.general.map((item) => (
+    function CreateItem({ attribute, value = "", children = <></> }) {
+      return (
+        <Grid item container direction="column" alignItems="flex-start">
           <Grid item>
-            <Typography variant="h6">{item.type}</Typography>
-            <Typography variant="body2" gutterBottom>
-              {item.value}
-            </Typography>
+            <Typography variant="h6">{attribute}</Typography>
           </Grid>
-        ))}
+          <Grid item container>
+            {value && <Typography variant="body1">{value}</Typography>}
+            {children}
+          </Grid>
+        </Grid>
+      );
+    }
+    function ContactChip({ url, icon, text }) {
+      return (
+        <Chip
+          variant="outlined"
+          color="primary"
+          clickable
+          icon={icon}
+          label={text}
+          onClick={(event) => window.open(url, "_blank")}
+        />
+      );
+    }
+    return (
+      <Grid item container direction="column" spacing={2}>
+        <CreateItem
+          attribute="Name"
+          value={person?.firstName + " " + person?.lastName}
+        />
+        <CreateItem attribute="Country" value={person?.country?.name} />
+        {/* <CreateItem attribute="Designation" value={person?.designation?.name} /> */}
+        <CreateItem attribute="Languages">
+          <Grid container spacing={1}>
+            {person?.languages?.map((lang) => (
+              <Grid item key={lang.id}>
+                <Chip variant="outlined" color="primary" label={lang?.name} />
+              </Grid>
+            ))}
+          </Grid>
+        </CreateItem>
+        <CreateItem attribute="Institution" value={person?.institution} />
+        <CreateItem attribute="About" value={person?.about} />
+        <CreateItem attribute="Contact">
+          <Grid container direction="column" spacing={1}>
+            <Grid item container>
+              <Button
+                style={{ width: "100%" }}
+                variant="contained"
+                color="primary"
+              >
+                Send Message
+              </Button>
+            </Grid>
+            {person?.fbURL && (
+              <Grid item>
+                <ContactChip
+                  url={"http://www.fb.com/" + person?.fbURL}
+                  icon={<FacebookIcon />}
+                  text={`/${person?.fbURL}`}
+                />
+              </Grid>
+            )}
+            {person?.youtubeURL && (
+              <Grid item>
+                <ContactChip
+                  url={"http://www.youtube.com/channel/" + person?.fbURL}
+                  icon={<YouTubeIcon />}
+                  text={`/${person?.youtubeURL}`}
+                />
+              </Grid>
+            )}
+            {person?.linkedInURL && (
+              <Grid item>
+                <ContactChip
+                  url={"http://www.linkedin.com/" + person?.fbURL}
+                  icon={<LinkedIn />}
+                  text={`/${person?.linkedInURL}`}
+                />
+              </Grid>
+            )}
+            {person?.website && (
+              <Grid item>
+                <ContactChip
+                  url={person?.website}
+                  icon={<WorkOutlined />}
+                  text={person?.website}
+                />
+              </Grid>
+            )}
+          </Grid>
+        </CreateItem>
       </Grid>
     );
   }
   return (
     <User>
       <Grid container>
-        <TopHeader />
-        <Grid item container sm>
-          <Details />
-          <Grid item sm container>
-            <CoursePagination courses={courses} title="Courses" />
+        <Grid container direction="row" alignItems="flex-start">
+          <Grid item sm={4} lg={3}>
+            <LeftComponent />
+          </Grid>
+          <Grid item sm={8} lg={9} style={{ paddingLeft: 16 }}>
+            <RightComponent />
           </Grid>
         </Grid>
       </Grid>

@@ -76,7 +76,7 @@ const MenuProps = {
 };
 
 export function LanguageField({
-  objects = [],
+  objects,
   onObjectsChange = (languages) => console.log(languages),
 }) {
   const [languageItem, setLanguageItem] = useState([]);
@@ -88,16 +88,17 @@ export function LanguageField({
     onObjectsChange(event.target.value.map(item => languageItem.find(langItem => langItem.id == item)));
   };
   useEffect(() => {
-    setLanguages(objects.map(item => item.id));
+    if (objects != undefined)
+      setLanguages(objects.map(item => item.id));
     LanguageService.getAllLanguages().then(response => {
       setLanguageItem(response.data);
     });
     return () => {
-      setLanguages([]);
-      setLanguageItem([]);
+      // setLanguages([]);
+      // setLanguageItem([]);
     }
-  }, [objects])
-
+  }, [])
+  // if (objects == undefined) return null;
   return (
     <FormControl variant="outlined" className={classes.formControl}>
       <InputLabel id="demo-multiple-chip-label">Language</InputLabel>

@@ -44,10 +44,11 @@ export class MiniCourse {
   id: number;
   title: string;
   teacherName: string;
+  coverContent: string;
   rating: number;
   ratingCount: number;
   price: number;
-  offeredPrice: number;
+  off: number;
 }
 
 export class Lecture {
@@ -94,6 +95,24 @@ export class FAQ {
   student: Student;
   teacher: Teacher;
   courseId: number;
+}
+
+export class FaqList {
+  courseTitle: string;
+  courseSubtitle: string;
+  courseImage: string;
+  faqInfos: Array<FaqInfo>;
+}
+
+export class FaqInfo {
+  studentName: string;
+  studentImage: string;
+  teacherName: string;
+  teacherImage: string;
+  question: string;
+  questionDate: Date;
+  answer: string;
+  answerDate: Date;
 }
 
 export class PurchaseHistory {
@@ -143,6 +162,30 @@ export class Review {
   date: Date;
   text: string;
   rating: CourseRating;
+}
+
+export class ReviewList {
+  courseImage: string;
+  courseTitle: string;
+  courseSubtitle: string;
+  reviewInfos: Array<ReviewInfo>;
+}
+
+export class ReviewInfo {
+  studentName: string;
+  studentImage: string;
+  reviewTime: Date;
+  ratingValue: number;
+  review: string;
+}
+
+export class PublicResponse {
+  enrolledStudentCount: number;
+  ratingByNumber: Array<number>;
+  ratingValue: number;
+  ratingCount: number;
+  reviews: Array<ReviewList>;
+  faqs: Array<FaqList>;
 }
 
 export {};

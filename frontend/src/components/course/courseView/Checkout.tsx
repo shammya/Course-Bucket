@@ -11,65 +11,89 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Image } from "@material-ui/icons";
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import React, { useState } from "react";
+import { Course } from "classes/Course";
+import { CreditCard } from "classes/Person";
+import PersonService from "components/person/api/PersonService";
+import { useSnackbar } from "notistack";
+import React, { useEffect, useState } from "react";
 import { SlidingUpTransition } from "tools/Tools";
 
 export function CongratulationDialog({
   open,
+  course,
   onClose,
 }: {
   open: boolean;
+  course: Course;
   onClose: () => void;
 }) {
   return (
     <Dialog open={open} keepMounted onClose={onClose}>
       <DialogContent>
-        <Image />
-        <Card>
-          <CardContent>
-            <Grid
-              container
-              direction="row"
-              wrap="nowrap"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={1}
-            >
-              <Grid
-                item
-                container
-                direction="row"
-                wrap="nowrap"
-                xs
-                spacing={1}
-                alignItems="center"
-              >
-                <Grid item>
-                  <Image />
+        <Grid container direction="column" alignItems="center" spacing={2}>
+          <Grid item>
+            <img src={require("assets/img/congratulation.jpg").default} />
+          </Grid>
+          <Grid item>
+            <Typography variant="h4">You successfully purchased</Typography>
+          </Grid>
+          <Grid item>
+            <Card>
+              <CardContent>
+                <Grid
+                  container
+                  direction="row"
+                  wrap="nowrap"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Grid
+                    item
+                    container
+                    direction="row"
+                    wrap="nowrap"
+                    xs
+                    spacing={1}
+                    alignItems="center"
+                  >
+                    <Grid item>
+                      <img src={course?.cover?.content} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h6">{course?.title}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    direction="column"
+                    alignItems="flex-end"
+                    style={{ width: "auto" }}
+                  >
+                    <Grid item>
+                      <Typography
+                        variant="body1"
+                        style={{ textDecoration: "line-through" }}
+                      >
+                        {course.mainPrice}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1">
+                        {course.mainPrice &&
+                          course.off &&
+                          course.mainPrice -
+                            (course.mainPrice * course.off) / 100}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Typography variant="h6">Course Title</Typography>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                direction="column"
-                alignItems="flex-end"
-                style={{ width: "auto" }}
-              >
-                <Grid item>
-                  <Typography variant="body1">10000</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="body1">500</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </DialogContent>
     </Dialog>
   );
@@ -77,17 +101,29 @@ export function CongratulationDialog({
 
 export function CheckoutDialog({
   open,
+  course,
   onClose,
   onPurchase,
 }: {
   open: boolean;
+  course: Course;
   onClose: () => void;
   onPurchase: () => void;
 }) {
-  const [nameOnCard, setNameOnCard] = useState("");
-  const [cardNum, setCardNum] = useState("");
-  const [expDate, setExpDate] = useState(new Date());
-
+  const { enqueueSnackbar } = useSnackbar();
+  const [creditCard, setCreditCard] = useState<CreditCard | undefined>();
+  useEffect(() => {
+    PersonService.getCreditCardDetails().then((response) => {
+      console.log("Credit card fetched", response.data);
+      setCreditCard(response.data);
+    });
+    return () => {
+      setCreditCard(undefined);
+    };
+  }, []);
+  let offeredPrice =
+    course?.mainPrice - (course?.mainPrice * course?.off) / 100;
+  if (course == undefined) return <></>;
   return (
     <Dialog
       open={open}
@@ -107,14 +143,23 @@ export function CheckoutDialog({
                 <TextField
                   variant="outlined"
                   label="Name on card"
-                  onBlur={(event) => setNameOnCard(event.target.value)}
+                  defaultValue={creditCard?.nameOnCard}
+                  onBlur={(event) =>
+                    setCreditCard({
+                      ...creditCard,
+                      nameOnCard: event.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item>
                 <TextField
                   variant="outlined"
+                  defaultValue={creditCard?.cardNo}
                   label="Card number"
-                  onBlur={(event) => setCardNum(event.target.value)}
+                  onBlur={(event) =>
+                    setCreditCard({ ...creditCard, cardNo: event.target.value })
+                  }
                 />
               </Grid>
               <Grid item>
@@ -124,9 +169,9 @@ export function CheckoutDialog({
                   format="dd/MMM/yyyy"
                   label="Expire Date"
                   inputVariant="outlined"
-                  value={expDate}
+                  value={creditCard?.expireDate}
                   onChange={(date) => {
-                    setExpDate(date as Date);
+                    setCreditCard({ ...creditCard, expireDate: date as Date });
                   }}
                   KeyboardButtonProps={{
                     "aria-label": "change date",
@@ -149,7 +194,7 @@ export function CheckoutDialog({
                   <Typography variant="body2">Original price</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="body2">10000</Typography>
+                  <Typography variant="body2">{course?.mainPrice}</Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -163,7 +208,11 @@ export function CheckoutDialog({
                   <Typography variant="body2">Discount</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="body2">989</Typography>
+                  <Typography variant="body2">
+                    {course.mainPrice &&
+                      course.off &&
+                      (course?.mainPrice * course?.off) / 100}
+                  </Typography>
                 </Grid>
               </Grid>
               <Divider />
@@ -178,7 +227,9 @@ export function CheckoutDialog({
                   <Typography variant="h6">Total</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="h6">1209</Typography>
+                  <Typography variant="h6">
+                    {course.mainPrice && course.off && offeredPrice}
+                  </Typography>
                 </Grid>
               </Grid>
               <Grid item>
@@ -187,7 +238,33 @@ export function CheckoutDialog({
                   variant="contained"
                   color="primary"
                   onClick={() => {
-                    onClose();
+                    let error = false;
+                    if (!creditCard?.cardNo) {
+                      error = true;
+                      enqueueSnackbar("Please provide a credit card no", {
+                        variant: "warning",
+                      });
+                    }
+                    if (!creditCard?.nameOnCard) {
+                      error = true;
+                      enqueueSnackbar("Please provide name on card", {
+                        variant: "warning",
+                      });
+                    }
+                    if (!creditCard?.expireDate) {
+                      error = true;
+                      enqueueSnackbar("Please provide expire date of card", {
+                        variant: "warning",
+                      });
+                    } else if (
+                      creditCard?.expireDate.getTime() < new Date().getTime()
+                    ) {
+                      error = true;
+                      enqueueSnackbar("Your credit card is expired", {
+                        variant: "error",
+                      });
+                    }
+                    if (error) return;
                     onPurchase();
                   }}
                 >
@@ -220,10 +297,10 @@ export function CheckoutDialog({
                     alignItems="center"
                   >
                     <Grid item>
-                      <Image />
+                      <img src={course?.cover?.content} />
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6">Course Title</Typography>
+                      <Typography variant="h6">{course.title}</Typography>
                     </Grid>
                   </Grid>
                   <Grid
@@ -234,10 +311,17 @@ export function CheckoutDialog({
                     style={{ width: "auto" }}
                   >
                     <Grid item>
-                      <Typography variant="body1">10000</Typography>
+                      <Typography
+                        variant="body1"
+                        style={{ textDecoration: "line-through" }}
+                      >
+                        {course?.mainPrice}
+                      </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="body1">500</Typography>
+                      <Typography variant="body1">
+                        {course.mainPrice && course.off && offeredPrice}
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Grid>

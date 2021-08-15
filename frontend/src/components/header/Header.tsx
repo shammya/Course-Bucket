@@ -20,7 +20,6 @@ import axios from "axios";
 import { Files } from "classes/Files";
 import classNames from "classnames";
 import AuthService, { authHeaders } from "components/auth/api/AuthService";
-import PersonService from "components/person/api/PersonService";
 import { GLOBAL } from "Configure";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
@@ -76,10 +75,11 @@ export function Header() {
   const history = useHistory();
   const [photo, setPhoto] = useState<Files>();
   useEffect(() => {
-    PersonService.getProfilePhoto().then((response) => {
-      console.log("Profile photo fetched", response.data);
-      setPhoto(response.data);
-    });
+    setPhoto(AuthService.getPhoto());
+    // PersonService.getProfilePhoto().then((response) => {
+    //   console.log("Profile photo fetched", response.data);
+    //   setPhoto(response.data);
+    // });
   }, []);
 
   function profileDetailsLoad() {

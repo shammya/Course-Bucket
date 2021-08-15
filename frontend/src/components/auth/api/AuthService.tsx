@@ -71,6 +71,11 @@ class AuthService {
       return this.getCurrentUser().accountType;
     } else return "";
   }
+  getPhoto() {
+    if (this.getCurrentUser()) {
+      return this.getCurrentUser().photo;
+    } else return undefined;
+  }
 }
 export function authHeaders() {
   const user = JSON.parse(localStorage.getItem("user") + "");

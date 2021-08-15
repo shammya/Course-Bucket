@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,30 +71,24 @@ public class AuthController {
 		if(!encoder.matches(loginRequest.getPassword(), passFromDB)) {
 			return ResponseEntity.ok(new MessageResponse("Incorrect Password !!! Try again."));
 		}
-		String jwt = jwtUtils.generateJwtToken(loginRequest.getUsername());
-		String email = DB.getString("Person", "ID", loginRequest.getUsername(), "EMAIL");
-		String role = Person.getRole(loginRequest.getUsername());
-		return ResponseEntity.ok(new JwtResponse(jwt, loginRequest.getUsername(),email, role));
+		String token = jwtUtils.generateJwtToken(loginRequest.getUsername());
+		return ResponseEntity.ok(new JwtResponse(token, loginRequest.getUsername()));
 	}
 	@PostMapping("/register-student/{eduStatusId}")
 	public ResponseEntity<?> registerStudent(@PathVariable(value="eduStatusId") Integer eduStatusId, @RequestBody Person student){
 		student.setPassword(encoder.encode(student.getPassword()));
 		Student.createNewStudent(student, eduStatusId);
 		
-		String jwt = jwtUtils.generateJwtToken(student.getUsername());
-		String email = DB.getString("Person", "ID", student.getUsername(), "EMAIL");
-		String role = Person.getRole(student.getUsername());
-		return ResponseEntity.ok(new JwtResponse(jwt, student.getUsername(),email, role));
+		String token = jwtUtils.generateJwtToken(student.getUsername());
+		return ResponseEntity.ok(new JwtResponse(token, student));
 	}
 	@PostMapping("/register-teacher/{designationId}")
 	public ResponseEntity<?> registerTeacher(@PathVariable(value="designationId") Integer designationId, @RequestBody Person teacher){
 		teacher.setPassword(encoder.encode(teacher.getPassword()));
 		Teacher.createNewTeacher(teacher, designationId);
 
-		String jwt = jwtUtils.generateJwtToken(teacher.getUsername());
-		String email = DB.getString("Person", "ID", teacher.getUsername(), "EMAIL");
-		String role = Person.getRole(teacher.getUsername());
-		return ResponseEntity.ok(new JwtResponse(jwt, teacher.getUsername(),email, role));
+		String token = jwtUtils.generateJwtToken(teacher.getUsername());
+		return ResponseEntity.ok(new JwtResponse(token, teacher));
 	}
 	@PostMapping("/request-password-change/{username}")
 	public ResponseEntity<?> requestPasswordChange(@PathVariable(value="username") String username,@RequestBody Date dob){

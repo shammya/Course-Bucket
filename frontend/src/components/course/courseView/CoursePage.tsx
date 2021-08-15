@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Grid,
   List,
   ListItem,
@@ -10,8 +11,9 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { DoneAll, Image, LabelImportant } from "@material-ui/icons";
-import { Course, Property, Week } from "classes/Course";
+import { DoneAll, LabelImportant } from "@material-ui/icons";
+import { Rating } from "@material-ui/lab";
+import { Course, Property, PublicResponse, Week } from "classes/Course";
 import {
   CheckoutDialog,
   CongratulationDialog,
@@ -21,13 +23,17 @@ import InstructorShortDetailsBox from "components/course/courseView/InstructorSh
 import RatingSection from "components/course/courseView/Rating";
 import { ReviewSection } from "components/course/courseView/Review";
 import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
+import TeacherService from "components/person/api/TeacherService";
+import { format } from "date-fns";
 import User from "layout/User";
 import React, { useEffect, useState } from "react";
 import { IconPickerItem } from "react-fa-icon-picker";
+import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import { Sticky, StickyContainer } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
 import CourseService from "../api/CourseService";
+import { TeacherMiniInfo } from "./../../../classes/Person";
 
 export const lorem =
   "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid magni adipisci, a quibusdam deserunt cupiditate. Reprehenderit, molestiae quas minima corporis non nulla perspiciatis esse nostrum in harum eveniet. Repellendus, animi!";
@@ -100,19 +106,47 @@ const useStyles = makeStyles((theme) => ({
 
 export function CourseView() {
   const { courseId } = useParams();
+  const history = useHistory();
   const classes = useStyles();
-  const [checkout, setCheckout] = useState(false);
-  const [purchased, setPurchased] = useState(false);
+  const [checkoutShow, setCheckoutShow] = useState(false);
+  const [congratulationShow, setCongratulationShow] = useState(false);
   const [course, setCourse] = useState<Course>(new Course());
+  const [teacherInfo, setTeacherInfo] = useState<TeacherMiniInfo>();
+  const [publicResponse, setPublicResponse] = useState<PublicResponse>();
 
   useEffect(() => {
     if (courseId) {
       CourseService.getCourseToShow(courseId).then((response) => {
         console.log("Course fetched", response.data);
         setCourse(response.data);
+        handleReloadPublicResponse(response.data.teacherUsername);
       });
     }
   }, []);
+
+  function handleCongratulationClose() {
+    setCongratulationShow(false);
+    history.push(`/course/${courseId}`);
+  }
+
+  function handleOnPurchase() {
+    CourseService.purchase(courseId).then((response) => {
+      if (response.status == 200) {
+        setCheckoutShow(false);
+        setCongratulationShow(true);
+      }
+    });
+  }
+
+  function handleReloadPublicResponse(teacherUsername: string) {
+    TeacherService.getMiniInfo(teacherUsername).then((response) => {
+      setTeacherInfo(response.data);
+    });
+    CourseService.courseRatingReview(courseId).then((response) => {
+      console.log("Course additional property fetched", response.data);
+      setPublicResponse(response.data);
+    });
+  }
 
   function Price() {
     return (
@@ -140,6 +174,11 @@ export function CourseView() {
     );
   }
   function TitleSection() {
+    let date = new Date(course?.publishDate);
+    let formattedDate = "";
+    if (course.publishDate)
+      formattedDate = format(date as Date, "hh:mm a - dd MMMM, yyyy");
+    console.log(formattedDate);
     return (
       <>
         <Grid item>
@@ -148,14 +187,40 @@ export function CourseView() {
         <Grid item>
           <Typography variant="h6">{course?.subTitle}</Typography>
         </Grid>
-        <Grid item container direction="row">
-          <Grid item>{/* <Rating></Rating> */}</Grid>
-          <Grid item>118001 ratings 1090034 students</Grid>
+        <Grid item container direction="row" alignItems="center" spacing={1}>
+          <Grid item>
+            <Rating
+              value={publicResponse?.ratingValue}
+              readOnly
+              name="rating"
+            />
+          </Grid>
+          <Grid item>
+            <Typography>
+              ({publicResponse?.ratingCount} rating
+              {publicResponse?.ratingCount && publicResponse?.ratingCount > 1
+                ? "s"
+                : ""}
+              )
+            </Typography>
+          </Grid>
+          <Grid item>
+            {publicResponse?.enrolledStudentCount} student enrolled
+          </Grid>
         </Grid>
         <Grid item>Created by {course?.teacherName}</Grid>
         <Grid item container direction="row">
-          <Grid item>Last updated {course?.lastUpdate}</Grid>
-          <Grid item>languages</Grid>
+          <Grid item>Published date: {formattedDate}</Grid>
+          <Grid item container direction="row" alignItems="center" spacing={1}>
+            <Grid item>
+              <Typography>Languages:</Typography>
+            </Grid>
+            {course?.languages.map((lang) => (
+              <Grid item key={lang.id}>
+                <Chip variant="outlined" color="primary" label={lang.name} />
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
       </>
     );
@@ -219,7 +284,7 @@ export function CourseView() {
                 {({ style }) => (
                   <Card style={{ ...style, zIndex: 999, marginLeft: 16 }}>
                     <CardContent>
-                      <Image />
+                      <img src={course?.cover?.content} />
                       <Grid
                         item
                         container
@@ -231,7 +296,7 @@ export function CourseView() {
                         <Price />
                       </Grid>
                       <Grid item>
-                        <div onClick={() => setCheckout(true)}>
+                        <div onClick={() => setCheckoutShow(true)}>
                           <Button
                             variant="contained"
                             color="primary"
@@ -241,15 +306,15 @@ export function CourseView() {
                           </Button>
                         </div>
                         <CheckoutDialog
-                          open={checkout}
-                          onClose={() => setCheckout(false)}
-                          onPurchase={() => setPurchased(true)}
+                          open={checkoutShow}
+                          course={course}
+                          onClose={() => setCheckoutShow(false)}
+                          onPurchase={handleOnPurchase}
                         />
                         <CongratulationDialog
-                          open={purchased}
-                          onClose={() => {
-                            setPurchased(false);
-                          }}
+                          open={congratulationShow}
+                          course={course}
+                          onClose={handleCongratulationClose}
                         />
                       </Grid>
                       <CourseProperties />
@@ -269,7 +334,7 @@ export function CourseView() {
         <CardContent>
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <Image />
+              <img src={course?.cover?.content} />
             </Grid>
             <Grid item>
               <TitleSection />
@@ -301,7 +366,7 @@ export function CourseView() {
                 </Grid>
               </Grid>
               <Grid item xs={6}>
-                <div onClick={() => setCheckout(true)}>
+                <div onClick={() => setCheckoutShow(true)}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -311,15 +376,15 @@ export function CourseView() {
                   </Button>
                 </div>
                 <CheckoutDialog
-                  open={checkout}
-                  onClose={() => setCheckout(false)}
-                  onPurchase={() => setPurchased(true)}
+                  open={checkoutShow}
+                  course={course}
+                  onClose={() => setCheckoutShow(false)}
+                  onPurchase={handleOnPurchase}
                 />
                 <CongratulationDialog
-                  open={purchased}
-                  onClose={() => {
-                    setPurchased(false);
-                  }}
+                  open={congratulationShow}
+                  course={course}
+                  onClose={handleCongratulationClose}
                 />
               </Grid>
             </Grid>
@@ -331,8 +396,8 @@ export function CourseView() {
   function Info() {
     return (
       <>
-        <Grid item>
-          <Card>
+        <Grid item container>
+          <Card style={{ width: "100%" }}>
             <CardContent>
               <Grid container direction="column">
                 <Grid item>
@@ -360,8 +425,8 @@ export function CourseView() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item>
-          <Card>
+        <Grid item container>
+          <Card style={{ width: "100%" }}>
             <CardContent>
               <Typography variant="h5">Requirements</Typography>
               <List dense={false}>
@@ -387,8 +452,8 @@ export function CourseView() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item>
-          <Card>
+        <Grid item container>
+          <Card style={{ width: "100%" }}>
             <CardContent>
               <Typography variant="h5">Description</Typography>
               <Typography>{course?.description}</Typography>
@@ -415,14 +480,14 @@ export function CourseView() {
     );
   }
   function InstructorDetails() {
-    return <InstructorShortDetailsBox />;
+    return <InstructorShortDetailsBox details={teacherInfo} />;
   }
   return (
     <User>
       <StickyContainer>
         <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Responsive displayIn="Laptop">
+            <Responsive displayIn={["Laptop", "Tablet"]}>
               <PCHeader />
             </Responsive>
           </Grid>
@@ -437,10 +502,7 @@ export function CourseView() {
             md={8}
           >
             <Grid item>
-              <Responsive displayIn="Tablet">
-                <MobileHeader />
-              </Responsive>
-              <Responsive displayIn="Mobile">
+              <Responsive displayIn={["Mobile"]}>
                 <MobileHeader />
               </Responsive>
             </Grid>
@@ -448,17 +510,35 @@ export function CourseView() {
             <Grid item container>
               <Content />
             </Grid>
-            <Grid item>
+            <Grid item container>
               <InstructorDetails />
             </Grid>
             <Grid item container>
-              <RatingSection />
+              <RatingSection
+                courseId={courseId}
+                data={publicResponse}
+                onRatingSubmit={() =>
+                  handleReloadPublicResponse(course?.teacherUsername)
+                }
+              />
             </Grid>
-            <Grid item>
-              <ReviewSection />
+            <Grid item container>
+              <ReviewSection
+                reviews={
+                  publicResponse?.reviews
+                    ? publicResponse?.reviews[0].reviewInfos
+                    : undefined
+                }
+              />
             </Grid>
-            <Grid item>
-              <FAQSection />
+            <Grid item container>
+              <FAQSection
+                faqs={
+                  publicResponse?.faqs
+                    ? publicResponse?.faqs[0].faqInfos
+                    : undefined
+                }
+              />
             </Grid>
           </Grid>
         </Grid>

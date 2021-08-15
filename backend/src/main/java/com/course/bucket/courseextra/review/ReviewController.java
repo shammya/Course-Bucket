@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
+import com.course.bucket.courseextra.CourseRating;
 import com.course.bucket.tools.ToolKit;
 
 
@@ -29,12 +31,21 @@ public class ReviewController {
 		Review.createNewReview(review);
 	}
 	
-	
+
 	@PreAuthorize("hasRole('Student')")
 	@PostMapping("/add-rating")
-	public void addRating(@RequestBody RatingDb rating) {
+	public void addRating(@RequestParam Integer courseId, @RequestParam Double ratingValue) {
 		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
-		Review.createNewRating(rating);
+		String username = ToolKit.getCurrentUserName();
+		Review.createNewRating(courseId, username, ratingValue);
+	}
+	
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/get-rating-self/{courseId}")
+	public Integer getRatingSelf(@PathVariable Integer courseId) {
+		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
+		String username = ToolKit.getCurrentUserName();
+		return CourseRating.getRatingByStudent(courseId, username);
 	}
 	
 	

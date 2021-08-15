@@ -1,6 +1,7 @@
 import {
   Card,
   CardActionArea,
+  CardActions,
   CardContent,
   CardMedia,
   Grid,
@@ -10,6 +11,7 @@ import {
 import { Rating } from "@material-ui/lab";
 import classNames from "classnames";
 import React from "react";
+import { useHistory } from "react-router";
 import { useStyles } from "Theme";
 
 const localStyles = makeStyles((theme) => ({
@@ -30,15 +32,20 @@ const localStyles = makeStyles((theme) => ({
 function CourseBox({ courseData }) {
   const global = useStyles();
   const local = localStyles();
+  const history = useHistory();
   return (
     <div>
       <CardActionArea
         style={{
-          maxWidth: "200px",
+          width: "185px",
         }}
+        onClick={(event) => history.push(`/course/${courseData.id}`)}
       >
         <Card>
-          <CardMedia style={{ height: 135 }} image={courseData.image} />
+          <CardMedia
+            style={{ height: 135, backgroundSize: "contain" }}
+            image={courseData.coverContent}
+          />
           <CardContent style={{ padding: "0px 10px 10px 10px" }}>
             <Grid
               container
@@ -69,7 +76,7 @@ function CourseBox({ courseData }) {
                 {courseData.rating}
               </Grid>
               <Grid item className={global.tiny}>
-                ({courseData.numOfRating})
+                ({courseData.ratingCount})
               </Grid>
             </Grid>
             <Grid

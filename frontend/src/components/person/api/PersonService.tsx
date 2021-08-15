@@ -36,8 +36,17 @@ class PersonController {
     formData.append("newPassword", newPassword);
     return axios.put(GLOBAL.HOST + "/change-password", formData, authHeaders());
   }
-  getProfilePhoto() {
-    return axios.get(GLOBAL.HOST + "/get-profile-photo", authHeaders());
+  getPersonToShow(username: string) {
+    return axios.get(
+      GLOBAL.HOST + `/get-person-by-username/${username}`,
+      authHeaders()
+    );
   }
+  getCreditCardDetails() {
+    return axios.get(GLOBAL.HOST + `/get-credit-card`, authHeaders());
+  }
+  // getProfilePhoto() {
+  //   return axios.get(GLOBAL.HOST + "/get-profile-photo", authHeaders());
+  // }
 }
 export default new PersonController();

@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.course.bucket.authentication.MessageResponse;
+import com.course.bucket.creditcard.CreditCard;
 import com.course.bucket.files.Files;
+import com.course.bucket.person.Person.AccountType;
+import com.course.bucket.tools.ToolKit;
 
 
 
@@ -45,10 +48,16 @@ public class PersonController {
 	}
 
 	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
-	@GetMapping("/get-person-by-id/{id}")
-	public Person findPerson(@PathVariable String id){
-		Person person = new Person(id);
-		person.setPassword("");
+	@GetMapping("/get-person-by-username/{username}")
+	public Person findPerson(@PathVariable String username){
+		String role = Person.getRole(username);
+		Person person = null;
+		if(role.toLowerCase().equals("student")) {
+			person = new Student(username);
+		}
+		else if(role.toLowerCase().equals("teacher")) {
+			person = new Teacher(username);
+		}
 		return person;
 	}
 	
@@ -63,9 +72,6 @@ public class PersonController {
 	}
 
 	
-	
-	
-	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/change-password")
 	public ResponseEntity<?> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword){
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -82,7 +88,18 @@ public class PersonController {
 	
 	
 	
+//	@PreAuthorize("hasRole('Admin')")
+//	@GetMapping("/get-student-info")
+//	public ArrayList<StudentInfoAdmin> getStudentInfoAdmin(){
+//		return Person.getStudentInfoAdmin();
+//	}
 	
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/get-credit-card")
+	public CreditCard getCreditCardDetails(){
+		String username = ToolKit.getCurrentUserName();
+		return new CreditCard(username);
+	}
 	
 	
 	@GetMapping("/get-profile-photo")
@@ -90,6 +107,11 @@ public class PersonController {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return Person.getPhoto(userDetails.getUsername());
 	}
+//	@GetMapping("/get-profile-photo")
+//	public Files getProfilePhoto() {
+//		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		return Person.getPhoto(userDetails.getUsername());
+//	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")
 //	public Person findById(@PathVariable String name) {

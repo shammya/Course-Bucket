@@ -137,7 +137,7 @@ public class Course {
 
 			isApproved = ToolKit.DBoolToJBool(rs.getString("IS_APPROVED"));
 			teacher = new Teacher(rs.getString("TEACHER_ID"));
-			teacherName = teacher.getFirstName();
+			teacherName = teacher.getFullName();
 			teacherUsername = teacher.getUsername();
 			cover = new Files(rs.getInt("COVER_ID"));
 			subCategory = new Category(rs.getInt("CATEGORY_ID"));
