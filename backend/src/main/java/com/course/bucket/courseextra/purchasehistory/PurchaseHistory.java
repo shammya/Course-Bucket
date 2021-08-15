@@ -209,5 +209,17 @@ public class PurchaseHistory {
 			e.printStackTrace();
 		}
 	}
+	
+	public static boolean isBought(Integer courseId, String username) {
+		ResultSet rs = DB.executeQuery("select * from purchase_history where course_id = # and student_id = '#'", courseId.toString(), username);
+		boolean ans = false;
+		try {
+			if(rs.next()) ans = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ans;
+	}
 
 }

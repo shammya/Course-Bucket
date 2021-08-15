@@ -12,6 +12,7 @@ import com.course.bucket.database.DB;
 import com.course.bucket.edustatus.EduStatus;
 import com.course.bucket.tools.ToolKit;
 import com.course.bucket.course.Course;
+import com.course.bucket.course.additionals.MiniCourse;
 
 public class Student extends Person {
 
@@ -40,6 +41,21 @@ public class Student extends Person {
 			System.err.println("error in get courses student");
 		}
 		return null;
+	}
+	
+	public static ArrayList<MiniCourse> getPurchasedCourses(String studentUsername){
+		ArrayList<MiniCourse> courses = new ArrayList();
+		try {
+			ResultSet rs = DB.executeQuery(
+					"SELECT COURSE_ID FROM PURCHASE_HISTORY WHERE STUDENT_ID = '#' ORDER BY TIME DESC", studentUsername);
+			while (rs.next()) {
+				courses.add(new MiniCourse(rs.getInt("COURSE_ID")));
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			System.err.println("error in get courses student");
+		}
+		return courses;
 	}
 
 	public EduStatus getEduStatus() {

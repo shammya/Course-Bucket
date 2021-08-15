@@ -123,6 +123,8 @@ export function CheckoutDialog({
   }, []);
   let offeredPrice =
     course?.mainPrice - (course?.mainPrice * course?.off) / 100;
+  let expDate = new Date(creditCard?.expireDate + "");
+
   if (course == undefined) return <></>;
   return (
     <Dialog
@@ -143,8 +145,8 @@ export function CheckoutDialog({
                 <TextField
                   variant="outlined"
                   label="Name on card"
-                  defaultValue={creditCard?.nameOnCard}
-                  onBlur={(event) =>
+                  value={creditCard?.nameOnCard}
+                  onChange={(event) =>
                     setCreditCard({
                       ...creditCard,
                       nameOnCard: event.target.value,
@@ -155,9 +157,9 @@ export function CheckoutDialog({
               <Grid item>
                 <TextField
                   variant="outlined"
-                  defaultValue={creditCard?.cardNo}
+                  value={creditCard?.cardNo}
                   label="Card number"
-                  onBlur={(event) =>
+                  onChange={(event) =>
                     setCreditCard({ ...creditCard, cardNo: event.target.value })
                   }
                 />
@@ -256,9 +258,7 @@ export function CheckoutDialog({
                       enqueueSnackbar("Please provide expire date of card", {
                         variant: "warning",
                       });
-                    } else if (
-                      creditCard?.expireDate.getTime() < new Date().getTime()
-                    ) {
+                    } else if (expDate.getTime() < new Date().getTime()) {
                       error = true;
                       enqueueSnackbar("Your credit card is expired", {
                         variant: "error",

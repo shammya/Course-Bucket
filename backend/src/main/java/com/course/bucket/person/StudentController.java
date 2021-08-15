@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
 import com.course.bucket.authentication.JwtUtils;
+import com.course.bucket.course.additionals.MiniCourse;
+import com.course.bucket.courseextra.purchasehistory.PurchaseHistory;
 import com.course.bucket.designation.Designation;
 import com.course.bucket.edustatus.EduStatus;
 import com.course.bucket.tools.ToolKit;
@@ -65,6 +67,14 @@ public class StudentController {
 //		Person.changePersonName(oldName, newName);
 //	}
 //	
+
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/get-purchased-courses")
+	public ArrayList<MiniCourse> getPurchasedCourses(){
+		String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		return Student.getPurchasedCourses(username);
+	}
+	
 	@PreAuthorize("hasRole('Admin')")
 	@DeleteMapping("/delete-student/{id}")
 	public void deleteStudent(@PathVariable String id) {

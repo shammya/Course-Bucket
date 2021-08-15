@@ -1,6 +1,7 @@
 package com.course.bucket.courseextra.faq;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,26 +13,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.course.bucket.courseextra.review.Review;
+import com.course.bucket.courseextra.review.ReviewInfo;
 import com.course.bucket.tools.ToolKit;
 
 
 @RestController
 public class FAQController {
 	
-	@PreAuthorize("hasRole('Teacher') or hasRole('Student')")
+	@PreAuthorize("hasRole('Student')")
 	@PostMapping("/add-faq-question")
-	public void addFaqQuestion(@RequestBody FaqDb faq) {
-		//System.out.println("Country : "+purchasehistory.name+" "+purchasehistory.adminId);
-		FAQ.addFaqQuestion(faq);
+	public void addFaqQuestion(@RequestParam Integer courseId, @RequestParam String question) {
+		String username = ToolKit.getCurrentUserName();
+		FAQ.addFaqQuestion(new FaqDb(courseId,  username, question, ToolKit.getCurTime(), null,null));
 	}
 	
 	@PreAuthorize("hasRole('Teacher')")
 	@PostMapping("/add-faq-answer")
-	public void addFaqAnswer(@RequestBody FaqDb faq) {
+	public void addFaqAnswer(@RequestParam Integer faqId, @RequestParam String answer) {
 		//System.out.println("Country : "+purchasehistory.name+" "+purchasehistory.adminId);
-		FAQ.addFaqAnswer(faq);
+		FAQ.addFaqAnswer(faqId, answer);
 	}
 	
 
@@ -52,6 +56,14 @@ public class FAQController {
 	@GetMapping("/get-faq-student")
 	public Map<Integer, ArrayList<FAQ>> findFAQForStudentView() {
 		return FAQ.getFAQForStudentView(ToolKit.getCurrentUserName());
+	}
+	
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/get-faq-self/{courseId}")
+	public FaqInfo getFaqSelf(@PathVariable Integer courseId) {
+		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
+		String username = ToolKit.getCurrentUserName();
+		return FAQ.getFaqByStudent(courseId, username);
 	}
 		
 	

@@ -105,8 +105,11 @@ export class FaqList {
 }
 
 export class FaqInfo {
+  id: number;
+  studentUsername: string;
   studentName: string;
   studentImage: string;
+  teacherUsername: string;
   teacherName: string;
   teacherImage: string;
   question: string;

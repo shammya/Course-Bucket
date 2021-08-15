@@ -1,6 +1,10 @@
 package com.course.bucket.courseextra.faq;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
+
+import com.course.bucket.database.DB;
 
 public class FaqDb {
 
@@ -14,7 +18,7 @@ public class FaqDb {
 	
 	
 	
-	public FaqDb(Integer id,Integer courseId, String studentId, String question, Date questionTime, String answer,
+	public FaqDb(Integer courseId, String studentId, String question, Date questionTime, String answer,
 			Date answerTime) {
 		super();
 		this.courseId = courseId;
@@ -23,6 +27,22 @@ public class FaqDb {
 		this.questionTime = questionTime;
 		this.answer = answer;
 		this.answerTime = answerTime;
+	}
+	
+	public FaqDb(Integer id) {
+		ResultSet rs = DB.executeQuery("SELECT * FROM FAQ WHERE ID = #", id.toString());
+		try {
+			if(rs.next()) {
+				this.courseId = rs.getInt("COURSE_ID");
+				this.studentId = rs.getString("STUDENT_ID");
+				this.question = rs.getString("QUESTION");
+				this.questionTime = rs.getTimestamp("QUESTION_TIME");
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	

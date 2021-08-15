@@ -95,6 +95,28 @@ class CourseService {
     formData.append("review", review);
     return axios.post(GLOBAL.HOST + `/add-review`, formData, authHeaders());
   }
+  submitQuestion(courseId: number, question: string) {
+    let formData = new FormData();
+    formData.append("courseId", courseId + "");
+    formData.append("question", question);
+    return axios.post(
+      GLOBAL.HOST + `/add-faq-question`,
+      formData,
+      authHeaders()
+    );
+  }
+  submitAnswer(faqId: number, answer: string) {
+    let formData = new FormData();
+    formData.append("faqId", faqId + "");
+    formData.append("answer", answer);
+    return axios.post(GLOBAL.HOST + `/add-faq-answer`, formData, authHeaders());
+  }
+  faqSelf(courseId: number) {
+    return axios.get(GLOBAL.HOST + `/get-faq-self/${courseId}`, authHeaders());
+  }
+  isBought(courseId: number) {
+    return axios.get(GLOBAL.HOST + `/is-bought/${courseId}`, authHeaders());
+  }
   // } else {
   //   course.weeks.forEach((week) => {
   //     new Promise(() => {

@@ -21,5 +21,8 @@ class PersonController {
   getCreateCourse() {
     return axios.get(GLOBAL.HOST + `/get-created-courses`, authHeaders());
   }
+  getEnrolledStudentList() {
+    return axios.get(GLOBAL.HOST + `/get-student-list-teacher`, authHeaders());
+  }
 }
 export default new PersonController();

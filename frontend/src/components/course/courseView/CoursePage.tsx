@@ -113,28 +113,38 @@ export function CourseView() {
   const [course, setCourse] = useState<Course>(new Course());
   const [teacherInfo, setTeacherInfo] = useState<TeacherMiniInfo>();
   const [publicResponse, setPublicResponse] = useState<PublicResponse>();
+  const [isBought, setIsBought] = useState(false);
 
   useEffect(() => {
     if (courseId) {
-      CourseService.getCourseToShow(courseId).then((response) => {
-        console.log("Course fetched", response.data);
-        setCourse(response.data);
-        handleReloadPublicResponse(response.data.teacherUsername);
-      });
+      loadCourseContent();
     }
   }, []);
 
   function handleCongratulationClose() {
     setCongratulationShow(false);
-    history.push(`/course/${courseId}`);
+    // history.push(`/course/${courseId}`);
   }
 
   function handleOnPurchase() {
     CourseService.purchase(courseId).then((response) => {
       if (response.status == 200) {
+        loadCourseContent();
         setCheckoutShow(false);
         setCongratulationShow(true);
       }
+    });
+  }
+
+  async function loadCourseContent() {
+    await CourseService.getCourseToShow(courseId).then((response) => {
+      console.log("Course fetched", response.data);
+      setCourse(response.data);
+      handleReloadPublicResponse(response.data.teacherUsername);
+    });
+    await CourseService.isBought(courseId).then((response) => {
+      console.log("course bought", response.data);
+      setIsBought(response.data);
     });
   }
 
@@ -285,38 +295,42 @@ export function CourseView() {
                   <Card style={{ ...style, zIndex: 999, marginLeft: 16 }}>
                     <CardContent>
                       <img src={course?.cover?.content} />
-                      <Grid
-                        item
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        spacing={1}
-                      >
-                        <Price />
-                      </Grid>
-                      <Grid item>
-                        <div onClick={() => setCheckoutShow(true)}>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            style={{ width: "100%" }}
+                      {!isBought && (
+                        <>
+                          <Grid
+                            item
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            spacing={1}
                           >
-                            Buy now
-                          </Button>
-                        </div>
-                        <CheckoutDialog
-                          open={checkoutShow}
-                          course={course}
-                          onClose={() => setCheckoutShow(false)}
-                          onPurchase={handleOnPurchase}
-                        />
-                        <CongratulationDialog
-                          open={congratulationShow}
-                          course={course}
-                          onClose={handleCongratulationClose}
-                        />
-                      </Grid>
+                            <Price />
+                          </Grid>
+                          <Grid item>
+                            <div onClick={() => setCheckoutShow(true)}>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                style={{ width: "100%" }}
+                              >
+                                Buy now
+                              </Button>
+                            </div>
+                            <CheckoutDialog
+                              open={checkoutShow}
+                              course={course}
+                              onClose={() => setCheckoutShow(false)}
+                              onPurchase={handleOnPurchase}
+                            />
+                            <CongratulationDialog
+                              open={congratulationShow}
+                              course={course}
+                              onClose={handleCongratulationClose}
+                            />
+                          </Grid>
+                        </>
+                      )}
                       <CourseProperties />
                     </CardContent>
                   </Card>
@@ -537,11 +551,15 @@ export function CourseView() {
             </Grid>
             <Grid item container>
               <FAQSection
+                courseId={courseId}
                 faqs={
                   publicResponse?.faqs
                     ? publicResponse?.faqs[0].faqInfos
                     : undefined
                 }
+                onSubmit={() => {
+                  handleReloadPublicResponse(course?.teacherUsername);
+                }}
               />
             </Grid>
           </Grid>

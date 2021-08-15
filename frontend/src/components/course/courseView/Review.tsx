@@ -77,7 +77,7 @@ export function ReviewSection({
               )}
             </Grid>
           </Grid>
-          {!reviews && (
+          {!reviews?.length && (
             <Grid item container>
               <Typography variant="h5">
                 Be first to review this course

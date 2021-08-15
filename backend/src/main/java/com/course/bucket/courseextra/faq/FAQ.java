@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.course.bucket.course.Course;
+import com.course.bucket.courseextra.review.ReviewInfo;
 import com.course.bucket.database.DB;
 import com.course.bucket.person.Student;
 import com.course.bucket.person.Teacher;
@@ -248,7 +249,7 @@ public class FAQ {
 		try {
 			while (crs.next()) {
 				ResultSet frs = DB.executeQuery("select * from faq where course_id = #", crs.getString("course_id"));
-
+				
 				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
 				while (frs.next()) {
 					ResultSet trs = DB.executeQuery(
@@ -260,8 +261,8 @@ public class FAQ {
 							frs.getString("student_id"));
 					trs.next();
 					srs.next();
-					faqInfos.add(new FaqInfo(srs.getString("full_name"), srs.getString("content"),
-							trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
+					faqInfos.add(new FaqInfo(frs.getString("student_id"), srs.getString("full_name"), srs.getString("content"),
+							teacherUsername, trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
 							frs.getTimestamp("question_time"), frs.getString("answer"),
 							frs.getTimestamp("answer_time")));
 
@@ -292,22 +293,24 @@ public class FAQ {
 		try {
 			while (crs.next()) {
 				ResultSet frs = DB.executeQuery("select * from faq where course_id = #", crs.getString("id"));
-
+				String teacherUsername = DB.getString("course", "id", courseId.toString(), "teacher_id");
 				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
 				while (frs.next()) {
 					ResultSet trs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f, course c where p.photo_id = f.id and c.teacher_id = p.id and c.id = #",
-							crs.getString("course_id"));
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f on (p.photo_id = f.id), course c where c.teacher_id = p.id and c.id = #",
+							crs.getString("id"));
 					ResultSet srs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
-									+ "where p.photo_id = f.id and p.id = '#'",
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f\n"
+									+ " on p.photo_id = f.id where p.id = '#'",
 							frs.getString("student_id"));
 					trs.next();
 					srs.next();
-					faqInfos.add(new FaqInfo(srs.getString("full_name"), srs.getString("content"),
-							trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
+					FaqInfo faqInfo = new FaqInfo(frs.getString("student_id"), srs.getString("full_name"), srs.getString("content"),
+							teacherUsername, trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
 							frs.getTimestamp("question_time"), frs.getString("answer"),
-							frs.getTimestamp("answer_time")));
+							frs.getTimestamp("answer_time"));
+					faqInfo.setId(frs.getInt("ID"));
+					faqInfos.add(faqInfo);
 
 					srs.close(); 
 					trs.close();
@@ -328,15 +331,47 @@ public class FAQ {
 
 	}
 	
+	public static FaqInfo getFaqByStudent(Integer courseId, String studentUsername) {
+    	FaqInfo faqInfo = null;
+		try {
+	    	ResultSet faqRS = DB.executeQuery("SELECT * FROM FAQ WHERE COURSE_ID = # AND STUDENT_ID = '#'", courseId.toString(), studentUsername);
+	    	if(!faqRS.next()) return null;
+	    	String teacherUsername = DB.getString("course", "ID", faqRS.getInt("course_id") + "", "teacher_id");
+	    	ResultSet studentRS = DB.executeQuery(""
+	    			+ "select concat(concat(p.first_name , ' '),p.last_name) as full_name, content \n"
+	    			+ "from person p \n"
+	    			+ "left outer join files f \n"
+	    			+ "on p.photo_id = f.id \n"
+	    			+ "where p.id = '#'", studentUsername);
+	    	ResultSet teacherRS = DB.executeQuery(""
+	    			+ "select concat(concat(p.first_name , ' '),p.last_name) as full_name, content \n"
+	    			+ "from person p \n"
+	    			+ "left outer join files f \n"
+	    			+ "on p.photo_id = f.id \n"
+	    			+ "where p.id = '#'", teacherUsername);
+	    	if(!studentRS.next() || !teacherRS.next()) return null;
+			faqInfo = new FaqInfo(studentUsername, studentRS.getString("full_name"), studentRS.getString("content"),
+					teacherUsername, teacherRS.getString("full_name"), teacherRS.getString("content"), faqRS.getString("question"),
+					faqRS.getTimestamp("question_time"), faqRS.getString("answer"),
+					faqRS.getTimestamp("answer_time"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return faqInfo;
+	}
+	
 	
 	public static void addFaqQuestion(FaqDb faq) {
 		Integer id = DB.generateId("FAQ");
 		String sql = "insert into faq values(#, #, '#', '#', #, NULL, NULL)";
-		DB.execute(sql,id.toString(),faq.getCourseId().toString(),faq.getStudentId(),faq.getQuestion(),ToolKit.JDateToDDate(faq.getQuestionTime()),
-				ToolKit.JDateToDDate(faq.getAnswerTime()));
+		DB.execute(sql,id.toString(),faq.getCourseId().toString(),faq.getStudentId(),faq.getQuestion(),ToolKit.JDateToDDate(faq.getQuestionTime()));
 	}
 	
-	public static void addFaqAnswer(FaqDb faq) {
+	public static void addFaqAnswer(Integer faqId, String answer) {
+		FaqDb faq = new FaqDb(faqId);
+		faq.setAnswer(answer);
+		faq.setAnswerTime(ToolKit.getCurTime());
 		DB.execute("update faq set answer = '#', answer_time = # where id = #",faq.getAnswer(),ToolKit.JDateToDDate(faq.getAnswerTime()), faq.getId().toString());
 		notificationFaqAnswer(faq);
 	}

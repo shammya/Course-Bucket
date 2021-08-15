@@ -37,9 +37,9 @@ Object.assign(lightTheme, {
       placeHolder: {
         position: 'relative'
       },
-      root: {
-        minHeight: 200
-      },
+      // root: {
+      //   minHeight: 200
+      // },
     },
     MuiDropzoneArea: {
       root: {

@@ -12,12 +12,32 @@ import {
   Typography,
 } from "@material-ui/core";
 import { FaqInfo } from "classes/Course";
-import MUIRichTextEditor from "mui-rte";
-import React, { useState } from "react";
+import AuthService from "components/auth/api/AuthService";
+import { useSnackbar } from "notistack";
+import React, { useEffect, useState } from "react";
+import TextEditor from "tools/customDesign/TextEditor";
 import { SlidingUpTransition } from "tools/Tools";
+import CourseService from "../api/CourseService";
 
-export function FAQSection({ faqs }: { faqs: FaqInfo[] | undefined }) {
-  const [writeFAQ, setWriteFAQ] = useState(false);
+export function FAQSection({
+  courseId,
+  faqs,
+  onSubmit,
+}: {
+  courseId: number;
+  faqs: FaqInfo[] | undefined;
+  onSubmit: () => void;
+}) {
+  const [questionInputShow, setQuestionInputShow] = useState(false);
+  const [questionOutputShow, setQuestionOutputShow] = useState(false);
+  const [myFaq, setMyFaq] = useState<FaqInfo>();
+  useEffect(() => {
+    CourseService.faqSelf(courseId).then((response) => {
+      console.log("my faq", response.data);
+      setMyFaq(response.data);
+    });
+  }, [faqs]);
+
   return (
     <Card style={{ width: "100%" }}>
       <CardContent>
@@ -32,14 +52,28 @@ export function FAQSection({ faqs }: { faqs: FaqInfo[] | undefined }) {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setWriteFAQ(true)}
+                onClick={() => {
+                  myFaq
+                    ? setQuestionOutputShow(true)
+                    : setQuestionInputShow(true);
+                }}
               >
-                Ask a question
+                {myFaq ? "See your question" : "Ask a question"}
               </Button>
-              <FAQInputAnswerDialog
-                open={writeFAQ}
-                onClose={() => setWriteFAQ(false)}
-              />
+              {myFaq ? (
+                <FAQOutputQuestionDialog
+                  faq={myFaq}
+                  open={questionOutputShow}
+                  onClose={() => setQuestionOutputShow(false)}
+                />
+              ) : (
+                <FAQInputQuestionDialog
+                  courseId={courseId}
+                  open={questionInputShow}
+                  onClose={() => setQuestionInputShow(false)}
+                  onQuestionSubmit={onSubmit}
+                />
+              )}
             </Grid>
           </Grid>
           <Grid item container direction="column">
@@ -49,7 +83,7 @@ export function FAQSection({ faqs }: { faqs: FaqInfo[] | undefined }) {
                   <Divider />
                 </Grid>
                 <Grid item container>
-                  <FAQBox faq={faq} />
+                  <FAQBox faq={faq} onSubmit={onSubmit} />
                 </Grid>
               </Grid>
             ))}
@@ -60,7 +94,15 @@ export function FAQSection({ faqs }: { faqs: FaqInfo[] | undefined }) {
   );
 }
 
-export function FAQBox({ faq }: { faq: FaqInfo | undefined }) {
+export function FAQBox({
+  faq,
+  onSubmit,
+}: {
+  faq: FaqInfo | undefined;
+  onSubmit?: () => void;
+}) {
+  const [answerInputShow, setAnswerInputShow] = useState(false);
+
   return (
     <Grid container direction="row" wrap="nowrap" spacing={2}>
       <Grid item>
@@ -76,34 +118,75 @@ export function FAQBox({ faq }: { faq: FaqInfo | undefined }) {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="body1">{faq?.question}</Typography>
+          <TextEditor value={faq?.question} readOnly />
         </Grid>
-        <Grid item style={{ marginTop: 20 }}>
-          <Grid container direction="row" wrap="nowrap" spacing={2}>
-            <Grid item>
-              <Avatar src={faq?.teacherImage} />
-            </Grid>
-            <Grid item container direction="column">
-              <Grid>
-                <Typography variant="h5">{faq?.teacherName}</Typography>
-              </Grid>
+        {!faq?.answer &&
+        faq?.teacherUsername === AuthService.getCurrentUsername() ? (
+          <Grid container justifyContent="center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setAnswerInputShow(true)}
+            >
+              Give an answer
+            </Button>
+            <FAQInputAnswerDialog
+              open={answerInputShow}
+              faq={faq}
+              onAnswerSubmit={onSubmit}
+              onClose={() => setAnswerInputShow(false)}
+            />
+          </Grid>
+        ) : (
+          !faq?.answer && <Typography variant="body1">No answer yet</Typography>
+        )}
+        {faq?.answer && (
+          <Grid item style={{ marginTop: 20 }}>
+            <Grid container direction="row" wrap="nowrap" spacing={2}>
               <Grid item>
-                <Typography variant="subtitle1">
-                  {new Date(faq?.answerDate + "").toLocaleString()}
-                </Typography>
+                <Avatar src={faq?.teacherImage} />
               </Grid>
-              <Grid item>
-                <Typography variant="body1">{faq?.answer}</Typography>
+              <Grid item container direction="column">
+                <Grid>
+                  <Typography variant="h5">{faq?.teacherName}</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle1">
+                    {new Date(faq?.answerDate + "").toLocaleString()}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <TextEditor value={faq?.answer} readOnly />
+                  {/* <Typography variant="body1">{faq?.answer}</Typography> */}
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
     </Grid>
   );
 }
 
-function FAQInputQuestionDialog({ open, onClose }) {
+function FAQInputQuestionDialog({ open, courseId, onClose, onQuestionSubmit }) {
+  const [question, setQuestion] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
+
+  function onSubmitQuestion() {
+    if (!question) {
+      enqueueSnackbar("Please write a question", { variant: "warning" });
+      return;
+    }
+    CourseService.submitQuestion(courseId, question).then((response) => {
+      if (response.status == 200) {
+        enqueueSnackbar("Your question is submitted successfully", {
+          variant: "success",
+        });
+        onQuestionSubmit();
+        onClose();
+      }
+    });
+  }
   return (
     <Dialog
       open={open}
@@ -113,7 +196,7 @@ function FAQInputQuestionDialog({ open, onClose }) {
     >
       <DialogTitle>Ask a question</DialogTitle>
       <DialogContent>
-        <MUIRichTextEditor />
+        <TextEditor onChange={(value) => setQuestion(value)} />
       </DialogContent>
       <DialogActions>
         <Grid container direction="row" justifyContent="center" spacing={2}>
@@ -121,9 +204,7 @@ function FAQInputQuestionDialog({ open, onClose }) {
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => {
-                onClose();
-              }}
+              onClick={onSubmitQuestion}
             >
               Submit
             </Button>
@@ -139,7 +220,25 @@ function FAQInputQuestionDialog({ open, onClose }) {
   );
 }
 
-function FAQInputAnswerDialog({ open, onClose }) {
+function FAQInputAnswerDialog({ faq, open, onClose, onAnswerSubmit }) {
+  const [answer, setAnswer] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
+
+  function onSubmitAnswer() {
+    if (!answer) {
+      enqueueSnackbar("Please write an answer", { variant: "warning" });
+      return;
+    }
+    CourseService.submitAnswer(faq?.id, answer).then((response) => {
+      if (response.status == 200) {
+        enqueueSnackbar("Your answer is submitted successfully", {
+          variant: "success",
+        });
+        onAnswerSubmit();
+        onClose();
+      }
+    });
+  }
   return (
     <Dialog
       open={open}
@@ -151,11 +250,11 @@ function FAQInputAnswerDialog({ open, onClose }) {
       <DialogContent>
         <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Typography>Question will be here...</Typography>
+            <TextEditor value={faq?.question} readOnly />
           </Grid>
           <Divider />
           <Grid item>
-            <MUIRichTextEditor />
+            <TextEditor onChange={(value) => setAnswer(value)} />
           </Grid>
         </Grid>
       </DialogContent>
@@ -165,9 +264,7 @@ function FAQInputAnswerDialog({ open, onClose }) {
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => {
-                onClose();
-              }}
+              onClick={onSubmitAnswer}
             >
               Submit
             </Button>
@@ -177,6 +274,27 @@ function FAQInputAnswerDialog({ open, onClose }) {
               Cancel
             </Button>
           </Grid>
+        </Grid>
+      </DialogActions>
+    </Dialog>
+  );
+}
+function FAQOutputQuestionDialog({ open, faq, onClose }) {
+  return (
+    <Dialog
+      open={open}
+      TransitionComponent={SlidingUpTransition}
+      keepMounted
+      onClose={onClose}
+    >
+      <DialogContent>
+        <FAQBox faq={faq} />
+      </DialogContent>
+      <DialogActions>
+        <Grid container justifyContent="center">
+          <Button color="secondary" variant="contained" onClick={onClose}>
+            Close
+          </Button>
         </Grid>
       </DialogActions>
     </Dialog>

@@ -15,19 +15,17 @@ function CustomPagination({
 }) {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
   const indexOfLastObject = currentPage * objectsPerPage;
   const indexOfFirstObject = indexOfLastObject - objectsPerPage;
-  const currentPageObjects = children.slice(
-    indexOfFirstObject,
-    indexOfLastObject
-  );
+  const currentPageObjects = children
+    ? children.slice(indexOfFirstObject, indexOfLastObject)
+    : [];
   const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
 
   let elements;
   if (type === "one-item-per-line") {
     elements = (
-      <Grid container direction="column" xs spacing={2}>
+      <Grid container direction="column" spacing={2}>
         {currentPageObjects.map((item) => (
           <Grid item xs={12}>
             {item}
@@ -47,15 +45,11 @@ function CustomPagination({
     );
   } else if (type == "calculate-by-width") {
     elements = (
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        xs
-        spacing={2}
-      >
+      <Grid container direction="row" spacing={2} justifyContent="flex-start">
         {currentPageObjects.map((item) => (
-          <Grid item>{item}</Grid>
+          <Grid item xs={6} sm={6} md={3} lg={2}>
+            {item}
+          </Grid>
         ))}
       </Grid>
     );
@@ -70,15 +64,10 @@ function CustomPagination({
           {title}
         </Typography>
       )}
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Grid container direction="column" alignItems="center">
         {elements}
         <Pagination
-          count={Math.ceil(children.length / objectsPerPage)}
+          count={children ? Math.ceil(children.length / objectsPerPage) : 0}
           page={currentPage}
           onChange={paginate}
           color="secondary"

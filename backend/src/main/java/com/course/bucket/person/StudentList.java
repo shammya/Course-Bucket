@@ -8,7 +8,7 @@ public class StudentList {
 	 private String courseName;
 	 private String courseImage;
 	 private String courseSubtitle;
-	 ArrayList<StudentInfo> studntInfolistList;
+	 ArrayList<StudentInfo> studentInfoList;
 	 
 	 public StudentList() {
 		 
@@ -20,7 +20,7 @@ public class StudentList {
 		this.courseName = courseName;
 		this.courseImage = courseImage;
 		this.courseSubtitle = courseSubtitle;
-		this.studntInfolistList = studntInfolistList;
+		this.studentInfoList = studntInfolistList;
 	}
 
 	public String getCourseName() {
@@ -35,6 +35,14 @@ public class StudentList {
 		return courseImage;
 	}
 
+	public ArrayList<StudentInfo> getStudentInfoList() {
+		return studentInfoList;
+	}
+
+	public void setStudentInfoList(ArrayList<StudentInfo> studentInfoList) {
+		this.studentInfoList = studentInfoList;
+	}
+
 	public void setCourseImage(String courseImage) {
 		this.courseImage = courseImage;
 	}
@@ -45,14 +53,6 @@ public class StudentList {
 
 	public void setCourseSubtitle(String courseSubtitle) {
 		this.courseSubtitle = courseSubtitle;
-	}
-
-	public ArrayList<StudentInfo> getStudntInfolistList() {
-		return studntInfolistList;
-	}
-
-	public void setStudntInfolistList(ArrayList<StudentInfo> studntInfolistList) {
-		this.studntInfolistList = studntInfolistList;
 	}
 	 
 	 

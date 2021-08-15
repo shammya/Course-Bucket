@@ -61,9 +61,11 @@ public class FaqList {
 }
 
 class FaqInfo {
-	
+	private Integer id;
+	private String studentUsername;
 	private String studentName;
 	private String studentImage;
+	private String teacherUsername;
 	private String teacherName;
 	private String teacherImage;
 	private String question;
@@ -75,17 +77,27 @@ class FaqInfo {
 
 	}
 
-	public FaqInfo(String studentName, String studentImage, String teacherName, String teacherImage, String question,
+	public FaqInfo(String studentUsername, String studentName, String studentImage, String teacherUsername, String teacherName, String teacherImage, String question,
 			Date questionDate, String answer, Date answerDate) {
 		super();
+		this.studentUsername = studentUsername;
 		this.studentName = studentName;
 		this.studentImage = studentImage;
+		this.teacherUsername = teacherUsername;
 		this.teacherName = teacherName;
 		this.teacherImage = teacherImage;
 		this.question = question;
 		this.questionDate = questionDate;
 		this.answer = answer;
 		this.answerDate = answerDate;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getStudentName() {

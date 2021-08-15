@@ -82,4 +82,16 @@ export class EduStatus {
   adminId: string;
 }
 
+export class StudentInfo {
+  studentImage: string;
+  studentName: string;
+  enrolledDate: Date;
+}
+export class StudentList {
+  courseName: string;
+  courseImage: string;
+  courseSubtitle: string;
+  studentInfoList: StudentInfo[];
+}
+
 export {};

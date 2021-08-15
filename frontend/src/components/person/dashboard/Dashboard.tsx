@@ -16,26 +16,32 @@ import React, { useState } from "react";
 import { FaChalkboardTeacher, FaDollarSign, FaQq } from "react-icons/fa";
 import { Redirect, Route, Switch } from "react-router";
 import { useRouteMatch } from "react-router-dom";
-import IncomePerCourseChart from "./teacher/IncomePerCourseChart";
-import { OverviewBarChart } from "./teacher/Overview";
-import { CoursePopularityPieChart } from "./teacher/PopularityPieChart";
-import { RatingLineChart } from "./teacher/RatingLIneChart";
+import IncomePerCourseChart from "../teacher/IncomePerCourseChart";
+import { OverviewBarChart } from "../teacher/Overview";
+import { CoursePopularityPieChart } from "../teacher/PopularityPieChart";
+import { RatingLineChart } from "../teacher/RatingLIneChart";
+import { EnrolledStudentListView } from "./EnrolledStudentListView";
 
-function ContentHeader({ children }) {
+export function ContentHeader({
+  courseTitle,
+  courseSubtitle,
+  courseImage,
+  children,
+}) {
   return (
     <Card>
       <CardContent>
         <CardActionArea>
           <Grid container direction="row" wrap="nowrap">
             <Grid item>
-              <Image />
+              <img src={courseImage} />
             </Grid>
             <Grid item container direction="column">
               <Grid item>
-                <Typography variant="h5">Course title</Typography>
+                <Typography variant="h5">{courseTitle}</Typography>
               </Grid>
               <Grid item>
-                <Typography variant="body2">Course subtitle</Typography>
+                <Typography variant="body2">{courseSubtitle}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -123,13 +129,13 @@ function Dashboard() {
         <CustomPagination objectsPerPage={3}>
           {[1, 2, 3, 4, 5].map((item) => (
             <Grid item>
-              <ContentHeader>
+              {/* <ContentHeader>
                 <CustomPagination type="two-item-per-line" objectsPerPage={2}>
                   {[1, 2, 3, 4, 5].map((item) => (
                     <ReviewBox review={undefined} />
                   ))}
                 </CustomPagination>
-              </ContentHeader>
+              </ContentHeader> */}
             </Grid>
           ))}
         </CustomPagination>
@@ -143,13 +149,13 @@ function Dashboard() {
         <CustomPagination objectsPerPage={3}>
           {[1, 2, 3, 4, 5].map((item) => (
             <Grid item>
-              <ContentHeader>
+              {/* <ContentHeader>
                 <CustomPagination type="one-item-per-line" objectsPerPage={2}>
                   {[1, 2, 3, 4, 5].map((item) => (
                     <FAQBox faq={undefined} />
                   ))}
                 </CustomPagination>
-              </ContentHeader>
+              </ContentHeader> */}
             </Grid>
           ))}
         </CustomPagination>
@@ -159,39 +165,7 @@ function Dashboard() {
       label: "Student List",
       urlShort: "enrolled-student",
       icon: <FaChalkboardTeacher />,
-      content: (
-        <CustomPagination objectsPerPage={3}>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <ContentHeader>
-              <CustomPagination type="calculate-by-width">
-                {[1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 1, 1].map(
-                  (item) => (
-                    <Card>
-                      <CardActionArea>
-                        <CardMedia>
-                          <Image />
-                        </CardMedia>
-                        <CardContent>
-                          <Grid container direction="column">
-                            <Grid item>
-                              <Typography variant="h6">Student Name</Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography variant="body2">
-                                Enrolled Date
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  )
-                )}
-              </CustomPagination>
-            </ContentHeader>
-          ))}
-        </CustomPagination>
-      ),
+      content: <EnrolledStudentListView />,
     },
   ];
   const route = useRouteMatch();

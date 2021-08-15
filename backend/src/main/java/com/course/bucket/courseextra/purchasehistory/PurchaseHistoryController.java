@@ -32,6 +32,13 @@ public class PurchaseHistoryController {
 		PurchaseHistory.createNewPurchaseHistory(pdb);
 	}
 	
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/is-bought/{courseId}")
+	public boolean isBought(@PathVariable Integer courseId) {
+		return PurchaseHistory.isBought(courseId, ToolKit.getCurrentUserName());
+	}
+	
+	
 	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-purchase-student-info")
 	public ArrayList<PurchaseHistory> findPurchasedStudentInfo(){

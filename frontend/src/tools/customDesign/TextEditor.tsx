@@ -5,11 +5,13 @@ import React, { useState } from "react";
 export default function TextEditor({
   value,
   onChange,
+  readOnly = false,
 }: {
-  value: string;
-  onChange: (value: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
+  readOnly?: boolean;
 }) {
-  const [content, setContent] = useState(value);
+  const [content, setContent] = useState(value ? value : "");
   const [key, setKey] = useState(100);
   function handleBodyChange(event) {
     const rteContent = convertToRaw(event.getCurrentContent());
@@ -17,13 +19,15 @@ export default function TextEditor({
   }
   return (
     <MUIRichTextEditor
+      toolbar={!readOnly}
       key={key}
       label="Start typing here..."
       defaultValue={value}
       onChange={handleBodyChange}
+      readOnly={readOnly}
       onBlur={() => {
         console.log(content);
-        onChange(content);
+        if (onChange) onChange(content);
       }}
     />
   );

@@ -10,7 +10,7 @@ import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { FileUploader } from "tools/FileUploader";
 import AdminDashboard from "components/AdminPanel/AdminDashboard";
-import Dashboard from "components/person/Dashboard";
+import Dashboard from "components/person/dashboard/Dashboard";
 import MyCourse from "components/person/MyCourse";
 import Search from "components/search/SearchPage";
 import Auth from "layout/Auth";
