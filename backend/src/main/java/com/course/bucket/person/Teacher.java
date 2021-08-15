@@ -68,9 +68,10 @@ public class Teacher extends Person {
         String sql = "SELECT DESIGNATION_ID FROM TEACHER WHERE ID = '#'";
         ResultSet rs = DB.executeQuery(sql, username);
         try {
-            rs.next();
+            if(rs.next()) {
             if (rs.getInt("DESIGNATION_ID") != 0) {
                 designation = new Designation(rs.getInt("DESIGNATION_ID"));
+            }
             }
 //        sql = "SELECT ID FROM COURSE WHERE TEACHER_ID = '#'";
 //        ResultSet rs2 = DB.executeQuery(sql, username);

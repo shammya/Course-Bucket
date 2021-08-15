@@ -26,9 +26,10 @@ public class ReviewController {
 	
 	@PreAuthorize("hasRole('Student')")
 	@PostMapping("/add-review")
-	public void addReview(@RequestBody ReviewDb review) {
-		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
-		Review.createNewReview(review);
+	public void addReview(@RequestParam Integer courseId, @RequestParam String review) {
+		String username = ToolKit.getCurrentUserName();
+		ReviewDb rd = new ReviewDb(courseId, username, ToolKit.getCurTime(), review);
+		Review.createNewReview(rd);
 	}
 	
 
@@ -46,6 +47,14 @@ public class ReviewController {
 		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
 		String username = ToolKit.getCurrentUserName();
 		return CourseRating.getRatingByStudent(courseId, username);
+	}
+	
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/get-review-self/{courseId}")
+	public ReviewInfo getReviewSelf(@PathVariable Integer courseId) {
+		//System.out.println("\t review : "+review.getName()+" "+review.getParentName()+" "+review.getAdminId());
+		String username = ToolKit.getCurrentUserName();
+		return Review.getReviewByStudent(courseId, username);
 	}
 	
 	

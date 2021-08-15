@@ -138,11 +138,12 @@ export function CourseView() {
     });
   }
 
-  function handleReloadPublicResponse(teacherUsername: string) {
-    TeacherService.getMiniInfo(teacherUsername).then((response) => {
+  async function handleReloadPublicResponse(teacherUsername: string) {
+    await TeacherService.getMiniInfo(teacherUsername).then((response) => {
+      console.log("Teacher mini info loaded", response.data);
       setTeacherInfo(response.data);
     });
-    CourseService.courseRatingReview(courseId).then((response) => {
+    await CourseService.courseRatingReview(courseId).then((response) => {
       console.log("Course additional property fetched", response.data);
       setPublicResponse(response.data);
     });
@@ -178,7 +179,6 @@ export function CourseView() {
     let formattedDate = "";
     if (course.publishDate)
       formattedDate = format(date as Date, "hh:mm a - dd MMMM, yyyy");
-    console.log(formattedDate);
     return (
       <>
         <Grid item>
@@ -524,10 +524,14 @@ export function CourseView() {
             </Grid>
             <Grid item container>
               <ReviewSection
+                courseId={courseId}
                 reviews={
                   publicResponse?.reviews
                     ? publicResponse?.reviews[0].reviewInfos
                     : undefined
+                }
+                onReviewSubmit={() =>
+                  handleReloadPublicResponse(course?.teacherUsername)
                 }
               />
             </Grid>

@@ -9,21 +9,35 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  TextField,
   Typography,
 } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import { ReviewInfo } from "classes/Course";
-import MUIRichTextEditor from "mui-rte";
-import React, { useState } from "react";
+import { useSnackbar } from "notistack";
+import React, { useEffect, useState } from "react";
 import { SlidingUpTransition } from "tools/Tools";
+import CourseService from "../api/CourseService";
 
 export function ReviewSection({
   reviews,
+  courseId,
+  onReviewSubmit,
 }: {
   reviews?: ReviewInfo[] | undefined;
+  courseId: number;
+  onReviewSubmit: () => void;
 }) {
-  const [writeReview, setWriteReview] = useState(false);
-
+  const [reviewInputShow, setReviewInputShow] = useState(false);
+  const [reviewOutputShow, setReviewOutputShow] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const [myReview, setMyReview] = useState<ReviewInfo>();
+  useEffect(() => {
+    CourseService.reviewSelf(courseId).then((response) => {
+      console.log("my review", response.data);
+      setMyReview(response.data);
+    });
+  }, [reviews]);
   return (
     <Card style={{ width: "100%" }}>
       <CardContent>
@@ -38,14 +52,29 @@ export function ReviewSection({
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setWriteReview(true)}
+                onClick={() => {
+                  myReview
+                    ? setReviewOutputShow(true)
+                    : setReviewInputShow(true);
+                }}
               >
-                Write a review
+                {myReview ? "See your review" : "Write a review"}
               </Button>
-              <ReviewInputDialog
-                open={writeReview}
-                onClose={() => setWriteReview(false)}
-              />
+              {!myReview && (
+                <ReviewInputDialog
+                  open={reviewInputShow}
+                  courseId={courseId}
+                  onClose={() => setReviewInputShow(false)}
+                  onReviewSubmit={onReviewSubmit}
+                />
+              )}
+              {myReview && (
+                <ReviewOutputDialog
+                  open={reviewOutputShow}
+                  review={myReview}
+                  onClose={() => setReviewOutputShow(false)}
+                />
+              )}
             </Grid>
           </Grid>
           {!reviews && (
@@ -56,15 +85,13 @@ export function ReviewSection({
             </Grid>
           )}
           {reviews && (
-            <Grid item container direction="column">
+            <Grid item container direction="column" spacing={2}>
               {reviews?.map((review, index) => (
                 <Grid item container key={index}>
-                  <Grid item container>
-                    <Divider />
-                  </Grid>
-                  <Grid item container>
-                    <ReviewBox review={review} />
-                  </Grid>
+                  <Divider
+                    style={{ width: "100%", marginTop: 8, marginBottom: 16 }}
+                  />
+                  <ReviewBox review={review} />
                 </Grid>
               ))}
             </Grid>
@@ -102,7 +129,45 @@ export function ReviewBox({ review }: { review: ReviewInfo | undefined }) {
   );
 }
 
-function ReviewInputDialog({ open, onClose }) {
+function ReviewInputDialog({ open, onClose, courseId, onReviewSubmit }) {
+  const [ratingValue, setRatingValue] = useState<number>(0);
+  const [ratingDone, setRatingDone] = useState<boolean>(false);
+  const [review, setReview] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    if (courseId) {
+      CourseService.ratingSelf(courseId).then((response) => {
+        if (response.data > 0) setRatingDone(true);
+        setRatingValue(response.data);
+      });
+    }
+  }, [courseId]);
+  async function handleReviewSubmit() {
+    let error = false;
+    if (!ratingValue) {
+      error = true;
+      enqueueSnackbar("Please give a rating", { variant: "warning" });
+    }
+    if (!review) {
+      error = true;
+      enqueueSnackbar("Please give a review and submit again", {
+        variant: "warning",
+      });
+    }
+    if (error) return;
+    if (!ratingDone) {
+      await CourseService.submitRating(courseId, ratingValue).then((response) =>
+        console.log(response)
+      );
+      console.log("ratingSubmitted");
+    }
+    await CourseService.submitReview(courseId, review).then((response) =>
+      console.log(response)
+    );
+    console.log("reviewSubmitted");
+    onReviewSubmit();
+    onClose();
+  }
   return (
     <Dialog
       open={open}
@@ -123,15 +188,30 @@ function ReviewInputDialog({ open, onClose }) {
             spacing={2}
           >
             <Grid item>
-              <Typography variant="body1">Give a rating </Typography>
+              <Typography variant="body1">
+                {ratingDone ? "Your rating : " : "Give a rating : "}{" "}
+              </Typography>
             </Grid>
             <Grid item>
-              <Rating name="rating-input" />
+              <Rating
+                value={ratingValue}
+                readOnly={ratingDone}
+                name="rating-in-review-box"
+                onChange={(event, value) => setRatingValue(value as number)}
+              />
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item>
-          <MUIRichTextEditor />
+          <Grid item container>
+            <TextField
+              fullWidth
+              variant="outlined"
+              color="primary"
+              label="Write your review"
+              onBlur={(event) => setReview(event.target.value)}
+              multiline
+              rows={6}
+            />
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -140,9 +220,7 @@ function ReviewInputDialog({ open, onClose }) {
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => {
-                onClose();
-              }}
+              onClick={handleReviewSubmit}
             >
               Submit
             </Button>
@@ -152,6 +230,28 @@ function ReviewInputDialog({ open, onClose }) {
               Cancel
             </Button>
           </Grid>
+        </Grid>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+function ReviewOutputDialog({ open, review, onClose }) {
+  return (
+    <Dialog
+      open={open}
+      TransitionComponent={SlidingUpTransition}
+      keepMounted
+      onClose={onClose}
+    >
+      <DialogContent>
+        <ReviewBox review={review} />
+      </DialogContent>
+      <DialogActions>
+        <Grid container justifyContent="center">
+          <Button color="secondary" variant="contained" onClick={onClose}>
+            Close
+          </Button>
         </Grid>
       </DialogActions>
     </Dialog>

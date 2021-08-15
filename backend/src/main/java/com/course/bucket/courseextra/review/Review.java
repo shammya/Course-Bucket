@@ -301,13 +301,16 @@ public class Review {
 		ResultSet crs = DB.executeQuery(sql, courseId.toString());
 		try {
 				crs.next();
-				ResultSet rvrs = DB.executeQuery("select * from review where course_id = #",courseId.toString());
+				ResultSet rvrs = DB.executeQuery("select * from review where course_id = # order by time desc",courseId.toString());
 
 				ArrayList<ReviewInfo> reviewInfos = new ArrayList<>();
 				while (rvrs.next()) {
 					ResultSet srs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
-									+ "where p.photo_id = f.id and p.id = '#'",rvrs.getString("student_id"));
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, content \n"
+							+ "from person p \n"
+							+ "left outer join files f \n"
+							+ "on p.photo_id = f.id \n"
+							+ "where p.id = '#'",rvrs.getString("student_id"));
 					ResultSet rtrs = DB.executeQuery("select value from rating where course_id = #",courseId.toString());
 					srs.next();
 					rtrs.next();
@@ -329,6 +332,31 @@ public class Review {
 		return null;
 
 	}
+	
+
+    public static ReviewInfo getReviewByStudent(Integer courseId, String username) {
+    	ResultSet reviewRS = DB.executeQuery("SELECT * FROM REVIEW WHERE COURSE_ID = # AND STUDENT_ID = '#'", courseId.toString(), username);
+        ResultSet ratingRS = DB.executeQuery("SELECT VALUE FROM RATING WHERE COURSE_ID=# AND STUDENT_ID = '#'", courseId.toString(), username);
+    	ResultSet personRS = DB.executeQuery(""
+    			+ "select concat(concat(p.first_name , ' '),p.last_name) as full_name, content \n"
+    			+ "from person p \n"
+    			+ "left outer join files f \n"
+    			+ "on p.photo_id = f.id \n"
+    			+ "where p.id = '#'", username);
+        ReviewInfo info = null;
+            try {
+				if(reviewRS.next() && ratingRS.next() && personRS.next()){
+					info = new ReviewInfo(personRS.getString("full_name"), personRS.getString("content"), reviewRS.getDate("TIME"), ratingRS.getInt("VALUE"), reviewRS.getString("TEXT"));
+				}
+	            reviewRS.close();
+	            ratingRS.close();
+	            personRS.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        return info;
+    }
 	
 	public static void createNewReview(ReviewDb review) {
 		Integer id = DB.generateId("review");

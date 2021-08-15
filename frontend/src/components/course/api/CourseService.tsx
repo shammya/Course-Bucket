@@ -76,11 +76,24 @@ class CourseService {
       authHeaders()
     );
   }
+  reviewSelf(courseId: number) {
+    return axios.get(
+      GLOBAL.HOST + `/get-review-self/${courseId}`,
+      authHeaders()
+    );
+  }
+
   submitRating(courseId: number, ratingValue: number) {
     let formData = new FormData();
     formData.append("courseId", courseId + "");
     formData.append("ratingValue", ratingValue + "");
     return axios.post(GLOBAL.HOST + `/add-rating`, formData, authHeaders());
+  }
+  submitReview(courseId: number, review: string) {
+    let formData = new FormData();
+    formData.append("courseId", courseId + "");
+    formData.append("review", review);
+    return axios.post(GLOBAL.HOST + `/add-review`, formData, authHeaders());
   }
   // } else {
   //   course.weeks.forEach((week) => {
