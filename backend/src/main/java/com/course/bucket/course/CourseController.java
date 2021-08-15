@@ -34,7 +34,7 @@ public class CourseController {
 	@PostMapping("/add-course")
 	public void addCourse(@RequestBody Course course) {
 		//System.out.println("\t course : "+course.getName()+" "+course.getParentName()+" "+course.getAdminId());
-		Course.createNewCourse("newTeacher", course);
+		Course.createNewCourse(ToolKit.getCurrentUserName(), course);
 	}
 
 	@PutMapping("/update-course")
@@ -53,8 +53,7 @@ public class CourseController {
 	}
 	@GetMapping("/get-course-to-show/{id}")
 	public Course getCourseToShow(@PathVariable Integer id) {
-		Course course = new Course(id);
-		return course;
+		return Course.getCourseAfterAuthentication(ToolKit.getCurrentUserName(),id);
 	}
 	@GetMapping("/get-course-public-response/{courseId}")
 	public PublicResponse getCoursePublicResponse(@PathVariable Integer courseId) {

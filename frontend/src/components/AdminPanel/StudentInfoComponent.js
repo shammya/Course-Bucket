@@ -3,12 +3,15 @@ import { Grid } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import React, { useEffect } from 'react';
 import InfoService from '../AdminPanel/api/InfoService.js';
+import { useHistory } from "react-router";
+import Avatar from '@material-ui/core/Avatar';
 
 
 function StudentInfoComponent(props) {
     const { useState } = React;
 
     const [columns, setColumns] = useState([
+        { title: 'Avatar', field: 'avatar', editable: false, render: item => <Avatar src={item.content} alt="" border="3" height="100" width="100" /> },
         { title: 'Username', field: 'username', editable: false },
         { title: 'Course Owned', field: 'courseOwned', editable: false },
         { title: 'Money Spent', field: 'moneySpent', editable: false }
@@ -29,6 +32,7 @@ function StudentInfoComponent(props) {
     }
 
     useEffect(() => { getStudentInfo() }, []);
+    const history = useHistory();
 
     return (
         <Grid container>
@@ -51,6 +55,16 @@ function StudentInfoComponent(props) {
                     options={{
                         actionsColumnIndex: -1, addRowPosition: "first", pageSize: 10
                     }}
+                    actions={[
+                        {
+                            icon: 'visibility',
+                            tooltip: 'see student',
+                            onClick: (event, rowData) => {
+                                console.log(rowData)
+                                history.push(`/profile/${rowData.username}`)
+                            }
+                        }
+                    ]}
                 />
             </Grid>
         </Grid>

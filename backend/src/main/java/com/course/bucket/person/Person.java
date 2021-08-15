@@ -548,12 +548,12 @@ public class Person {
 	
 	public static void notificationRegistration(String userId) {
 		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values(# ,'admin','#',# , 'F', NULL,'REGISTRATION'";
+		String sql = "insert into notification values(# ,'admin','#',# , 'F', NULL,'REGISTRATION')";
 		DB.execute(sql, id.toString(), userId, ToolKit.JDateToDDate(new Date()));
 	}
 
 	public static void approveCourse(Integer courseId) {
-		DB.execute("update course set is_approved = 'T' where id = ", courseId.toString());
+		DB.execute("update course set is_approved = 'T' where id = #", courseId.toString());
 		notificationCourseUpload(courseId);
 	}
 	public static void notificationCourseUpload(Integer courseId) {
@@ -566,9 +566,8 @@ public class Person {
 			rs = DB.executeQuery(sql, teacherId);
 			while (rs.next()) {
 				Integer id = DB.generateId("notification");
-				sql = "insert into notification values(# ,'#','#',# , 'F', #,'COURSEUPLOAD'";
-				DB.execute(sql, id.toString(), rs.getString("student_id"), teacherId, ToolKit.JDateToDDate(new Date()),
-						courseId.toString());
+				sql = "insert into notification values(# ,'#','#',# , 'F', #,'COURSEUPLOAD')";
+				DB.execute(sql, id.toString(), rs.getString("student_id"), teacherId, ToolKit.JDateToDDate(new Date()),courseId.toString());
 			}
 			rs.close();
 		} catch (SQLException e1) {

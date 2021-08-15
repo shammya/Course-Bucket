@@ -6,14 +6,17 @@ public class TeacherInfoAdmin {
 	private Integer courseCreated;
 	private Integer coursePurchased;
 	private Double totalIncome;
+	private String content;
 	
 	
-	public TeacherInfoAdmin(String username, Integer courseCreated, Integer coursePurchased, Double totalIncome) {
+	public TeacherInfoAdmin(String username, Integer courseCreated, Integer coursePurchased, Double totalIncome,
+			String content) {
 		super();
 		this.username = username;
 		this.courseCreated = courseCreated;
 		this.coursePurchased = coursePurchased;
 		this.totalIncome = totalIncome;
+		this.content = content;
 	}
 
 
@@ -55,6 +58,20 @@ public class TeacherInfoAdmin {
 	public void setTotalIncome(Double totalIncome) {
 		this.totalIncome = totalIncome;
 	}
+
+
+	public String getContent() {
+		return content;
+	}
+
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	
+	
+	
 	
 	
 	

@@ -171,6 +171,7 @@ public class ToolKit {
     
     public static String getCurrentUserName()
     {
+    	if(SecurityContextHolder.getContext().getAuthentication() == null) return "";
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return userDetails.getUsername();
 		

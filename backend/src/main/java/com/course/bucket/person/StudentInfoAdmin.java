@@ -6,13 +6,15 @@ public class StudentInfoAdmin {
 	private String username;
 	private Integer courseOwned;
 	private Double moneySpent;
+	private String content;
 	
 	
-	public StudentInfoAdmin(String username, Integer courseOwned, Double moneySpent) {
+	public StudentInfoAdmin(String username, Integer courseOwned, Double moneySpent, String content) {
 		super();
 		this.username = username;
 		this.courseOwned = courseOwned;
 		this.moneySpent = moneySpent;
+		this.content = content;
 	}
 
 
@@ -44,6 +46,19 @@ public class StudentInfoAdmin {
 	public void setMoneySpent(Double moneySpent) {
 		this.moneySpent = moneySpent;
 	}
+
+
+	public String getContent() {
+		return content;
+	}
+
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	
+	
 	
 	
 	
