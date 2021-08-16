@@ -1,4 +1,3 @@
-import { Grid } from "@material-ui/core";
 import { ReviewList } from "classes/Course";
 import AuthService from "components/auth/api/AuthService";
 import { ReviewBox } from "components/course/courseView/Review";
@@ -34,6 +33,7 @@ export function ReviewListView() {
     <CustomPagination objectsPerPage={3}>
       {reviewsWithCourses?.map((reviewsWithCourse) => (
         <ContentHeader
+          key={reviewsWithCourse.courseId}
           courseId={reviewsWithCourse.courseId}
           courseTitle={reviewsWithCourse.courseTitle}
           courseSubtitle={reviewsWithCourse.courseSubtitle}
@@ -41,7 +41,7 @@ export function ReviewListView() {
         >
           <CustomPagination objectsPerPage={3} divider>
             {reviewsWithCourse?.reviewInfos?.map((review) => (
-              <ReviewBox review={review} />
+              <ReviewBox review={review} key={review.id} />
             ))}
           </CustomPagination>
         </ContentHeader>

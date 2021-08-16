@@ -42,10 +42,7 @@ export function RatingLineChart() {
   const [dataSource, setDataSource] = useState([]);
   useEffect(() => {
     axios
-      .get(
-        GLOBAL.HOST + "/get-cumulative-rating-teacher/mehediT",
-        authHeaders()
-      )
+      .get(GLOBAL.HOST + "/get-cumulative-rating-teacher", authHeaders())
       .then((response) => {
         console.log(response);
         setDataSource(

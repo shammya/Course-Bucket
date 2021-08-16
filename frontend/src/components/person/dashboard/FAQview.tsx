@@ -33,6 +33,7 @@ export function FaqView() {
     <CustomPagination objectsPerPage={3}>
       {faqWithCourses?.map((faqWithCourse) => (
         <ContentHeader
+          key={faqWithCourse.courseId}
           courseId={faqWithCourse.courseId}
           courseTitle={faqWithCourse.courseTitle}
           courseSubtitle={faqWithCourse.courseSubtitle}
@@ -40,7 +41,7 @@ export function FaqView() {
         >
           <CustomPagination objectsPerPage={3} divider>
             {faqWithCourse?.faqInfos?.map((faq) => (
-              <FAQBox faq={faq} onSubmit={handleLoadData} />
+              <FAQBox faq={faq} onSubmit={handleLoadData} key={faq.id} />
             ))}
           </CustomPagination>
         </ContentHeader>

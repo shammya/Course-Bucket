@@ -20,42 +20,9 @@ import LanguageComponent from "./LanguageComponent";
 import PopularCategoryChart from "./charts/PopularCategoryChart";
 import { PopularCourseAdminChart } from "./charts/PopurlarCourseAdminChart";
 import CourseApprovalComponent from "./CourseApprovalComponent";
-import TeacherInfoComponent from './TeacherInfoComponent';
-import StudentInfoComponent from './StudentInfoComponent';
-
-function ContentHeader({ children }) {
-  return (
-    <Card>
-      <CardContent>
-        <CardActionArea>
-          <Grid container direction="row" wrap="nowrap">
-            <Grid item>
-              <Image />
-            </Grid>
-            <Grid item container direction="column">
-              <Grid item>
-                <Typography variant="h5">Course title</Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="body2">Course subtitle</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </CardActionArea>
-        {children}
-      </CardContent>
-    </Card>
-  );
-}
-
-interface PurchaseHistory {
-  image: JSX.Element;
-  courseName: string;
-  studentImage: JSX.Element;
-  studentName: string;
-  time: Date;
-  amount: number;
-}
+import TeacherInfoComponent from "./TeacherInfoComponent";
+import StudentInfoComponent from "./StudentInfoComponent";
+import { Cards } from "./Cards";
 
 function AdminDashboard() {
   const [columns, setColumns] = useState([
@@ -89,98 +56,17 @@ function AdminDashboard() {
       icon: <Looks />,
       content: (
         <Grid container xs spacing={2}>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Visitors
-                </Typography>
-                <Typography align="center" variant="h4">
-                  170
-                </Typography>
-              </CardContent>
-            </Card>
+          <Grid item>
+            <Cards />
           </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  New Course
-                </Typography>
-                <Typography align="center" variant="h4">
-                  17
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Total Course
-                </Typography>
-                <Typography align="center" variant="h4">
-                  170
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  New User
-                </Typography>
-                <Typography align="center" variant="h4">
-                  2
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Total User
-                </Typography>
-                <Typography align="center" variant="h4">
-                  240
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Today Income
-                </Typography>
-                <Typography align="center" variant="h4">
-                  $345
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h6">
-                  Total Income
-                </Typography>
-                <Typography align="center" variant="h4">
-                  $2404
-                </Typography>
-              </CardContent>
-            </Card>
+          <Grid item xs={12}>
+            <UserRegistrationChart />
           </Grid>
           <Grid item xs={12} md={6}>
             <PopularCourseAdminChart />
           </Grid>
           <Grid item xs={12} md={6}>
             <PopularCategoryChart />
-          </Grid>
-          <Grid item xs={12}>
-            <UserRegistrationChart />
           </Grid>
         </Grid>
       ),

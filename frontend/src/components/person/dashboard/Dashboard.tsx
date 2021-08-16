@@ -74,7 +74,7 @@ function Dashboard() {
       urlShort: "overview",
       icon: <Looks />,
       content: (
-        <Grid container xs spacing={2}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <OverviewBarChart />
           </Grid>
@@ -120,7 +120,11 @@ function Dashboard() {
     <>
       <Switch>
         {objects.map((item, idx) => (
-          <Route exact path={`${route.path}/${item.urlShort}`}>
+          <Route
+            exact
+            path={`${route.path}/${item.urlShort}`}
+            key={item.urlShort}
+          >
             <DrawerLayout objects={objects} defaultTabIndex={idx} />
           </Route>
         ))}

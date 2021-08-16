@@ -106,6 +106,8 @@ class PurchaseHistoryInfo{
 
 	public void setStudentImage(String studentImage) {
 		this.studentImage = studentImage;
+		this.studentImage = studentImage;
+		this.studentImage = studentImage;
 	}
 
 	public Date getPurchaaseTime() {

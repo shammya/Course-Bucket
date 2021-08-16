@@ -126,6 +126,19 @@ export class PurchaseHistory {
   time: Date;
   cost: number;
 }
+
+export class PurchaseHistoryList {
+  coursetitle: string;
+  coursesubtitle: string;
+  courseImage: string;
+  purchaseHistoryInfos: PurchaseHistoryInfo[];
+}
+export class PurchaseHistoryInfo {
+  studentName: string;
+  studentImage: string;
+  purchaseTime: Date;
+  purchaseAmount: number;
+}
 // export class CourseLearning {
 //   learnings: Array<string>;
 // }

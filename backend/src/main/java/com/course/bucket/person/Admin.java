@@ -69,6 +69,39 @@ public class Admin extends Person{
 		return newUsers;
 	}
     
+    public static ArrayList<NewUser> getNewUserCount(){
+    	ArrayList<NewUser> array = new ArrayList();
+    	ResultSet rs = DB.executeQuery(""
+    			+ "\r\n"
+    			+ "select signup_date \"date\",\r\n"
+    			+ "    nvl((\r\n"
+    			+ "       select count(*)\r\n"
+    			+ "        from person p, student s\r\n"
+    			+ "        where p.id = s.id \r\n"
+    			+ "        group by p.signup_date\r\n"
+    			+ "        having p.signup_date = pp.signup_date --TO_DATE('23-NOV-20','dd-MON-yy') \r\n"
+    			+ "    ),0) \"student count\", \r\n"
+    			+ "    nvl((\r\n"
+    			+ "        select count(*)\r\n"
+    			+ "        from person pe, teacher t\r\n"
+    			+ "        where pe.id = t.id \r\n"
+    			+ "        group by pe.signup_date\r\n"
+    			+ "        having pe.signup_date = pp.signup_date --TO_DATE('23-NOV-20','dd-MON-yy') \r\n"
+    			+ "    ),0) \"teacher count\"\r\n"
+    			+ "from person pp\r\n"
+    			+ "group by signup_date\r\n"
+    			+ "order by signup_date asc");
+    	try {
+			while(rs.next()) {
+				array.add(new NewUser(rs.getDate("date"), rs.getInt("student count"), rs.getInt("teacher count")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return array;
+    }
+    
     
     public static ShowCard showCardAdmin() {
 		ShowCard showCard;
@@ -141,13 +174,13 @@ public class Admin extends Person{
 				date = ToolKit.localDateToDate(ldate);
 				String dDate = ToolKit.JDateToDDate(date);
 				String sql1 = "SELECT c.id,(\r\n"
-						+ "SELECT nvl(count(*),0) FROM purchase_history ph WHERE time=# AND c.id=ph.course_id) AS enr_std_count,(\r\n"
-						+ "SELECT nvl(count(*),0) FROM review rv WHERE time=# AND c.id=rv.course_id) AS review_count,(\r\n"
-						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=1 AND c.id=rt.course_id) AS one,(\r\n"
-						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=2 AND c.id=rt.course_id) AS two,(\r\n"
-						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=3 AND c.id=rt.course_id) AS three,(\r\n"
-						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=4 AND c.id=rt.course_id) AS four,(\r\n"
-						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=# AND value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.id= #";
+						+ "SELECT nvl(count(*),0) FROM purchase_history ph WHERE time=trunc(#) AND c.id=ph.course_id) AS enr_std_count,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM review rv WHERE time=trunc(#) AND c.id=rv.course_id) AS review_count,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=trunc(#) AND value=1 AND c.id=rt.course_id) AS one,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=trunc(#) AND value=2 AND c.id=rt.course_id) AS two,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=trunc(#) AND value=3 AND c.id=rt.course_id) AS three,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=trunc(#) AND value=4 AND c.id=rt.course_id) AS four,(\r\n"
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE time=trunc(#) AND value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.id= #";
 				ResultSet rs1 = DB.executeQuery(sql1, dDate, dDate, dDate, dDate, dDate, dDate, dDate, id.toString());
 				rs1.next();
 				overviewContents.add(new OverviewContent(date, rs1.getInt("enr_std_count"), rs1.getInt("review_count"),

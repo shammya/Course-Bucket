@@ -64,10 +64,10 @@ public class TeacherController {
 		return Teacher.getCreatedCourses(username);
 	}
 	
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-cumulative-rating-teacher/{teacherUsername}")
-	public Vector<CumulativeRating> getCumulativeRatingTeacher(@PathVariable String teacherUsername){
-		return Teacher.getCumulativeRatingTeacher(teacherUsername);
+	@PreAuthorize("hasRole('Teacher')")
+	@GetMapping("/get-cumulative-rating-teacher")
+	public Vector<CumulativeRating> getCumulativeRatingTeacher(){
+		return Teacher.getCumulativeRatingTeacher(ToolKit.getCurrentUserName());
 	}
 	
 	@PreAuthorize("hasRole('Teacher')")

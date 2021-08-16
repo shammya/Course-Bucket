@@ -11,89 +11,14 @@ import PieChart, {
   Legend,
   Tooltip,
 } from "devextreme-react/pie-chart";
+import Popover from "devextreme-react/popover";
 import React, { useEffect, useState } from "react";
 
 export function CoursePopularityPieChart() {
-  // const data = [
-  //   {
-  //     title: "Course name 1",
-  //     rating: 20,
-  //     ratingValue: 4.78,
-  //     review: 100,
-  //     purchase: 10,
-  //   },
-  //   {
-  //     title: "Course name 2",
-  //     rating: 2,
-  //     ratingValue: 5,
-  //     review: 12,
-  //     purchase: 192,
-  //   },
-  //   {
-  //     title: "Course name 3",
-  //     rating: 10,
-  //     ratingValue: 4.98,
-  //     review: 50,
-  //     purchase: 230,
-  //   },
-  //   {
-  //     title: "Course name 4",
-  //     rating: 20,
-  //     ratingValue: 4.76,
-  //     review: 20,
-  //     purchase: 12,
-  //   },
-  //   {
-  //     title: "Course name 5",
-  //     rating: 100,
-  //     ratingValue: 3.99,
-  //     review: 25,
-  //     purchase: 0,
-  //   },
-  //   {
-  //     title: "Course name 6",
-  //     rating: 2,
-  //     ratingValue: 1.2,
-  //     review: 43,
-  //     purchase: 30,
-  //   },
-  //   {
-  //     title: "Course name 7",
-  //     rating: 15,
-  //     ratingValue: 2.1,
-  //     review: 53,
-  //     purchase: 40,
-  //   },
-  //   {
-  //     title: "Course name 8",
-  //     rating: 22,
-  //     ratingValue: 3.2,
-  //     review: 23,
-  //     purchase: 55,
-  //   },
-  //   {
-  //     title: "Course name 9",
-  //     rating: 1,
-  //     ratingValue: 5,
-  //     review: 100,
-  //     purchase: 67,
-  //   },
-  // ];
-  // const dataSource = data.map((item) => ({
-  //   ...item,
-  //   value:
-  //     item.rating * item.ratingValue * 0.35 +
-  //     item.review * 0.15 +
-  //     item.purchase * 0.5,
-  // }));
-
   const [dataSource, setDataSource] = useState([]);
   useEffect(() => {
     axios
-      .get(
-        GLOBAL.HOST + "/get-course-popularity-teacher/mehediT",
-        authHeaders()
-      )
+      .get(GLOBAL.HOST + "/get-course-popularity-teacher", authHeaders())
       .then((response) => {
         console.log(response);
         setDataSource(
@@ -103,6 +28,11 @@ export function CoursePopularityPieChart() {
             ratingCount: item.ratingCount,
             enrolledStudentCount: item.enrolledStudentCount,
             reviewCount: item.reviewCount,
+            value:
+              item.rating * 40 +
+              item.ratingCount * 10 +
+              item.enrolledStudentCount * 30 +
+              item.reviewCount * 20,
           }))
         );
       });
@@ -110,6 +40,7 @@ export function CoursePopularityPieChart() {
 
   function customizeTooltip(arg) {
     const data = arg.point.data;
+    console.log(arg);
     return (
       <Grid container direction="column">
         <Typography variant="h6">{data.title}</Typography>

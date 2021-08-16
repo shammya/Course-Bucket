@@ -1,4 +1,7 @@
 import { Card, CardContent, Grid, MenuItem, Select } from "@material-ui/core";
+import axios from "axios";
+import { authHeaders } from "components/auth/api/AuthService";
+import { GLOBAL } from "Configure";
 import {
   ArgumentAxis,
   Border,
@@ -13,101 +16,189 @@ import {
   ValueAxis,
   ZoomAndPan,
 } from "devextreme-react/chart";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import TeacherService from "../api/TeacherService";
 
 interface ISource {
-  state: string;
-  enrolledStudent: number;
-  review: number;
-  rating1: number;
-  rating2: number;
-  rating3: number;
-  rating4: number;
-  rating5: number;
+  date: Date | string;
+  enrStdCount: number;
+  reviewCount: number;
+  oneStar: number;
+  twoStar: number;
+  threeStar: number;
+  fourStar: number;
+  fiveStar: number;
 }
 const viewTypeArray = ["Last 7 days", "Last 30 days", "Last 1 year"];
 interface ICourse {
   id: number;
-  name: string;
+  title: string;
+  image?: string;
 }
-const courseArray: Array<ICourse> = [
-  { id: 1, name: "Course name 1" },
-  { id: 2, name: "Course name 2" },
-  { id: 3, name: "Course name 3" },
-  { id: 4, name: "Course name 4" },
-  { id: 5, name: "Course name 5" },
-  { id: 6, name: "Course name 6" },
-  { id: 7, name: "Course name 7" },
-];
-export function OverviewBarChart() {
-  const [viewType, setViewType] = useState(viewTypeArray[1]);
-  const [course, setCourse] = useState<ICourse>(courseArray[0]);
 
-  const dataSource: Array<ISource> = [];
-  function generateRandomData() {
-    let n =
-      viewType == viewTypeArray[0]
-        ? 7
-        : viewType === viewTypeArray[1]
-        ? 30
-        : 12;
-    for (let i = 0; i < n; i++) {
-      let data;
-      if (viewType == viewTypeArray[0]) {
-        let date = new Date().setDate(new Date().getDate() - (n - 1 - i));
-        data = new Date(date).toLocaleString("default", { weekday: "short" });
-      } else if (viewType == viewTypeArray[1]) {
-        let date = new Date().setDate(new Date().getDate() - (n - 1 - i));
-        data = new Date(date).toLocaleString("default", {
-          day: "numeric",
-          month: "long",
-        });
-      } else if (viewType == viewTypeArray[2]) {
-        let date = new Date().setMonth(new Date().getMonth() - (n - 1 - i));
-        data = new Date(date).toLocaleString("default", {
-          month: "short",
-          year: "numeric",
-        });
+function convertToDay(date: Date) {
+  return date.toLocaleString("default", { weekday: "short" });
+}
+function convertToDate(date: Date) {
+  return date.toLocaleString("default", {
+    day: "numeric",
+    month: "long",
+  });
+}
+function convertToMonth(date: Date) {
+  return date.toLocaleString("default", {
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function generateArrayByDay(
+  source: ISource[],
+  day: number,
+  format: (item: Date) => string
+) {
+  let array: ISource[] = [...source];
+  array = array.slice(-day, array.length - 1);
+  console.log(array);
+  for (let i = 0; i < day; i++) {
+    let date = new Date(
+      new Date().setDate(new Date().getDate() - (day - 1 - i))
+    );
+    date.setHours(0, 0, 0, 0);
+    let data = source.filter(
+      (item) => (item.date as Date).getTime() == date.getTime()
+    );
+    console.log(source[0].date, new Date(source[0].date), date, data);
+    array.push({
+      date: format(date), //new Date(date).toLocaleString("default", { weekday: "short" }),
+      enrStdCount: data.length ? data[0].enrStdCount : 0,
+      reviewCount: data.length ? data[0].reviewCount : 0,
+      oneStar: data.length ? data[0].oneStar : 0,
+      twoStar: data.length ? data[0].twoStar : 0,
+      threeStar: data.length ? data[0].threeStar : 0,
+      fourStar: data.length ? data[0].fourStar : 0,
+      fiveStar: data.length ? data[0].fiveStar : 0,
+    });
+  }
+  // console.log(day + " days", array);
+  return array;
+}
+function generateArrayByMonth(
+  source: ISource[],
+  month: number,
+  format: (item: Date) => string
+) {
+  let array: ISource[] = [];
+  for (let i = 0; i < month; i++) {
+    let date = new Date(
+      new Date().setMonth(new Date().getMonth() - (month - 1 - i))
+    );
+    console.log(date);
+    date.setHours(0, 0, 0, 0);
+    let enrStdCount: number = 0;
+    let reviewCount: number = 0;
+    let oneStar: number = 0;
+    let twoStar: number = 0;
+    let threeStar: number = 0;
+    let fourStar: number = 0;
+    let fiveStar: number = 0;
+    let data = source.map((item) => {
+      if ((item.date as Date).getMonth() == date.getMonth()) {
+        enrStdCount += item.enrStdCount;
+        reviewCount += item.reviewCount;
+        oneStar += item.oneStar;
+        twoStar += item.twoStar;
+        threeStar += item.threeStar;
+        fourStar += item.fourStar;
+        fiveStar += item.fiveStar;
       }
-      console.log(data);
-      dataSource.push({
-        state: data,
-        enrolledStudent: 10,
-        review: 20,
-        rating1: 3,
-        rating2: 4,
-        rating3: 0,
-        rating4: 10,
-        rating5: 2,
+    });
+    console.log(date, data);
+    array.push({
+      date: format(date), //new Date(date).toLocaleString("default", { weekday: "short" }),
+      enrStdCount: enrStdCount,
+      reviewCount: reviewCount,
+      oneStar: oneStar,
+      twoStar: twoStar,
+      threeStar: threeStar,
+      fourStar: fourStar,
+      fiveStar: fiveStar,
+    });
+  }
+  console.log(month + " days", array);
+  return array;
+}
+
+export function OverviewBarChart() {
+  const [viewType, setViewType] = useState(viewTypeArray[0]);
+  const [courseArray, setCourseArray] = useState<ICourse[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<ICourse>({
+    id: 0,
+    title: "--Select--",
+  });
+  const [dataSource, setDataSource] = useState<ISource[]>([]);
+  const [temp, setTemp] = useState<ISource[]>([]);
+  useEffect(() => {
+    loadCourseName();
+  }, []);
+  async function loadCourseName() {
+    await TeacherService.getCreateCourse().then((response) => {
+      console.log("create course fetched", response.data);
+      let array = response.data.map((item) => ({
+        id: item.id,
+        title: item.title,
+        image: item.coverContent,
+      }));
+      setCourseArray(array);
+      handleCourseChange(array[0]);
+    });
+  }
+  async function handleCourseChange(course) {
+    await setSelectedCourse(course);
+    await axios
+      .get(GLOBAL.HOST + `/get-course-overview/${1}`, authHeaders())
+      .then((response) => {
+        console.log("overview fetch for course " + course.title, response.data);
+        let source = response.data.overviewContents.map((item) => ({
+          ...item,
+          date: new Date(item.date),
+        }));
+        setDataSource(source);
+        handleViewTypeChange(source, viewTypeArray[0]);
       });
+  }
+  function handleViewTypeChange(source: ISource[], type) {
+    console.log(type);
+    setViewType(type);
+    switch (type) {
+      case viewTypeArray[0]:
+        setTemp(generateArrayByDay(source, 7, convertToDay));
+        break;
+      case viewTypeArray[1]:
+        setTemp(generateArrayByDay(source, 30, convertToDate));
+        break;
+      case viewTypeArray[2]:
+        setTemp(generateArrayByMonth(source, 12, convertToMonth));
+        break;
     }
   }
-  generateRandomData();
 
-  //   <SelectBox
-  //   dataSource={viewTypeArray}
-  //   defaultValue={viewTypeArray[1]}
-  //   onSelectionChanged={(event) =>
-  //     setViewType(event.selectedItem as string)
-  //   }
-  // />
   return (
     <Card>
       <CardContent style={{ textAlign: "center" }}>
-        <Chart title="Overview" dataSource={dataSource}>
-          <CommonSeriesSettings argumentField="state" type="stackedBar" />
+        <Chart title="Overview" dataSource={temp}>
+          <CommonSeriesSettings argumentField="date" type="stackedBar" />
           <Series
-            valueField="enrolledStudent"
+            valueField="enrStdCount"
             name="Enrolled Student"
             stack="Enrolled Student"
           />
-          {console.log("rendering")}
-          <Series valueField="review" name="Review" stack="Review" />
-          <Series valueField="rating1" name="1 star" stack="Rating" />
-          <Series valueField="rating2" name="2 star" stack="Rating" />
-          <Series valueField="rating3" name="3 star" stack="Rating" />
-          <Series valueField="rating4" name="4 star" stack="Rating" />
-          <Series valueField="rating5" name="5 star" stack="Rating" />
+          <Series valueField="reviewCount" name="Review" stack="Review" />
+          <Series valueField="oneStar" name="1 star" stack="Rating" />
+          <Series valueField="twoStar" name="2 star" stack="Rating" />
+          <Series valueField="threeStar" name="3 star" stack="Rating" />
+          <Series valueField="fourStar" name="4 star" stack="Rating" />
+          <Series valueField="fiveStar" name="5 star" stack="Rating" />
           <ValueAxis>
             <Title text="Student number" />
           </ValueAxis>
@@ -126,11 +217,13 @@ export function OverviewBarChart() {
           <ScrollBar visible={true} position="bottom" />
           <ZoomAndPan argumentAxis="both" />
         </Chart>
-        <Grid container direction="row" justifyContent="center" xs spacing={1}>
+        <Grid container direction="row" justifyContent="center" spacing={1}>
           <Grid item>
             <Select
               value={viewType}
-              onChange={(event) => setViewType(event.target.value as string)}
+              onChange={(event) =>
+                handleViewTypeChange(dataSource, event.target.value as string)
+              }
               variant="outlined"
             >
               {viewTypeArray.map((item) => (
@@ -146,8 +239,8 @@ export function OverviewBarChart() {
           </Grid>
           <Grid item>
             <Select
-              value={course}
-              onChange={(event) => setCourse(event.target.value as ICourse)}
+              value={selectedCourse}
+              onChange={(event) => handleCourseChange(event.target.value)}
               variant="outlined"
             >
               {courseArray.map((item) => (
@@ -156,7 +249,17 @@ export function OverviewBarChart() {
                   // @ts-ignore
                   value={item}
                 >
-                  {item.name}
+                  <Grid
+                    container
+                    direction="row"
+                    spacing={1}
+                    justifyContent="flex-start"
+                  >
+                    <Grid item>
+                      <img src={item.image} style={{ width: 40, height: 25 }} />
+                    </Grid>
+                    <Grid item>{item.title}</Grid>
+                  </Grid>
                 </MenuItem>
               ))}
             </Select>

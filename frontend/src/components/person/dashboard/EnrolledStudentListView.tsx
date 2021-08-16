@@ -28,6 +28,7 @@ export function EnrolledStudentListView() {
     <CustomPagination objectsPerPage={3}>
       {studentsWithCourses?.map((studentsWithCourse) => (
         <ContentHeader
+          key={studentsWithCourse.courseId}
           courseId={studentsWithCourse.courseId}
           courseTitle={studentsWithCourse.courseName}
           courseSubtitle={studentsWithCourse.courseSubtitle}
@@ -35,7 +36,7 @@ export function EnrolledStudentListView() {
         >
           <CustomPagination type="calculate-by-width">
             {studentsWithCourse?.studentInfoList?.map((student) => (
-              <Card>
+              <Card key={student.studentUsername}>
                 <CardActionArea
                   onClick={(event) =>
                     history.push(`/profile/${student.studentUsername}`)

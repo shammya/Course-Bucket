@@ -1,45 +1,15 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-} from "@material-ui/core";
-import { StudentList } from "classes/Person";
+import { PurchaseHistory, PurchaseHistoryList } from "classes/Course";
+import AuthService from "components/auth/api/AuthService";
+import { ReviewBox } from "components/course/courseView/Review";
 import CustomPagination from "layout/Pagination";
+import MaterialTable from "material-table";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import StudentService from "../api/StudentService";
 import TeacherService from "../api/TeacherService";
 import { ContentHeader } from "./Dashboard";
-import AuthService from "components/auth/api/AuthService";
-import StudentService from "../api/StudentService";
-import { PurchaseHistory, ReviewList } from "classes/Course";
-import { ReviewBox } from "components/course/courseView/Review";
-import MaterialTable from "material-table";
 
-export function PurchaseHistoryListView() {
-  const history = useHistory();
-  const [purchaseHistories, setPurchaseHistories] = useState<PurchaseHistory[]>(
-    []
-  );
-  useEffect(() => {
-    switch (AuthService.getCurrentAccountType()) {
-      case "Student":
-        StudentService.getPurchaseHistory().then((response) => {
-          console.log("Purchase History List", response.data);
-          setPurchaseHistories(response.data);
-        });
-        break;
-      case "Teacher":
-        TeacherService.getPurchaseHistory().then((response) => {
-          console.log("Purchase History List", response.data);
-          setPurchaseHistories(response.data);
-        });
-        break;
-    }
-  }, []);
-
+function PurchaseHistoryTable({ data }) {
   const [columns, setColumns] = useState([
     { title: "Course Image", field: "image" },
     { title: "Course Name", field: "courseName" },
@@ -58,8 +28,48 @@ export function PurchaseHistoryListView() {
     <MaterialTable
       // @ts-ignore
       columns={columns}
-      title="Purchase History"
-      data={purchaseHistories}
+      title=""
+      data={data}
+      options={{ search: false, toolbar: false }}
     />
+  );
+}
+
+export function PurchaseHistoryListView() {
+  const history = useHistory();
+  const [purchaseHistories, setPurchaseHistories] = useState<
+    PurchaseHistoryList[]
+  >([]);
+  useEffect(() => {
+    switch (AuthService.getCurrentAccountType()) {
+      case "Student":
+        StudentService.getPurchaseHistory().then((response) => {
+          console.log("Purchase History List", response.data);
+          setPurchaseHistories(response.data);
+        });
+        break;
+      case "Teacher":
+        TeacherService.getPurchaseHistory().then((response) => {
+          console.log("Purchase History List", response.data);
+          setPurchaseHistories(response.data);
+        });
+        break;
+    }
+  }, []);
+
+  return (
+    <CustomPagination objectsPerPage={3}>
+      {purchaseHistories?.map((purchaseHistory) => (
+        <ContentHeader
+          // key={purchaseHistory.courseId}
+          courseId={10}
+          courseTitle={purchaseHistory.coursetitle}
+          courseSubtitle={purchaseHistory.coursesubtitle}
+          courseImage={purchaseHistory.courseImage}
+        >
+          <PurchaseHistoryTable data={purchaseHistory.purchaseHistoryInfos} />
+        </ContentHeader>
+      ))}
+    </CustomPagination>
   );
 }

@@ -6,14 +6,14 @@ public class NewUser {
 
 	private Date date;
 	private Integer studentCount;
-	private Integer TeacherCount;
+	private Integer teacherCount;
 	
 	
 	public NewUser(Date date, Integer studentCount, Integer teacherCount) {
 		super();
 		this.date = date;
 		this.studentCount = studentCount;
-		TeacherCount = teacherCount;
+		this.teacherCount = teacherCount;
 	}
 
 
@@ -38,12 +38,12 @@ public class NewUser {
 
 
 	public Integer getTeacherCount() {
-		return TeacherCount;
+		return teacherCount;
 	}
 
 
 	public void setTeacherCount(Integer teacherCount) {
-		TeacherCount = teacherCount;
+		this.teacherCount = teacherCount;
 	}
 	
 	

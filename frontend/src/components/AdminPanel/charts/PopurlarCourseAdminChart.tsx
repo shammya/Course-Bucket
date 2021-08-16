@@ -1,5 +1,8 @@
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { Chart, Series } from "devextreme-react/chart";
+import axios from "axios";
+import { authHeaders } from "components/auth/api/AuthService";
+import { GLOBAL } from "Configure.js";
+import { Series } from "devextreme-react/chart";
 import PieChart, {
   Connector,
   Export,
@@ -8,9 +11,6 @@ import PieChart, {
   Legend,
   Tooltip,
 } from "devextreme-react/pie-chart";
-import axios from "axios";
-import { authHeaders } from "components/auth/api/AuthService";
-import { GLOBAL } from "Configure.js";
 import React, { useEffect, useState } from "react";
 
 export function PopularCourseAdminChart() {
@@ -22,11 +22,16 @@ export function PopularCourseAdminChart() {
         console.log(response);
         setDataSource(
           response.data.map((item) => ({
-            courseName: item.courseName,
+            title: item.courseName,
             rating: item.rating,
             ratingCount: item.ratingCount,
             enrolledStudentCount: item.enrolledStudentCount,
             reviewCount: item.reviewCount,
+            value:
+              item.rating * 40 +
+              item.ratingCount * 10 +
+              item.enrolledStudentCount * 30 +
+              item.reviewCount * 20,
           }))
         );
       });
@@ -43,7 +48,7 @@ export function PopularCourseAdminChart() {
     const data = arg.point.data;
     return (
       <Grid container direction="column">
-        <Typography variant="h6">{data.courseName}</Typography>
+        <Typography variant="h6">{data.title}</Typography>
         <Typography variant="body2">{`Rating: ${data.rating} (${data.ratingCount})`}</Typography>
         <Typography variant="body2">Review: {data.reviewCount}</Typography>
         <Typography variant="body2">

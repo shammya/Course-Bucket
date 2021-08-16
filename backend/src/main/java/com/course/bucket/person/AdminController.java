@@ -25,7 +25,11 @@ public class AdminController {
 	public HashMap<Date, NewUser> getNewUserAdmin(){
 		return Admin.getNewUserAdmin();
 	}
-	
+	@GetMapping("/get-new-user-count")	// Mehedi
+	public ArrayList<NewUser> getNewUserCount(){
+		return Admin.getNewUserCount();
+	}
+		
 //	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-show-card-admin")
 	public ShowCard showCardAdmin(){
