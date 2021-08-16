@@ -52,7 +52,7 @@ public class PurchaseHistoryController {
 	}
 	
 	
-	@PreAuthorize("hasRole('Teacher')")
+	@PreAuthorize("hasRole('Teacher')")		// Unnecessary
 	@GetMapping("/get-enrolled-students-teacher")
 	public HashMap<Integer, ArrayList<PurchaseHistory>> findEnrolledStudentList() {
 		return PurchaseHistory.getEnrolledStudentList(ToolKit.getCurrentUserName());

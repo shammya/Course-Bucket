@@ -167,8 +167,8 @@ public class PurchaseHistory {
 				ArrayList<PurchaseHistoryInfo> phInfos = new ArrayList<>();
 				while (phrs.next()) {
 					ResultSet srs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
-									+ "where p.photo_id = f.id and p.id = '#'",
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left outer join files f\n"
+									+ "on p.photo_id = f.id where p.id = '#'",
 							phrs.getString("student_id"));
 					srs.next();
 					phInfos.add(new PurchaseHistoryInfo(srs.getString("full_name"), srs.getString("content"), phrs.getTimestamp("time"),

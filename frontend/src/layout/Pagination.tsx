@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@material-ui/core";
+import { Divider, Grid, GridSpacing, Typography } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import React, { useState } from "react";
 
@@ -7,11 +7,15 @@ function CustomPagination({
   title,
   children,
   objectsPerPage = 12,
+  divider = false,
+  spacing = 2,
 }: {
   type?: "one-item-per-line" | "two-item-per-line" | "calculate-by-width";
   children: JSX.Element[];
   title?: string;
   objectsPerPage?: number;
+  divider?: boolean;
+  spacing?: GridSpacing | undefined;
 }) {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,32 +26,41 @@ function CustomPagination({
     : [];
   const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
 
-  let elements;
+  let elementsWithContainer;
   if (type === "one-item-per-line") {
-    elements = (
-      <Grid container direction="column" spacing={2}>
-        {currentPageObjects.map((item) => (
-          <Grid item xs={12}>
-            {item}
+    elementsWithContainer = (
+      <Grid container direction="column" spacing={spacing}>
+        {currentPageObjects.map((item, index) => (
+          <Grid item container key={index}>
+            {index != 0 && divider ? (
+              <Grid item xs={12} key={index}>
+                <Divider style={{ marginBottom: 4 }} />
+              </Grid>
+            ) : (
+              ""
+            )}
+            <Grid item xs={12}>
+              {item}
+            </Grid>
           </Grid>
         ))}
       </Grid>
     );
   } else if (type == "two-item-per-line") {
-    elements = (
+    elementsWithContainer = (
       <Grid container spacing={2}>
-        {currentPageObjects.map((item) => (
-          <Grid item xs={6}>
+        {currentPageObjects.map((item, index) => (
+          <Grid item xs={6} key={index}>
             {item}
           </Grid>
         ))}
       </Grid>
     );
   } else if (type == "calculate-by-width") {
-    elements = (
+    elementsWithContainer = (
       <Grid container direction="row" spacing={2} justifyContent="flex-start">
-        {currentPageObjects.map((item) => (
-          <Grid item xs={6} sm={6} md={3} lg={2}>
+        {currentPageObjects.map((item, index) => (
+          <Grid item xs={6} sm={6} md={3} lg={2} key={index}>
             {item}
           </Grid>
         ))}
@@ -64,17 +77,19 @@ function CustomPagination({
           {title}
         </Typography>
       )}
-      <Grid container direction="column" alignItems="center">
-        {elements}
-        <Pagination
-          count={children ? Math.ceil(children.length / objectsPerPage) : 0}
-          page={currentPage}
-          onChange={paginate}
-          color="secondary"
-          siblingCount={3}
-          size="large"
-          style={{ marginTop: 15 }}
-        />
+      <Grid container direction="column" alignItems="center" spacing={2}>
+        {elementsWithContainer}
+        <Grid item container justifyContent="center">
+          <Pagination
+            count={children ? Math.ceil(children.length / objectsPerPage) : 0}
+            page={currentPage}
+            onChange={paginate}
+            color="secondary"
+            siblingCount={3}
+            size="large"
+            style={{ marginTop: 15 }}
+          />
+        </Grid>
       </Grid>
     </>
   );

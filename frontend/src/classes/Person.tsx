@@ -83,11 +83,13 @@ export class EduStatus {
 }
 
 export class StudentInfo {
+  studentUsername: string;
   studentImage: string;
   studentName: string;
   enrolledDate: Date;
 }
 export class StudentList {
+  courseId: number;
   courseName: string;
   courseImage: string;
   courseSubtitle: string;

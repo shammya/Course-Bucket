@@ -98,6 +98,7 @@ export class FAQ {
 }
 
 export class FaqList {
+  courseId: number;
   courseTitle: string;
   courseSubtitle: string;
   courseImage: string;
@@ -168,6 +169,7 @@ export class Review {
 }
 
 export class ReviewList {
+  courseId: string;
   courseImage: string;
   courseTitle: string;
   courseSubtitle: string;
@@ -175,6 +177,8 @@ export class ReviewList {
 }
 
 export class ReviewInfo {
+  id: number;
+  studentUsername: string;
   studentName: string;
   studentImage: string;
   reviewTime: Date;

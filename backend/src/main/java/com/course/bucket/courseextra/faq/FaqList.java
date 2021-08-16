@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class FaqList {
-
+	private Integer courseId;
 	private String courseTitle;
 	private String courseSubtitle;
 	private String courseImage;
@@ -14,12 +14,21 @@ public class FaqList {
 
 	}
 
-	public FaqList(String courseTitle, String courseSubtitle, String courseImage, ArrayList<FaqInfo> faqInfos) {
+	public FaqList(Integer courseId, String courseTitle, String courseSubtitle, String courseImage, ArrayList<FaqInfo> faqInfos) {
 		super();
+		this.courseId = courseId;
 		this.courseTitle = courseTitle;
 		this.courseSubtitle = courseSubtitle;
 		this.courseImage = courseImage;
 		this.faqInfos = faqInfos;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
 	}
 
 	public String getCourseTitle() {
@@ -94,6 +103,22 @@ class FaqInfo {
 
 	public Integer getId() {
 		return id;
+	}
+
+	public String getStudentUsername() {
+		return studentUsername;
+	}
+
+	public void setStudentUsername(String studentUsername) {
+		this.studentUsername = studentUsername;
+	}
+
+	public String getTeacherUsername() {
+		return teacherUsername;
+	}
+
+	public void setTeacherUsername(String teacherUsername) {
+		this.teacherUsername = teacherUsername;
 	}
 
 	public void setId(Integer id) {

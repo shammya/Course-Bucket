@@ -2,7 +2,7 @@ import axios from "axios";
 import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 import { GLOBAL } from "Configure.js";
 
-class PersonController {
+class TeacherService {
   getPerson(username: string) {
     return axios.get(GLOBAL.HOST + `/get-person`, authHeaders());
   }
@@ -24,5 +24,17 @@ class PersonController {
   getEnrolledStudentList() {
     return axios.get(GLOBAL.HOST + `/get-student-list-teacher`, authHeaders());
   }
+  getFAQList() {
+    return axios.get(GLOBAL.HOST + `/get-faq-for-teacher`, authHeaders());
+  }
+  getReviewList() {
+    return axios.get(GLOBAL.HOST + `/get-review-teacher`, authHeaders());
+  }
+  getPurchaseHistory() {
+    return axios.get(
+      GLOBAL.HOST + `/get-purchase-history-teacher`,
+      authHeaders()
+    );
+  }
 }
-export default new PersonController();
+export default new TeacherService();

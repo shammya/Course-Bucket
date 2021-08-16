@@ -9,12 +9,15 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  IconButton,
+  Link,
   Typography,
 } from "@material-ui/core";
 import { FaqInfo } from "classes/Course";
 import AuthService from "components/auth/api/AuthService";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import TextEditor from "tools/customDesign/TextEditor";
 import { SlidingUpTransition } from "tools/Tools";
 import CourseService from "../api/CourseService";
@@ -102,15 +105,21 @@ export function FAQBox({
   onSubmit?: () => void;
 }) {
   const [answerInputShow, setAnswerInputShow] = useState(false);
-
+  const history = useHistory();
   return (
     <Grid container direction="row" wrap="nowrap" spacing={2}>
       <Grid item>
-        <Avatar src={faq?.studentImage} />
+        <IconButton
+          onClick={() => history.push(`/profile/${faq?.studentUsername}`)}
+        >
+          <Avatar src={faq?.studentImage} />
+        </IconButton>
       </Grid>
       <Grid item container direction="column">
         <Grid>
-          <Typography variant="h5">{faq?.studentName}</Typography>
+          <Link variant="h5" href={`/profile/${faq?.studentUsername}`}>
+            {faq?.studentName}
+          </Link>
         </Grid>
         <Grid item>
           <Typography variant="subtitle1">
@@ -120,6 +129,8 @@ export function FAQBox({
         <Grid item>
           <TextEditor value={faq?.question} readOnly />
         </Grid>
+        {console.log(faq?.teacherUsername)}
+        {console.log(AuthService.getCurrentUsername())}
         {!faq?.answer &&
         faq?.teacherUsername === AuthService.getCurrentUsername() ? (
           <Grid container justifyContent="center">
@@ -144,11 +155,19 @@ export function FAQBox({
           <Grid item style={{ marginTop: 20 }}>
             <Grid container direction="row" wrap="nowrap" spacing={2}>
               <Grid item>
-                <Avatar src={faq?.teacherImage} />
+                <IconButton
+                  onClick={() =>
+                    history.push(`/profile/${faq?.teacherUsername}`)
+                  }
+                >
+                  <Avatar src={faq?.teacherImage} />
+                </IconButton>
               </Grid>
               <Grid item container direction="column">
                 <Grid>
-                  <Typography variant="h5">{faq?.teacherName}</Typography>
+                  <Link variant="h5" href={`/profile/${faq?.teacherUsername}`}>
+                    {faq?.teacherName}
+                  </Link>
                 </Grid>
                 <Grid item>
                   <Typography variant="subtitle1">

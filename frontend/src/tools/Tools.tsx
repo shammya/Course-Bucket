@@ -1,7 +1,8 @@
 import { Slide, Snackbar } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import React from "react";
+import React, { useEffect } from "react";
+import { withRouter } from "react-router";
 
 export function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -57,3 +58,17 @@ export function SuccessMessage({ open, message, onClose }) {
     </Snackbar>
   );
 }
+
+function ScrollToTop({ history }) {
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.scrollTo(0, 0);
+    });
+    return () => {
+      unlisten();
+    };
+  }, [history]);
+
+  return null;
+}
+export default withRouter(ScrollToTop);

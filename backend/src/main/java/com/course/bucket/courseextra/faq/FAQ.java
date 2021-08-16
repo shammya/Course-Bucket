@@ -253,25 +253,27 @@ public class FAQ {
 				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
 				while (frs.next()) {
 					ResultSet trs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f, course c where p.photo_id = f.id and c.teacher_id = p.id and c.id = #",
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f on p.photo_id = f.id, course c where c.teacher_id = p.id and c.id = #",
 							crs.getString("course_id"));
 					ResultSet srs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
-									+ "where p.photo_id = f.id and p.id = '#'",
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f \n"
+									+ "on p.photo_id = f.id where p.id = '#'",
 							frs.getString("student_id"));
 					trs.next();
 					srs.next();
-					faqInfos.add(new FaqInfo(frs.getString("student_id"), srs.getString("full_name"), srs.getString("content"),
+					FaqInfo faqInfo = new FaqInfo(frs.getString("student_id"), srs.getString("full_name"), srs.getString("content"),
 							teacherUsername, trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
 							frs.getTimestamp("question_time"), frs.getString("answer"),
-							frs.getTimestamp("answer_time")));
+							frs.getTimestamp("answer_time"));
+					faqInfo.setId(frs.getInt("ID"));
+					faqInfos.add(faqInfo);
 
 					srs.close();
 					trs.close();
 				}
 				frs.close();
 
-				faqLists.add(new FaqList(crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
+				faqLists.add(new FaqList(crs.getInt("course_id"), crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
 						faqInfos));
 
 			}
@@ -317,7 +319,7 @@ public class FAQ {
 				}
 				frs.close();
 
-				faqLists.add(new FaqList(crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
+				faqLists.add(new FaqList(crs.getInt("id"), crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
 						faqInfos));
 
 			}

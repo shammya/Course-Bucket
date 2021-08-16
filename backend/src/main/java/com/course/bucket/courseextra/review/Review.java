@@ -260,19 +260,19 @@ public class Review {
 				ArrayList<ReviewInfo> reviewInfos = new ArrayList<>();
 				while (rvrs.next()) {
 					ResultSet srs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p, files f\n"
-									+ "where p.photo_id = f.id and p.id = '#'",rvrs.getString("student_id"));
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f\n"
+									+ "on p.photo_id = f.id where p.id = '#'",rvrs.getString("student_id"));
 					ResultSet rtrs = DB.executeQuery("select value from rating where course_id = #", crs.getString("course_id"));
 					srs.next();
 					rtrs.next();
-					reviewInfos.add(new ReviewInfo(srs.getString("full_name"),srs.getString("content"),rvrs.getTimestamp("time"),rtrs.getInt("value"),rvrs.getString("text")));
+					reviewInfos.add(new ReviewInfo(rvrs.getInt("id"), rvrs.getString("student_id"), srs.getString("full_name"),srs.getString("content"),rvrs.getTimestamp("time"),rtrs.getInt("value"),rvrs.getString("text")));
 
 					srs.close();
 					rtrs.close();
 				}
 				rvrs.close();
 
-				reviewLists.add(new ReviewList(crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
+				reviewLists.add(new ReviewList(crs.getInt("course_id"), crs.getString("content"), crs.getString("title"), crs.getString("subtitle"),
 						reviewInfos));
 			}
 			crs.close();
@@ -314,14 +314,14 @@ public class Review {
 					ResultSet rtrs = DB.executeQuery("select value from rating where course_id = #",courseId.toString());
 					srs.next();
 					rtrs.next();
-					reviewInfos.add(new ReviewInfo(srs.getString("full_name"),srs.getString("content"),rvrs.getTimestamp("time"),rtrs.getInt("value"),rvrs.getString("text")));
+					reviewInfos.add(new ReviewInfo(rvrs.getInt("id"), rvrs.getString("student_id"), srs.getString("full_name"),srs.getString("content"),rvrs.getTimestamp("time"),rtrs.getInt("value"),rvrs.getString("text")));
 
 					srs.close();
 					rtrs.close();
 				}
 				rvrs.close();
 
-				reviewLists.add(new ReviewList(crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
+				reviewLists.add(new ReviewList(crs.getInt("id"), crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
 						reviewInfos));
 			crs.close();
 			return reviewLists;
@@ -346,7 +346,7 @@ public class Review {
         ReviewInfo info = null;
             try {
 				if(reviewRS.next() && ratingRS.next() && personRS.next()){
-					info = new ReviewInfo(personRS.getString("full_name"), personRS.getString("content"), reviewRS.getDate("TIME"), ratingRS.getInt("VALUE"), reviewRS.getString("TEXT"));
+					info = new ReviewInfo(reviewRS.getInt("id"), username, personRS.getString("full_name"), personRS.getString("content"), reviewRS.getDate("TIME"), ratingRS.getInt("VALUE"), reviewRS.getString("TEXT"));
 				}
 	            reviewRS.close();
 	            ratingRS.close();

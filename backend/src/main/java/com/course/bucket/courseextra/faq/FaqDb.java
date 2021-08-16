@@ -30,6 +30,7 @@ public class FaqDb {
 	}
 	
 	public FaqDb(Integer id) {
+		this.id = id;
 		ResultSet rs = DB.executeQuery("SELECT * FROM FAQ WHERE ID = #", id.toString());
 		try {
 			if(rs.next()) {

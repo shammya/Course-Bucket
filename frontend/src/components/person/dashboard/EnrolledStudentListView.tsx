@@ -9,10 +9,12 @@ import {
 import { StudentList } from "classes/Person";
 import CustomPagination from "layout/Pagination";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import TeacherService from "../api/TeacherService";
 import { ContentHeader } from "./Dashboard";
 
 export function EnrolledStudentListView() {
+  const history = useHistory();
   const [studentsWithCourses, setStudentsWithCourses] = useState<StudentList[]>(
     []
   );
@@ -26,16 +28,19 @@ export function EnrolledStudentListView() {
     <CustomPagination objectsPerPage={3}>
       {studentsWithCourses?.map((studentsWithCourse) => (
         <ContentHeader
+          courseId={studentsWithCourse.courseId}
           courseTitle={studentsWithCourse.courseName}
           courseSubtitle={studentsWithCourse.courseSubtitle}
           courseImage={studentsWithCourse.courseImage}
         >
-          {console.log(studentsWithCourse)}
           <CustomPagination type="calculate-by-width">
             {studentsWithCourse?.studentInfoList?.map((student) => (
               <Card>
-                {console.log("student", student)}
-                <CardActionArea>
+                <CardActionArea
+                  onClick={(event) =>
+                    history.push(`/profile/${student.studentUsername}`)
+                  }
+                >
                   <CardMedia>
                     <img src={student.studentImage} />
                   </CardMedia>

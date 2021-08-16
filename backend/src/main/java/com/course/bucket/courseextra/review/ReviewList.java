@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ReviewList {
-
+	private Integer courseId;
 	private String courseImage;
 	private String courseTitle;
 	private String courseSubtitle;
@@ -15,13 +15,22 @@ public class ReviewList {
 		
 	}
 	
-	public ReviewList(String courseImage, String courseTitle, String courseSubtitle,
+	public ReviewList(Integer courseId, String courseImage, String courseTitle, String courseSubtitle,
 			ArrayList<ReviewInfo> reviewInfos) {
 		super();
+		this.courseId = courseId;
 		this.courseImage = courseImage;
 		this.courseTitle = courseTitle;
 		this.courseSubtitle = courseSubtitle;
 		this.reviewInfos = reviewInfos;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
 	}
 
 	public String getCourseImage() {

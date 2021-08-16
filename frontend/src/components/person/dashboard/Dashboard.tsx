@@ -2,52 +2,58 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  CardMedia,
+  Divider,
   Grid,
   Typography,
 } from "@material-ui/core";
-import { Image, Looks, RateReview } from "@material-ui/icons";
-import { FAQBox } from "components/course/courseView/FAQ";
-import { ReviewBox } from "components/course/courseView/Review";
+import { Looks, RateReview } from "@material-ui/icons";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
-import CustomPagination from "layout/Pagination";
-import MaterialTable from "material-table";
-import React, { useState } from "react";
+import React from "react";
 import { FaChalkboardTeacher, FaDollarSign, FaQq } from "react-icons/fa";
-import { Redirect, Route, Switch } from "react-router";
+import { Redirect, Route, Switch, useHistory } from "react-router";
 import { useRouteMatch } from "react-router-dom";
 import IncomePerCourseChart from "../teacher/IncomePerCourseChart";
 import { OverviewBarChart } from "../teacher/Overview";
 import { CoursePopularityPieChart } from "../teacher/PopularityPieChart";
 import { RatingLineChart } from "../teacher/RatingLIneChart";
 import { EnrolledStudentListView } from "./EnrolledStudentListView";
+import { FaqView } from "./FAQview";
+import { PurchaseHistoryListView } from "./PurchaseHistoryLIstView";
+import { ReviewListView } from "./ReviewListView";
 
 export function ContentHeader({
+  courseId,
   courseTitle,
   courseSubtitle,
   courseImage,
   children,
 }) {
+  const history = useHistory();
   return (
-    <Card>
-      <CardContent>
-        <CardActionArea>
-          <Grid container direction="row" wrap="nowrap">
+    <Card style={{ width: "100%" }}>
+      <CardActionArea onClick={() => history.push(`/course/${courseId}`)}>
+        <Grid container direction="row" wrap="nowrap" spacing={2}>
+          <Grid item>
+            <img src={courseImage} />
+          </Grid>
+          <Grid
+            item
+            container
+            direction="column"
+            spacing={1}
+            style={{ paddingRight: 20 }}
+          >
             <Grid item>
-              <img src={courseImage} />
+              <Typography variant="h5">{courseTitle}</Typography>
             </Grid>
-            <Grid item container direction="column">
-              <Grid item>
-                <Typography variant="h5">{courseTitle}</Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="body2">{courseSubtitle}</Typography>
-              </Grid>
+            <Grid item>
+              <Typography variant="body2">{courseSubtitle}</Typography>
             </Grid>
           </Grid>
-        </CardActionArea>
-        {children}
-      </CardContent>
+        </Grid>
+        <Divider />
+      </CardActionArea>
+      <CardContent>{children}</CardContent>
     </Card>
   );
 }
@@ -62,30 +68,6 @@ interface PurchaseHistory {
 }
 
 function Dashboard() {
-  const [columns, setColumns] = useState([
-    { title: "Course Image", field: "image" },
-    { title: "Course Name", field: "courseName" },
-    { title: "Student Image", field: "studentImage" },
-    { title: "Student Name", field: "studentName" },
-    { title: "Purchase time", field: "time" },
-    { title: "Purchase Amount", field: "amount" },
-    // { title: "Course Image", field: "image", editable: "never" },
-    // { title: "Course Name", field: "courseName", editable: "never" },
-    // { title: "Student Image", field: "studentImage", editable: "never" },
-    // { title: "Student Name", field: "studentName", editable: "never" },
-    // { title: "Purchase time", field: "time", editable: "never" },
-    // { title: "Purchase Amount", field: "amount", editable: "never" },
-  ]);
-  const [data, setData] = useState([
-    {
-      image: <Image />,
-      courseName: "Course Name Course Name Course Name Course Name Course Name",
-      studentImage: <Image />,
-      studentName: "StudentName",
-      time: new Date().toDateString(),
-      amount: 3000,
-    },
-  ]);
   const objects: Array<IDrawerLayoutObject> = [
     {
       label: "Overview",
@@ -112,54 +94,19 @@ function Dashboard() {
       label: "Purchase History",
       urlShort: "purchase-history",
       icon: <FaDollarSign />,
-      content: (
-        <MaterialTable
-          // @ts-ignore
-          columns={columns}
-          title="Purchase History"
-          data={data}
-        />
-      ),
+      content: <PurchaseHistoryListView />,
     },
     {
       label: "Reviews",
       urlShort: "review",
       icon: <RateReview />,
-      content: (
-        <CustomPagination objectsPerPage={3}>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <Grid item>
-              {/* <ContentHeader>
-                <CustomPagination type="two-item-per-line" objectsPerPage={2}>
-                  {[1, 2, 3, 4, 5].map((item) => (
-                    <ReviewBox review={undefined} />
-                  ))}
-                </CustomPagination>
-              </ContentHeader> */}
-            </Grid>
-          ))}
-        </CustomPagination>
-      ),
+      content: <ReviewListView />,
     },
     {
       label: "FAQ",
       urlShort: "faq",
       icon: <FaQq />,
-      content: (
-        <CustomPagination objectsPerPage={3}>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <Grid item>
-              {/* <ContentHeader>
-                <CustomPagination type="one-item-per-line" objectsPerPage={2}>
-                  {[1, 2, 3, 4, 5].map((item) => (
-                    <FAQBox faq={undefined} />
-                  ))}
-                </CustomPagination>
-              </ContentHeader> */}
-            </Grid>
-          ))}
-        </CustomPagination>
-      ),
+      content: <FaqView />,
     },
     {
       label: "Student List",

@@ -163,6 +163,7 @@ public class Student extends Person {
 		String title = "";
 		String courseImage = null;
 		String subtitle = "";
+		String studentUsername = "";
 		String studentImage = "";
 		String studentName = "";
 		Date enrolledDate;
@@ -176,17 +177,18 @@ public class Student extends Person {
 				subtitle = rs.getString("subtitle");
 				courseImage = rs.getString("content");
 				ArrayList<StudentInfo> stdInfos = new ArrayList<>();
-				String sql1 = "select concat(concat(p.first_name , ' '),p.last_name) as full_name, ph.time, f.content from person p, purchase_history ph, files f where ph.course_id = # and p.id = ph.student_id and p.photo_id = f.id";
+				String sql1 = "select p.id, concat(concat(p.first_name , ' '),p.last_name) as full_name, ph.time, f.content from person p, purchase_history ph, files f where ph.course_id = # and p.id = ph.student_id and p.photo_id = f.id";
 				ResultSet prs = DB.executeQuery(sql1, courseId.toString());
 				System.out.println(courseId + " " + title + " " + subtitle);
 				while (prs.next()) {
+					studentUsername = prs.getString("id");
 					studentImage = prs.getString("content");
 					studentName = prs.getString("full_name");
 					enrolledDate = prs.getTimestamp("time");
-					stdInfos.add(new StudentInfo(studentImage, studentName, enrolledDate));
+					stdInfos.add(new StudentInfo(studentUsername, studentImage, studentName, enrolledDate));
 				}
 				prs.close();
-				stdList.add(new StudentList(title, courseImage, subtitle, stdInfos));
+				stdList.add(new StudentList(courseId, title, courseImage, subtitle, stdInfos));
 
 			}
 			rs.close();

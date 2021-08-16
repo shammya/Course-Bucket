@@ -9,6 +9,8 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  IconButton,
+  Link,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -16,6 +18,7 @@ import { Rating } from "@material-ui/lab";
 import { ReviewInfo } from "classes/Course";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { SlidingUpTransition } from "tools/Tools";
 import CourseService from "../api/CourseService";
 
@@ -102,18 +105,27 @@ export function ReviewSection({
   );
 }
 export function ReviewBox({ review }: { review: ReviewInfo | undefined }) {
+  const history = useHistory();
   return (
     <Grid container direction="row" wrap="nowrap" spacing={2}>
       <Grid item>
-        <Avatar src={review?.studentImage} />
+        <IconButton
+          onClick={(event) =>
+            history.push(`/profile/${review?.studentUsername}`)
+          }
+        >
+          <Avatar src={review?.studentImage} />
+        </IconButton>
       </Grid>
       <Grid item container direction="column">
         <Grid>
-          <Typography variant="h5">{review?.studentName}</Typography>
+          <Link href={`/profile/${review?.studentUsername}`} variant="h5">
+            {review?.studentName}
+          </Link>
         </Grid>
         <Grid item container direction="row" spacing={2}>
           <Grid item>
-            <Rating value={review?.ratingValue} name="rating-input" />
+            <Rating value={review?.ratingValue} readOnly name="rating-input" />
           </Grid>
           <Grid item>
             <Typography variant="subtitle1">
