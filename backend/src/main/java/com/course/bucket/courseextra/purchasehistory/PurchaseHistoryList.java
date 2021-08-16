@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class PurchaseHistoryList {
 
+	private Integer courseId;
 	private String coursetitle;
 	private String coursesubtitle;
 	private String courseImage;
@@ -16,13 +17,24 @@ public class PurchaseHistoryList {
 	}
 
 
-	public PurchaseHistoryList(String coursetitle, String coursesubtitle, String courseImage,
+	public PurchaseHistoryList(Integer courseId, String coursetitle, String coursesubtitle, String courseImage,
 			ArrayList<PurchaseHistoryInfo> purchaseHistoryInfos) {
 		super();
+		this.courseId = courseId;
 		this.coursetitle = coursetitle;
 		this.coursesubtitle = coursesubtitle;
 		this.courseImage = courseImage;
 		this.purchaseHistoryInfos = purchaseHistoryInfos;
+	}
+
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
 	}
 
 
@@ -64,9 +76,8 @@ public class PurchaseHistoryList {
 	public void setPurchaseHistoryInfos(ArrayList<PurchaseHistoryInfo> purchaseHistoryInfos) {
 		this.purchaseHistoryInfos = purchaseHistoryInfos;
 	}
-	
-	
-	
+
+
 	
 	
 	
@@ -75,21 +86,32 @@ public class PurchaseHistoryList {
 
 class PurchaseHistoryInfo{
 	
+	private Integer id;
 	private String studentName;
 	private String studentImage;
-	private Date purchaaseTime;
+	private Date purchaseTime;
 	private Double purchaseAmount;
 	
 	public  PurchaseHistoryInfo() {
 		
 	}
 
-	public PurchaseHistoryInfo(String studentName, String studentImage, Date purchaaseTime, Double purchaseAmount) {
+	public PurchaseHistoryInfo(Integer id, String studentName, String studentImage, Date purchaseTime,
+			Double purchaseAmount) {
 		super();
+		this.id = id;
 		this.studentName = studentName;
 		this.studentImage = studentImage;
-		this.purchaaseTime = purchaaseTime;
+		this.purchaseTime = purchaseTime;
 		this.purchaseAmount = purchaseAmount;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getStudentName() {
@@ -110,12 +132,12 @@ class PurchaseHistoryInfo{
 		this.studentImage = studentImage;
 	}
 
-	public Date getPurchaaseTime() {
-		return purchaaseTime;
+	public Date getPurchaseTime() {
+		return purchaseTime;
 	}
 
 	public void setPurchaaseTime(Date purchaaseTime) {
-		this.purchaaseTime = purchaaseTime;
+		this.purchaseTime = purchaaseTime;
 	}
 
 	public Double getPurchaseAmount() {
@@ -125,6 +147,8 @@ class PurchaseHistoryInfo{
 	public void setPurchaseAmount(Double purchaseAmount) {
 		this.purchaseAmount = purchaseAmount;
 	}
+
+	
 	
 	
 	
