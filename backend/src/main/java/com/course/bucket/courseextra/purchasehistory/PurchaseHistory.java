@@ -155,7 +155,7 @@ public class PurchaseHistory {
 	public static ArrayList<PurchaseHistoryList> getPurchaseHistoryTeacher(String teacherUsername) {
 
 		ArrayList<PurchaseHistoryList> phList = new ArrayList<>();
-		String sql = "SELECT ph.course_id,c.title, c.subtitle, fl.content\n" + " FROM purchase_history ph ,course c, files fl\n"
+		String sql = "SELECT ph.course_id id,c.title, c.subtitle, fl.content\n" + " FROM purchase_history ph ,course c, files fl\n"
 				+ " WHERE ph.course_id = c.id and c.cover_id = fl.id and \n"
 				+ " ph.course_id = ANY (SELECT ID FROM COURSE WHERE TEACHER_ID = '#')\n"
 				+ " GROUP BY ph.course_id, c.title, c.subtitle, fl.content ORDER BY MAX(time) DESC";
@@ -171,13 +171,67 @@ public class PurchaseHistory {
 									+ "on p.photo_id = f.id where p.id = '#'",
 							phrs.getString("student_id"));
 					srs.next();
-					phInfos.add(new PurchaseHistoryInfo(srs.getString("full_name"), srs.getString("content"), phrs.getTimestamp("time"),
+					phInfos.add(new PurchaseHistoryInfo(phrs.getInt("id"),srs.getString("full_name"), srs.getString("content"), phrs.getTimestamp("time"),
 							phrs.getDouble("cost")));
 					
 					srs.close();
 				}
 				phrs.close();
-				phList.add(new PurchaseHistoryList(crs.getString("title"),crs.getString("subtitle"),crs.getString("content"),phInfos));
+				phList.add(new PurchaseHistoryList(crs.getInt("id"),crs.getString("title"),crs.getString("subtitle"),crs.getString("content"),phInfos));
+
+			}
+			crs.close();
+			return phList;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<PurchaseHistoryList> getPurchaseHistoryStudent(String StudentUsername) {
+
+		ArrayList<PurchaseHistoryList> phList = new ArrayList<>();
+		String sql = "SELECT\r\n"
+				+ "	ph.course_id id,\r\n"
+				+ "	c.title,\r\n"
+				+ "	c.subtitle,\r\n"
+				+ "	fl.content \r\n"
+				+ "FROM\r\n"
+				+ "	purchase_history ph,\r\n"
+				+ "	course c,\r\n"
+				+ "	files fl \r\n"
+				+ "WHERE\r\n"
+				+ "	ph.course_id = c.id \r\n"
+				+ "	AND c.cover_id = fl.id \r\n"
+				+ "	AND ph.course_id = ANY ( SELECT course_id FROM purchase_history WHERE student_id = '#' ) \r\n"
+				+ "GROUP BY\r\n"
+				+ "	ph.course_id,\r\n"
+				+ "	c.title,\r\n"
+				+ "	c.subtitle,\r\n"
+				+ "	fl.content \r\n"
+				+ "ORDER BY\r\n"
+				+ "	MAX( time ) DESC";
+		ResultSet crs = DB.executeQuery(sql, StudentUsername);
+		try {
+			while (crs.next()) {
+				ResultSet phrs = DB.executeQuery("select * from purchase_history where course_id = #",
+						crs.getString("course_id"));
+				ArrayList<PurchaseHistoryInfo> phInfos = new ArrayList<>();
+				while (phrs.next()) {
+					ResultSet srs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left outer join files f\n"
+									+ "on p.photo_id = f.id where p.id = '#'",
+							phrs.getString("student_id"));
+					srs.next();
+					phInfos.add(new PurchaseHistoryInfo(phrs.getInt("id"),srs.getString("full_name"), srs.getString("content"), phrs.getTimestamp("time"),
+							phrs.getDouble("cost")));
+					
+					srs.close();
+				}
+				phrs.close();
+				phList.add(new PurchaseHistoryList(crs.getInt("id"),crs.getString("title"),crs.getString("subtitle"),crs.getString("content"),phInfos));
 
 			}
 			crs.close();

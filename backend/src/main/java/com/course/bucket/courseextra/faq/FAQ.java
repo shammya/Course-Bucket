@@ -287,6 +287,72 @@ public class FAQ {
 
 	}
 	
+	public static ArrayList<FaqList> getFaqListStudent(String studentUsername) {
+		ArrayList<FaqList> faqLists = new ArrayList<>();
+		String sql = "SELECT\r\n"
+				+ "	f.course_id,\r\n"
+				+ "	c.title,\r\n"
+				+ "	c.subtitle,\r\n"
+				+ "	fl.content \r\n"
+				+ "FROM\r\n"
+				+ "	FAQ f,\r\n"
+				+ "	course c,\r\n"
+				+ "	files fl \r\n"
+				+ "WHERE\r\n"
+				+ "	f.course_id = c.id \r\n"
+				+ "	AND c.cover_id = fl.id \r\n"
+				+ "	AND course_id = ANY ( SELECT course_id FROM faq WHERE student_id = '#' ) \r\n"
+				+ "GROUP BY\r\n"
+				+ "	f.course_id,\r\n"
+				+ "	c.title,\r\n"
+				+ "	c.subtitle,\r\n"
+				+ "	fl.content \r\n"
+				+ "ORDER BY\r\n"
+				+ "	MAX( question_time ) DESC\r\n"
+				+ " ";
+		ResultSet crs = DB.executeQuery(sql, studentUsername);
+
+		try {
+			while (crs.next()) {
+				ResultSet frs = DB.executeQuery("select * from faq where course_id = #", crs.getString("course_id"));
+				
+				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
+				while (frs.next()) {
+					ResultSet trs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f on p.photo_id = f.id, course c where c.teacher_id = p.id and c.id = #",
+							crs.getString("course_id"));
+					ResultSet srs = DB.executeQuery(
+							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f \n"
+									+ "on p.photo_id = f.id where p.id = '#'",
+							frs.getString("student_id"));
+					trs.next();
+					srs.next();
+					FaqInfo faqInfo = new FaqInfo(frs.getString("student_id"), srs.getString("full_name"), srs.getString("content"),
+							studentUsername, trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
+							frs.getTimestamp("question_time"), frs.getString("answer"),
+							frs.getTimestamp("answer_time"));
+					faqInfo.setId(frs.getInt("ID"));
+					faqInfos.add(faqInfo);
+
+					srs.close();
+					trs.close();
+				}
+				frs.close();
+
+				faqLists.add(new FaqList(crs.getInt("course_id"), crs.getString("title"), crs.getString("subtitle"), crs.getString("content"),
+						faqInfos));
+
+			}
+			crs.close();
+			return faqLists;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
 	public static ArrayList<FaqList> getFaqListCourse(Integer courseId) {
 		ArrayList<FaqList> faqLists = new ArrayList<>();
 		String sql = "SELECT c.id,c.title,c.subtitle,fl.content FROM course c,files fl WHERE c.id=# AND c.cover_id=fl.id";

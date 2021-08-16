@@ -51,12 +51,18 @@ public class FAQController {
 		return FAQ.getFaqListTeacher(ToolKit.getCurrentUserName());
 	}
 	
-	
 	@PreAuthorize("hasRole('Student')")
-	@GetMapping("/get-faq-student")
-	public Map<Integer, ArrayList<FAQ>> findFAQForStudentView() {
-		return FAQ.getFAQForStudentView(ToolKit.getCurrentUserName());
+	@GetMapping("/get-faq-for-student")
+	public ArrayList<FaqList> findFAQForStudentView() {
+		return FAQ.getFaqListStudent(ToolKit.getCurrentUserName());
 	}
+	
+	
+//	@PreAuthorize("hasRole('Student')")
+//	@GetMapping("/get-faq-student")
+//	public Map<Integer, ArrayList<FAQ>> findFAQForStudentView() {
+//		return FAQ.getFAQForStudentView(ToolKit.getCurrentUserName());
+//	}
 	
 	@PreAuthorize("hasRole('Student')")
 	@GetMapping("/get-faq-self/{courseId}")
