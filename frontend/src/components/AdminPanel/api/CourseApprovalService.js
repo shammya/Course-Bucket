@@ -1,15 +1,15 @@
 import axios from "axios"
 import { GLOBAL } from 'Configure.js'
-
+import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 
 class CourseApprovalService {
 
     getApprovedCourses() {
-        return axios.get(GLOBAL.HOST + '/get-approved-courses')
+        return axios.get(GLOBAL.HOST + '/get-approved-courses', authHeaders())
     }
 
     getUnapprovedCourses() {
-        return axios.get(GLOBAL.HOST + '/get-unapproved-courses')
+        return axios.get(GLOBAL.HOST + '/get-unapproved-courses', authHeaders())
     }
 
     // deleteCountry(id){
