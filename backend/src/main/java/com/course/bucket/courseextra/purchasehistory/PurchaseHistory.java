@@ -163,15 +163,17 @@ public class PurchaseHistory {
 		try {
 			while (crs.next()) {
 				ResultSet phrs = DB.executeQuery("select * from purchase_history where course_id = #",
-						crs.getString("course_id"));
+						crs.getString("id"));
 				ArrayList<PurchaseHistoryInfo> phInfos = new ArrayList<>();
 				while (phrs.next()) {
 					ResultSet srs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left outer join files f\n"
+							"select p.id, concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left outer join files f\n"
 									+ "on p.photo_id = f.id where p.id = '#'",
 							phrs.getString("student_id"));
 					srs.next();
-					phInfos.add(new PurchaseHistoryInfo(phrs.getInt("id"),srs.getString("full_name"), srs.getString("content"), phrs.getTimestamp("time"),
+					phInfos.add(new PurchaseHistoryInfo(phrs.getInt("id"),srs.getString("id"), srs.getString("full_name"), srs.getString("content"),
+							"","","",
+							phrs.getTimestamp("time"),
 							phrs.getDouble("cost")));
 					
 					srs.close();
@@ -216,8 +218,8 @@ public class PurchaseHistory {
 		ResultSet crs = DB.executeQuery(sql, StudentUsername);
 		try {
 			while (crs.next()) {
-				ResultSet phrs = DB.executeQuery("select * from purchase_history where course_id = #",
-						crs.getString("course_id"));
+				ResultSet phrs = DB.executeQuery("select * from purchase_history where course_id = # and student_id = '#'",
+						crs.getString("id"), StudentUsername);
 				ArrayList<PurchaseHistoryInfo> phInfos = new ArrayList<>();
 				while (phrs.next()) {
 					ResultSet srs = DB.executeQuery(
@@ -225,9 +227,14 @@ public class PurchaseHistory {
 									+ "on p.photo_id = f.id where p.id = '#'",
 							phrs.getString("student_id"));
 					srs.next();
-					phInfos.add(new PurchaseHistoryInfo(phrs.getInt("id"),srs.getString("full_name"), srs.getString("content"), phrs.getTimestamp("time"),
+					ResultSet trs = DB.executeQuery(
+							"select p.id, concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left outer join files f\n"
+									+ "on p.photo_id = f.id where p.id = '#'",
+							DB.getString("COURSE", "ID", crs.getString("id"), "teacher_id"));
+					trs.next();
+					phInfos.add(new PurchaseHistoryInfo(phrs.getInt("id"),StudentUsername,srs.getString("full_name"), srs.getString("content"),
+							trs.getString("id"), trs.getString("full_name"), trs.getString("content"), phrs.getTimestamp("time"),
 							phrs.getDouble("cost")));
-					
 					srs.close();
 				}
 				phrs.close();

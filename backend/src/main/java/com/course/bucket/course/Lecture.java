@@ -16,7 +16,7 @@ public class Lecture {
     String title;
     Date lastUpdate;
     Files file;
-    boolean isPreview;
+    boolean preview;
     
     public Lecture() {}
     
@@ -28,7 +28,7 @@ public class Lecture {
                 lectureNo = rs.getInt("LECTURE_NO");
                 title = rs.getString("TITLE");
                 lastUpdate = rs.getTimestamp("LAST_UPDATE");
-                isPreview = ToolKit.DBoolToJBool(rs.getString("IS_PREVIEW"));
+                preview = ToolKit.DBoolToJBool(rs.getString("IS_PREVIEW"));
                 file = new Files(rs.getInt("FILE_ID"));  
             }
             rs.close();
@@ -50,7 +50,7 @@ public class Lecture {
         this.lectureNo = lectureNo;
         this.title = title;
         this.file = file;
-        this.isPreview = isPreview;
+        this.preview = isPreview;
         this.lastUpdate = ToolKit.getCurTime();
         DB.execute(
               "INSERT INTO LECTURE(ID, LECTURE_NO, TITLE, LAST_UPDATE, IS_PREVIEW, WEEK_ID, FILE_ID) VALUES(#, #, '#', #, '#', #, #)", 
@@ -77,12 +77,13 @@ public class Lecture {
         return id;
     }
 
-    public boolean isPreview() {
-		return isPreview;
+
+	public boolean isPreview() {
+		return preview;
 	}
 
-	public void setPreview(boolean isPreview) {
-		this.isPreview = isPreview;
+	public void setPreview(boolean preview) {
+		this.preview = preview;
 	}
 
 	public void setId(Integer id) {
@@ -123,11 +124,11 @@ public class Lecture {
     }
 
     public boolean isIsPreview() {
-        return isPreview;
+        return preview;
     }
 
     public void setIsPreview(boolean isPreview) {
-        this.isPreview = isPreview;
+        this.preview = isPreview;
 //        DB.execute("UPDATE LECTURE SET IS_PREVIEW = '#' WHERE ID = #", ToolKit.JBoolToDBool(isPreview), id.toString());
 //        updateTime();
     }
@@ -138,11 +139,12 @@ public class Lecture {
     }
     
     public void upload(Integer weekId) {
+    	System.out.println("Preview: "+preview);
     	Files.createNewFile(file);
     	id = DB.generateId("lecture");
 		String lectureSql = "insert into lecture(id,lecture_no,title,last_update,is_preview,week_id,file_id) values(#,#,'#',#,'#',#,#)";
 		DB.execute(lectureSql, id.toString(), lectureNo.toString(), title,
-				ToolKit.getCurTimeDB(), ToolKit.JBoolToDBool(isPreview),
+				ToolKit.getCurTimeDB(), ToolKit.JBoolToDBool(preview),
 				weekId.toString(), file.getId().toString());
     }
     public void update() {
@@ -157,7 +159,7 @@ public class Lecture {
     			lectureNo.toString(),
     			title,
     			ToolKit.getCurTimeDB(),
-    			ToolKit.JBoolToDBool(isPreview),
+    			ToolKit.JBoolToDBool(preview),
     			id.toString());
     }
     

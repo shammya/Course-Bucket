@@ -1,15 +1,15 @@
-import axios from "axios"
-import { GLOBAL } from 'Configure.js'
+import axios from "axios";
+import { GLOBAL } from 'Configure.js';
 
 
 class InfoService {
 
     getTeacherInfo() {
-        return axios.get(GLOBAL.HOST + '/get-teacher-info')
+        return axios.get(GLOBAL.HOST + '/get-teacher-info', authHeaders());
     }
 
     getStudentInfo() {
-        return axios.get(GLOBAL.HOST + '/get-student-info')
+        return axios.get(GLOBAL.HOST + '/get-student-info', authHeaders());
     }
 
     // deleteCountry(id){

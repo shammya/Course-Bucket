@@ -174,7 +174,7 @@ public class Course {
 		}
 	}
 
-	public static void createNewCourse(String teacherUsername, Course course) {
+	public static Integer createNewCourse(String teacherUsername, Course course) {
 		Integer courseId = DB.generateId("COURSE");
 		course.setId(courseId);
 
@@ -205,6 +205,7 @@ public class Course {
 		});
 		notificationCourseUpload(teacherUsername, courseId);
 		System.out.println("Course upload done of id: " + courseId);
+		return courseId;
 	}
 
 	public static void update(Course course) {
@@ -841,12 +842,28 @@ public class Course {
 			sql += whereStatement;
 		sql = sql + "\n" + orderStatement;
 
-		String finalSql = " select c.id, c.title ,\n" + "	( select concat(concat(first_name,' '),last_name) \n"
-				+ "	  from person where c.teacher_id = id\n" + "	) as name ,\n" + "	nvl(( select avg(value)\n"
-				+ "	  from rating \n" + "	  where course_id = c.id \n" + "	  group by course_id\n"
-				+ "	),0.0) as rating ,\n" + "	nvl(( select count(course_id)\n" + "	  from rating \n"
-				+ "	  where course_id = c.id\n" + "	  group by course_id\n" + "	),0) as rating_count ,\n"
-				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" + "	\n" + "from course c , \n" + " ( "
+		String finalSql = ""
+				+ " select c.id, c.title ,\n" 
+				+ "	( select concat(concat(first_name,' '),last_name) \n"
+				+ "	  from person where c.teacher_id = id\n" 
+				+ "	) as name ,\n" 
+				+ " ( select content"
+				+ "   from files f "
+				+ "   where c.cover_id = f.id"
+				+ " ) as content, "
+				+ "	nvl(( select avg(value)\n"
+				+ "	  from rating \n" 
+				+ "	  where course_id = c.id \n" 
+				+ "	  group by course_id\n"
+				+ "	),0.0) as rating ,\n" 
+				+ "	nvl(( select count(course_id)\n" 
+				+ "	  from rating \n"
+				+ "	  where course_id = c.id\n" 
+				+ "	  group by course_id\n" 
+				+ "	),0) as rating_count ,\n"
+				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" 
+				+ "from course c , \n" 
+				+ " ( "
 				+ sql + " ) a\n" + "where c.id = a.id and c.is_approved = 'T'";
 
 		// System.err.println(finalSql);
@@ -855,6 +872,7 @@ public class Course {
 		try {
 			while (rs.next()) {
 				miniCourses.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getString("content"),
 						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
 						rs.getDouble("offer_price")));
 			}
@@ -868,12 +886,26 @@ public class Course {
 	}
 
 	public static String getMiniCourseSql(String sql) {
-		String finalSql = " select c.id, c.title ,\n" + "	( select concat(concat(first_name,' '),last_name) \n"
-				+ "	  from person where c.teacher_id = id\n" + "	) as name ,\n" + "	nvl(( select avg(value)\n"
-				+ "	  from rating \n" + "	  where course_id = c.id \n" + "	  group by course_id\n"
-				+ "	),0.0) as rating ,\n" + "	nvl(( select count(course_id)\n" + "	  from rating \n"
-				+ "	  where course_id = c.id\n" + "	  group by course_id\n" + "	),0) as rating_count ,\n"
-				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" + " from ( " + sql + " ) c";
+		String finalSql = " select c.id, c.title ,\n" 
+				+ "	( select concat(concat(first_name,' '),last_name) \n"
+				+ "	  from person where c.teacher_id = id\n" 
+				+ "	) as name ,\n"
+				+ " ( select content"
+				+ "   from files f "
+				+ "   where c.cover_id = f.id"
+				+ " ) as content, " 
+				+ "	nvl(( select avg(value)\n"
+				+ "	  from rating \n" 
+				+ "	  where course_id = c.id \n" 
+				+ "	  group by course_id\n"
+				+ "	),0.0) as rating ,\n" 
+				+ "	nvl(( select count(course_id)\n" 
+				+ "	  from rating \n"
+				+ "	  where course_id = c.id\n" 
+				+ "	  group by course_id\n" 
+				+ "	),0) as rating_count ,\n"
+				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" 
+				+ " from ( " + sql + " ) c";
 		return finalSql;
 	}
 
@@ -892,12 +924,13 @@ public class Course {
 			if (rs != null) {
 				while (rs.next()) {
 					newReleased.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+							rs.getString("content"),
 							rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
 							rs.getDouble("offer_price")));
 				}
 			}
 			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n"
-					+ "	c.teacher_id ,\n"
+					+ "	c.teacher_id , c.cover_id, \n"
 					+ "	( SELECT count( course_id ) FROM purchase_history WHERE course_id = c.id ) AS count \n"
 					+ "FROM\n"
 					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM purchase_history ) ) c \n"
@@ -905,39 +938,46 @@ public class Course {
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
 				bestSeller.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getString("content"),
 						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
 						rs.getDouble("offer_price")));
 			}
 			sql = getMiniCourseSql(
 					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n" + "	c.teacher_id ,\n"
+							+ "	c.cover_id, \n"
 							+ "	( SELECT count( course_id ) FROM rating WHERE course_id = c.id ) AS count \n" + "FROM\n"
 							+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM rating ) ) c \n"
 							+ "ORDER BY\n" + "	count DESC");
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
 				mostRated.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getString("content"),
 						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
 						rs.getDouble("offer_price")));
 			}
 
 			sql = getMiniCourseSql(
 					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n" + "	c.teacher_id ,\n"
+							+ "	c.cover_id, \n"
 							+ "	( SELECT count( course_id ) FROM review WHERE course_id = c.id ) AS count \n" + "FROM\n"
 							+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM review ) ) c \n"
 							+ "ORDER BY\n" + "	count DESC");
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
 				mostReviewed.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getString("content"),
 						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
 						rs.getDouble("offer_price")));
 			}
 
 			sql = getMiniCourseSql(
-					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer \n" + "	c.teacher_id ,\n"
+					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer, \n" + "	c.teacher_id \n"
+							+ "	c.cover_id \n"
 							+ "FROM\n" + "	course c \n" + "WHERE\n" + "	( c.price * ( 100-c.offer ) / 100 ) = 0.0");
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
 				free.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getString("content"),
 						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
 						rs.getDouble("offer_price")));
 			}
@@ -1048,36 +1088,44 @@ public class Course {
 		ArrayList<FaqList> faqs = FAQ.getFaqListCourse(courseId);
 		return new PublicResponse(enrolledStudentCount, ratingByNumber, ratingValue, ratingCount, reviews, faqs);
 	}
-
-	public static Course getCourseAfterAuthentication(String username, Integer courseId) {
+	
+	public static boolean authenticateForCourseContent(String username, Integer courseId) {
 		String sql = "select teacher_id person from course where id = # and teacher_id = '#'\r\n" + "union\r\n"
 				+ "select student_id person from purchase_history where course_id = #  and student_id = '#'\r\n"
 				+ "union \r\n" + "select id person from admin where id = '#'\r\n" + "	";
 		ResultSet rs = DB.executeQuery(sql, courseId.toString(), username, courseId.toString(), username, username);
 		try {
 			if (rs.next()) {
-				return new Course(courseId);
+				return true;
 			}
 			else {
-				Course course  = new Course(courseId);
-				for(Week week : course.getWeeks())
-				{
-					for(Lecture lecture : week.getLectures())
-					{
-						if(!lecture.isPreview)
-						{
-							lecture.setFile(null);
-						}
-							
-					}
-				}
-				return course;
+				return false;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return false;
+	}
 
+	public static Course getCourseAfterAuthentication(String username, Integer courseId) {
+		if (authenticateForCourseContent(username, courseId)) {
+			return new Course(courseId);
+		}
+		else {
+			Course course  = new Course(courseId);
+			for(Week week : course.getWeeks())
+			{
+				for(Lecture lecture : week.getLectures())
+				{
+					if(!lecture.preview)
+					{
+						lecture.setFile(null);
+					}
+						
+				}
+			}
+			return course;
+		}
 	}
 }

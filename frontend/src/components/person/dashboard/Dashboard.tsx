@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Looks, RateReview } from "@material-ui/icons";
+import AuthService from "components/auth/api/AuthService";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import React from "react";
 import { FaChalkboardTeacher, FaDollarSign, FaQq } from "react-icons/fa";
@@ -67,54 +68,68 @@ interface PurchaseHistory {
   amount: number;
 }
 
+const Overview = {
+  label: "Overview",
+  urlShort: "overview",
+  icon: <Looks />,
+  content: (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <OverviewBarChart />
+      </Grid>
+      <Grid item xs={12}>
+        <RatingLineChart />
+      </Grid>
+      <Grid item md={6} xs={12}>
+        <CoursePopularityPieChart />
+      </Grid>
+      <Grid item md={6} xs={12}>
+        <IncomePerCourseChart />
+      </Grid>
+    </Grid>
+  ),
+};
+const PurchaseHistory = {
+  label: "Purchase History",
+  urlShort: "purchase-history",
+  icon: <FaDollarSign />,
+  content: <PurchaseHistoryListView />,
+};
+const Review = {
+  label: "Reviews",
+  urlShort: "review",
+  icon: <RateReview />,
+  content: <ReviewListView />,
+};
+const FAQ = {
+  label: "FAQ",
+  urlShort: "faq",
+  icon: <FaQq />,
+  content: <FaqView />,
+};
+const StudentList = {
+  label: "Enrolled Students",
+  urlShort: "enrolled-student",
+  icon: <FaChalkboardTeacher />,
+  content: <EnrolledStudentListView />,
+};
 function Dashboard() {
-  const objects: Array<IDrawerLayoutObject> = [
-    {
-      label: "Overview",
-      urlShort: "overview",
-      icon: <Looks />,
-      content: (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <OverviewBarChart />
-          </Grid>
-          <Grid item xs={12}>
-            <RatingLineChart />
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <CoursePopularityPieChart />
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <IncomePerCourseChart />
-          </Grid>
-        </Grid>
-      ),
-    },
-    {
-      label: "Purchase History",
-      urlShort: "purchase-history",
-      icon: <FaDollarSign />,
-      content: <PurchaseHistoryListView />,
-    },
-    {
-      label: "Reviews",
-      urlShort: "review",
-      icon: <RateReview />,
-      content: <ReviewListView />,
-    },
-    {
-      label: "FAQ",
-      urlShort: "faq",
-      icon: <FaQq />,
-      content: <FaqView />,
-    },
-    {
-      label: "Student List",
-      urlShort: "enrolled-student",
-      icon: <FaChalkboardTeacher />,
-      content: <EnrolledStudentListView />,
-    },
+  const StudentObject: Array<IDrawerLayoutObject> = [
+    Review,
+    FAQ,
+    PurchaseHistory,
   ];
+  const TeacherObject: Array<IDrawerLayoutObject> = [
+    Overview,
+    PurchaseHistory,
+    Review,
+    FAQ,
+    StudentList,
+  ];
+  const objects =
+    AuthService.getCurrentAccountType() === "Teacher"
+      ? TeacherObject
+      : StudentObject;
   const route = useRouteMatch();
   return (
     <>

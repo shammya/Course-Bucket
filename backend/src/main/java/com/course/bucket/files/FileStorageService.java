@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.course.bucket.Global;
+import com.course.bucket.course.Course;
+import com.course.bucket.database.DB;
+import com.course.bucket.tools.ToolKit;
 
 @Service
 public class FileStorageService {
@@ -162,6 +167,27 @@ public class FileStorageService {
 		}
 	}
 	
+	public boolean authenticateFile(String fileName) {
+		ResultSet rs = DB.executeQuery(""
+				+ "SELECT COURSE_ID, IS_PREVIEW\r\n"
+				+ "FROM FILES F, LECTURE L, WEEK W\r\n"
+				+ "WHERE \r\n"
+				+ "F.ID = L.FILE_ID AND\r\n"
+				+ "W.ID = L.WEEK_ID AND\r\n"
+				+ "CONTENT = '#'", "http://localhost:8800/resources/pv/"+fileName);
+		try {
+			if(rs.next()) {
+				if(ToolKit.DBoolToJBool(rs.getString("IS_PREVIEW"))) {
+					return true;
+				}
+				return Course.authenticateForCourseContent(ToolKit.getCurrentUserName(), rs.getInt("COURSE_ID"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 //	function to load the file
 	public Resource loadFileAsResource(String fileName, boolean secure) {

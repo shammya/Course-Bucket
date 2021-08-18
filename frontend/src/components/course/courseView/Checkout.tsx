@@ -145,7 +145,7 @@ export function CheckoutDialog({
                 <TextField
                   variant="outlined"
                   label="Name on card"
-                  value={creditCard?.nameOnCard}
+                  value={creditCard?.nameOnCard ? creditCard.nameOnCard : ""}
                   onChange={(event) =>
                     setCreditCard({
                       ...creditCard,
@@ -157,7 +157,7 @@ export function CheckoutDialog({
               <Grid item>
                 <TextField
                   variant="outlined"
-                  value={creditCard?.cardNo}
+                  value={creditCard?.cardNo ? creditCard.cardNo : ""}
                   label="Card number"
                   onChange={(event) =>
                     setCreditCard({ ...creditCard, cardNo: event.target.value })

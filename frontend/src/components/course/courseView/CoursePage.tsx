@@ -1,9 +1,15 @@
 import {
+  Breadcrumbs,
   Button,
   Card,
   CardContent,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
+  Link,
   List,
   ListItem,
   ListItemAvatar,
@@ -11,9 +17,10 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { DoneAll, LabelImportant } from "@material-ui/icons";
+import { DoneAll, LabelImportant, NavigateNext } from "@material-ui/icons";
 import { Rating } from "@material-ui/lab";
 import { Course, Property, PublicResponse, Week } from "classes/Course";
+import AuthService from "components/auth/api/AuthService";
 import {
   CheckoutDialog,
   CongratulationDialog,
@@ -26,6 +33,7 @@ import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum
 import TeacherService from "components/person/api/TeacherService";
 import { format } from "date-fns";
 import User from "layout/User";
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { IconPickerItem } from "react-fa-icon-picker";
 import { useHistory } from "react-router";
@@ -113,8 +121,12 @@ export function CourseView() {
   const [course, setCourse] = useState<Course>(new Course());
   const [teacherInfo, setTeacherInfo] = useState<TeacherMiniInfo>();
   const [publicResponse, setPublicResponse] = useState<PublicResponse>();
-  const [isBought, setIsBought] = useState(false);
+  const [buyNowShow, setBuyNowShow] = useState(true);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+
+  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (courseId) {
       loadCourseContent();
@@ -136,16 +148,40 @@ export function CourseView() {
     });
   }
 
+  function handleBuyNowClick() {
+    if (AuthService.getCurrentAccountType() === "Student") {
+      setCheckoutShow(true);
+    } else {
+      enqueueSnackbar('Please log in as "Student" to buy this course', {
+        variant: "error",
+      });
+    }
+  }
+
   async function loadCourseContent() {
+    let teacherUsername = "";
     await CourseService.getCourseToShow(courseId).then((response) => {
       console.log("Course fetched", response.data);
+      teacherUsername = response.data.teacherUsername;
       setCourse(response.data);
       handleReloadPublicResponse(response.data.teacherUsername);
     });
-    await CourseService.isBought(courseId).then((response) => {
-      console.log("course bought", response.data);
-      setIsBought(response.data);
-    });
+    if (AuthService.getCurrentAccountType() === "Student") {
+      await CourseService.isBought(courseId).then((response) => {
+        console.log("course bought", response.data);
+        console.log("teacher username", course.teacherUsername);
+        if (response.data) {
+          setBuyNowShow(false);
+        }
+      });
+    } else if (
+      AuthService.getCurrentAccountType() == "Admin" ||
+      AuthService.getCurrentUsername() == teacherUsername
+    ) {
+      setBuyNowShow(false);
+    }
+    console.log("loading will be false");
+    setLoading(false);
   }
 
   async function handleReloadPublicResponse(teacherUsername: string) {
@@ -295,7 +331,7 @@ export function CourseView() {
                   <Card style={{ ...style, zIndex: 999, marginLeft: 16 }}>
                     <CardContent>
                       <img src={course?.cover?.content} />
-                      {!isBought && (
+                      {buyNowShow && (
                         <>
                           <Grid
                             item
@@ -308,15 +344,14 @@ export function CourseView() {
                             <Price />
                           </Grid>
                           <Grid item>
-                            <div onClick={() => setCheckoutShow(true)}>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                style={{ width: "100%" }}
-                              >
-                                Buy now
-                              </Button>
-                            </div>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              style={{ width: "100%" }}
+                              onClick={handleBuyNowClick}
+                            >
+                              Buy now
+                            </Button>
                             <CheckoutDialog
                               open={checkoutShow}
                               course={course}
@@ -344,7 +379,7 @@ export function CourseView() {
   }
   function MobileHeader() {
     return (
-      <Card>
+      <Card style={{ width: "100%" }}>
         <CardContent>
           <Grid container direction="column" spacing={1}>
             <Grid item>
@@ -356,55 +391,143 @@ export function CourseView() {
             <Grid item>
               <CourseProperties />
             </Grid>
-            <Grid
-              item
-              container
-              direction="row"
-              style={{
-                zIndex: 999,
-                position: "fixed",
-                bottom: 0,
-                left: 0,
-                backgroundColor: "pink",
-              }}
-            >
-              <Grid item xs={6}>
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  spacing={1}
-                >
-                  <Price />
+
+            {buyNowShow && (
+              <Grid
+                item
+                container
+                direction="row"
+                style={{
+                  zIndex: 999,
+                  position: "fixed",
+                  bottom: 0,
+                  left: 0,
+                  backgroundColor: "pink",
+                }}
+              >
+                <Grid item xs={6}>
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="center"
+                    spacing={1}
+                  >
+                    <Price />
+                  </Grid>
+                </Grid>
+                <Grid item xs={6}>
+                  <div onClick={() => setCheckoutShow(true)}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      style={{ width: "100%" }}
+                    >
+                      Buy now
+                    </Button>
+                  </div>
+                  <CheckoutDialog
+                    open={checkoutShow}
+                    course={course}
+                    onClose={() => setCheckoutShow(false)}
+                    onPurchase={handleOnPurchase}
+                  />
+                  <CongratulationDialog
+                    open={congratulationShow}
+                    course={course}
+                    onClose={handleCongratulationClose}
+                  />
                 </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <div onClick={() => setCheckoutShow(true)}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ width: "100%" }}
-                  >
-                    Buy now
-                  </Button>
-                </div>
-                <CheckoutDialog
-                  open={checkoutShow}
-                  course={course}
-                  onClose={() => setCheckoutShow(false)}
-                  onPurchase={handleOnPurchase}
-                />
-                <CongratulationDialog
-                  open={congratulationShow}
-                  course={course}
-                  onClose={handleCongratulationClose}
-                />
-              </Grid>
-            </Grid>
+            )}
           </Grid>
         </CardContent>
       </Card>
+    );
+  }
+  function EditableButtons() {
+    return (
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignContent="center"
+        spacing={2}
+      >
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(event) => {
+              history.push(`/create-course/${courseId}`);
+            }}
+          >
+            Update
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            onClick={(event) => {
+              history.push({
+                pathname: `/create-course/${courseId}`,
+                state: { duplicate: true },
+              });
+            }}
+          >
+            Duplicate
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={(event) => setDeleteConfirmation(true)}
+          >
+            Delete
+          </Button>
+          <Dialog open={deleteConfirmation}>
+            <DialogTitle>Do you want to delete this course?</DialogTitle>
+            <DialogContent>
+              If you delete, you can not recover it.
+            </DialogContent>
+            <DialogActions>
+              <Grid
+                container
+                direction="row"
+                justifyContent="center"
+                spacing={2}
+              >
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={(event) => {
+                      CourseService.deleteCourse(courseId).then((response) => {
+                        if (response.status === 200) {
+                          enqueueSnackbar("Course successfully deleted");
+                          history.push(`/profile/${course.teacherUsername}`);
+                        }
+                      });
+                    }}
+                  >
+                    Yes
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={(event) => setDeleteConfirmation(false)}
+                  >
+                    No
+                  </Button>
+                </Grid>
+              </Grid>
+            </DialogActions>
+          </Dialog>
+        </Grid>
+      </Grid>
     );
   }
   function Info() {
@@ -486,7 +609,11 @@ export function CourseView() {
               <Typography variant="h5">Course content</Typography>
             </Grid>
             <Grid item>
-              <Curriculum course={course} onCourseAttrChange={(course) => {}} />
+              <Curriculum
+                editable={false}
+                course={course}
+                onCourseAttrChange={(course) => {}}
+              />
             </Grid>
           </Grid>
         </CardContent>
@@ -497,11 +624,23 @@ export function CourseView() {
     return <InstructorShortDetailsBox details={teacherInfo} />;
   }
   return (
-    <User>
+    <User loading={loading}>
       <StickyContainer>
         <Grid container direction="column" spacing={2}>
+          <Breadcrumbs
+            separator={<NavigateNext fontSize="small" />}
+            aria-label="breadcrumb"
+          >
+            <Link color="inherit" href="/">
+              {course?.mainCategory?.name}
+            </Link>
+            <Typography color="textPrimary">
+              {" "}
+              {course?.subCategory?.name}
+            </Typography>
+          </Breadcrumbs>
           <Grid item>
-            <Responsive displayIn={["Laptop", "Tablet"]}>
+            <Responsive displayIn={["Laptop"]}>
               <PCHeader />
             </Responsive>
           </Grid>
@@ -512,14 +651,18 @@ export function CourseView() {
             alignItems="center"
             // style={{ padding: 10 }}
             spacing={2}
-            xs
             md={8}
           >
-            <Grid item>
-              <Responsive displayIn={["Mobile"]}>
+            <Grid item container>
+              <Responsive displayIn={["Mobile", "Tablet"]}>
                 <MobileHeader />
               </Responsive>
             </Grid>
+            {AuthService.getCurrentUsername() === course.teacherUsername && (
+              <Grid item>
+                <EditableButtons />
+              </Grid>
+            )}
             <Info />
             <Grid item container>
               <Content />
@@ -539,6 +682,7 @@ export function CourseView() {
             <Grid item container>
               <ReviewSection
                 courseId={courseId}
+                teacherUsername={course.teacherUsername}
                 reviews={
                   publicResponse?.reviews
                     ? publicResponse?.reviews[0].reviewInfos
@@ -552,6 +696,7 @@ export function CourseView() {
             <Grid item container>
               <FAQSection
                 courseId={courseId}
+                teacherUsername={course.teacherUsername}
                 faqs={
                   publicResponse?.faqs
                     ? publicResponse?.faqs[0].faqInfos

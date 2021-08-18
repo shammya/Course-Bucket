@@ -1,5 +1,6 @@
 import { Card, CardContent, makeStyles } from "@material-ui/core";
 import CardHeader from "@material-ui/core/CardHeader";
+import { MiniCourse } from "classes/Course";
 import React from "react";
 import { Breakpoint } from "react-elastic-carousel";
 import CustomCarousel from "tools/customDesign/CustomCarousel";
@@ -21,14 +22,21 @@ for (var i = 1; i <= 10; i++) {
 const useStyles = makeStyles((theme) => ({
   container: {
     margin: theme.spacing(3, 0),
+    width: "100%",
   },
 }));
 
-export function CourseCarousel(props) {
+export function CourseCarousel({
+  title,
+  courses,
+}: {
+  title: string;
+  courses: MiniCourse[];
+}) {
   const classes = useStyles();
   return (
     <Card className={classes.container}>
-      <CardHeader title={props.title} />
+      <CardHeader title={title} />
       <CardContent>
         <CustomCarousel
           isRTL={false}
@@ -36,8 +44,8 @@ export function CourseCarousel(props) {
           disableArrowsOnEnd={true}
           breakPoints={customBreakPoints}
         >
-          {props.courses.map((item) => (
-            <CourseBox courseData={item} />
+          {courses.map((item) => (
+            <CourseBox key={item.id} courseData={item} />
           ))}
         </CustomCarousel>
       </CardContent>

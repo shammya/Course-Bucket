@@ -27,12 +27,13 @@ public class MiniCourse {
 		this.off = course.getOff();
 	}
 	
-	public MiniCourse(Integer id, String title, String teacherName, Double rating, Integer ratingCount, Double price,
+	public MiniCourse(Integer id, String title, String teacherName, String content, Double rating, Integer ratingCount, Double price,
 			Double offeredPrice) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.teacherName = teacherName;
+		this.coverContent = content;
 		this.rating = rating;
 		this.ratingCount = ratingCount;
 		this.price = price;

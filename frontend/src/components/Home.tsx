@@ -1,9 +1,11 @@
 import { Grid, makeStyles } from "@material-ui/core";
 import ImageSlider from "components/ImageCarousel";
 import User from "layout/User";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { CarouselCourse } from "./../classes/Course";
+import CourseService from "./course/api/CourseService";
 import { CourseCarousel } from "./course/CourseCarousel";
 
 const courses = [
@@ -388,20 +390,59 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Home = (props) => {
+  const [carouselCourses, setCarouselCourses] = useState<CarouselCourse>(
+    new CarouselCourse()
+  );
+  const [loading, setLoading] = useState<boolean>(true);
   let match = useRouteMatch();
   const history = useHistory();
-  console.log(props.location.state);
   const classes = useStyles();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  async function fetchData() {
+    await CourseService.getCarouselCourses().then((response) => {
+      console.log(response);
+      if (response.status === 200) setCarouselCourses(response.data);
+    });
+    await setLoading(false);
+    console.log("carousels loaded");
+  }
   return (
-    <User>
+    <User loading={loading}>
       <Grid container className={classes.homeContainer} direction="column">
         <Grid item>
           <ImageSlider />
         </Grid>
-        <Grid item>
-          {courses.map((courses) => (
-            <CourseCarousel title={courses.title} courses={courses.courses} />
-          ))}
+        <Grid item container direction="column" spacing={2}>
+          <Grid item container>
+            <CourseCarousel
+              title={"Most Rated"}
+              courses={carouselCourses.mostRated}
+            />
+          </Grid>
+          <Grid item container>
+            <CourseCarousel
+              title={"Most Reviewed"}
+              courses={carouselCourses.mostReviewed}
+            />
+          </Grid>
+          <Grid item container>
+            <CourseCarousel
+              title={"Best Seller"}
+              courses={carouselCourses.bestSeller}
+            />
+          </Grid>
+          <Grid item container>
+            <CourseCarousel title={"Free"} courses={carouselCourses.free} />
+          </Grid>
+          <Grid item container>
+            <CourseCarousel
+              title={"New Released"}
+              courses={carouselCourses.newReleased}
+            />
+          </Grid>
         </Grid>
       </Grid>
     </User>

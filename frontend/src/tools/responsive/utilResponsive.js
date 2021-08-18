@@ -5,13 +5,13 @@ export const DeviceWidthObject = {
   MobileMedium: { max: 375, min: 321 },
   MobileLarge: { max: 767, min: 376 },
   Tablet: { max: 991, min: 768 },
-  LaptopSmall: { max: 1024, min: 992 },
-  LaptopLarge: { max: 1440, min: 1025 },
-  LargerThanLaptop: { max: 2560, min: 1441 },
+  LaptopSmall: { max: 1099, min: 992 },
+  LaptopLarge: { max: 1439, min: 1100 },
+  LargerThanLaptop: { max: 2560, min: 1440 },
   LargeScreenMax: { max: 999999, min: 2561 }
 };
 export const IdDeviceBreakpointsByWidth = {
-  laptop_max: 1440,
+  laptop_max: 1439,
   laptop_min: 992,
   tablet_max: 991,
   tablet_min: 768,

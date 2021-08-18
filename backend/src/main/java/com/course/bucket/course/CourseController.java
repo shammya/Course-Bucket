@@ -32,11 +32,12 @@ public class CourseController {
 	
 	@PreAuthorize("hasRole('Teacher')")
 	@PostMapping("/add-course")
-	public void addCourse(@RequestBody Course course) {
+	public Integer addCourse(@RequestBody Course course) {
 		//System.out.println("\t course : "+course.getName()+" "+course.getParentName()+" "+course.getAdminId());
-		Course.createNewCourse(ToolKit.getCurrentUserName(), course);
+		return Course.createNewCourse(ToolKit.getCurrentUserName(), course);
 	}
 
+	@PreAuthorize("hasRole('Teacher')")
 	@PutMapping("/update-course")
 	public void updateCourse(@RequestBody Course course) {
 		Course.update(course);
@@ -46,38 +47,36 @@ public class CourseController {
 //	public List<Course> findCategories(){
 //		return Course.getAllCategories();
 //	}
-	
+
+	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-course-for-update/{id}")
 	public Course getCourseForUpdate(@PathVariable Integer id) {
 		return new Course(id);
 	}
-	@GetMapping("/get-course-to-show/{id}")
+	
+	@GetMapping("/public/get-course-to-show/{id}")
 	public Course getCourseToShow(@PathVariable Integer id) {
 		return Course.getCourseAfterAuthentication(ToolKit.getCurrentUserName(),id);
 	}
-	@GetMapping("/get-course-public-response/{courseId}")
+	@GetMapping("/public/get-course-public-response/{courseId}")
 	public PublicResponse getCoursePublicResponse(@PathVariable Integer courseId) {
 		return Course.getPublicResponse(courseId);
 	}
 	
-	
-	
-	@PostMapping("/get-filtered-courses")
+	@PostMapping("/public/get-filtered-courses")
 	public ArrayList<MiniCourse> getFilteredCourses(@RequestBody Filters filters) {
 		return Course.getFilteredCourses(filters);
 	}
 	
 	
-	@GetMapping("/get-carousel-courses")
+	@GetMapping("/public/get-carousel-courses")
 	public CarouselCourse getFilteredCourses() {
 		return Course.getCarouselCourse();
 	}
 	
-		
-	
-//	
-//	@DeleteMapping("/delete-course/{id}")
-//	public void deleteCourse(@PathVariable Integer id) {
-//		Course.deleteCourse(id);
-//	}
+	@PreAuthorize("hasRole('Teacher')")
+	@DeleteMapping("/delete-course/{id}")
+	public void deleteCourse(@PathVariable Integer id) {
+		new Course(id).delete();
+	}
 }

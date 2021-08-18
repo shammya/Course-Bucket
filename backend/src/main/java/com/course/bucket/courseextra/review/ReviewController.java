@@ -57,10 +57,14 @@ public class ReviewController {
 		return Review.getReviewByStudent(courseId, username);
 	}
 	
-	
+
 	@GetMapping("/get-review-teacher")
 	public ArrayList<ReviewList> getReviewListTeacher(){
 		return Review.getReviewListTeacher(ToolKit.getCurrentUserName());
+	}
+	@GetMapping("/get-review-student")
+	public ArrayList<ReviewList> getReviewListStudent(){
+		return Review.getReviewListStudent(ToolKit.getCurrentUserName());
 	}
 	
 //	@GetMapping("/get-review-by-name/{id}")

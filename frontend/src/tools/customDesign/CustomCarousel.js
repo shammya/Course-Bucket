@@ -32,7 +32,7 @@ function navigationArrow(props) {
 
 export default function CustomCarousel(props) {
   return (
-    <Carousel {...props} renderArrow={navigationArrow}>
+    <Carousel {...props} itemPadding={[3, 0, 3, 0]} renderArrow={navigationArrow}>
       {props.children}
     </Carousel>
   )

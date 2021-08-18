@@ -51,16 +51,24 @@ export class MiniCourse {
   off: number;
 }
 
+export class CarouselCourse {
+  newReleased: MiniCourse[];
+  bestSeller: MiniCourse[];
+  mostReviewed: MiniCourse[];
+  mostRated: MiniCourse[];
+  free: MiniCourse[];
+}
+
 export class Lecture {
   id: number;
   lectureNo: number;
   title: string;
   lastUpdate: Date;
   file: Files;
-  isPreview: Boolean;
+  preview: boolean;
 
   constructor(title: string = "Lecture Title") {
-    this.isPreview = false;
+    this.preview = false;
     this.title = title;
   }
   setLectureNo(lectureNo: number) {
@@ -128,14 +136,20 @@ export class PurchaseHistory {
 }
 
 export class PurchaseHistoryList {
-  coursetitle: string;
-  coursesubtitle: string;
+  courseId: number;
+  courseTitle: string;
+  courseSubtitle: string;
   courseImage: string;
   purchaseHistoryInfos: PurchaseHistoryInfo[];
 }
 export class PurchaseHistoryInfo {
+  id: number;
+  studentUsername: string;
   studentName: string;
   studentImage: string;
+  teacherUsername: string;
+  teacherName: string;
+  teacherImage: string;
   purchaseTime: Date;
   purchaseAmount: number;
 }

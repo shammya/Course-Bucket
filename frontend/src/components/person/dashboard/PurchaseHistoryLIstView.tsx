@@ -1,6 +1,6 @@
-import { PurchaseHistory, PurchaseHistoryList } from "classes/Course";
+import { Avatar, Grid, IconButton, Link } from "@material-ui/core";
+import { PurchaseHistoryList } from "classes/Course";
 import AuthService from "components/auth/api/AuthService";
-import { ReviewBox } from "components/course/courseView/Review";
 import CustomPagination from "layout/Pagination";
 import MaterialTable from "material-table";
 import { useEffect, useState } from "react";
@@ -10,19 +10,51 @@ import TeacherService from "../api/TeacherService";
 import { ContentHeader } from "./Dashboard";
 
 function PurchaseHistoryTable({ data }) {
+  const history = useHistory();
+  data = data.map((item) => ({
+    person:
+      AuthService.getCurrentAccountType() === "Teacher"
+        ? {
+            name: item.studentName,
+            image: item.studentImage,
+            username: item.studentUsername,
+          }
+        : {
+            name: item.teacherName,
+            image: item.teacherImage,
+            username: item.teacherUsername,
+          },
+    time: new Date(item.purchaseTime).toLocaleString(),
+    amount: item.purchaseAmount,
+  }));
   const [columns, setColumns] = useState([
-    { title: "Course Image", field: "image" },
-    { title: "Course Name", field: "courseName" },
-    { title: "Student Image", field: "studentImage" },
-    { title: "Student Name", field: "studentName" },
+    {
+      title:
+        AuthService.getCurrentAccountType() === "Teacher"
+          ? "Student"
+          : "Teacher",
+      field: "student",
+      render: (rowData) => (
+        <Grid container direction="row" spacing={1} alignItems="center">
+          <Grid item>
+            <IconButton
+              onClick={() =>
+                history.push(`/profile/${rowData.person.username}`)
+              }
+            >
+              <Avatar src={rowData.person.image} />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <Link variant="h6" href={`/profile/${rowData.person.username}`}>
+              {rowData.person.name}
+            </Link>
+          </Grid>
+        </Grid>
+      ),
+    },
     { title: "Purchase time", field: "time" },
     { title: "Purchase Amount", field: "amount" },
-    // { title: "Course Image", field: "image", editable: "never" },
-    // { title: "Course Name", field: "courseName", editable: "never" },
-    // { title: "Student Image", field: "studentImage", editable: "never" },
-    // { title: "Student Name", field: "studentName", editable: "never" },
-    // { title: "Purchase time", field: "time", editable: "never" },
-    // { title: "Purchase Amount", field: "amount", editable: "never" },
   ]);
   return (
     <MaterialTable
@@ -61,13 +93,32 @@ export function PurchaseHistoryListView() {
     <CustomPagination objectsPerPage={3}>
       {purchaseHistories?.map((purchaseHistory) => (
         <ContentHeader
-          // key={purchaseHistory.courseId}
-          courseId={10}
-          courseTitle={purchaseHistory.coursetitle}
-          courseSubtitle={purchaseHistory.coursesubtitle}
+          key={purchaseHistory.courseId}
+          courseId={purchaseHistory.courseId}
+          courseTitle={purchaseHistory.courseTitle}
+          courseSubtitle={purchaseHistory.courseSubtitle}
           courseImage={purchaseHistory.courseImage}
         >
           <PurchaseHistoryTable data={purchaseHistory.purchaseHistoryInfos} />
+          {/* {AuthService.getCurrentAccountType() === "Student" && (
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-around"
+              alignItems="center"
+            >
+              <Grid item container justifyContent="flex-start">
+                <Grid item>
+                  <Avatar src={""} />
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6">{}</Typography>
+                </Grid>
+              </Grid>
+              <Grid item>{"Date"}</Grid>
+              <Grid item>{"Cost"}</Grid>
+            </Grid>
+          )} */}
         </ContentHeader>
       ))}
     </CustomPagination>

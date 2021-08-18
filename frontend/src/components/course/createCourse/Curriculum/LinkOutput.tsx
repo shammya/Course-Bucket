@@ -3,10 +3,10 @@ import MUIRichTextEditor from "mui-rte";
 import React from "react";
 import { LectureOutputProps, OutputLayout } from "./OutputLayout";
 
-export function LinkOutput({ file, onUpdate }: LectureOutputProps) {
+export function LinkOutput({ editable, file, onUpdate }: LectureOutputProps) {
   const url = "http://google.com";
   return (
-    <OutputLayout onUpdate={onUpdate}>
+    <OutputLayout editable={editable} onUpdate={onUpdate}>
       <MUIRichTextEditor readOnly toolbar={false} defaultValue={file.content} />
       <Grid item container direction="row" alignItems="center">
         <Typography variant="h6">Source link: </Typography>

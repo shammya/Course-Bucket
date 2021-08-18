@@ -10,7 +10,7 @@ class StudentService {
     return axios.get(GLOBAL.HOST + `/get-faq-for-student`, authHeaders());
   }
   getReviewList() {
-    return axios.get(GLOBAL.HOST + `/get-review-teacher`, authHeaders());
+    return axios.get(GLOBAL.HOST + `/get-review-student`, authHeaders());
   }
   getPurchaseHistory() {
     return axios.get(

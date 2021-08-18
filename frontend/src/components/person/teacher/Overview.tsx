@@ -57,9 +57,7 @@ function generateArrayByDay(
   day: number,
   format: (item: Date) => string
 ) {
-  let array: ISource[] = [...source];
-  array = array.slice(-day, array.length - 1);
-  console.log(array);
+  let array: ISource[] = [];
   for (let i = 0; i < day; i++) {
     let date = new Date(
       new Date().setDate(new Date().getDate() - (day - 1 - i))
@@ -80,7 +78,7 @@ function generateArrayByDay(
       fiveStar: data.length ? data[0].fiveStar : 0,
     });
   }
-  // console.log(day + " days", array);
+  console.log(day + " days", array);
   return array;
 }
 function generateArrayByMonth(
@@ -93,7 +91,6 @@ function generateArrayByMonth(
     let date = new Date(
       new Date().setMonth(new Date().getMonth() - (month - 1 - i))
     );
-    console.log(date);
     date.setHours(0, 0, 0, 0);
     let enrStdCount: number = 0;
     let reviewCount: number = 0;
@@ -113,7 +110,7 @@ function generateArrayByMonth(
         fiveStar += item.fiveStar;
       }
     });
-    console.log(date, data);
+    console.log("format", format(date));
     array.push({
       date: format(date), //new Date(date).toLocaleString("default", { weekday: "short" }),
       enrStdCount: enrStdCount,
@@ -156,7 +153,7 @@ export function OverviewBarChart() {
   async function handleCourseChange(course) {
     await setSelectedCourse(course);
     await axios
-      .get(GLOBAL.HOST + `/get-course-overview/${1}`, authHeaders())
+      .get(GLOBAL.HOST + `/get-course-overview/${course.id}`, authHeaders())
       .then((response) => {
         console.log("overview fetch for course " + course.title, response.data);
         let source = response.data.overviewContents.map((item) => ({

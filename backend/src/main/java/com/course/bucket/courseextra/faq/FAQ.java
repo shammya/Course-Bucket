@@ -314,7 +314,7 @@ public class FAQ {
 
 		try {
 			while (crs.next()) {
-				ResultSet frs = DB.executeQuery("select * from faq where course_id = #", crs.getString("course_id"));
+				ResultSet frs = DB.executeQuery("select * from faq where course_id = # and student_id = '#'", crs.getString("course_id"), studentUsername);
 				
 				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
 				while (frs.next()) {

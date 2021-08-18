@@ -313,7 +313,7 @@ public class Review {
 
 		try {
 			while (crs.next()) {
-				ResultSet rvrs = DB.executeQuery("select * from review where course_id = #", crs.getString("course_id"));
+				ResultSet rvrs = DB.executeQuery("select * from review where course_id = # and student_id = '#'", crs.getString("course_id"), studentUsername);
 
 				ArrayList<ReviewInfo> reviewInfos = new ArrayList<>();
 				while (rvrs.next()) {

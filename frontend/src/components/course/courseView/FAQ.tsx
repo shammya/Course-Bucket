@@ -16,7 +16,7 @@ import {
 import { FaqInfo } from "classes/Course";
 import AuthService from "components/auth/api/AuthService";
 import { useSnackbar } from "notistack";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 import TextEditor from "tools/customDesign/TextEditor";
 import { SlidingUpTransition } from "tools/Tools";
@@ -24,22 +24,25 @@ import CourseService from "../api/CourseService";
 
 export function FAQSection({
   courseId,
+  teacherUsername,
   faqs,
   onSubmit,
 }: {
   courseId: number;
+  teacherUsername: string;
   faqs: FaqInfo[] | undefined;
   onSubmit: () => void;
 }) {
   const [questionInputShow, setQuestionInputShow] = useState(false);
-  const [questionOutputShow, setQuestionOutputShow] = useState(false);
-  const [myFaq, setMyFaq] = useState<FaqInfo>();
-  useEffect(() => {
-    CourseService.faqSelf(courseId).then((response) => {
-      console.log("my faq", response.data);
-      setMyFaq(response.data);
-    });
-  }, [faqs]);
+  // const [questionOutputShow, setQuestionOutputShow] = useState(false);
+  // const [myFaq, setMyFaq] = useState<FaqInfo>();
+  const { enqueueSnackbar } = useSnackbar();
+  // useEffect(() => {
+  //   CourseService.faqSelf(courseId).then((response) => {
+  //     console.log("my faq", response.data);
+  //     setMyFaq(response.data);
+  //   });
+  // }, [faqs]);
 
   return (
     <Card style={{ width: "100%" }}>
@@ -51,43 +54,41 @@ export function FAQSection({
                 FAQ
               </Typography>
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  myFaq
-                    ? setQuestionOutputShow(true)
-                    : setQuestionInputShow(true);
-                }}
-              >
-                {myFaq ? "See your question" : "Ask a question"}
-              </Button>
-              {myFaq ? (
-                <FAQOutputQuestionDialog
-                  faq={myFaq}
-                  open={questionOutputShow}
-                  onClose={() => setQuestionOutputShow(false)}
-                />
-              ) : (
-                <FAQInputQuestionDialog
-                  courseId={courseId}
-                  open={questionInputShow}
-                  onClose={() => setQuestionInputShow(false)}
-                  onQuestionSubmit={onSubmit}
-                />
+            {AuthService.getCurrentAccountType() !== "Admin" &&
+              AuthService.getCurrentUsername() !== teacherUsername && (
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      if (AuthService.getCurrentAccountType() === "Student") {
+                        setQuestionInputShow(true);
+                      } else {
+                        enqueueSnackbar(
+                          'Please log in as "Student" to ask a question',
+                          { variant: "error" }
+                        );
+                      }
+                    }}
+                  >
+                    {"Ask a question"}
+                  </Button>
+                  <FAQInputQuestionDialog
+                    courseId={courseId}
+                    open={questionInputShow}
+                    onClose={() => setQuestionInputShow(false)}
+                    onQuestionSubmit={onSubmit}
+                  />
+                </Grid>
               )}
-            </Grid>
           </Grid>
           <Grid item container direction="column">
             {faqs?.map((faq, index) => (
               <Grid item container key={index}>
-                <Grid item container>
-                  <Divider />
-                </Grid>
-                <Grid item container>
-                  <FAQBox faq={faq} onSubmit={onSubmit} />
-                </Grid>
+                <Divider
+                  style={{ width: "100%", marginTop: 8, marginBottom: 16 }}
+                />
+                <FAQBox faq={faq} onSubmit={onSubmit} />
               </Grid>
             ))}
           </Grid>

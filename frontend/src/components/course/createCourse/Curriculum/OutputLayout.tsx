@@ -3,14 +3,17 @@ import { Files } from "classes/Files";
 import React, { ReactElement } from "react";
 
 export interface LectureOutputProps {
+  editable: boolean;
   file: Files;
   onUpdate: () => void;
 }
 
 export function OutputLayout({
+  editable,
   onUpdate,
   children,
 }: {
+  editable: boolean;
   onUpdate: () => void;
   children: ReactElement[] | ReactElement;
 }) {
@@ -19,11 +22,13 @@ export function OutputLayout({
       <Grid item container direction="column">
         {children}
       </Grid>
-      <Grid item container direction="row" justifyContent="center">
-        <Button color="primary" variant="outlined" onClick={onUpdate}>
-          Update
-        </Button>
-      </Grid>
+      {editable && (
+        <Grid item container direction="row" justifyContent="center">
+          <Button color="primary" variant="outlined" onClick={onUpdate}>
+            Update
+          </Button>
+        </Grid>
+      )}
     </Grid>
   );
 }

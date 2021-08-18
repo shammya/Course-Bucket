@@ -25,6 +25,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Responsive } from "tools/responsive/Responsive";
 import { TopNav } from "./NavBar";
+import { NotificationPopUp } from "./NotificationPopUp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -248,17 +249,28 @@ export function Header() {
     const classes = useStyles();
     return (
       <>
-        <img
-          className={classes.logo}
-          src={require("assets/img/CourseOverflowIcon.png").default}
-        />
+        <IconButton onClick={(event) => history.push("/home")}>
+          <img
+            className={classes.logo}
+            src={require("assets/img/CourseOverflowIcon.png").default}
+          />
+        </IconButton>
         <Responsive displayIn={["Laptop", "Tablet"]}>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography
+            className={classes.title}
+            variant="h6"
+            noWrap
+            onClick={(event) => history.push("/home")}
+          >
             Course Bucket
           </Typography>
         </Responsive>
         <Responsive displayIn={["Mobile"]}>
-          <Grid className={classes.title} item>
+          <Grid
+            className={classes.title}
+            item
+            onClick={(event) => history.push("/home")}
+          >
             <Typography variant="h6" noWrap>
               Course
             </Typography>
@@ -272,6 +284,20 @@ export function Header() {
   }
   function SearchBox(props) {
     const classes = useStyles();
+    const [value, setValue] = useState("");
+    function handleSearchClick() {
+      if (history.location.pathname == "/search") {
+        history.replace({
+          pathname: `/search`,
+          state: { key: value },
+        });
+      } else {
+        history.push({
+          pathname: `/search`,
+          state: { key: value },
+        });
+      }
+    }
     return (
       <div className={classNames(classes.inputRoot, props.className)}>
         <Grid container spacing={1} alignItems="center">
@@ -279,35 +305,110 @@ export function Header() {
             <TextField
               placeholder="Search course..."
               fullWidth
+              value={value}
               InputLabelProps={{
                 shrink: true,
               }}
               inputProps={{
                 type: "search",
               }}
+              onKeyPress={(event) =>
+                event.key === "Enter" ? handleSearchClick() : ""
+              }
+              InputProps={{
+                endAdornment: (
+                  <IconButton onClick={handleSearchClick}>
+                    <SearchIcon />
+                  </IconButton>
+                ),
+              }}
               variant="outlined"
+              onChange={(event) => setValue(event.target.value)}
             />
           </Grid>
-          <IconButton>
-            <SearchIcon />
-          </IconButton>
         </Grid>
       </div>
     );
   }
-
+  function SideMenuPopUp() {
+    return (
+      <Grid container direction="column">
+        <Grid item onClick={profileDetailsLoad}>
+          <CardActionArea style={{ padding: 16 }}>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              wrap="nowrap"
+              spacing={1}
+            >
+              <Grid item>
+                <Avatar src={photo?.content} />
+              </Grid>
+              <Grid item>
+                <Typography>Signed in as</Typography>
+                <Typography variant="h6">
+                  {AuthService.getCurrentUser().username}
+                </Typography>
+                <Typography variant="body1">
+                  {AuthService.getCurrentUser().email}
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardActionArea>
+        </Grid>
+        <Divider />
+        <Grid item>
+          <List>
+            {popUpNav.map((item) => (
+              <ListItem
+                key={item.label}
+                button
+                onClick={(event) => {
+                  item.func();
+                }}
+              >
+                {item.label}
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
+      </Grid>
+    );
+  }
   function IconSet() {
     const [anchorRef, setAnchorRef] = useState<HTMLButtonElement | null>(null);
+    const [notificationAnchorRef, setNotificationAnchorRef] =
+      useState<HTMLButtonElement | null>(null);
 
     return (
       <>
         {AuthService.isLogin() ? (
           <>
-            <IconButton>
+            <IconButton
+              onClick={(event: React.MouseEvent<any>) =>
+                setNotificationAnchorRef(event.currentTarget)
+              }
+            >
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon fontSize="large" />
               </Badge>
             </IconButton>
+            <Popover
+              open={Boolean(notificationAnchorRef)}
+              anchorEl={notificationAnchorRef}
+              onClose={() => setNotificationAnchorRef(null)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              <NotificationPopUp />
+            </Popover>
             <Grid style={{ display: "flex" }}>
               <IconButton
                 onClick={(event: React.MouseEvent<any>) =>
@@ -329,48 +430,7 @@ export function Header() {
                   horizontal: "center",
                 }}
               >
-                <Grid container direction="column">
-                  <Grid item onClick={profileDetailsLoad}>
-                    <CardActionArea style={{ padding: 16 }}>
-                      <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        wrap="nowrap"
-                        spacing={1}
-                      >
-                        <Grid item>
-                          <Avatar src={photo?.content} />
-                        </Grid>
-                        <Grid item>
-                          <Typography>Signed in as</Typography>
-                          <Typography variant="h6">
-                            {AuthService.getCurrentUser().username}
-                          </Typography>
-                          <Typography variant="body1">
-                            {AuthService.getCurrentUser().email}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </CardActionArea>
-                  </Grid>
-                  <Divider />
-                  <Grid item>
-                    <List>
-                      {popUpNav.map((item) => (
-                        <ListItem
-                          key={item.label}
-                          button
-                          onClick={(event) => {
-                            item.func();
-                          }}
-                        >
-                          {item.label}
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Grid>
-                </Grid>
+                <SideMenuPopUp />
               </Popover>
             </Grid>
           </>

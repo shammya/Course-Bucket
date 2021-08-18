@@ -12,50 +12,37 @@ class CourseService {
   }
   getCourseToShow(courseId: number) {
     return axios.get(
-      GLOBAL.HOST + `/get-course-to-show/${courseId}`,
+      GLOBAL.HOST + `/public/get-course-to-show/${courseId}`,
       authHeaders()
     );
   }
-  addCourse(course: Course) {
-    course.cover
-      .upload()
-      .then(() => {
-        course.weeks.forEach((week) => {
-          week.lectures.forEach(async (lecture) => {
-            await lecture.file.upload();
-          });
-        });
-      })
-      .then(() => {
-        console.log("Course upload starting", course);
-        axios
-          .post(GLOBAL.HOST + "/add-course", course, authHeaders())
-          .then((response) => {
-            console.log(response);
-          });
-      });
+  async addCourse(course: Course) {
+    await course.cover.upload();
+    console.log("cover uploaded");
+    for (const week of course.weeks) {
+      for (const lecture of week.lectures) {
+        await lecture.file.upload();
+        console.log("lecture uploaded");
+      }
+    }
+    console.log("Course upload starting", course);
+    return await axios.post(GLOBAL.HOST + "/add-course", course, authHeaders());
   }
-  updateCourse(course: Course) {
-    // if (course.cover.content.file) {
-    course.cover
-      .upload()
-      .then(() => {
-        course.weeks.forEach((week) => {
-          week.lectures.forEach(async (lecture) => {
-            if (lecture.file.content.file) {
-              await lecture.file.upload();
-            }
-          });
-        });
-      })
-      .then(() => {
-        console.log("Course update starting", course);
-        axios
-          .put(GLOBAL.HOST + "/update-course", course, authHeaders())
-          .then((response) => {
-            console.log(response);
-          });
-      });
+  async updateCourse(course: Course) {
+    await course.cover.upload();
+    console.log("cover uploaded");
+    for (const week of course.weeks) {
+      for (const lecture of week.lectures) {
+        await lecture.file.upload();
+        console.log("lecture uploaded");
+      }
+    }
+    console.log("Course update starting", course);
+    return await axios.put(
+      GLOBAL.HOST + "/update-course",
+      course,
+      authHeaders()
+    );
   }
   purchase(courseId: number) {
     return axios.post(
@@ -66,7 +53,7 @@ class CourseService {
   }
   courseRatingReview(courseId: number) {
     return axios.get(
-      GLOBAL.HOST + `/get-course-public-response/${courseId}`,
+      GLOBAL.HOST + `/public/get-course-public-response/${courseId}`,
       authHeaders()
     );
   }
@@ -117,6 +104,19 @@ class CourseService {
   isBought(courseId: number) {
     return axios.get(GLOBAL.HOST + `/is-bought/${courseId}`, authHeaders());
   }
+  deleteCourse(courseId: number) {
+    return axios.delete(
+      GLOBAL.HOST + `/delete-course/${courseId}`,
+      authHeaders()
+    );
+  }
+  getCarouselCourses() {
+    return axios.get(
+      GLOBAL.HOST + `/public/get-carousel-courses`,
+      authHeaders()
+    );
+  }
+
   // } else {
   //   course.weeks.forEach((week) => {
   //     new Promise(() => {

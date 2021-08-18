@@ -61,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 //			.antMatchers("/api/auth/valid-session").authenticated()
 			.antMatchers(
+				"/public/**",
 				"/api/auth/**",
 				"/api/auth/signin",
 				"/api/test/**",
@@ -69,9 +70,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/get-edustatus",
 				"/get-designations",
 				"/get-categories",
-				"/resources/upload",
-				"/resources/pb/**"
+				"/resources/**"
 				).permitAll()
+			.antMatchers(
+					"/resources/pv/**"
+					).authenticated()
 			.anyRequest().authenticated();
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

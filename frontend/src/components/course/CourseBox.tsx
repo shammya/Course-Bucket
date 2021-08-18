@@ -34,69 +34,68 @@ function CourseBox({ courseData }) {
   const local = localStyles();
   const history = useHistory();
   return (
-    <div>
-      <CardActionArea
-        style={{
-          width: "185px",
-        }}
-        onClick={(event) => history.push(`/course/${courseData.id}`)}
-      >
-        <Card>
-          <CardMedia
-            style={{ height: 135, backgroundSize: "contain" }}
-            image={courseData.coverContent}
-          />
-          <CardContent style={{ padding: "0px 10px 10px 10px" }}>
-            <Grid
-              container
-              className={local.titleBox}
-              wrap="nowrap"
-              direction="column"
-              justifyContent="flex-start"
+    <CardActionArea
+      style={{
+        width: "185px",
+      }}
+      onClick={(event) => history.push(`/course/${courseData.id}`)}
+    >
+      <Card>
+        <CardMedia
+          style={{ height: 135, backgroundSize: "contain" }}
+          image={courseData.coverContent}
+        />
+        <CardContent style={{ padding: "0px 10px 10px 10px" }}>
+          <Grid
+            container
+            className={local.titleBox}
+            wrap="nowrap"
+            direction="column"
+            justifyContent="flex-start"
+          >
+            <Typography
+              className={classNames(local.title, global.medium, global.bold)}
+              align="left"
             >
-              <Typography
-                className={classNames(local.title, global.medium, global.bold)}
-                align="left"
-              >
-                {courseData.title}
-              </Typography>
-              <Typography variant="subtitle2" align="left">
-                {courseData.teacherName}
-              </Typography>
+              {courseData.title}
+            </Typography>
+            <Typography variant="subtitle2" align="left">
+              {courseData.teacherName}
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
+            <Rating size="small" value={courseData.rating} readOnly />
+            <Grid item className={global.medium}>
+              {Math.round(courseData.rating * 100) / 100}
             </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-end"
-              alignItems="center"
-              spacing={1}
-            >
-              <Rating size="small" value={courseData.rating} readOnly />
-              <Grid item className={global.medium}>
-                {courseData.rating}
-              </Grid>
-              <Grid item className={global.tiny}>
-                ({courseData.ratingCount})
-              </Grid>
+            <Grid item className={global.tiny}>
+              ({courseData.ratingCount})
             </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-end"
-              alignItems="center"
-              spacing={1}
-            >
-              <Grid item className={classNames(global.medium, local.offPrice)}>
-                {courseData.price * (1 - courseData.off / 100)}
-              </Grid>
-              <Grid item className={classNames(global.big, global.bold)}>
-                {courseData.price}
-              </Grid>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item className={classNames(global.medium, local.offPrice)}>
+              {Math.round(courseData.price * (1 - courseData.off / 100) * 100) /
+                100}
             </Grid>
-          </CardContent>
-        </Card>
-      </CardActionArea>
-    </div>
+            <Grid item className={classNames(global.big, global.bold)}>
+              {courseData.price}
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    </CardActionArea>
   );
 }
 

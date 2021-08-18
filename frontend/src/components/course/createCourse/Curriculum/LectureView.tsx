@@ -35,11 +35,13 @@ import { VideoInput } from "./VideoInput";
 import { VideoOutput } from "./VideoOutput";
 
 export function LectureView({
+  editable,
   lecture,
   lectureNo,
   onLectureChange,
   onLectureRemove,
 }: {
+  editable: boolean;
   lecture: Lecture;
   lectureNo: number;
   onLectureChange: (Lecture) => void;
@@ -48,15 +50,20 @@ export function LectureView({
   const [expanded, setExpanded] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [fieldValue, setFieldValue] = useState(lecture.title);
-  const [body, setBody] = useState("LECTURE_TYPE");
-  const [preview, setPreview] = useState(false);
+  const [body, setBody] = useState(editable ? "LECTURE_TYPE" : "");
+  const [preview, setPreview] = useState(lecture ? lecture.preview : false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     setBody(
-      lecture?.file?.type ? lecture?.file?.type + "_OUTPUT" : "LECTURE_TYPE"
+      lecture?.file?.type
+        ? lecture?.file?.type + "_OUTPUT"
+        : editable
+        ? "LECTURE_TYPE"
+        : ""
     );
-  }, [lecture.title]);
+    setPreview(lecture.preview);
+  }, [lecture.title, lecture.preview]);
 
   // function handleBodyChange(body) {
   //   setState({ ...state, body: body });
@@ -120,7 +127,7 @@ export function LectureView({
   }
   function handlePreviewChange(event) {
     setPreview(!preview);
-    onLectureChange({ ...lecture, isPreview: !preview });
+    onLectureChange({ ...lecture, preview: !preview });
   }
 
   function LectureType() {
@@ -164,41 +171,48 @@ export function LectureView({
       <>
         {!editMode && (
           <Grid container direction="row" alignItems="center" wrap="nowrap">
-            <Grid item>
-              <Tooltip
-                title={
-                  preview
-                    ? "This lecture is set as preview"
-                    : "Do you want to set this lecture as preview?"
-                }
-                TransitionComponent={Zoom}
-                arrow
-              >
-                <span onClick={(event) => event.stopPropagation()}>
-                  <Checkbox checked={preview} onChange={handlePreviewChange} />
-                </span>
-              </Tooltip>
-            </Grid>
-            <Grid item>
-              <IconButton
-                onClick={(event) => {
-                  setEditMode(true);
-                  event.stopPropagation();
-                }}
-              >
-                <Edit />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton
-                onClick={(event) => {
-                  onLectureRemove();
-                  event.stopPropagation();
-                }}
-              >
-                <DeleteForever />
-              </IconButton>
-            </Grid>
+            {editable && (
+              <>
+                <Grid item>
+                  <Tooltip
+                    title={
+                      preview
+                        ? "This lecture is set as preview"
+                        : "Do you want to set this lecture as preview?"
+                    }
+                    TransitionComponent={Zoom}
+                    arrow
+                  >
+                    <span onClick={(event) => event.stopPropagation()}>
+                      <Checkbox
+                        checked={preview}
+                        onChange={handlePreviewChange}
+                      />
+                    </span>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    onClick={(event) => {
+                      setEditMode(true);
+                      event.stopPropagation();
+                    }}
+                  >
+                    <Edit />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    onClick={(event) => {
+                      onLectureRemove();
+                      event.stopPropagation();
+                    }}
+                  >
+                    <DeleteForever />
+                  </IconButton>
+                </Grid>
+              </>
+            )}
             <Grid item>
               <Typography style={{ whiteSpace: "nowrap", marginRight: 10 }}>
                 Lecture {lectureNo} :
@@ -207,7 +221,7 @@ export function LectureView({
             <Grid item container>
               <Typography> {lecture.title}</Typography>
             </Grid>
-            {!expanded && lecture.file == undefined && (
+            {!expanded && editable && lecture.file == undefined && (
               <Grid item>
                 <Button
                   variant="outlined"
@@ -220,7 +234,7 @@ export function LectureView({
                 </Button>
               </Grid>
             )}
-            {expanded && lecture.file == undefined && (
+            {expanded && editable && lecture.file == undefined && (
               <Grid item>
                 <IconButton
                   onClick={(event) => {
@@ -286,7 +300,9 @@ export function LectureView({
     >
       <AccordionSummary
         expandIcon={lecture.file != undefined && <ExpandMore />}
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => {
+          if (editable || lecture?.file?.content) setExpanded(!expanded);
+        }}
       >
         <LectureRow />
       </AccordionSummary>
@@ -301,7 +317,11 @@ export function LectureView({
           />
         )}
         {body === "ARTICLE_OUTPUT" && (
-          <ArticleOutput file={lecture.file} onUpdate={handleOnUpdate} />
+          <ArticleOutput
+            editable={editable}
+            file={lecture.file}
+            onUpdate={handleOnUpdate}
+          />
         )}
         {body === "LINK_INPUT" && (
           <LinkInput
@@ -311,7 +331,11 @@ export function LectureView({
           />
         )}
         {body === "LINK_OUTPUT" && (
-          <LinkOutput file={lecture.file} onUpdate={handleOnUpdate} />
+          <LinkOutput
+            editable={editable}
+            file={lecture.file}
+            onUpdate={handleOnUpdate}
+          />
         )}
         {body === "VIDEO_INPUT" && (
           <VideoInput
@@ -321,7 +345,11 @@ export function LectureView({
           />
         )}
         {body === "VIDEO_OUTPUT" && (
-          <VideoOutput file={lecture.file} onUpdate={handleOnUpdate} />
+          <VideoOutput
+            editable={editable}
+            file={lecture.file}
+            onUpdate={handleOnUpdate}
+          />
         )}
         {body === "PDF_INPUT" && (
           <PDFInput
@@ -331,7 +359,11 @@ export function LectureView({
           />
         )}
         {body === "PDF_OUTPUT" && (
-          <PDFOutput file={lecture.file} onUpdate={handleOnUpdate} />
+          <PDFOutput
+            editable={editable}
+            file={lecture.file}
+            onUpdate={handleOnUpdate}
+          />
         )}
       </AccordionDetails>
     </Accordion>

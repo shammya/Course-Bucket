@@ -32,11 +32,13 @@ const defaultLecture = {
 };
 
 export function WeekView({
+  editable,
   week,
   onWeekChange,
   onWeekRemove,
   weekNo,
 }: {
+  editable: boolean;
   week: Week;
   onWeekChange: (Week) => void;
   onWeekRemove: () => void;
@@ -85,26 +87,30 @@ export function WeekView({
         </IconButton> */}
         {!editMode && (
           <Grid container alignItems="center" direction="row" wrap="nowrap">
-            <Grid item>
-              <IconButton
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setEditMode(true);
-                }}
-              >
-                <Edit />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton
-                onClick={(event) => {
-                  onWeekRemove();
-                  event.stopPropagation();
-                }}
-              >
-                <DeleteForever />
-              </IconButton>
-            </Grid>
+            {editable && (
+              <>
+                <Grid item>
+                  <IconButton
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setEditMode(true);
+                    }}
+                  >
+                    <Edit />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    onClick={(event) => {
+                      onWeekRemove();
+                      event.stopPropagation();
+                    }}
+                  >
+                    <DeleteForever />
+                  </IconButton>
+                </Grid>
+              </>
+            )}
             <Grid item>
               <Typography style={{ whiteSpace: "nowrap", marginRight: 10 }}>
                 Week {weekNo} :
@@ -172,6 +178,7 @@ export function WeekView({
           {lectures.map((item, index) => (
             <Grid item container key={index} style={{ marginBottom: 12 }}>
               <LectureView
+                editable={editable}
                 lecture={item}
                 lectureNo={index + 1}
                 onLectureChange={(lecture) =>
@@ -182,21 +189,23 @@ export function WeekView({
             </Grid>
           ))}
           {/* </ReactSortable> */}
-          <Grid
-            item
-            container
-            justifyContent="center"
-            style={{ marginTop: 10 }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddCircle />}
-              onClick={handleOnLectureAdd}
+          {editable && (
+            <Grid
+              item
+              container
+              justifyContent="center"
+              style={{ marginTop: 10 }}
             >
-              ADD LECTURE
-            </Button>
-          </Grid>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddCircle />}
+                onClick={handleOnLectureAdd}
+              >
+                ADD LECTURE
+              </Button>
+            </Grid>
+          )}
           {/* </ReactSortable> */}
         </Grid>
       </AccordionDetails>

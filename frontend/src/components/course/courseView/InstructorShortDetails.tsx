@@ -47,7 +47,11 @@ function InstructorShortDetailsBox({
                           <Star />
                         </ListItemAvatar>
                         <ListItemText>
-                          ({details?.rating}) {details?.ratingCount} Rating
+                          (
+                          {Math.round(
+                            (details?.rating ? details?.rating : 0) * 100
+                          ) / 100}
+                          ) {details?.ratingCount} Rating
                         </ListItemText>
                       </ListItem>
                       <ListItem>

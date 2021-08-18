@@ -44,11 +44,16 @@ public class PurchaseHistoryController {
 	public ArrayList<PurchaseHistory> findPurchasedStudentInfo(){
 		return PurchaseHistory.getPurchasedStudentInfo(ToolKit.getCurrentUserName());
 	}
-	
+
 	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-purchase-history-teacher")
 	public ArrayList<PurchaseHistoryList> getPurchaseHistoryTeacher(){
 		return PurchaseHistory.getPurchaseHistoryTeacher(ToolKit.getCurrentUserName());
+	}
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/get-purchase-history-student")
+	public ArrayList<PurchaseHistoryList> getPurchaseHistoryStudent(){
+		return PurchaseHistory.getPurchaseHistoryStudent(ToolKit.getCurrentUserName());
 	}
 	
 	

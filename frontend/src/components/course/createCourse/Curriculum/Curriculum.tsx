@@ -5,8 +5,9 @@ import React, { useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 import { WeekView } from "./WeekView";
 import { useSnackbar } from "notistack";
+import AuthService from "components/auth/api/AuthService";
 
-export function Curriculum({ course, onCourseAttrChange }) {
+export function Curriculum({ editable, course, onCourseAttrChange }) {
   const { enqueueSnackbar } = useSnackbar();
   const [weeks, setWeeks] = useState(course.weeks);
 
@@ -48,6 +49,7 @@ export function Curriculum({ course, onCourseAttrChange }) {
         // <div key={item.id}>
         <Grid item container key={index} style={{ marginBottom: 12 }}>
           <WeekView
+            editable={editable}
             week={item}
             onWeekChange={(week) => onWeekChange(index, week)}
             onWeekRemove={() => handleOnWeekRemove(index)}
@@ -58,16 +60,18 @@ export function Curriculum({ course, onCourseAttrChange }) {
         </Grid>
       ))}
       {/* </ReactSortable> */}
-      <Grid item container justifyContent="center" style={{ marginTop: 10 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddCircle />}
-          onClick={handleOnWeekAdd}
-        >
-          ADD WEEK
-        </Button>
-      </Grid>
+      {editable && (
+        <Grid item container justifyContent="center" style={{ marginTop: 10 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddCircle />}
+            onClick={handleOnWeekAdd}
+          >
+            ADD WEEK
+          </Button>
+        </Grid>
+      )}
       {/* </div> */}
       {/* </ReactSortable> */}
     </Grid>

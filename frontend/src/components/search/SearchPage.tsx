@@ -5,6 +5,7 @@ import { FilterChips } from "components/search/filter/Chips";
 import Sort from "components/search/Sort";
 import User from "layout/User";
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import { StickyContainer } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
 
@@ -109,6 +110,8 @@ export const filterObjectList: Array<IFilterType> = [
 ];
 
 const Search = () => {
+  const history = useHistory();
+  console.log(history);
   // const [filterData, setFilterData] = useState(
   //   JSON.parse(JSON.stringify(filterObjectList))
   // );

@@ -37,6 +37,10 @@ img {
 .MuiDialogTitle-root > .MuiTypography-root {
   text-align: center;
 }
+.player-wrapper {
+  width: 100%;
+  height: auto;
+}
 /* input:invalid {
   border-color: red !important;
 } */

@@ -1,34 +1,43 @@
 import { createTheme, makeStyles } from "@material-ui/core/styles";
 
-export const theme = createTheme({
-  typography: {
-    subtitle2: {
-      fontSize: 13
-    }
-  },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 767,
-      md: 991,
-      lg: 1199,
-      xl: 1439
-    }
-  },
+// export const theme = createTheme({
+//   typography: {
+//     subtitle2: {
+//       fontSize: 13
+//     }
+//   },
+//   breakpoints: {
+//     values: {
+//       xs: 0,
+//       sm: 767,
+//       md: 991,
+//       lg: 1199,
+//       xl: 1439
+//     }
+//   },
 
-  // overrides: {
-  //   MuiCssBaseline: {
-  //     '@global': {
-  //       '@font-face': [raleway],
-  //     },
-  //   },
-  // },
-});
+//   // overrides: {
+//   //   MuiCssBaseline: {
+//   //     '@global': {
+//   //       '@font-face': [raleway],
+//   //     },
+//   //   },
+//   // },
+// });
 
 export const lightTheme = createTheme({
   palette: {
     type: "light"
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 768,
+      md: 992,
+      lg: 1100,
+      xl: 1440
+    }
+  }
 });
 Object.assign(lightTheme, {
   overrides: {
@@ -87,6 +96,11 @@ Object.assign(lightTheme, {
       root: {
         margin: 'auto',
         marginRight: 0,
+      }
+    },
+    MuiRating: {
+      root: {
+        color: '#b4690e',
       }
     }
     // spacing: {

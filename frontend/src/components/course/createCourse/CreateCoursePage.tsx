@@ -1,5 +1,7 @@
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import { Course } from "classes/Course";
+import { Files } from "classes/Files";
+import AuthService from "components/auth/api/AuthService";
 import { CoursePrice } from "components/course/createCourse/CoursePrice";
 import { Curriculum } from "components/course/createCourse/Curriculum/Curriculum";
 import { TargetStudent } from "components/course/createCourse/TargetStudent";
@@ -7,12 +9,13 @@ import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import CourseService from "../api/CourseService";
 import { LandingPage } from "./Landing";
-import { Files } from "classes/Files";
 
 function CreateCourse(props) {
   let { courseId } = useParams();
+  let history = useHistory();
   const icon = <InboxIcon />;
   const [course, setCourse] = useState(new Course());
   console.log(course);
@@ -22,14 +25,53 @@ function CreateCourse(props) {
     if (courseId != undefined) {
       CourseService.getCourseForUpdate(courseId).then((response) => {
         console.log("Course fetched", response.data);
+        if (history.location?.state?.duplicate) {
+          removeId(response.data);
+          console.log("after removing id", response.data);
+        }
         let cover = response.data.cover;
         response.data.cover = new Files(cover.type, cover.title)
           .setId(cover.id)
           .setContent(cover.content);
+        response.data.weeks = response.data.weeks.map((week) => {
+          week.lectures = week.lectures.map((lecture) => {
+            let file: Files = lecture.file;
+            file = new Files(file.type, file.title)
+              .setId(file.id)
+              .setContent(file.content);
+            lecture.file = file;
+            return lecture;
+          });
+          return week;
+        });
         setCourse(response.data);
+      });
+    } else {
+      setCourse({
+        ...course,
+        teacherUsername: AuthService.getCurrentUsername(),
       });
     }
   }, []);
+
+  function removeId(course: any) {
+    course.id = undefined;
+    course.cover.id = undefined;
+    course.properties = course.properties.map((item) => ({
+      ...item,
+      id: undefined,
+      icon: { ...item.icon, id: undefined },
+    }));
+    course.weeks = course.weeks.map((week) => ({
+      ...week,
+      id: undefined,
+      lectures: week.lectures.map((lecture) => ({
+        ...lecture,
+        id: undefined,
+        file: { ...lecture.file, id: undefined },
+      })),
+    }));
+  }
 
   function handleOnSave() {
     let error = false;
@@ -158,9 +200,23 @@ function CreateCourse(props) {
     if (error) return;
 
     if (course.id) {
-      CourseService.updateCourse(course);
+      CourseService.updateCourse(course).then((response) => {
+        if (response.status === 200) {
+          enqueueSnackbar("Course updated successfully", {
+            variant: "success",
+          });
+          history.push(`/course/${courseId}`);
+        }
+      });
     } else {
-      CourseService.addCourse(course);
+      CourseService.addCourse(course).then((response) => {
+        if (response.status === 200) {
+          enqueueSnackbar("Course uploaded successfully", {
+            variant: "success",
+          });
+          history.push(`/course/${response.data}`);
+        }
+      });
     }
     //   .then((response) => {
     //   if (response.status == 200) {
@@ -202,6 +258,7 @@ function CreateCourse(props) {
       icon: icon,
       content: (
         <Curriculum
+          editable={true}
           course={course}
           onCourseAttrChange={handleCourseAttrChange}
         />

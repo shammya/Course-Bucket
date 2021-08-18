@@ -16,6 +16,7 @@ import {
 } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import { ReviewInfo } from "classes/Course";
+import AuthService from "components/auth/api/AuthService";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -25,10 +26,12 @@ import CourseService from "../api/CourseService";
 export function ReviewSection({
   reviews,
   courseId,
+  teacherUsername,
   onReviewSubmit,
 }: {
   reviews?: ReviewInfo[] | undefined;
   courseId: number;
+  teacherUsername: string;
   onReviewSubmit: () => void;
 }) {
   const [reviewInputShow, setReviewInputShow] = useState(false);
@@ -36,10 +39,12 @@ export function ReviewSection({
   const { enqueueSnackbar } = useSnackbar();
   const [myReview, setMyReview] = useState<ReviewInfo>();
   useEffect(() => {
-    CourseService.reviewSelf(courseId).then((response) => {
-      console.log("my review", response.data);
-      setMyReview(response.data);
-    });
+    if (AuthService.getCurrentAccountType() === "Student") {
+      CourseService.reviewSelf(courseId).then((response) => {
+        console.log("my review", response.data);
+        setMyReview(response.data);
+      });
+    }
   }, [reviews]);
   return (
     <Card style={{ width: "100%" }}>
@@ -51,34 +56,44 @@ export function ReviewSection({
                 Review
               </Typography>
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  myReview
-                    ? setReviewOutputShow(true)
-                    : setReviewInputShow(true);
-                }}
-              >
-                {myReview ? "See your review" : "Write a review"}
-              </Button>
-              {!myReview && (
-                <ReviewInputDialog
-                  open={reviewInputShow}
-                  courseId={courseId}
-                  onClose={() => setReviewInputShow(false)}
-                  onReviewSubmit={onReviewSubmit}
-                />
+            {AuthService.getCurrentAccountType() !== "Admin" &&
+              AuthService.getCurrentUsername() !== teacherUsername && (
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      if (AuthService.getCurrentAccountType() === "Student") {
+                        myReview
+                          ? setReviewOutputShow(true)
+                          : setReviewInputShow(true);
+                      } else {
+                        enqueueSnackbar(
+                          'Please log in as "Student" to review this course',
+                          { variant: "error" }
+                        );
+                      }
+                    }}
+                  >
+                    {myReview ? "See your review" : "Write a review"}
+                  </Button>
+                  {!myReview && (
+                    <ReviewInputDialog
+                      open={reviewInputShow}
+                      courseId={courseId}
+                      onClose={() => setReviewInputShow(false)}
+                      onReviewSubmit={onReviewSubmit}
+                    />
+                  )}
+                  {myReview && (
+                    <ReviewOutputDialog
+                      open={reviewOutputShow}
+                      review={myReview}
+                      onClose={() => setReviewOutputShow(false)}
+                    />
+                  )}
+                </Grid>
               )}
-              {myReview && (
-                <ReviewOutputDialog
-                  open={reviewOutputShow}
-                  review={myReview}
-                  onClose={() => setReviewOutputShow(false)}
-                />
-              )}
-            </Grid>
           </Grid>
           {!reviews?.length && (
             <Grid item container>
