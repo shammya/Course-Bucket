@@ -3,6 +3,8 @@ import MaterialTable from 'material-table'
 import CourseApprovalService from '../AdminPanel/api/CourseApprovalService.js'
 import { Drawer, Grid } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 import { useHistory } from "react-router";
 
 
@@ -65,6 +67,19 @@ function CourseApproval(props) {
                 console.log(rowData)
                 history.push(`/course/${rowData.id}`)
               }
+            },
+            {
+              icon: 'checkcirclesharp',
+              tooltip: 'approve course',
+              onClick: (event, rowData) => {
+                console.log(rowData)
+                CourseApprovalService.approveCourse(rowData.id)
+                  .then(response => {
+                    getApprovedCourses()
+                    getUnapprovedCourses()
+                  }
+                  )
+              }
             }
           ]}
         />
@@ -85,6 +100,19 @@ function CourseApproval(props) {
               onClick: (event, rowData) => {
                 console.log(rowData)
                 history.push(`/course/${rowData.id}`)
+              }
+            },
+            {
+              icon: 'cancel',
+              tooltip: 'unapprove course',
+              onClick: (event, rowData) => {
+                console.log(rowData)
+                CourseApprovalService.unapproveCourse(rowData.id)
+                  .then(response => {
+                    getApprovedCourses()
+                    getUnapprovedCourses()
+                  }
+                  )
               }
             }
           ]}

@@ -506,4 +506,57 @@ public class Notification {
 		return null;
 		
 	}
+	
+	public static ArrayList<ObjectNode> getFaqAnswerNotification(ObjectMapper mapper) {
+		ArrayList<ObjectNode> objectNodes = new ArrayList<>();
+		
+		String sql = "select \r\n"
+				+ "	n.time,\r\n"
+				+ "	n.from_id ,\r\n"
+				+ "	(\r\n"
+				+ "	select title from course where id = n.course_id\r\n"
+				+ "	) title,\r\n"
+				+ "	n.course_id,\r\n"
+				+ "	(\r\n"
+				+ "	select concat(p.first_name,concat(' ',p.last_name)) full_name from person p where p.id = n.from_id\r\n"
+				+ "	) full_name,\r\n"
+				+ "	(\r\n"
+				+ "	select content from files f , person p where f.id = p.photo_id and p.id = n.from_id\r\n"
+				+ "	) photo,\r\n"
+				+ "	(\r\n"
+				+ "	select id from faq where id = n.event_id and course_id = n.course_id\r\n"
+				+ "	) faq_id\r\n"
+				+ "from \r\n"
+				+ "	notification n\r\n"
+				+ "where \r\n"
+				+ "	n.type = 'FAQQUESTION' and\r\n"
+				+ "	n.seen = 'F' and\r\n"
+				+ "	n.event_id is not null\r\n"
+				+ "order by \r\n"
+				+ "	n.time desc";
+		ResultSet notificationRSet = DB.executeQuery(sql);
+		
+		try {
+			while(notificationRSet.next()) {
+				
+				ObjectNode objectNode = mapper.createObjectNode();
+					
+					objectNode.put("username", notificationRSet.getString("from_id"));
+					objectNode.put("full_name", notificationRSet.getString("full_name"));
+					objectNode.put("photo", notificationRSet.getString("photo"));
+					objectNode.put("title", notificationRSet.getString("title"));
+					objectNode.put("faq_id", notificationRSet.getString("faq_id"));
+					objectNode.put("course_id", notificationRSet.getString("course_id"));
+					objectNode.put("time", notificationRSet.getTimestamp("time").toString());
+
+					objectNodes.add(objectNode);
+			}
+			return objectNodes;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
 }
