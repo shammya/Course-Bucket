@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
@@ -30,12 +32,12 @@ import com.course.bucket.tools.ToolKit;
 public class AdminController {
 
 	
-	@PostMapping("/approve-course")
+	@PostMapping("/approve-course/{courseId}")
 	public void approveCourse(@PathVariable Integer courseId) {
 		 Admin.approveCourse(courseId,ToolKit.getCurrentUserName());
 	}
 	
-	@PostMapping("/unapprove-course")
+	@PostMapping("/unapprove-course/{courseId}")
 	public void unapproveCourse(@PathVariable Integer courseId) {
 		 Admin.unapproveCourse(courseId,ToolKit.getCurrentUserName());
 	}

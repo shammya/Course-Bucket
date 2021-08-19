@@ -41,11 +41,11 @@ public class PersonController {
 		Person.createNewPerson(person);
 	}
 	
-	@PreAuthorize("hasRole('Admin')")
-	@PostMapping("/approve-course/{courseId}")
-	public void approveCourse(@PathVariable Integer courseId) {
-		Person.approveCourse(courseId);
-	}
+//	@PreAuthorize("hasRole('Admin')")
+//	@PostMapping("/approve-course/{courseId}")
+//	public void approveCourse(@PathVariable Integer courseId) {
+//		Person.approveCourse(courseId);
+//	}
 
 	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
 	@GetMapping("/get-person-by-username/{username}")
