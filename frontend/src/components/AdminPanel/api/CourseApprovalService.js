@@ -13,10 +13,10 @@ class CourseApprovalService {
     }
 
     approveCourse(courseId) {
-        return axios.post(GLOBAL.HOST + `/approve-course/${courseId}`, authHeaders())
+        return axios.post(GLOBAL.HOST + `/approve-course/${courseId}`, {}, authHeaders())
     }
     unapproveCourse(courseId) {
-        return axios.post(GLOBAL.HOST + `/unapprove-course/${courseId}`, authHeaders())
+        return axios.post(GLOBAL.HOST + `/unapprove-course/${courseId}`, {}, authHeaders())
     }
 
     // deleteCountry(id){

@@ -45,7 +45,13 @@ function CourseApproval(props) {
   useEffect(() => {
     getApprovedCourses()
     getUnapprovedCourses()
+    return () => {
+      setData1(null);
+      setData2(null);
+    }
   }, []);
+
+
 
   const history = useHistory();
   return (
@@ -69,7 +75,7 @@ function CourseApproval(props) {
               }
             },
             {
-              icon: 'checkcirclesharp',
+              icon: "checkcircle",
               tooltip: 'approve course',
               onClick: (event, rowData) => {
                 console.log(rowData)
