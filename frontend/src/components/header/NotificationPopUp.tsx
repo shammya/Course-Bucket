@@ -1,18 +1,15 @@
-import {
-  Avatar,
-  Button,
-  Divider,
-  Grid,
-  ListItem,
-  ListItemAvatar,
-  Typography,
-} from "@material-ui/core";
-function Notification() {
+import { Avatar, Button, Divider, Grid, Typography } from "@material-ui/core";
+import axios from "axios";
+import { authHeaders } from "components/auth/api/AuthService";
+import input from "postcss/lib/input";
+import { useState, useEffect } from "react";
+import { GLOBAL } from "./../../Configure";
+function Notification({ notification }) {
   let type = "register-person";
   let image;
   let text;
-  switch (type) {
-    case "register-person":
+  switch (notification.type) {
+    case "REGISTRATION":
       image = (
         <Grid item style={{ width: 100 }}>
           <Avatar src={""} />
@@ -25,7 +22,7 @@ function Notification() {
         </Grid>
       );
       break;
-    case "upload-course":
+    case "COURSEUPLOAD":
       image = (
         <Grid item>
           <Avatar src={""} />
@@ -38,7 +35,7 @@ function Notification() {
         </Grid>
       );
       break;
-    case "purchase-course":
+    case "COURSEPURCHASE":
       image = (
         <Grid item>
           <Avatar src={""} />
@@ -52,7 +49,7 @@ function Notification() {
         </Grid>
       );
       break;
-    case "approve-course":
+    case "COURSEAPPROVED":
       image = (
         <Grid item>
           <img src={""} />
@@ -65,7 +62,20 @@ function Notification() {
         </Grid>
       );
       break;
-    case "rating":
+    case "COURSEUNAPPROVED":
+      image = (
+        <Grid item>
+          <img src={""} />
+        </Grid>
+      );
+      text = (
+        <Grid item>
+          <Typography>courseName</Typography>
+          <Typography>is approved </Typography>
+        </Grid>
+      );
+      break;
+    case "RATING":
       image = (
         <Grid item>
           <Avatar src={""} />
@@ -80,7 +90,7 @@ function Notification() {
         </Grid>
       );
       break;
-    case "review":
+    case "REVIEW":
       image = (
         <Grid item>
           <Avatar src={""} />
@@ -94,7 +104,7 @@ function Notification() {
         </Grid>
       );
       break;
-    case "faq-question":
+    case "FAQQUESTION":
       image = (
         <Grid item>
           <Avatar src={""} />
@@ -107,7 +117,7 @@ function Notification() {
         </Grid>
       );
       break;
-    case "faq-answer":
+    case "FAQANSWER":
       image = (
         <Grid item>
           <img src={""} />
@@ -120,7 +130,7 @@ function Notification() {
         </Grid>
       );
       break;
-    case "course-update":
+    case "COURSEUPDATE":
       image = (
         <Grid item>
           <img src={""} />
@@ -133,29 +143,45 @@ function Notification() {
         </Grid>
       );
       break;
-      return (
-        <Grid
-          container
-          direction="row"
-          spacing={1}
-          alignContent="center"
-          justifyContent="flex-start"
-        >
-          {image}
-          {text}
-        </Grid>
-      );
   }
+  return (
+    <Grid
+      container
+      direction="row"
+      spacing={1}
+      alignContent="center"
+      justifyContent="flex-start"
+    >
+      {image}
+      {text}
+    </Grid>
+  );
 }
 export function NotificationPopUp() {
+  const [notifications, setNotifications] = useState([]);
+  useEffect(() => {
+    axios
+      .get(GLOBAL.HOST + "/get-notification", authHeaders())
+      .then((response) => {
+        setNotifications(response.data);
+      });
+  }, []);
   return (
     <Grid container direction="column">
       <Grid item container justifyContent="space-between">
         <Typography variant="h4">Notification</Typography>
         <Button variant="outlined">See all</Button>
       </Grid>
-      <Divider />
-      <Grid item></Grid>
+      {notifications.map((item) => (
+        <>
+          <Grid item>
+            <Divider />
+          </Grid>
+          <Grid item>
+            <Notification notification={item} />
+          </Grid>
+        </>
+      ))}
     </Grid>
   );
 }

@@ -23,35 +23,36 @@ public class NotificationController {
 
 	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
 	@GetMapping("/get-notification")
-	public ArrayList<Notification> getNotification() {
-		return Notification.getNotification(ToolKit.getCurrentUserName());
+	public ArrayList<ObjectNode> getNotification() {
+//		return Notification.getNotifications(mapper, ToolKit.getCurrentUserName());
+		return Notification.getNotifications(mapper, "newTeacher");
 	}
 
-	@GetMapping("/api/auth/get-registration-notification")
-	public   ArrayList<ObjectNode> getRegisteredPerson(){
-		return Notification.getRegisteredPersonNotification(mapper);
-	}
-	
-	@GetMapping("/api/auth/get-course-upload-notification")
-	public   ArrayList<ObjectNode> getCourseUpload(){
-		return Notification.getCourseUploadNotification(mapper);
-	}
-	@GetMapping("/api/auth/get-course-purchase-notification")
-	public   ArrayList<ObjectNode> getCoursePurchase(){
-		return Notification.getCoursePurchaseNotification(mapper);
-	}
-	@GetMapping("/api/auth/get-course-rating-notification")
-	public   ArrayList<ObjectNode> getCourseRating(){
-		return Notification.getCourseRatingNotification(mapper);
-	}
-	@GetMapping("/api/auth/get-course-review-notification")
-	public   ArrayList<ObjectNode> getCourseReview(){
-		return Notification.getCourseReviewNotification(mapper);
-	}
-	@GetMapping("/api/auth/get-course-faq-question-notification")
-	public   ArrayList<ObjectNode> getFaqQuestion(){
-		return Notification.getFaqQuestionNotification(mapper);
-	}
+//	@GetMapping("/api/auth/get-registration-notification")
+//	public   ArrayList<ObjectNode> getRegisteredPerson(){
+//		return Notification.getRegisteredPersonNotification(mapper);
+//	}
+//	
+//	@GetMapping("/api/auth/get-course-upload-notification")
+//	public   ArrayList<ObjectNode> getCourseUpload(){
+//		return Notification.getCourseUploadNotification(mapper);
+//	}
+//	@GetMapping("/api/auth/get-course-purchase-notification")
+//	public   ArrayList<ObjectNode> getCoursePurchase(){
+//		return Notification.getCoursePurchaseNotification(mapper);
+//	}
+//	@GetMapping("/api/auth/get-course-rating-notification")
+//	public   ArrayList<ObjectNode> getCourseRating(){
+//		return Notification.getCourseRatingNotification(mapper);
+//	}
+//	@GetMapping("/api/auth/get-course-review-notification")
+//	public   ArrayList<ObjectNode> getCourseReview(){
+//		return Notification.getCourseReviewNotification(mapper);
+//	}
+//	@GetMapping("/api/auth/get-course-faq-question-notification")
+//	public   ArrayList<ObjectNode> getFaqQuestion(){
+//		return Notification.getFaqQuestionNotification(mapper);
+//	}
 	
 
 }

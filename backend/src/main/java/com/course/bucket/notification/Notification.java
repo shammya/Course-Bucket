@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.course.bucket.course.Course;
 import com.course.bucket.database.DB;
 import com.course.bucket.tools.ToolKit;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,100 +97,190 @@ public class Notification {
 		}
 		return null;
 	}
-
-	public static ArrayList<ObjectNode> getRegisteredPersonNotification(ObjectMapper mapper) {
-		ArrayList<ObjectNode> objectNodes = new ArrayList<>();
-		
-		String sql = "select from_id,time from notification where type = 'REGISTRATION' and seen = 'F' order by time desc";
-		ResultSet notificationRSet = DB.executeQuery(sql);
-		
+	
+	public static ArrayList<ObjectNode> getNotifications(ObjectMapper mapper, String username){
+		String sql = ""
+				+ "select id, seen, user_id, type, time, course_id, from_id "
+				+ "from notification "
+				+ "where user_id = '#' "
+				+ "order by time desc";
+		ResultSet rs = DB.executeQuery(sql, username);
+		ArrayList<ObjectNode> nodes = new ArrayList();
 		try {
-			while(notificationRSet.next()) {
-				String username = notificationRSet.getString("from_id");
-				sql = "select \r\n"
-						+ "	p.id username,\r\n"
-						+ "	concat(p.first_name,concat(' ',p.last_name)) full_name,\r\n"
-						+ "	(\r\n"
-						+ "	select content from files f where f.id = p.photo_id\r\n"
-						+ "	) photo,\r\n"
-						+ "	(\r\n"
-						+ "	select unique((case when (select id from student where id = '#') is not null then 'student' else 'teacher' end))  account_type from 		student\r\n"
-						+ "	) account_type\r\n"
-						+ "from\r\n"
-						+ "	person p\r\n"
-						+ "where \r\n"
-						+ "	p.id = '#'";
-				ResultSet personRSet  = DB.executeQuery(sql, username,username);
-				ObjectNode objectNode = mapper.createObjectNode();
-				while(personRSet.next()) {
+			while(rs.next()) {
+				ObjectNode personNode = mapper.createObjectNode();
+				ObjectNode courseNode = mapper.createObjectNode();
+				ObjectNode node = mapper.createObjectNode();
+				
+				Integer id = rs.getInt("id");
+				String type = rs.getString("type");
+				String userId = rs.getString("user_id");
+				String fromId = rs.getString("from_id");
+				Integer courseId = rs.getInt("course_id");
+
+				node.put("id",id);
+				node.put("type",type);
+				node.put("seen",ToolKit.DBoolToJBool(rs.getString("seen")));
+				node.put("time",rs.getTimestamp("time").toString());
+				
+				switch (type) {
+				case "REGISTRATION": 
+					personNode.setAll(personInfo(mapper, fromId));
+					break;
 					
-					objectNode.put("username", personRSet.getString("username"));
-					objectNode.put("full_name", personRSet.getString("full_name"));
-					objectNode.put("photo", personRSet.getString("photo"));
-					objectNode.put("account_type", personRSet.getString("account_type"));
-					objectNode.put("time", notificationRSet.getTimestamp("time").toString());
+					
+				case "COURSEUPLOAD": 
+				case "COURSEPURCHASE": 
+				case "REVIEW": 
+				case "FAQQUESTION": 
+				case "FAQANSWER": 
+					personNode.setAll(personInfo(mapper, fromId));
+					courseNode.setAll(courseInfo(mapper, courseId)); 
+					break; 
+					
+					
+				case "RATING": 
+					personNode.setAll(personInfo(mapper, fromId));
+					courseNode.setAll(courseInfo(mapper, courseId)); 
+					courseNode.put("rating", ratingInfo(courseId, fromId));
+					break; 
+					
+				case "COURSEAPPROVED": 
+				case "COURSEUNAPPROVED": 
+				case "COURSEUPDATE": 
+					courseNode.setAll(courseInfo(mapper, courseId)); 
+					break;   
 				}
-				objectNodes.add(objectNode);
+				node.setAll(courseNode);
+				node.setAll(personNode);
+				nodes.add(node);
 			}
-			return objectNodes;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
 		
+		return nodes;
 	}
 	
-	public static ArrayList<ObjectNode> getCourseUploadNotification(ObjectMapper mapper) {
-		ArrayList<ObjectNode> objectNodes = new ArrayList<>();
-		
-		String sql = "select \r\n"
-				+ "	n.time,\r\n"
-				+ "	n.from_id ,\r\n"
-				+ "	(\r\n"
-				+ "	select title from course where id = n.course_id and is_approved = 'T'\r\n"
-				+ "	) title\r\n"
-				+ "from \r\n"
-				+ "	notification n\r\n"
-				+ "where \r\n"
-				+ "	n.type = 'COURSEUPLOAD' and\r\n"
-				+ "	n.seen = 'F'\r\n"
-				+ "order by \r\n"
-				+ "	n.time desc";
-		ResultSet notificationRSet = DB.executeQuery(sql);
-		
+	public static Integer ratingInfo(Integer courseId, String fromId) {
+		ResultSet rs = DB.executeQuery(""
+				+ "select value "
+				+ "from rating "
+				+ "where student_id = '#' "
+				+ "and course_id = #",fromId, courseId.toString());
 		try {
-			while(notificationRSet.next()) {
-				String username = notificationRSet.getString("from_id");
-				sql = "select \r\n"
-						+ "	p.id username,\r\n"
-						+ "	concat(p.first_name,concat(' ',p.last_name)) full_name,\r\n"
-						+ "	(\r\n"
-						+ "	select content from files f where f.id = p.photo_id\r\n"
-						+ "	) photo\r\n"
-						+ "from\r\n"
-						+ "	person p\r\n"
-						+ "where \r\n"
-						+ "	p.id = '#'";
-				ResultSet personRSet  = DB.executeQuery(sql, username);
-				ObjectNode objectNode = mapper.createObjectNode();
-				while(personRSet.next()) {
-					
-					objectNode.put("username", username);
-					objectNode.put("full_name", personRSet.getString("full_name"));
-					objectNode.put("photo", personRSet.getString("photo"));
-					objectNode.put("title", notificationRSet.getString("title"));
-					objectNode.put("time", notificationRSet.getTimestamp("time").toString());
-				}
-				objectNodes.add(objectNode);
-			}
-			return objectNodes;
+			rs.next();
+			return rs.getInt("value");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
-		
+		return 0;
+	}
+	
+	public static ObjectNode personInfo(ObjectMapper mapper, String fromId) {
+		ObjectNode objectNode = mapper.createObjectNode();
+		String sql = "select \r\n"
+				+ "	p.id username,\r\n"
+				+ "	concat(p.first_name,concat(' ',p.last_name)) full_name,\r\n"
+				+ "	(\r\n"
+				+ "	select content from files f where f.id = p.photo_id\r\n"
+				+ "	) photo,\r\n"
+				+ "	(\r\n"
+				+ "	select unique((case when (select id from student where id = '#') is not null then 'student' else 'teacher' end))  account_type from 		student\r\n"
+				+ "	) account_type\r\n"
+				+ "from\r\n"
+				+ "	person p\r\n"
+				+ "where \r\n"
+				+ "	p.id = '#'";
+		ResultSet personRSet  = DB.executeQuery(sql, fromId, fromId);
+		try {
+			personRSet.next();
+			objectNode.put("username", personRSet.getString("username"));
+			objectNode.put("full_name", personRSet.getString("full_name"));
+			objectNode.put("photo", personRSet.getString("photo"));
+			objectNode.put("account_type", personRSet.getString("account_type"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return objectNode;
+	}
+	
+	public static ObjectNode courseInfo(ObjectMapper mapper, Integer courseId) {
+		ObjectNode objectNode = mapper.createObjectNode();
+		String sql = ""
+				+ "select id, title, "
+				+ "(select content from files where id = c.cover_id) content "
+				+ "from course c "
+				+ "where id = #";
+		ResultSet courseRS = DB.executeQuery(sql, courseId.toString());
+		try {
+			courseRS.next();
+			objectNode.put("course_id", courseRS.getString("id"));
+			objectNode.put("title", courseRS.getString("title"));
+			objectNode.put("photo", courseRS.getString("content"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return objectNode;
+	}
+
+	public static ObjectNode getRegisteredPersonNotification(ObjectMapper mapper, String fromId) {
+		ObjectNode objectNode = mapper.createObjectNode();
+		String sql = "select \r\n"
+				+ "	p.id username,\r\n"
+				+ "	concat(p.first_name,concat(' ',p.last_name)) full_name,\r\n"
+				+ "	(\r\n"
+				+ "	select content from files f where f.id = p.photo_id\r\n"
+				+ "	) photo,\r\n"
+				+ "	(\r\n"
+				+ "	select unique((case when (select id from student where id = '#') is not null then 'student' else 'teacher' end))  account_type from 		student\r\n"
+				+ "	) account_type\r\n"
+				+ "from\r\n"
+				+ "	person p\r\n"
+				+ "where \r\n"
+				+ "	p.id = '#'";
+		ResultSet personRSet  = DB.executeQuery(sql, fromId, fromId);
+		try {
+			personRSet.next();
+			objectNode.put("username", personRSet.getString("username"));
+			objectNode.put("full_name", personRSet.getString("full_name"));
+			objectNode.put("photo", personRSet.getString("photo"));
+			objectNode.put("account_type", personRSet.getString("account_type"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return objectNode;
+	}
+	
+	public static ObjectNode getCourseUploadNotification(ObjectMapper mapper, String fromId, Integer courseId) {
+		ObjectNode objectNode = mapper.createObjectNode();
+		String sql = "select \r\n"
+					+ "	p.id username,\r\n"
+					+ "	concat(p.first_name,concat(' ',p.last_name)) full_name,\r\n"
+					+ "	(\r\n"
+					+ "	select content from files f where f.id = p.photo_id\r\n"
+					+ "	) photo\r\n"
+					+ "from\r\n"
+					+ "	person p\r\n"
+					+ "where \r\n"
+					+ "	p.id = '#'";
+		ResultSet personRSet  = DB.executeQuery(sql, fromId);
+		try {
+			if(personRSet.next()) {
+				objectNode.put("username", fromId);
+				objectNode.put("full_name", personRSet.getString("full_name"));
+				objectNode.put("photo", personRSet.getString("photo"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return objectNode;
 	}
 	
 	public static ArrayList<ObjectNode> getCoursePurchaseNotification(ObjectMapper mapper) {
@@ -315,7 +406,7 @@ public class Notification {
 				+ "from \r\n"
 				+ "	notification n\r\n"
 				+ "where \r\n"
-				+ "	n.type = 'REVIEW' and\r\n"
+				+ "	n.type = 'REVIEW' and\r\n" 
 				+ "	n.seen = 'F'\r\n"
 				+ "order by \r\n"
 				+ "	n.time desc\r\n"
@@ -386,7 +477,7 @@ public class Notification {
 				+ "from \r\n"
 				+ "	notification n\r\n"
 				+ "where \r\n"
-				+ "	n.type = 'FAQQUESTION' and\r\n"
+				+ "	n.type = 'FAQQUESTION' and\r\n" 
 				+ "	n.seen = 'F' and\r\n"
 				+ "	n.event_id is not null\r\n"
 				+ "order by \r\n"
@@ -434,7 +525,7 @@ public class Notification {
 				+ "from \r\n"
 				+ "	notification n\r\n"
 				+ "where \r\n"
-				+ "	n.type = 'COURSEAPPROVED' and\r\n"
+				+ "	n.type = 'COURSEAPPROVED' and\r\n" 
 				+ "	n.seen = 'F' \r\n"
 				+ "order by \r\n"
 				+ "	n.time desc";
@@ -479,7 +570,7 @@ public class Notification {
 				+ "from \r\n"
 				+ "	notification n\r\n"
 				+ "where \r\n"
-				+ "	n.type = 'COURSEUNAPPROVED' and\r\n"
+				+ "	n.type = 'COURSEUNAPPROVED' and\r\n" 
 				+ "	n.seen = 'F' \r\n"
 				+ "order by \r\n"
 				+ "	n.time desc";
