@@ -56,6 +56,12 @@ public class PurchaseHistoryController {
 		return PurchaseHistory.getPurchaseHistoryStudent(ToolKit.getCurrentUserName());
 	}
 	
+	@PreAuthorize("hasRole('Student')")
+	@GetMapping("/get-purchase-history-student")
+	public ArrayList<PurchaseHistoryList> getPurchaseHistoryStudent(){
+		return PurchaseHistory.getPurchaseHistoryStudent(ToolKit.getCurrentUserName());
+	}
+	
 	
 	@PreAuthorize("hasRole('Teacher')")		// Unnecessary
 	@GetMapping("/get-enrolled-students-teacher")

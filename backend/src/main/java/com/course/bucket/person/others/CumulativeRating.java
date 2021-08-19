@@ -1,4 +1,4 @@
-package com.course.bucket.person;
+package com.course.bucket.person.others;
 
 import java.util.Date;
 

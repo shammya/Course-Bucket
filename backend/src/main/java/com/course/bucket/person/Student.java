@@ -10,6 +10,8 @@ import org.springframework.scheduling.support.SimpleTriggerContext;
 
 import com.course.bucket.database.DB;
 import com.course.bucket.edustatus.EduStatus;
+import com.course.bucket.person.others.StudentInfo;
+import com.course.bucket.person.others.StudentList;
 import com.course.bucket.tools.ToolKit;
 import com.course.bucket.course.Course;
 import com.course.bucket.course.additionals.MiniCourse;

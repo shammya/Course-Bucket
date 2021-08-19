@@ -1,6 +1,7 @@
 package com.course.bucket.person;
 
 import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,7 +13,15 @@ import com.course.bucket.course.additionals.CoursePopularity;
 import com.course.bucket.course.additionals.IncomePerCourse;
 import com.course.bucket.course.additionals.PopularCategory;
 import com.course.bucket.database.DB;
+import com.course.bucket.person.others.CourseOverview;
+import com.course.bucket.person.others.NewUser;
+import com.course.bucket.person.others.OverviewContent;
+import com.course.bucket.person.others.ShowCard;
+import com.course.bucket.person.others.Slider;
+import com.course.bucket.person.others.StudentInfoAdmin;
+import com.course.bucket.person.others.TeacherInfoAdmin;
 import com.course.bucket.tools.ToolKit;
+
 
 public class Admin extends Person{
 
@@ -452,4 +461,59 @@ public class Admin extends Person{
 		}
 		return null;
  	}
+	
+	public static ArrayList<Slider> getSliderImages(){
+		ArrayList<Slider> sliders = new ArrayList<>();
+		
+		String sql = "SELECT\r\n"
+				+ "	s.id slider_id,\r\n"
+				+ "	f.id file_id,\r\n"
+				+ "	f.content content \r\n"
+				+ "FROM\r\n"
+				+ "	slider s,\r\n"
+				+ "	files f \r\n"
+				+ "WHERE\r\n"
+				+ "	s.files_id = f.id";
+		ResultSet rs = DB.executeQuery(sql);
+		
+		try {
+			while(rs.next()) {
+				sliders.add(new Slider(rs.getInt("slider_id"), rs.getInt("file_id"), rs.getString("content")));
+			}
+			return sliders;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static void approveCourse(Integer courseId,String adminId) {
+		DB.execute("update course set is_approved = 'T' where id = # ",courseId.toString());
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = ",courseId.toString() );
+		try {
+			rs.next();
+			Integer id = DB.generateId("notification");
+			DB.execute("insert into  notification values( #,'#','#',#,'F',#,'COURSEAPPROVED',NULL) ",id.toString(),rs.getString("teacher_id"),adminId,ToolKit.JDateToDDate(new Date()),courseId.toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public static void unapproveCourse(Integer courseId,String adminId) {
+		DB.execute("update course set is_approved = 'F' where id = # ",courseId.toString());
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = ",courseId.toString() );
+		try {
+			rs.next();
+			Integer id = DB.generateId("notification");
+			DB.execute("insert into  notification values( #,'#','#',#,'F',#,'COURSEUNAPPROVED',NULL) ",id.toString(),rs.getString("teacher_id"),adminId,ToolKit.JDateToDDate(new Date()),courseId.toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }

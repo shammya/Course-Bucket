@@ -1,4 +1,6 @@
-package com.course.bucket.person;
+package com.course.bucket.person.others;
+
+import com.course.bucket.person.Teacher;
 
 public class TeacherMiniInfo {
 	String username;

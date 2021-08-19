@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.authentication.JwtUtils;
 import com.course.bucket.designation.Designation;
+import com.course.bucket.person.others.CumulativeRating;
+import com.course.bucket.person.others.TeacherMiniInfo;
 import com.course.bucket.course.Course;
 import com.course.bucket.course.additionals.CoursePopularity;
 import com.course.bucket.course.additionals.IncomePerCourse;

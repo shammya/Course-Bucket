@@ -16,6 +16,8 @@ import com.course.bucket.courseextra.CourseRating;
 import com.course.bucket.database.DB;
 import com.course.bucket.designation.Designation;
 import com.course.bucket.person.Person.AccountType;
+import com.course.bucket.person.others.CumulativeRating;
+import com.course.bucket.person.others.RatingCount;
 import com.course.bucket.tools.ToolKit;
 
 public class Teacher extends Person {
