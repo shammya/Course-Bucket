@@ -1,6 +1,5 @@
 package com.course.bucket.course;
 
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -842,29 +841,14 @@ public class Course {
 			sql += whereStatement;
 		sql = sql + "\n" + orderStatement;
 
-		String finalSql = ""
-				+ " select c.id, c.title ,\n" 
-				+ "	( select concat(concat(first_name,' '),last_name) \n"
-				+ "	  from person where c.teacher_id = id\n" 
-				+ "	) as name ,\n" 
-				+ " ( select content"
-				+ "   from files f "
-				+ "   where c.cover_id = f.id"
-				+ " ) as content, "
-				+ "	nvl(( select avg(value)\n"
-				+ "	  from rating \n" 
-				+ "	  where course_id = c.id \n" 
-				+ "	  group by course_id\n"
-				+ "	),0.0) as rating ,\n" 
-				+ "	nvl(( select count(course_id)\n" 
-				+ "	  from rating \n"
-				+ "	  where course_id = c.id\n" 
-				+ "	  group by course_id\n" 
-				+ "	),0) as rating_count ,\n"
-				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" 
-				+ "from course c , \n" 
-				+ " ( "
-				+ sql + " ) a\n" + "where c.id = a.id and c.is_approved = 'T'";
+		String finalSql = "" + " select c.id, c.title ,\n" + "	( select concat(concat(first_name,' '),last_name) \n"
+				+ "	  from person where c.teacher_id = id\n" + "	) as name ,\n" + " ( select content"
+				+ "   from files f " + "   where c.cover_id = f.id" + " ) as content, " + "	nvl(( select avg(value)\n"
+				+ "	  from rating \n" + "	  where course_id = c.id \n" + "	  group by course_id\n"
+				+ "	),0.0) as rating ,\n" + "	nvl(( select count(course_id)\n" + "	  from rating \n"
+				+ "	  where course_id = c.id\n" + "	  group by course_id\n" + "	),0) as rating_count ,\n"
+				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" + "from course c , \n" + " ( " + sql
+				+ " ) a\n" + "where c.id = a.id and c.is_approved = 'T'";
 
 		// System.err.println(finalSql);
 		ResultSet rs = DB.executeQuery(finalSql);
@@ -872,9 +856,8 @@ public class Course {
 		try {
 			while (rs.next()) {
 				miniCourses.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
-						rs.getString("content"),
-						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
-						rs.getDouble("offer_price")));
+						rs.getString("content"), rs.getDouble("rating"), rs.getInt("rating_count"),
+						rs.getDouble("price"), rs.getDouble("offer_price")));
 			}
 			return miniCourses;
 		} catch (SQLException e1) {
@@ -886,26 +869,13 @@ public class Course {
 	}
 
 	public static String getMiniCourseSql(String sql) {
-		String finalSql = " select c.id, c.title ,\n" 
-				+ "	( select concat(concat(first_name,' '),last_name) \n"
-				+ "	  from person where c.teacher_id = id\n" 
-				+ "	) as name ,\n"
-				+ " ( select content"
-				+ "   from files f "
-				+ "   where c.cover_id = f.id"
-				+ " ) as content, " 
-				+ "	nvl(( select avg(value)\n"
-				+ "	  from rating \n" 
-				+ "	  where course_id = c.id \n" 
-				+ "	  group by course_id\n"
-				+ "	),0.0) as rating ,\n" 
-				+ "	nvl(( select count(course_id)\n" 
-				+ "	  from rating \n"
-				+ "	  where course_id = c.id\n" 
-				+ "	  group by course_id\n" 
-				+ "	),0) as rating_count ,\n"
-				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" 
-				+ " from ( " + sql + " ) c";
+		String finalSql = " select c.id, c.title ,\n" + "	( select concat(concat(first_name,' '),last_name) \n"
+				+ "	  from person where c.teacher_id = id\n" + "	) as name ,\n" + " ( select content"
+				+ "   from files f " + "   where c.cover_id = f.id" + " ) as content, " + "	nvl(( select avg(value)\n"
+				+ "	  from rating \n" + "	  where course_id = c.id \n" + "	  group by course_id\n"
+				+ "	),0.0) as rating ,\n" + "	nvl(( select count(course_id)\n" + "	  from rating \n"
+				+ "	  where course_id = c.id\n" + "	  group by course_id\n" + "	),0) as rating_count ,\n"
+				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" + " from ( " + sql + " ) c";
 		return finalSql;
 	}
 
@@ -924,9 +894,8 @@ public class Course {
 			if (rs != null) {
 				while (rs.next()) {
 					newReleased.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
-							rs.getString("content"),
-							rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
-							rs.getDouble("offer_price")));
+							rs.getString("content"), rs.getDouble("rating"), rs.getInt("rating_count"),
+							rs.getDouble("price"), rs.getDouble("offer_price")));
 				}
 			}
 			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n"
@@ -938,49 +907,42 @@ public class Course {
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
 				bestSeller.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
-						rs.getString("content"),
-						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
-						rs.getDouble("offer_price")));
+						rs.getString("content"), rs.getDouble("rating"), rs.getInt("rating_count"),
+						rs.getDouble("price"), rs.getDouble("offer_price")));
 			}
-			sql = getMiniCourseSql(
-					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n" + "	c.teacher_id ,\n"
-							+ "	c.cover_id, \n"
-							+ "	( SELECT count( course_id ) FROM rating WHERE course_id = c.id ) AS count \n" + "FROM\n"
-							+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM rating ) ) c \n"
-							+ "ORDER BY\n" + "	count DESC");
+			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n"
+					+ "	c.teacher_id ,\n" + "	c.cover_id, \n"
+					+ "	( SELECT count( course_id ) FROM rating WHERE course_id = c.id ) AS count \n" + "FROM\n"
+					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM rating ) ) c \n"
+					+ "ORDER BY\n" + "	count DESC");
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
 				mostRated.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
-						rs.getString("content"),
-						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
-						rs.getDouble("offer_price")));
+						rs.getString("content"), rs.getDouble("rating"), rs.getInt("rating_count"),
+						rs.getDouble("price"), rs.getDouble("offer_price")));
 			}
 
-			sql = getMiniCourseSql(
-					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n" + "	c.teacher_id ,\n"
-							+ "	c.cover_id, \n"
-							+ "	( SELECT count( course_id ) FROM review WHERE course_id = c.id ) AS count \n" + "FROM\n"
-							+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM review ) ) c \n"
-							+ "ORDER BY\n" + "	count DESC");
+			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n"
+					+ "	c.teacher_id ,\n" + "	c.cover_id, \n"
+					+ "	( SELECT count( course_id ) FROM review WHERE course_id = c.id ) AS count \n" + "FROM\n"
+					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM review ) ) c \n"
+					+ "ORDER BY\n" + "	count DESC");
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
 				mostReviewed.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
-						rs.getString("content"),
-						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
-						rs.getDouble("offer_price")));
+						rs.getString("content"), rs.getDouble("rating"), rs.getInt("rating_count"),
+						rs.getDouble("price"), rs.getDouble("offer_price")));
 			}
 
-			sql = getMiniCourseSql(
-					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer, \n" + "	c.teacher_id \n"
-							+ "	c.cover_id \n"
-							+ "FROM\n" + "	course c \n" + "WHERE\n" + "	( c.price * ( 100-c.offer ) / 100 ) = 0.0");
+			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer, \n"
+					+ "	c.teacher_id \n" + ",	c.cover_id \n" + "FROM\n" + "	course c \n" + "WHERE\n"
+					+ "	( c.price * ( 100-c.offer ) / 100 ) = 0.0");
 			rs = DB.executeQuery(sql);
-			while (rs.next()) {
-				free.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
-						rs.getString("content"),
-						rs.getDouble("rating"), rs.getInt("rating_count"), rs.getDouble("price"),
-						rs.getDouble("offer_price")));
-			}
+				while (rs.next()) {
+					free.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+							rs.getString("content"), rs.getDouble("rating"), rs.getInt("rating_count"),
+							rs.getDouble("price"), rs.getDouble("offer_price")));
+				}
 
 			rs.close();
 			cc = new CarouselCourse(newReleased, bestSeller, mostReviewed, mostRated, free);
@@ -1088,7 +1050,7 @@ public class Course {
 		ArrayList<FaqList> faqs = FAQ.getFaqListCourse(courseId);
 		return new PublicResponse(enrolledStudentCount, ratingByNumber, ratingValue, ratingCount, reviews, faqs);
 	}
-	
+
 	public static boolean authenticateForCourseContent(String username, Integer courseId) {
 		String sql = "select teacher_id person from course where id = # and teacher_id = '#'\r\n" + "union\r\n"
 				+ "select student_id person from purchase_history where course_id = #  and student_id = '#'\r\n"
@@ -1097,8 +1059,7 @@ public class Course {
 		try {
 			if (rs.next()) {
 				return true;
-			}
-			else {
+			} else {
 				return false;
 			}
 		} catch (SQLException e) {
@@ -1111,18 +1072,14 @@ public class Course {
 	public static Course getCourseAfterAuthentication(String username, Integer courseId) {
 		if (authenticateForCourseContent(username, courseId)) {
 			return new Course(courseId);
-		}
-		else {
-			Course course  = new Course(courseId);
-			for(Week week : course.getWeeks())
-			{
-				for(Lecture lecture : week.getLectures())
-				{
-					if(!lecture.preview)
-					{
+		} else {
+			Course course = new Course(courseId);
+			for (Week week : course.getWeeks()) {
+				for (Lecture lecture : week.getLectures()) {
+					if (!lecture.preview) {
 						lecture.setFile(null);
 					}
-						
+
 				}
 			}
 			return course;

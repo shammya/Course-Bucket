@@ -490,7 +490,7 @@ public class Admin extends Person{
 	
 	public static void approveCourse(Integer courseId,String adminId) {
 		DB.execute("update course set is_approved = 'T' where id = # ",courseId.toString());
-		ResultSet rs = DB.executeQuery("select teacher_id from course where id = ",courseId.toString() );
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #",courseId.toString() );
 		try {
 			rs.next();
 			Integer id = DB.generateId("notification");
@@ -505,7 +505,7 @@ public class Admin extends Person{
 	
 	public static void unapproveCourse(Integer courseId,String adminId) {
 		DB.execute("update course set is_approved = 'F' where id = # ",courseId.toString());
-		ResultSet rs = DB.executeQuery("select teacher_id from course where id = '#'",courseId.toString() ); 
+		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #",courseId.toString() ); 
 		try {
 			rs.next();
 			Integer id = DB.generateId("notification");

@@ -21,7 +21,7 @@ import com.course.bucket.Global;
 public class CategoryController {
 	
 	
-	@PreAuthorize("hasRole('Admin')")
+//	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/add-category")
 	public void addCategory(@RequestBody Category category) {
 		//System.out.println("\t category : "+category.getName()+" "+category.getParentName()+" "+category.getAdminId());
@@ -35,20 +35,20 @@ public class CategoryController {
 	}
 	
 	
-	@PreAuthorize("hasRole('Admin')")
+//	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-category-by-name/{id}")
 	public Category findById(@PathVariable Integer id) {
 		return new Category(id);
 	}
 		
-	@PreAuthorize("hasRole('Admin')")
+//	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/update-category")
 	public void updateCategory(@RequestBody Category category) {
 		Category.updateCategory(category);
 	}
 	
 	
-	@PreAuthorize("hasRole('Admin')")
+//	@PreAuthorize("hasRole('Admin')")
 	@DeleteMapping("/delete-category/{id}")
 	public void deleteCategory(@PathVariable Integer id) {
 		Category.deleteCategory(id);
