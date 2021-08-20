@@ -4,24 +4,18 @@ import { GLOBAL } from 'Configure.js'
 
 
 class CategoryService {
-
     getCategories() {
-        return axios.get(GLOBAL.HOST + '/get-categories', authHeaders())
+        return axios.get(GLOBAL.HOST + '/public/get-categories')
     }
-
     deleteCategory(id) {
         return axios.delete(GLOBAL.HOST + `/delete-category/${id}`, authHeaders())
     }
-
-
     updateCategory(category) {
         return axios.put(GLOBAL.HOST + '/update-category', category, authHeaders())
     }
-
     addCategory(category) {
         return axios.post(GLOBAL.HOST + '/add-category', category, authHeaders());
     }
-
 }
 
 export default new CategoryService()

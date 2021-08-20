@@ -494,7 +494,7 @@ public class Admin extends Person{
 		try {
 			rs.next();
 			Integer id = DB.generateId("notification");
-			DB.execute("insert into  notification values( #,'#','#',#,'F',#,'COURSEAPPROVED',NULL) ",id.toString(),rs.getString("teacher_id"),adminId,ToolKit.JDateToDDate(new Date()),courseId.toString());
+			DB.execute("insert into  notification values( #,'#','#',#,'F',#,'COURSEAPPROVED',0) ",id.toString(),rs.getString("teacher_id"),adminId,ToolKit.JDateToDDate(new Date()),courseId.toString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -509,7 +509,7 @@ public class Admin extends Person{
 		try {
 			rs.next();
 			Integer id = DB.generateId("notification");
-			DB.execute("insert into  notification values( #,'#','#',#,'F',#,'COURSEUNAPPROVED',NULL) ",id.toString(),rs.getString("teacher_id"),adminId,ToolKit.JDateToDDate(new Date()),courseId.toString());
+			DB.execute("insert into  notification values( #,'#','#',#,'F',#,'COURSEUNAPPROVED',0) ",id.toString(),rs.getString("teacher_id"),adminId,ToolKit.JDateToDDate(new Date()),courseId.toString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

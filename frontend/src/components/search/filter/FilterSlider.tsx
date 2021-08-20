@@ -1,6 +1,6 @@
 import { Grid, InputAdornment, Slider, TextField } from "@material-ui/core";
 import React, { useEffect } from "react";
-import { IFilteredValue, ISliderFilter } from "../SearchPage";
+import { ISliderFilter } from "../SearchPage";
 
 export function FilterSlider({
   sliderData,
@@ -71,7 +71,7 @@ export function FilterSlider({
   }
 
   return (
-    <Grid container xs spacing={2}>
+    <Grid item container xs spacing={2}>
       <Grid item xs={12}>
         <Slider
           min={sliderData.min}

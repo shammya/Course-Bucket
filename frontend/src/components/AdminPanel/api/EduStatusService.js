@@ -5,7 +5,7 @@ import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 class EduStatusService {
 
     getAllEduStatus() {
-        return axios.get(GLOBAL.HOST + '/get-edustatus')
+        return axios.get(GLOBAL.HOST + '/public/get-edustatus')
     }
 
     deleteEduStatus(id) {

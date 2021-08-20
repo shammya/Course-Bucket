@@ -39,11 +39,11 @@ public class TeacherController {
 		Teacher.createNewTeacher(person,desig_id);
 	}
 
-	@GetMapping("/get-teacher")
-	public Teacher findTeacher(@PathVariable String id){
-		return new Teacher(ToolKit.getCurrentUserName());
-	}
-	@GetMapping("/get-teacher-mini/{username}")
+//	@GetMapping("/get-teacher")
+//	public Teacher findTeacher(@PathVariable String id){
+//		return new Teacher(ToolKit.getCurrentUserName());
+//	}
+	@GetMapping("/public/get-teacher-mini/{username}")
 	public TeacherMiniInfo getTeacherMiniByUsername(@PathVariable String username){
 		return new TeacherMiniInfo(username);
 	}
@@ -56,12 +56,14 @@ public class TeacherController {
 		return ResponseEntity.ok(person);
 	}
 
+	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-created-courses")
 	public ArrayList<MiniCourse> getCreatedCourses(){
 		String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		return getCreatedCoursesByUsername(username);
 	}
-	@GetMapping("/get-created-courses/{username}")
+	
+	@GetMapping("/public/get-created-courses/{username}")
 	public ArrayList<MiniCourse> getCreatedCoursesByUsername(@PathVariable String username){
 		return Teacher.getCreatedCourses(username);
 	}
@@ -107,7 +109,11 @@ public class TeacherController {
 //	Mehedi
 	@PreAuthorize("hasRole('Teacher')")
 	@PutMapping("/update-teacher/{designationId}")
-	public void updateTeacher(@PathVariable Integer designationId, @RequestBody Person person) {
+	public ResponseEntity<?> updateTeacher(@PathVariable Integer designationId, @RequestBody Person person) {
+		if(!ToolKit.getCurrentUserName().equals(person.getUsername())) {
+			return ResponseEntity.badRequest().body("Requested user can not perform the task");
+		}
 		Teacher.update(person, designationId);
+		return ResponseEntity.ok("");
 	}
 }

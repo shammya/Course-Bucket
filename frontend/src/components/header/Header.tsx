@@ -25,7 +25,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Responsive } from "tools/responsive/Responsive";
 import { TopNav } from "./NavBar";
-import { NotificationPopUp } from "./NotificationPopUp";
+import { Notification } from "./NotificationPopUp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -378,37 +378,12 @@ export function Header() {
   }
   function IconSet() {
     const [anchorRef, setAnchorRef] = useState<HTMLButtonElement | null>(null);
-    const [notificationAnchorRef, setNotificationAnchorRef] =
-      useState<HTMLButtonElement | null>(null);
 
     return (
       <>
         {AuthService.isLogin() ? (
           <>
-            <IconButton
-              onClick={(event: React.MouseEvent<any>) =>
-                setNotificationAnchorRef(event.currentTarget)
-              }
-            >
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon fontSize="large" />
-              </Badge>
-            </IconButton>
-            <Popover
-              open={Boolean(notificationAnchorRef)}
-              anchorEl={notificationAnchorRef}
-              onClose={() => setNotificationAnchorRef(null)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-            >
-              <NotificationPopUp />
-            </Popover>
+            <Notification />
             <Grid style={{ display: "flex" }}>
               <IconButton
                 onClick={(event: React.MouseEvent<any>) =>

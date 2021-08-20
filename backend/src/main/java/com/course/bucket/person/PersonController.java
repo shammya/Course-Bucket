@@ -47,8 +47,7 @@ public class PersonController {
 //		Person.approveCourse(courseId);
 //	}
 
-	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
-	@GetMapping("/get-person-by-username/{username}")
+	@GetMapping("/public/get-person-by-username/{username}")
 	public Person findPerson(@PathVariable String username){
 		String role = Person.getRole(username);
 		Person person = null;
@@ -64,9 +63,7 @@ public class PersonController {
 	@PreAuthorize("hasRole('Teacher') or hasRole('Student') or hasRole('Admin')")
 	@GetMapping("/get-person-self")
 	public ResponseEntity<?> getPersonSelf(){
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Person person = new Person(userDetails.getUsername());
-//		Person person = new Person("newTeacher");
+		Person person = new Person(ToolKit.getCurrentUserName());
 		person.setPassword("");
 		return ResponseEntity.ok(person);
 	}
@@ -75,7 +72,7 @@ public class PersonController {
 	@PutMapping("/change-password")
 	public ResponseEntity<?> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword){
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String passFromDB = Person.getPasswordByUsername(userDetails.getUsername());
+		String passFromDB = Person.getPasswordByUsername(ToolKit.getCurrentUserName());
 		if(!encoder.matches(oldPassword, passFromDB)) {
 			return ResponseEntity.ok(new MessageResponse("Old password is incorrect"));
 		}

@@ -107,13 +107,13 @@ public class AuthController {
 		DB.update("Person", "ID", lr.getUsername(), "Password", encoder.encode(lr.getPassword())); 
 		return ResponseEntity.ok(new MessageResponse(false));
 	}
-	@GetMapping("/valid-session")
-	@PreAuthorize("hasRole('Teacher') or hasRole('TEACHER') or hasRole('ROLE_Teacher')")
-	public ResponseEntity<?> isValidSession(){
-		return ResponseEntity.ok(new MessageResponse(true));
-	}
-	@PostMapping("/query")
-	public void query(@RequestBody String sql) {
-		DB.execute(sql);
-	}
+//	@GetMapping("/valid-session")
+//	@PreAuthorize("hasRole('Teacher') or hasRole('TEACHER') or hasRole('ROLE_Teacher')")
+//	public ResponseEntity<?> isValidSession(){
+//		return ResponseEntity.ok(new MessageResponse(true));
+//	}
+//	@PostMapping("/query")
+//	public void query(@RequestBody String sql) {
+//		DB.execute(sql);
+//	}
 }

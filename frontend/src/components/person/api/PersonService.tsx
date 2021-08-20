@@ -38,7 +38,7 @@ class PersonController {
   }
   getPersonToShow(username: string) {
     return axios.get(
-      GLOBAL.HOST + `/get-person-by-username/${username}`,
+      GLOBAL.HOST + `/public/get-person-by-username/${username}`,
       authHeaders()
     );
   }

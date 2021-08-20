@@ -5,10 +5,11 @@ import {
   ListItem,
   ListItemText,
 } from "@material-ui/core";
-import { Category, categoryList } from "classes/Category";
+import { Category } from "classes/Category";
 import React, { useState } from "react";
 import { CategorySelector } from "tools/customDesign/CategorySelector";
 import {
+  ICategoryFilter,
   IFilteredValue,
   IFilterType as IFilterType,
   IListFilter,
@@ -26,7 +27,8 @@ export function MakeList({
   filter: IFilterType;
   onFilterValueChange: (value: IFilteredValue, type: "ADD" | "REMOVE") => void;
 }) {
-  const [open, setOpen] = useState(true);
+  console.log("filter in makelist", filter);
+  const [open, setOpen] = useState(false);
   return (
     <>
       <ListItem key={filter.title} button onClick={() => setOpen(!open)}>
@@ -55,7 +57,7 @@ export function GenerateFilterValue({
   if (filter.type === "CATEGORY") {
     return (
       <CategorySelector
-        categories={categoryList}
+        categories={(filter as ICategoryFilter).items}
         selectedCategories={filteredData.map(
           (filterValue) =>
             new Category(filterValue.id as number, filterValue.value as string)
@@ -78,7 +80,7 @@ export function GenerateFilterValue({
       <List>
         {(filter as IListFilter).items.map((item, index) => (
           <ListItem
-            key={item.title}
+            key={item.id}
             // @ts-ignore
             value={item}
           >

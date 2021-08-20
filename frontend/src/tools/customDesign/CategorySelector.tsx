@@ -4,7 +4,7 @@ import { alpha, makeStyles, withStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
-import { Category, CategoryTreeNode } from "classes/Category";
+import { Category } from "classes/Category";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { animated, useSpring } from "react-spring"; // web.cjs is required for IE 11 support
@@ -135,7 +135,7 @@ export function CategorySelector({
   selectedCategories,
   onCategorySelectionChange,
 }: {
-  categories: Array<CategoryTreeNode>;
+  categories: Array<Category>;
   selectedCategories: Array<Category>;
   onCategorySelectionChange: (
     category: Category,
@@ -144,32 +144,32 @@ export function CategorySelector({
 }) {
   const classes = useStyles();
 
-  function ExploreData({ data }: { data: Array<CategoryTreeNode> }): any {
+  function ExploreData({ data }: { data: Array<Category> }): any {
     function handleDataChange(item: Category, checked: boolean) {
       onCategorySelectionChange(item, checked ? "ADD" : "REMOVE");
     }
     return data.map((item, index) =>
-      item.child.length > 0 ? (
+      item.children.length > 0 ? (
         <StyledTreeItem
-          key={item.category.id}
-          nodeId={item.category.id}
-          label={item.category.name}
+          key={item.id}
+          nodeId={item.id}
+          label={item.name}
           checked={selectedCategories.some(
-            (selectedCategory) => selectedCategory.id == item.category.id
+            (selectedCategory) => selectedCategory.id == item.id
           )}
-          onChange={(checked) => handleDataChange(item.category, checked)}
+          onChange={(checked) => handleDataChange(item, checked)}
         >
-          <ExploreData data={item.child} />
+          <ExploreData data={item.children} />
         </StyledTreeItem>
       ) : (
         <StyledTreeItem
-          key={item.category.id}
-          nodeId={item.category.id}
-          label={item.category.name}
+          key={item.id}
+          nodeId={item.id}
+          label={item.name}
           checked={selectedCategories.some(
-            (selectedCategory) => selectedCategory.id == item.category.id
+            (selectedCategory) => selectedCategory.id == item.id
           )}
-          onChange={(checked) => handleDataChange(item.category, checked)}
+          onChange={(checked) => handleDataChange(item, checked)}
         />
       )
     );

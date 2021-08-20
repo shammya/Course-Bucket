@@ -26,6 +26,7 @@ import com.course.bucket.courseextra.review.ReviewList;
 import com.course.bucket.database.DB;
 import com.course.bucket.files.Files;
 import com.course.bucket.language.Language;
+import com.course.bucket.notification.Notification;
 import com.course.bucket.person.Student;
 import com.course.bucket.person.Teacher;
 import com.course.bucket.tools.ToolKit;
@@ -202,9 +203,13 @@ public class Course {
 		course.properties.forEach(property -> {
 			property.upload(courseId);
 		});
-		notificationCourseUpload(teacherUsername, courseId);
+		//notificationCourseUpload(teacherUsername, courseId);
+		Notification.generateNotification("admin", teacherUsername, courseId, "COURSEUPLOAD", 0);
+		
 		System.out.println("Course upload done of id: " + courseId);
 		return courseId;
+		
+		
 	}
 
 	public static void update(Course course) {
@@ -255,6 +260,9 @@ public class Course {
 		course.properties.forEach(property -> {
 			property.update();
 		});
+		
+		Notification.generateNotification("admin", course.getTeacherUserame(), course.getId(), "COURSEUPDATE", 0);
+		
 	}
 
 	public static String formatString(ArrayList<String> strarr) {
@@ -808,30 +816,30 @@ public class Course {
 
 		String orderStatement = "";
 		switch (filters.getSorting()) {
-		case "NewReleased":
+		case "New released":
 			selectStatement += " , c.publish_date ";
 			orderStatement += " order by c.publish_date desc";
 			break;
-		case "BestSeller":
+		case "Best seller":
 			selectStatement += (" , (select nvl(count(course_id),0) \n" + "		From purchase_history\n"
 					+ "		Where course_id = c.id) as count ");
 			orderStatement += " order by count desc";
 			break;
-		case "MostReviewed":
+		case "Most reviewed":
 			selectStatement += (" , (select nvl(count(course_id),0) \n" + "		From review\n"
 					+ "		Where course_id = c.id) as count ");
 			orderStatement += " order by count desc";
 			break;
-		case "MostRated":
+		case "Most rated":
 			selectStatement += (" , (select nvl(count(course_id),0) \n" + "		From rating\n"
 					+ "		Where course_id = c.id) as count ");
 			orderStatement += " order by count desc";
 			break;
-		case "AscendingPrice":
+		case "Price low to high":
 			selectStatement += " , (c.price * (100 - c.offer)/100) as price ";
 			orderStatement += " order by price asc";
 			break;
-		case "DescendingPrice":
+		case "Price high to low":
 			selectStatement += " , (c.price * (100 - c.offer)/100) as price ";
 			orderStatement += " order by price desc";
 			break;
@@ -875,7 +883,7 @@ public class Course {
 				+ "	  from rating \n" + "	  where course_id = c.id \n" + "	  group by course_id\n"
 				+ "	),0.0) as rating ,\n" + "	nvl(( select count(course_id)\n" + "	  from rating \n"
 				+ "	  where course_id = c.id\n" + "	  group by course_id\n" + "	),0) as rating_count ,\n"
-				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" + " from ( " + sql + " ) c";
+				+ "	c.price, c.offer as offer_price\n" + " from ( " + sql + " ) c";
 		return finalSql;
 	}
 
@@ -934,9 +942,10 @@ public class Course {
 						rs.getDouble("price"), rs.getDouble("offer_price")));
 			}
 
-			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer, \n"
-					+ "	c.teacher_id \n" + ",	c.cover_id \n" + "FROM\n" + "	course c \n" + "WHERE\n"
-					+ "	( c.price * ( 100-c.offer ) / 100 ) = 0.0");
+			sql = getMiniCourseSql(
+					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer, \n" + "	c.teacher_id, \n"
+							+ "	c.cover_id \n"
+							+ "FROM\n" + "	course c \n" + "WHERE\n" + "	( c.price * ( 100-c.offer ) / 100 ) = 0.0");
 			rs = DB.executeQuery(sql);
 				while (rs.next()) {
 					free.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
@@ -958,7 +967,7 @@ public class Course {
 
 	public static void notificationCourseUpload(String fromId, Integer courseId) {
 		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values(#, 'admin', '#', #, 'F', #, 'COURSEUPLOAD') ";
+		String sql = "insert into notification values(#, 'admin', '#', #, 'F', #, 'COURSEUPLOAD',NULL) ";
 		DB.execute(sql, id.toString(), fromId, ToolKit.JDateToDDate(new Date()), courseId.toString());
 	}
 

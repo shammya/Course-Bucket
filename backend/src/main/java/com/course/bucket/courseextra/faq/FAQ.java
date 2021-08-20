@@ -10,6 +10,7 @@ import java.util.Map;
 import com.course.bucket.course.Course;
 import com.course.bucket.courseextra.review.ReviewInfo;
 import com.course.bucket.database.DB;
+import com.course.bucket.notification.Notification;
 import com.course.bucket.person.Student;
 import com.course.bucket.person.Teacher;
 import com.course.bucket.tools.ToolKit;
@@ -432,42 +433,44 @@ public class FAQ {
 	
 	public static void addFaqQuestion(FaqDb faq) {
 		Integer id = DB.generateId("FAQ");
+		String teacherUsername = DB.getString("course", "id", faq.getCourseId().toString(), "teacher_id");
 		String sql = "insert into faq values(#, #, '#', '#', #, NULL, NULL)";
 		DB.execute(sql,id.toString(),faq.getCourseId().toString(),faq.getStudentId(),faq.getQuestion(),ToolKit.JDateToDDate(faq.getQuestionTime()));
+		Notification.generateNotification(teacherUsername, faq.getStudentId(), faq.getCourseId(), "FAQQUESTION", id);
 	}
 	
-	public static void addFaqAnswer(Integer faqId, String answer) {
+	public static void addFaqAnswer(Integer faqId, String answer,String fromId) {
 		FaqDb faq = new FaqDb(faqId);
 		faq.setAnswer(answer);
 		faq.setAnswerTime(ToolKit.getCurTime());
 		DB.execute("update faq set answer = '#', answer_time = # where id = #",faq.getAnswer(),ToolKit.JDateToDDate(faq.getAnswerTime()), faq.getId().toString());
-		notificationFaqAnswer(faq);
+		Notification.generateNotification(faq.getStudentId(), fromId, faq.getCourseId(), "FAQANSWER", faqId);
 	}
 	
-	public static void notificationFaqQuestion(FaqDb faq) {
-		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQQUESTION')";
-		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", faq.getCourseId().toString());
-		try {
-			rs.next();
-			DB.execute(sql,id.toString(),rs.getString("teacher_id"),faq.getStudentId(),ToolKit.JDateToDDate(new Date()),faq.getCourseId().toString());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public static void notificationFaqAnswer(FaqDb faq) {
-		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQANSWER')";
-		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", faq.getCourseId().toString());
-		try {
-			rs.next();
-			DB.execute(sql,id.toString(),faq.getStudentId(),rs.getString("teacher_id"),ToolKit.JDateToDDate(new Date()),faq.getCourseId().toString());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public static void notificationFaqQuestion(FaqDb faq) {
+//		Integer id = DB.generateId("notification");
+//		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQQUESTION')";
+//		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", faq.getCourseId().toString());
+//		try {
+//			rs.next();
+//			DB.execute(sql,id.toString(),rs.getString("teacher_id"),faq.getStudentId(),ToolKit.JDateToDDate(new Date()),faq.getCourseId().toString());
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	
+//	public static void notificationFaqAnswer(FaqDb faq) {
+//		Integer id = DB.generateId("notification");
+//		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'FAQANSWER')";
+//		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", faq.getCourseId().toString());
+//		try {
+//			rs.next();
+//			DB.execute(sql,id.toString(),faq.getStudentId(),rs.getString("teacher_id"),ToolKit.JDateToDDate(new Date()),faq.getCourseId().toString());
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }
