@@ -12,9 +12,11 @@ import {
 } from "@material-ui/core";
 import { Cancel } from "@material-ui/icons";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import React from "react";
+import input from "postcss/lib/input";
+import React, { useEffect, useState } from "react";
 import { Sticky } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
+import SearchService from "./api/SearchService";
 import { GenerateFilterValue, MakeList } from "./filter/MakeList";
 import { IFilteredValue, IFilterType } from "./SearchPage";
 
@@ -29,7 +31,19 @@ const useStyle = makeStyles((theme) => ({
     width: "100%",
   },
 }));
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
+  return (
+    <div role="tabpanel" hidden={value !== index} {...other}>
+      {value === index && (
+        <Grid container style={{ padding: 10 }}>
+          {children}
+        </Grid>
+      )}
+    </div>
+  );
+}
 function Filter({
   filteredData,
   filterDataList,
@@ -44,24 +58,44 @@ function Filter({
   const classes = useStyle();
   const [openDrawer, setOpenDrawer] = React.useState(true);
   const [tabValue, setTabValue] = React.useState(0);
+  const [filterDataList2, setFilterDataList2] = useState<Array<IFilterType>>();
 
+  useEffect(() => {
+    SearchService.getDataForFilter().then((response) => {
+      console.log(response.data);
+      setFilterDataList2([
+        { title: "Teacher", type: "LIST", items: response.data.teachers },
+        {
+          title: "Category",
+          type: "CATEGORY",
+          items: response.data.categories[0].children,
+        },
+        { title: "Language", type: "LIST", items: response.data.languages },
+        {
+          title: "Rating",
+          type: "SLIDER",
+          min: 0,
+          max: 5,
+          value: [0, 5],
+          step: 0.01,
+          valueType: "⭐",
+        },
+        {
+          title: "Price",
+          type: "SLIDER",
+          min: response.data.price.min,
+          max: response.data.price.max,
+          value: [response.data.price.min, response.data.price.max],
+          step: 10,
+          valueType: "$",
+        },
+      ]);
+    });
+  }, []);
   function handleTabChange(event, newValue) {
     setTabValue(newValue);
   }
 
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div role="tabpanel" hidden={value !== index} {...other}>
-        {value === index && (
-          <Grid container style={{ padding: 10 }}>
-            {children}
-          </Grid>
-        )}
-      </div>
-    );
-  }
   // const handleFilterChange = (data) => {
   //   var array = filterData;
   //   var index = array.findIndex(item => item.title === data.title);
@@ -145,8 +179,8 @@ function Filter({
                   variant="scrollable"
                   scrollButtons="auto"
                 >
-                  {filterDataList.map((filter) => (
-                    <Tab label={filter.title} />
+                  {filterDataList.map((filter, index) => (
+                    <Tab key={index} label={filter.title} />
                   ))}
                 </Tabs>
               </AppBar>
@@ -155,7 +189,7 @@ function Filter({
         </Sticky>
 
         {filterDataList.map((filter, index) => (
-          <TabPanel value={tabValue} index={index}>
+          <TabPanel value={tabValue} index={index} key={index}>
             <GenerateFilterValue
               filteredData={filteredData}
               filter={filter}
@@ -169,8 +203,9 @@ function Filter({
   function DesktopFilter() {
     return (
       <List component="nav">
-        {filterDataList.map((filter, index) => (
+        {filterDataList2?.map((filter, index) => (
           <MakeList
+            key={index}
             filteredData={filteredData}
             filter={filter}
             onFilterValueChange={onFilterChange}
@@ -185,6 +220,7 @@ function Filter({
       <Grid
         sm={12}
         xs={6}
+        item
         container
         justifyContent="space-between"
         onClick={(event) => setOpenDrawer(true)}

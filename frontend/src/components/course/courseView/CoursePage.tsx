@@ -131,7 +131,7 @@ export function CourseView() {
     if (courseId) {
       loadCourseContent();
     }
-  }, []);
+  }, [courseId]);
 
   function handleCongratulationClose() {
     setCongratulationShow(false);

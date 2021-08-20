@@ -1,9 +1,16 @@
 package com.course.bucket.course.additionals;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import com.course.bucket.category.Category;
+import com.course.bucket.database.DB;
 import com.course.bucket.tools.Pair;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 
@@ -98,6 +105,60 @@ public class Filters {
 
 	public void setSearchKey(String searchKey) {
 		this.searchKey = searchKey;
+	}
+
+
+	public static ObjectNode getDataForFilter(ObjectMapper mapper) {
+		ObjectNode data = mapper.createObjectNode();
+		try {
+			ResultSet rs = DB.executeQuery(""
+					+ "select unique(p.id), concat(p.first_name,concat(' ',p.last_name)) full_name "
+					+ "from person p, course c "
+					+ "where p.id = c.teacher_id "
+					+ "order by full_name");
+			ArrayList<ObjectNode> teacherNodes = new ArrayList();
+			while(rs.next()) {
+				ObjectNode node = mapper.createObjectNode();
+				node.put("id", rs.getString("id"));
+				node.put("title", rs.getString("full_name"));
+				teacherNodes.add(node);
+			}
+			
+			rs = DB.executeQuery("select * from language order by name");
+			ArrayList<ObjectNode> langNodes = new ArrayList();
+			while(rs.next()) {
+				ObjectNode node = mapper.createObjectNode();
+				node.put("id", rs.getInt("id"));
+				node.put("title", rs.getString("name"));
+				langNodes.add(node);
+			}
+
+			rs = DB.executeQuery(""
+					+ "select min(price) min, max(price) max "
+					+ "from course "
+					+ "");
+
+			ObjectNode price = mapper.createObjectNode();
+			while(rs.next()) {
+				price.put("min", rs.getDouble("min"));
+				price.put("max", rs.getDouble("max"));
+			}
+
+			JsonNode teacher = mapper.convertValue(teacherNodes, JsonNode.class);
+			JsonNode language = mapper.convertValue(langNodes, JsonNode.class);
+			JsonNode categories = mapper.convertValue(Category.getAllCategories(), JsonNode.class);
+			
+			data.set("teachers", teacher);
+			data.set("languages", language);
+			data.set("categories", categories);
+			data.set("price", price);
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return data;
 	}
 	
 	

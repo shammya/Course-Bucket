@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
@@ -26,6 +29,12 @@ public class NotificationController {
 	public ArrayList<ObjectNode> getNotification() {
 //		return Notification.getNotifications(mapper, ToolKit.getCurrentUserName());
 		return Notification.getNotifications(mapper, "newTeacher");
+	}
+
+	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
+	@PutMapping("/notification-seen/{id}")
+	public void notificationSeen(@PathVariable Integer id) {
+		Notification.notificationSeen(id);
 	}
 
 //	@GetMapping("/api/auth/get-registration-notification")

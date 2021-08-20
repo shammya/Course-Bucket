@@ -30,9 +30,9 @@ export function FilterChips({
   onDelete: (value: IFilteredValue, type: "ADD" | "REMOVE") => void;
 }) {
   return (
-    <Grid id="chipsContainer" sm container>
+    <Grid id="chipsContainer" sm item container>
       {filteredData.map((filter, index) => (
-        <>
+        <React.Fragment key={filter.id + filter.title}>
           {filter.type === "SLIDER" ? (
             <CustomChip
               label={
@@ -47,11 +47,12 @@ export function FilterChips({
             />
           ) : (
             <CustomChip
+              key={filter.id + filter.title}
               label={filter.value as string}
               onDelete={() => onDelete(filter, "REMOVE")}
             />
           )}
-        </>
+        </React.Fragment>
       ))}
     </Grid>
   );

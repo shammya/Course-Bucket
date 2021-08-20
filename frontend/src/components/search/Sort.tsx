@@ -24,14 +24,6 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 120,
   },
 }));
-const sortTypes = [
-  "New released",
-  "Best seller",
-  "Most reviewed",
-  "Most rated",
-  "Price low to high",
-  "Price high to low",
-];
 
 const CustomSelect = ({ data, title, open, selected, onClose, onChange }) => {
   const classes = useStyles();
@@ -47,8 +39,9 @@ const CustomSelect = ({ data, title, open, selected, onClose, onChange }) => {
       <DialogContent>
         <FormControl component="fieldset">
           <RadioGroup>
-            {data.map((item) => (
+            {data.map((item, index) => (
               <FormControlLabel
+                key={index}
                 checked={item === selected}
                 value={item}
                 control={<Radio />}
@@ -66,9 +59,8 @@ const CustomSelect = ({ data, title, open, selected, onClose, onChange }) => {
   );
 };
 
-function Sort() {
+function Sort({ sortTypes, sortType, setSortType }) {
   const [open, setOpen] = useState(false);
-  const [sortType, setSortType] = useState(sortTypes[0]);
   const handleChange = (value) => {
     setSortType(value);
     setOpen(false);
@@ -83,7 +75,7 @@ function Sort() {
   };
 
   return (
-    <Grid sm={12} xs={6} container>
+    <Grid item sm={12} xs={6} container>
       <Grid container justifyContent="space-between" onClick={handleOpen}>
         <Typography variant="h6">Sort by</Typography>
         <SortIcon />

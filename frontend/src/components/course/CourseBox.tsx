@@ -86,11 +86,11 @@ function CourseBox({ courseData }) {
             spacing={1}
           >
             <Grid item className={classNames(global.medium, local.offPrice)}>
-              {Math.round(courseData.price * (1 - courseData.off / 100) * 100) /
-                100}
+              {courseData.price}
             </Grid>
             <Grid item className={classNames(global.big, global.bold)}>
-              {courseData.price}
+              {Math.round(courseData.price * (100 - courseData.off) * 100) /
+                100}
             </Grid>
           </Grid>
         </CardContent>

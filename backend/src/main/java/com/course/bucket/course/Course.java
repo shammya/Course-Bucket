@@ -809,30 +809,30 @@ public class Course {
 
 		String orderStatement = "";
 		switch (filters.getSorting()) {
-		case "NewReleased":
+		case "New released":
 			selectStatement += " , c.publish_date ";
 			orderStatement += " order by c.publish_date desc";
 			break;
-		case "BestSeller":
+		case "Best seller":
 			selectStatement += (" , (select nvl(count(course_id),0) \n" + "		From purchase_history\n"
 					+ "		Where course_id = c.id) as count ");
 			orderStatement += " order by count desc";
 			break;
-		case "MostReviewed":
+		case "Most reviewed":
 			selectStatement += (" , (select nvl(count(course_id),0) \n" + "		From review\n"
 					+ "		Where course_id = c.id) as count ");
 			orderStatement += " order by count desc";
 			break;
-		case "MostRated":
+		case "Most rated":
 			selectStatement += (" , (select nvl(count(course_id),0) \n" + "		From rating\n"
 					+ "		Where course_id = c.id) as count ");
 			orderStatement += " order by count desc";
 			break;
-		case "AscendingPrice":
+		case "Price low to high":
 			selectStatement += " , (c.price * (100 - c.offer)/100) as price ";
 			orderStatement += " order by price asc";
 			break;
-		case "DescendingPrice":
+		case "Price high to low":
 			selectStatement += " , (c.price * (100 - c.offer)/100) as price ";
 			orderStatement += " order by price desc";
 			break;
@@ -971,7 +971,7 @@ public class Course {
 			}
 
 			sql = getMiniCourseSql(
-					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer, \n" + "	c.teacher_id \n"
+					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer, \n" + "	c.teacher_id, \n"
 							+ "	c.cover_id \n"
 							+ "FROM\n" + "	course c \n" + "WHERE\n" + "	( c.price * ( 100-c.offer ) / 100 ) = 0.0");
 			rs = DB.executeQuery(sql);

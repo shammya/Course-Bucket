@@ -51,6 +51,23 @@ function CourseApproval(props) {
     }
   }, []);
 
+  function insertIntoApproveList(data) {
+    setData2([data, ...data2]);
+  }
+  function insertIntoUnapproveList(data) {
+    setData1([data, ...data1]);
+  }
+  function deleteFromApprove(idx) {
+    let dataset = [...data2];
+    dataset.splice(idx, 1);
+    setData2(dataset);
+  }
+  function deleteFromUnapprove(idx) {
+    let dataset = [...data2];
+    dataset.splice(idx, 1);
+    setData2(dataset);
+  }
+
 
 
   const history = useHistory();
@@ -83,6 +100,8 @@ function CourseApproval(props) {
                   .then(response => {
                     getApprovedCourses()
                     getUnapprovedCourses()
+                    // deleteFromUnapprove(rowData.tableData.id);
+                    // insertIntoApproveList(rowData);
                   }
                   )
               }
