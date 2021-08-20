@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
 import com.course.bucket.authentication.JwtUtils;
+import com.course.bucket.course.Course;
 import com.course.bucket.course.additionals.MiniCourse;
 import com.course.bucket.courseextra.purchasehistory.PurchaseHistory;
 import com.course.bucket.designation.Designation;
@@ -37,11 +38,12 @@ public class StudentController {
 		Student.createNewStudent(person,edu_id);
 	}
 	
-	@GetMapping("/get-student")
-	public Student findStudent(@PathVariable String id){
-			return new Student(ToolKit.getCurrentUserName());
-	}
+//	@GetMapping("/get-student")
+//	public Student findStudent(@PathVariable String id){
+//			return new Student(ToolKit.getCurrentUserName());
+//	}
 
+	@PreAuthorize("hasRole('Student')")
 	@GetMapping("/get-student-self")
 	public ResponseEntity<?> getStudentSelf(){
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -86,7 +88,11 @@ public class StudentController {
 	
 	@PreAuthorize("hasRole('Student')")
 	@PutMapping("/update-student/{eduStatusId}")
-	public void updateStudent(@PathVariable Integer eduStatusId, @RequestBody Person person) {
+	public ResponseEntity<?> updateStudent(@PathVariable Integer eduStatusId, @RequestBody Person person) {
+		if(!ToolKit.getCurrentUserName().equals(person.getUsername())) {
+			return ResponseEntity.badRequest().body("Requested user can not perform the task");
+		}
 		Student.update(person, eduStatusId);
+		return ResponseEntity.ok("");
 	}
 }

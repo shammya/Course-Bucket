@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
+import com.course.bucket.course.Course;
+import com.course.bucket.database.DB;
 import com.course.bucket.tools.ToolKit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -28,13 +31,18 @@ public class NotificationController {
 	@GetMapping("/get-notification")
 	public ArrayList<ObjectNode> getNotification() {
 //		return Notification.getNotifications(mapper, ToolKit.getCurrentUserName());
-		return Notification.getNotifications(mapper, "newTeacher");
+		return Notification.getNotifications(mapper,ToolKit.getCurrentUserName());
 	}
 
 	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
 	@PutMapping("/notification-seen/{id}")
-	public void notificationSeen(@PathVariable Integer id) {
+	public ResponseEntity<?> notificationSeen(@PathVariable Integer id) {
+		String userId = DB.getString("notification", "id", id.toString(), "user_id");
+		if(!ToolKit.getCurrentUserName().equals(userId)) {
+			return ResponseEntity.badRequest().body("Requested user is not the owner of the notification");
+		}
 		Notification.notificationSeen(id);
+		return ResponseEntity.ok("");
 	}
 
 //	@GetMapping("/api/auth/get-registration-notification")

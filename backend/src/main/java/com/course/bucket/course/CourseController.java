@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,7 @@ import com.course.bucket.course.additionals.IncomePerCourse;
 import com.course.bucket.course.additionals.MiniCourse;
 import com.course.bucket.course.additionals.PopularCategory;
 import com.course.bucket.courseextra.PublicResponse;
+import com.course.bucket.database.DB;
 import com.course.bucket.person.Admin;
 import com.course.bucket.tools.ToolKit;
 
@@ -39,8 +42,13 @@ public class CourseController {
 
 	@PreAuthorize("hasRole('Teacher')")
 	@PutMapping("/update-course")
-	public void updateCourse(@RequestBody Course course) {
+	public ResponseEntity<?> updateCourse(@RequestBody Course course) {
+		String username = DB.getString("course", "id", course.getId().toString(), "teacher_id");
+		if(!ToolKit.getCurrentUserName().equals(username)) {
+			return ResponseEntity.badRequest().body("Requested user is not match with the course creator");
+		}
 		Course.update(course);
+		return ResponseEntity.ok("");
 	}
 	
 //	@GetMapping("/get-categories")
@@ -50,8 +58,12 @@ public class CourseController {
 
 	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-course-for-update/{id}")
-	public Course getCourseForUpdate(@PathVariable Integer id) {
-		return new Course(id);
+	public ResponseEntity<?> getCourseForUpdate(@PathVariable Integer id) {
+		Course course = new Course(id);
+		if(!ToolKit.getCurrentUserName().equals(course.getTeacherUserame())) {
+			return ResponseEntity.badRequest().body("Requested user is not match with the course creator");
+		}
+		return ResponseEntity.ok(course);
 	}
 	
 	@GetMapping("/public/get-course-to-show/{id}")
@@ -76,7 +88,12 @@ public class CourseController {
 	
 	@PreAuthorize("hasRole('Teacher')")
 	@DeleteMapping("/delete-course/{id}")
-	public void deleteCourse(@PathVariable Integer id) {
-		new Course(id).delete();
+	public ResponseEntity<?> deleteCourse(@PathVariable Integer id) {
+		Course course = new Course(id);
+		if(!ToolKit.getCurrentUserName().equals(course.getTeacherUserame())) {
+			return ResponseEntity.badRequest().body("Requested user is not match with the course creator");
+		}
+		course.delete();
+		return ResponseEntity.ok("");
 	}
 }

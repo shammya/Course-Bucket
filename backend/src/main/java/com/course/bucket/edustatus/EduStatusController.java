@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.Global;
 import com.course.bucket.authentication.JwtUtils;
+import com.course.bucket.tools.ToolKit;
 
 
 @RestController
@@ -29,16 +30,16 @@ public class EduStatusController {
 		EduStatus.createNewEduStatus(edustatus.getType(),edustatus.getAdminId());
 	}
 	
-	@GetMapping("/get-edustatus")
+	@GetMapping("/public/get-edustatus")
 	public List<EduStatus> findEdustatuses(){
 		return EduStatus.getList();
 	}
 	
-	@GetMapping("/get-edustatus-by-name/{name}")
-	public EduStatus findById(@PathVariable String name) {
-		EduStatus edustatus = new EduStatus(name);
-		return edustatus;
-	}
+//	@GetMapping("/get-edustatus-by-name/{name}")
+//	public EduStatus findById(@PathVariable String name) {
+//		EduStatus edustatus = new EduStatus(name);
+//		return edustatus;
+//	}
 		
 	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/update-edustatus")
@@ -58,7 +59,6 @@ public class EduStatusController {
 	@PreAuthorize("hasRole('Student')")
 	@GetMapping("/get-edustatus-self")
 	public EduStatus getEduStatusSelf() {
-		UserDetails user = JwtUtils.getUser();
-		return EduStatus.getByUsername(user.getUsername());
+		return EduStatus.getByUsername(ToolKit.getCurrentUserName());
 	}
 }

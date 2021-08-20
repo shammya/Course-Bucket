@@ -56,14 +56,11 @@ public class ReviewController {
 		String username = ToolKit.getCurrentUserName();
 		return Review.getReviewByStudent(courseId, username);
 	}
-	
+
+	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-review-teacher")
 	public ArrayList<ReviewList> getReviewListTeacher(){
 		return Review.getReviewListTeacher(ToolKit.getCurrentUserName());
-	}
-	@GetMapping("/get-review-student")
-	public ArrayList<ReviewList> getReviewListStudent(){
-		return Review.getReviewListStudent(ToolKit.getCurrentUserName());
 	}
 	
 	@PreAuthorize("hasRole('Student')")

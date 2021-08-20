@@ -1,28 +1,23 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  Grid,
-  Typography,
-} from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { Category, Image, Language, Looks } from "@material-ui/icons";
+import { UserRegistrationChart } from "components/AdminPanel/charts/UserRegistrationChart";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import { useState } from "react";
 import { ImEarth } from "react-icons/im";
 import { Redirect, Route, Switch } from "react-router";
 import { useRouteMatch } from "react-router-dom";
-import { UserRegistrationChart } from "components/AdminPanel/charts/UserRegistrationChart";
+import { Cards } from "./Cards";
 import MultiSelectTreeView from "./CategoryComponent";
+import PopularCategoryChart from "./charts/PopularCategoryChart";
+import { PopularCourseAdminChart } from "./charts/PopurlarCourseAdminChart";
 import CountryComponent from "./CountryComponent";
+import CourseApprovalComponent from "./CourseApprovalComponent";
 import DesignationComponent from "./DesignationComponent";
 import EduStatusComponent from "./EduStatusComponent";
 import LanguageComponent from "./LanguageComponent";
-import PopularCategoryChart from "./charts/PopularCategoryChart";
-import { PopularCourseAdminChart } from "./charts/PopurlarCourseAdminChart";
-import CourseApprovalComponent from "./CourseApprovalComponent";
-import TeacherInfoComponent from "./TeacherInfoComponent";
+import SliderComponent from "./SliderComponent";
 import StudentInfoComponent from "./StudentInfoComponent";
-import { Cards } from "./Cards";
+import TeacherInfoComponent from "./TeacherInfoComponent";
 
 function AdminDashboard() {
   const [columns, setColumns] = useState([
@@ -55,7 +50,7 @@ function AdminDashboard() {
       urlShort: "overview",
       icon: <Looks />,
       content: (
-        <Grid container xs spacing={2}>
+        <Grid container spacing={2}>
           <Grid item>
             <Cards />
           </Grid>
@@ -70,6 +65,12 @@ function AdminDashboard() {
           </Grid>
         </Grid>
       ),
+    },
+    {
+      label: "Homepage Slider",
+      urlShort: "slider-manager",
+      icon: <Language />,
+      content: <SliderComponent />,
     },
     {
       label: "Student Info",
@@ -127,7 +128,7 @@ function AdminDashboard() {
     <>
       <Switch>
         {objects.map((item, idx) => (
-          <Route exact path={`${route.path}/${item.urlShort}`}>
+          <Route key={idx} exact path={`${route.path}/${item.urlShort}`}>
             <DrawerLayout objects={objects} defaultTabIndex={idx} />
           </Route>
         ))}

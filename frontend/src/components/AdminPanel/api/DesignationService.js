@@ -5,7 +5,7 @@ import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 class DesignationService {
 
     getAllDesignation() {
-        return axios.get(GLOBAL.HOST + '/get-designations')
+        return axios.get(GLOBAL.HOST + '/public/get-designations')
     }
 
     deleteDesignation(id) {

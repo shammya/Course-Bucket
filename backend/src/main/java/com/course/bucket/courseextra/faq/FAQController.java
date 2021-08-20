@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.course.bucket.course.Course;
 import com.course.bucket.courseextra.review.Review;
 import com.course.bucket.courseextra.review.ReviewInfo;
+import com.course.bucket.database.DB;
 import com.course.bucket.tools.ToolKit;
 
 
@@ -33,16 +36,20 @@ public class FAQController {
 	
 	@PreAuthorize("hasRole('Teacher')")
 	@PostMapping("/add-faq-answer")
-	public void addFaqAnswer(@RequestParam Integer faqId, @RequestParam String answer) {
-		//System.out.println("Country : "+purchasehistory.name+" "+purchasehistory.adminId);
+	public ResponseEntity<?> addFaqAnswer(@RequestParam Integer faqId, @RequestParam String answer) {
+		Integer courseId = DB.getInt("FAQ", "id", faqId.toString(), "course_id");
+		String username = DB.getString("course", "id", courseId.toString(), "teacher_id");
+		if(!ToolKit.getCurrentUserName().equals(username)) {
+			return ResponseEntity.badRequest().body("Requested user is not match with the course creator");
+		}
 		FAQ.addFaqAnswer(faqId, answer);
+		return ResponseEntity.ok("");
 	}
-	
 
-	@GetMapping("/get-faq-list/{courseId}")
-	public ArrayList<FAQ> findFAQList(@PathVariable Integer courseId){
-		return FAQ. getFAQList(courseId);
-	}
+//	@GetMapping("/get-faq-list/{courseId}")
+//	public ArrayList<FAQ> findFAQList(@PathVariable Integer courseId){
+//		return FAQ. getFAQList(courseId);
+//	}
 	
 	
 	@PreAuthorize("hasRole('Teacher')")

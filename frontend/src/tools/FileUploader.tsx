@@ -25,6 +25,7 @@ export function FileUploader(props: IFileUploader) {
     acceptedFiles,
     Icon,
     type,
+    showPreviewsInDropzone,
     ...rest
   } = props;
   const [state, setState] = useState({
@@ -70,7 +71,7 @@ export function FileUploader(props: IFileUploader) {
         });
     }
     return () => abortController.abort();
-  }, [type]);
+  }, [type, fileObjects]);
 
   function handleChange(files: FileObject[]) {
     if (filesLimit)
@@ -90,7 +91,7 @@ export function FileUploader(props: IFileUploader) {
         fileObjects={state.fileObjects}
         dropzoneText="Drop a file here or click here"
         maxFileSize={100000000}
-        showPreviewsInDropzone
+        showPreviewsInDropzone={showPreviewsInDropzone}
         // styles={{ position: "relative" }}
         onAdd={(newFileObjects) => {
           console.log("onAdd", newFileObjects);

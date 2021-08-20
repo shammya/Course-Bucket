@@ -27,16 +27,16 @@ public class LanguageController {
 		Language.createNewLanguage(language.getName(),language.getAdminId());
 	}
 	
-	@GetMapping("/get-languages")
+	@GetMapping("/public/get-languages")
 	public List<Language> findLanguages(){
 		return Language.getList();
 	}
 	
-	@GetMapping("/get-language-by-name/{name}")
-	public Language findById(@PathVariable String name) {
-		Language language = new Language(name);
-		return language;
-	}
+//	@GetMapping("/get-language-by-name/{name}")
+//	public Language findById(@PathVariable String name) {
+//		Language language = new Language(name);
+//		return language;
+//	}
 		
 	
 	@PreAuthorize("hasRole('Admin')")

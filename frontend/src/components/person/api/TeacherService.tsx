@@ -8,13 +8,13 @@ class TeacherService {
   }
   getCreateCourseByUsername(username: string) {
     return axios.get(
-      GLOBAL.HOST + `/get-created-courses/${username}`,
+      GLOBAL.HOST + `/public/get-created-courses/${username}`,
       authHeaders()
     );
   }
   getMiniInfo(username: string) {
     return axios.get(
-      GLOBAL.HOST + `/get-teacher-mini/${username}`,
+      GLOBAL.HOST + `/public/get-teacher-mini/${username}`,
       authHeaders()
     );
   }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.authentication.JwtUtils;
+import com.course.bucket.tools.ToolKit;
 
 
 @RestController
@@ -28,16 +29,16 @@ public class DesignationController {
 		Designation.createNewDesignation(designation.getType(),designation.getAdminId());
 	}
 	
-	@GetMapping("/get-designations")
+	@GetMapping("/public/get-designations")
 	public List<Designation> findCountries(){
 		return Designation.getList();
 	}
 	
-	@GetMapping("/get-designation-by-name/{name}")
-	public Designation findById(@PathVariable String name) {
-		Designation designation = new Designation(name);
-		return designation;
-	}
+//	@GetMapping("/get-designation-by-name/{name}")
+//	public Designation findById(@PathVariable String name) {
+//		Designation designation = new Designation(name);
+//		return designation;
+//	}
 		
 	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/update-designation")
@@ -56,7 +57,6 @@ public class DesignationController {
 	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-designation-self")
 	public Designation getDesignationSelf() {
-		UserDetails user = JwtUtils.getUser();
-		return Designation.getByUsername(user.getUsername());
+		return Designation.getByUsername(ToolKit.getCurrentUserName());
 	}
 }

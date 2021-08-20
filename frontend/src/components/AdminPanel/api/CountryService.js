@@ -6,7 +6,7 @@ import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 class CountryService {
 
     getAllCountries() {
-        return axios.get(GLOBAL.HOST + '/get-countries')
+        return axios.get(GLOBAL.HOST + '/public/get-countries')
     }
 
     deleteCountry(id) {
