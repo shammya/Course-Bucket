@@ -1,12 +1,14 @@
 import { Grid } from "@material-ui/core";
-import { authHeaders } from "components/auth/api/AuthService";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactPlayer from "react-player/lazy";
 
 export default function VideoPlayer({ url }: { url: string }) {
   return (
     <Grid container>
       <ReactPlayer
+        // className="react-player"
+        width="100%"
+        height="auto"
         style={{ width: "100%", height: "auto" }}
         url={url}
         controls={true}

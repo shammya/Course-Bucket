@@ -1,4 +1,4 @@
-import { Button, Link } from "@material-ui/core";
+import { Button, Grid, Link } from "@material-ui/core";
 import { CloudDownloadRounded } from "@material-ui/icons";
 import MUIRichTextEditor from "mui-rte";
 import React, { useState } from "react";
@@ -20,6 +20,7 @@ export function PDFOutput({ editable, file, onUpdate }: LectureOutputProps) {
     <OutputLayout editable={editable} onUpdate={onUpdate}>
       {/* <PDFViewer url={URL.createObjectURL(file?.content?.file)} /> */}
       <MUIRichTextEditor readOnly toolbar={false} defaultValue={file.title} />
+      <Grid container justifyContent="center">
       <Link
         href={
           file?.content?.file
@@ -27,10 +28,12 @@ export function PDFOutput({ editable, file, onUpdate }: LectureOutputProps) {
             : file?.content
         }
       >
-        <Button style={{ color: "green" }} startIcon={<CloudDownloadRounded />}>
-          Download
+        <Button variant="contained" style={{ color: "green" }} startIcon={<CloudDownloadRounded />}>
+          Download PDF
         </Button>
       </Link>
+      </Grid>
+      
     </OutputLayout>
   );
 }

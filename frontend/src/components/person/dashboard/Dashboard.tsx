@@ -28,6 +28,7 @@ export function ContentHeader({
   courseSubtitle,
   courseImage,
   children,
+  contentPadding = true,
 }) {
   const history = useHistory();
   return (
@@ -54,7 +55,9 @@ export function ContentHeader({
         </Grid>
         <Divider />
       </CardActionArea>
-      <CardContent>{children}</CardContent>
+      <CardContent style={{ padding: !contentPadding ? 0 : "" }}>
+        {children}
+      </CardContent>
     </Card>
   );
 }

@@ -18,6 +18,7 @@ import AuthService from "components/auth/api/AuthService";
 import { useSnackbar } from "notistack";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import ShadowText from "tools/customDesign/ShadowText";
 import TextEditor from "tools/customDesign/TextEditor";
 import { SlidingUpTransition } from "tools/Tools";
 import CourseService from "../api/CourseService";
@@ -83,6 +84,9 @@ export function FAQSection({
               )}
           </Grid>
           <Grid item container direction="column">
+            {(faqs === undefined || faqs?.length === 0) && (
+              <ShadowText>No Question yet</ShadowText>
+            )}
             {faqs?.map((faq, index) => (
               <Grid item container key={index}>
                 <Divider
@@ -134,7 +138,7 @@ export function FAQBox({
         {console.log(AuthService.getCurrentUsername())}
         {!faq?.answer &&
         faq?.teacherUsername === AuthService.getCurrentUsername() ? (
-          <Grid container justifyContent="center">
+          <Grid container justifyContent="center" style={{ marginLeft: -40 }}>
             <Button
               variant="contained"
               color="primary"
@@ -150,7 +154,20 @@ export function FAQBox({
             />
           </Grid>
         ) : (
-          !faq?.answer && <Typography variant="body1">No answer yet</Typography>
+          !faq?.answer && (
+            <Typography
+              variant="body1"
+              style={{
+                marginLeft: -40,
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                textAlign: "center",
+                fontSize: "1.2rem",
+              }}
+            >
+              No answer yet
+            </Typography>
+          )
         )}
         {faq?.answer && (
           <Grid item style={{ marginTop: 20 }}>

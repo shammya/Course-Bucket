@@ -9,6 +9,7 @@ import {
   Grid,
   makeStyles,
 } from "@material-ui/core";
+import auth_bg from "assets/img/auth_bg.png";
 import AuthService from "components/auth/api/AuthService";
 import { ForgotPassword } from "components/auth/ForgotPassword";
 import { SignIn } from "components/auth/SignIn";
@@ -51,8 +52,7 @@ export default function Auth() {
             // height: "100vw",
             backgroundColor: "#1E293B",
             backgroundSize: "100vw",
-            backgroundImage:
-              "url(http://localhost:8800/files/Messenger%20Group%20Photo%20SSC'21%20.png)",
+            backgroundImage: `url(${auth_bg})`,
           }}
         >
           {/* <Login /> */}
@@ -93,23 +93,25 @@ export default function Auth() {
                 </DialogActions>
               </Dialog>
             }
-            <Switch>
-              <Route path={`${match.path}/signin`} exact>
-                <SignIn signOut={signOut} />
-              </Route>
-              <Route path={`${match.path}/signup`} exact>
-                <SignUp signOut={signOut} />
-              </Route>
-              <Route path={`${match.path}/forgot-password`} exact>
-                <ForgotPassword signOut={signOut} />
-              </Route>
-              <Route
-                path={`${match.path}/profile-details`}
-                exact
-                component={ProfileDetails}
-              />
-              <Redirect from="/" to={`${match.path}/signin`} />
-            </Switch>
+            <Grid item xs={10} sm={8} md={5}>
+              <Switch>
+                <Route path={`${match.path}/signin`} exact>
+                  <SignIn signOut={signOut} />
+                </Route>
+                <Route path={`${match.path}/signup`} exact>
+                  <SignUp signOut={signOut} />
+                </Route>
+                <Route path={`${match.path}/forgot-password`} exact>
+                  <ForgotPassword signOut={signOut} />
+                </Route>
+                <Route
+                  path={`${match.path}/profile-details`}
+                  exact
+                  component={ProfileDetails}
+                />
+                <Redirect from="/" to={`${match.path}/signin`} />
+              </Switch>
+            </Grid>
           </Grid>
           {/* <FooterSmall absolute /> */}
         </div>

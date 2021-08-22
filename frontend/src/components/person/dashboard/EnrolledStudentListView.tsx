@@ -25,7 +25,7 @@ export function EnrolledStudentListView() {
     });
   }, []);
   return (
-    <CustomPagination objectsPerPage={3}>
+    <CustomPagination objectsPerPage={3} noContentText="You have no enrolled student">
       {studentsWithCourses?.map((studentsWithCourse) => (
         <ContentHeader
           key={studentsWithCourse.courseId}

@@ -13,9 +13,9 @@ import {
   Typography,
   useTheme,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import axios from "axios";
+import { Files } from "classes/Files";
 import { CreditCard, Designation, EduStatus, Person } from "classes/Person";
 import CountryService from "components/AdminPanel/api/CountryService";
 import DesignationService from "components/AdminPanel/api/DesignationService";
@@ -23,13 +23,12 @@ import EduStatusService from "components/AdminPanel/api/EduStatusService";
 import AuthService, { authHeaders } from "components/auth/api/AuthService";
 import { GLOBAL } from "Configure";
 import User from "layout/User";
-import { FileObject } from "material-ui-dropzone";
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { ControlledTextfield } from "tools/customDesign/ControlledTextfield";
 import { ImageUploader } from "tools/customDesign/ImageUploader";
 import { LanguageField } from "tools/customDesign/LanguageField";
-import { ErrorMessage } from "tools/Tools";
 import { Country } from "./../../classes/Country";
 import PersonService from "./api/PersonService";
 
@@ -89,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfileDetails = (props) => {
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
   const [person, setPerson] = useState<Person>(props.location.state.person);
   // let person: Person;
 
@@ -106,23 +106,12 @@ const ProfileDetails = (props) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [againNewPassword, setAgainNewPassword] = useState("");
-  // const [files, setFiles] = useState<FileObject[]>([]);
-  const [tempFiles, setTempFiles] = useState<FileObject[]>([]);
-
   // Snackbar control
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  // function handleSnackbarClose(event?: React.SyntheticEvent, reason?: string) {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-  //   setOpen(false);
-  // }
-  // Initialize  - start
 
   useEffect(() => {
+    let abort = new AbortController();
     console.log("heheh");
     if (props.location.state) {
       setPerson(props.location.state.person);
@@ -133,12 +122,15 @@ const ProfileDetails = (props) => {
           .then((response) => {
             console.log("Person data from header", response);
             // history.goBack();
+
+            let photo = response.data.photo;
+            response.data.photo = new Files(photo.type, photo.title)
+              .setId(photo.id)
+              .setContent(photo.content);
+
             history.push({
               pathname: "/profile-details",
-              state: {
-                person: response.data,
-                registered: true,
-              },
+              state: response.data,
             });
           });
       } else if (AuthService.getCurrentAccountType() == "Student") {
@@ -147,6 +139,11 @@ const ProfileDetails = (props) => {
           .then((response) => {
             console.log("Person data from header", response);
             // history.goBack();
+            let photo = response.data.photo;
+            response.data.photo = new Files(photo.type, photo.title)
+              .setId(photo.id)
+              .setContent(photo.content);
+
             history.push({
               pathname: "/profile-details",
               state: {
@@ -197,43 +194,44 @@ const ProfileDetails = (props) => {
     //   person.dob = dob;
     // }
     return () => {
-      setOldPassword("");
-      setNewPassword("");
-      setAgainNewPassword("");
+      // setOldPassword(null);
+      // setNewPassword(null);
+      // setAgainNewPassword(null);
+      // setDob(null)
+      // setPerson(null)
+      abort.abort();
     };
   }, []);
   // Initialize - end
 
-  function passwordInfoCheck(func) {
+  async function passwordInfoCheck(func) {
     if (oldPassword && newPassword && againNewPassword) {
       if (newPassword != againNewPassword) {
-        setErrorMessage("Password mismatch");
-        setShowErrorMessage(true);
+        enqueueSnackbar("Password mismatch", { variant: "error" });
       }
-      PersonService.changePassword(oldPassword, newPassword).then(
-        (response) => {
+      await PersonService.changePassword(oldPassword, newPassword).then(
+        async (response) => {
           if (response.data.stringValue) {
-            setErrorMessage(response.data.stringValue);
-            setShowErrorMessage(true);
+            enqueueSnackbar(response.data.stringValue, { variant: "error" });
           } else {
-            setSuccessMessage("Password change successfully");
-            setShowSuccessMessage(true);
-            func();
+            enqueueSnackbar("Password change successfully", {
+              variant: "success",
+            });
+            await func();
           }
         }
       );
     } else if (!oldPassword && !newPassword && !againNewPassword) {
-      func();
+      await func();
     } else {
-      setErrorMessage("Fill up password field properly");
-      setShowErrorMessage(true);
+      enqueueSnackbar("Fill up password field properly", { variant: "error" });
     }
   }
 
-  function register() {
+  async function register() {
     if (person.accountType == "Student") {
       // @ts-ignore
-      AuthService.registerStudent(person, statusId).then((response) => {
+      await AuthService.registerStudent(person, statusId).then((response) => {
         if (response.data.token) {
           localStorage.setItem("user", JSON.stringify(response.data));
         }
@@ -242,7 +240,7 @@ const ProfileDetails = (props) => {
       });
     } else if (person.accountType == "Teacher") {
       // @ts-ignore
-      AuthService.registerTeacher(person, statusId).then((response) => {
+      await AuthService.registerTeacher(person, statusId).then((response) => {
         if (response.data.token) {
           localStorage.setItem("user", JSON.stringify(response.data));
         }
@@ -252,35 +250,40 @@ const ProfileDetails = (props) => {
     }
   }
 
-  function update() {
+  async function update() {
     if (person.accountType == "Student") {
       // @ts-ignore
-      PersonService.updateStudent(person, statusId).then((response) => {
+      await PersonService.updateStudent(person, statusId).then((response) => {
         if (response.data.stringValue) {
-          setErrorMessage(response.data.stringValue);
-          setShowErrorMessage(true);
+          enqueueSnackbar(response.data.stringValue, { variant: "error" });
         } else {
           props.location.state.person = person;
-          setSuccessMessage("Successfully updated.");
-          setShowSuccessMessage(true);
+          console.log("updated");
+          enqueueSnackbar("Successfully updated", { variant: "success" });
+
+          let user = JSON.parse(localStorage.getItem("user") + "");
+          user.photo = person.photo;
+          localStorage.setItem("user", JSON.stringify(user));
         }
       });
     } else if (person.accountType == "Teacher") {
       // @ts-ignore
-      PersonService.updateTeacher(person, statusId).then((response) => {
+      await PersonService.updateTeacher(person, statusId).then((response) => {
         if (response.data.stringValue) {
-          setErrorMessage(response.data.stringValue);
-          setShowErrorMessage(true);
+          enqueueSnackbar(response.data.stringValue, { variant: "error" });
         } else {
           props.location.state.person = person;
-          setSuccessMessage("Successfully updated.");
-          setShowSuccessMessage(true);
+          enqueueSnackbar("Successfully updated", { variant: "success" });
+
+          let user = JSON.parse(localStorage.getItem("user") + "");
+          user.photo = person.photo;
+          localStorage.setItem("user", JSON.stringify(user));
         }
       });
     }
   }
 
-  function handleSaveClicked(event) {
+  async function handleSaveClicked(event) {
     event.preventDefault();
     if (person.card) {
       if (
@@ -288,26 +291,36 @@ const ProfileDetails = (props) => {
         !person.card.expireDate ||
         !person.card.nameOnCard
       ) {
-        setErrorMessage("Please set all information of credit card properly");
-        setShowErrorMessage(true);
+        enqueueSnackbar("Please set all information of credit card properly", {
+          variant: "warning",
+        });
         return;
       }
     }
     if (props.location.state.registered) {
-      passwordInfoCheck(() => {
+      enqueueSnackbar("Please wait, your profile is updating...", {
+        variant: "info",
+      });
+      await passwordInfoCheck(async () => {
         console.log("Updated person ", person);
-        if (person.photo) {
-          person.photo.upload().then(update);
+        //@ts-ignore
+        if (person?.photo?.content?.file) {
+          await person.photo.upload();
+          await update();
         } else {
-          update();
+          await update();
         }
       });
     } else {
+      enqueueSnackbar(
+        "Please wait, your account registration is processing...",
+        { variant: "info" }
+      );
       console.log(person);
       if (person.photo) {
-        person.photo.upload().then(register);
+        await person.photo.upload().then(register);
       } else {
-        register();
+        await register();
       }
     }
   }
@@ -418,9 +431,9 @@ const ProfileDetails = (props) => {
             setDob(date);
             person.dob = date;
           }}
-          KeyboardButtonProps={{
-            "aria-label": "change date",
-          }}
+          // KeyboardButtonProps={{
+          //   "aria-label": "change date",
+          // }}
           required
         />
         <LanguageField
@@ -442,9 +455,9 @@ const ProfileDetails = (props) => {
           color="primary"
           defaultValue={person.website}
           onChange={(event) => (person.website = event.target.value)}
-          inputProps={{
-            type: "url",
-          }}
+          // inputProps={{
+          //   type: "url",
+          // }}
         />
         <TextField
           label="Facebook"
@@ -559,6 +572,14 @@ const ProfileDetails = (props) => {
     return (
       <Grid container direction="column">
         <TextField
+          label="Username"
+          margin="normal"
+          variant="outlined"
+          color="primary"
+          disabled
+          defaultValue={person.username}
+        />
+        <TextField
           label="Email"
           margin="normal"
           variant="outlined"
@@ -572,7 +593,7 @@ const ProfileDetails = (props) => {
           variant="outlined"
           color="primary"
           defaultValue={oldPassword}
-          onChange={(event) => setOldPassword(event.target.value)}
+          onBlur={(event) => setOldPassword(event.target.value)}
           type="password"
         />
         <ControlledTextfield
@@ -581,7 +602,7 @@ const ProfileDetails = (props) => {
           variant="outlined"
           color="primary"
           defaultValue={newPassword}
-          onChange={(event) => setNewPassword(event.target.value)}
+          onBlur={(event) => setNewPassword(event.target.value)}
           type="password"
         />
         <ControlledTextfield
@@ -590,7 +611,7 @@ const ProfileDetails = (props) => {
           variant="outlined"
           color="primary"
           defaultValue={againNewPassword}
-          onChange={(event) => setAgainNewPassword(event.target.value)}
+          onBlur={(event) => setAgainNewPassword(event.target.value)}
           type="password"
         />
       </Grid>
@@ -598,63 +619,88 @@ const ProfileDetails = (props) => {
   }
   function FullPage() {
     return (
-      <Grid item xs={12} sm={8} md={5} style={{ margin: "0 auto" }}>
-        <form onSubmit={handleSaveClicked} encType="multipart/form-data">
-          <Accordion
-            expanded={expanded === "panel1"}
-            onChange={handleChange("panel1")}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography style={{ width: "100%", textAlign: "center" }}>
-                General settings
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <PersonalDetails />
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            expanded={expanded === "panel2"}
-            onChange={handleChange("panel2")}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography style={{ width: "100%", textAlign: "center" }}>
-                Profile Picture
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <ProfilePicture />
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            expanded={expanded === "panel3"}
-            onChange={handleChange("panel3")}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography style={{ width: "100%", textAlign: "center" }}>
-                Credit Card Information
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <CreditCardInfo />
-            </AccordionDetails>
-          </Accordion>
-          {props.location.state.registered && (
+      <form encType="multipart/form-data" onSubmit={handleSaveClicked}>
+        <Grid container direction="column" spacing={2}>
+          <Grid item container>
             <Accordion
-              expanded={expanded === "panel4"}
-              onChange={handleChange("panel4")}
+              expanded={true}
+              style={{ width: "100%" }}
+              // expanded={expanded === "panel1"}
+              // onChange={handleChange("panel1")}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary>
                 <Typography style={{ width: "100%", textAlign: "center" }}>
-                  Security
+                  General settings
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Security />
+                <PersonalDetails />
               </AccordionDetails>
             </Accordion>
+          </Grid>
+          <Grid item container>
+            <Accordion
+              expanded={true}
+              style={{ width: "100%" }}
+              // expanded={expanded === "panel2"}
+              // onChange={handleChange("panel2")}
+            >
+              <AccordionSummary>
+                <Typography style={{ width: "100%", textAlign: "center" }}>
+                  Profile Picture
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <ProfilePicture />
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+          <Grid item container>
+            <Accordion
+              expanded={true}
+              style={{ width: "100%" }}
+              // expanded={expanded === "panel3"}
+              // onChange={handleChange("panel3")}
+            >
+              <AccordionSummary>
+                <Typography style={{ width: "100%", textAlign: "center" }}>
+                  Credit Card Information
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <CreditCardInfo />
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+          {props.location.state.registered && (
+            <Grid item container>
+              <Accordion
+                expanded={true}
+                style={{ width: "100%" }}
+                // expanded={expanded === "panel4"}
+                // onChange={handleChange("panel4")}
+              >
+                <AccordionSummary>
+                  <Typography style={{ width: "100%", textAlign: "center" }}>
+                    Security
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Security />
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
           )}
-          <Grid item container justifyContent="center" style={{ padding: 10 }}>
+        </Grid>
+
+        <Grid
+          item
+          container
+          justifyContent="center"
+          spacing={3}
+          style={{ padding: 15 }}
+        >
+          <Grid item>
             <Button
               // onClick={handleSaveClicked}
               variant="contained"
@@ -663,6 +709,8 @@ const ProfileDetails = (props) => {
             >
               Save
             </Button>
+          </Grid>
+          <Grid item>
             <Button
               onClick={(event) => history.goBack()}
               variant="contained"
@@ -672,25 +720,24 @@ const ProfileDetails = (props) => {
               Cancel
             </Button>
           </Grid>
-        </form>
-      </Grid>
+        </Grid>
+      </form>
     );
   }
   return (
     <>
-      <ErrorMessage
-        open={showErrorMessage}
-        message={errorMessage}
-        onClose={setShowErrorMessage}
-      />
       {props.location.state.registered ? (
         <User>
           <Grid container justifyContent="center">
-            <FullPage />
+            <Grid item xs={12} sm={8} md={5} style={{ margin: "0 auto" }}>
+              <FullPage />
+            </Grid>
           </Grid>
         </User>
       ) : (
-        <FullPage />
+        <Grid item xs={12} style={{ margin: "0 auto" }}>
+          <FullPage />
+        </Grid>
       )}
     </>
   );

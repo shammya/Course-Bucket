@@ -25,13 +25,18 @@ import com.course.bucket.courseextra.purchasehistory.PurchaseHistory;
 import com.course.bucket.designation.Designation;
 import com.course.bucket.edustatus.EduStatus;
 import com.course.bucket.person.others.StudentList;
+import com.course.bucket.person.others.TeacherMiniInfo;
 import com.course.bucket.tools.ToolKit;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 @RestController
 @CrossOrigin(origins = Global.HOST)
 public class StudentController {
 	
+	@Autowired
+	ObjectMapper mapper;
 	
 	@PostMapping("/add-student/{edu_id}")
 	public void addStudent(@RequestBody Person person,@PathVariable Integer edu_id) {
@@ -57,6 +62,11 @@ public class StudentController {
 	public ArrayList<StudentList> getStudntListTeacher(){
 		return Student.getStudntListTeacher(ToolKit.getCurrentUserName());
 	}
+	
+	@GetMapping("/public/get-student-edustatus/{username}")
+	public EduStatus getTeacherDesignation(@PathVariable String username){
+		return EduStatus.getByUsername(username);
+	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")
 //	public Person findById(@PathVariable String name) {
@@ -72,9 +82,14 @@ public class StudentController {
 //	
 
 	@PreAuthorize("hasRole('Student')")
-	@GetMapping("/get-purchased-courses")
-	public ArrayList<MiniCourse> getPurchasedCourses(){
+	@GetMapping("/get-purchased-courses-self")
+	public ArrayList<MiniCourse> getPurchasedCoursesSelf(){
 		String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		return Student.getPurchasedCourses(username);
+	}
+	
+	@GetMapping("/public/get-purchased-courses/{username}")
+	public ArrayList<MiniCourse> getPurchasedCoursesSelf(@PathVariable String username){
 		return Student.getPurchasedCourses(username);
 	}
 	
@@ -86,8 +101,14 @@ public class StudentController {
 	
 //	Mehedi
 	
+
+	@GetMapping("/public/get-student-mini/{username}")
+	public ObjectNode getStudentMiniByUsername(@PathVariable String username){
+		return Student.getMiniDetails(mapper, username);
+	}
+	
 	@PreAuthorize("hasRole('Student')")
-	@PutMapping("/update-student/{eduStatusId}")
+	@PutMapping("/update-student/{eduStatusId}") 
 	public ResponseEntity<?> updateStudent(@PathVariable Integer eduStatusId, @RequestBody Person person) {
 		if(!ToolKit.getCurrentUserName().equals(person.getUsername())) {
 			return ResponseEntity.badRequest().body("Requested user can not perform the task");

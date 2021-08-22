@@ -207,7 +207,7 @@ public class Person {
 		// DB.execute("UPDATE PERSON SET PASSWORD = '" + this.password + "' WHERE ID =
 		// '#'", username);
 	}
-
+ 
 	public String getFirstName() {
 		return firstName;
 	}
@@ -519,6 +519,7 @@ public class Person {
 				photo.setId(Files.createNewFile(photo));
 			}
 			else {
+				System.out.println("\t\tPhoto content: "+photo.getContent());
 				Files.updateFile(photo);
 			}
 		}

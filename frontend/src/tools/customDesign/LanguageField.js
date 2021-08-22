@@ -87,17 +87,21 @@ export function LanguageField({
     setLanguages(event.target.value);
     onObjectsChange(event.target.value.map(item => languageItem.find(langItem => langItem.id == item)));
   };
+
+
   useEffect(() => {
-    if (objects != undefined)
-      setLanguages(objects.map(item => item.id));
-    LanguageService.getAllLanguages().then(response => {
-      setLanguageItem(response.data);
-    });
-    return () => {
-      // setLanguages([]);
-      // setLanguageItem([]);
-    }
+    let abort = new AbortController();
+    loadLanguages();
+    return () => abort.abort();
   }, [])
+
+  async function loadLanguages() {
+    await LanguageService.getAllLanguages().then(async response => {
+      await setLanguageItem(response.data);
+    });
+    if (objects != undefined)
+      await setLanguages(objects.map(item => item.id));
+  }
   // if (objects == undefined) return null;
   return (
     <FormControl variant="outlined" className={classes.formControl}>

@@ -152,7 +152,7 @@ public class Files{
 
 	public static void updateFile(Files files) {
 		String currentDate = ToolKit.getCurTimeDB();
-		DB.execute("UPDATE FILES SET TYPE = #,TITLE = '#' ,CONTENT = '#',LAST_UPDATE_TIME = # WHERE ID = #",
+		DB.execute("UPDATE FILES SET TYPE = #,TITLE = '#' ,CONTENT = '#',LAST_UPDATE = # WHERE ID = #",
 				files.getType().getId().toString(), files.getTitle(), files.getContent(),
 				currentDate, files.getId().toString());
 	}

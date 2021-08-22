@@ -18,6 +18,9 @@ class TeacherService {
       authHeaders()
     );
   }
+  getDesignation(username: string){
+    return axios.get(GLOBAL.HOST + `/public/get-teacher-designation/${username}`, authHeaders());
+  }
   getCreateCourse() {
     return axios.get(GLOBAL.HOST + `/get-created-courses`, authHeaders());
   }

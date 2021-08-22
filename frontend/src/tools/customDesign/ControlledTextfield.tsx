@@ -112,54 +112,7 @@ export function ControlledTextfield(props: IControlledTextField) {
     }
     if (onChange) onChange(event);
   }
-  // useEffect(() => {
-  //   if (pattern) {
-  //     setPattern(pattern);
-  //     setHelperText(helperText);
-  //   } else {
-  //     if (type == "text") {
-  //       console.log(rules.text.pattern);
-  //       setPattern(rules.text.pattern);
-  //       setHelperText(rules.text.helperText);
-  //     } else if (type == "number") {
-  //       setPattern(rules.number.pattern);
-  //       setHelperText(rules.number.helperText);
-  //     }
-  //   }
-  //   if (helperText) {
-  //     setHelperText(helperText);
-  //   }
-  //   setErrorMessage(errorMessage);
-  // }, []);
-
-  // function handleOnChange(event) {
-  //   if (statePattern) {
-  //     if (!statePattern.test(event.target.value)) {
-  //       setShowError(true);
-  //       if (!errorMessage) {
-  //         if (
-  //           value.length + 1 != event.target.value.length &&
-  //           value.length - 1 != event.target.value.length
-  //         ) {
-  //           setErrorMessage("Text doesn't match the criteria");
-  //         } else {
-  //           setErrorMessage(
-  //             "'" +
-  //               event.target.value.charAt(event.target.value.length - 1) +
-  //               "' is not allowed."
-  //           );
-  //         }
-  //       }
-  //     } else {
-  //       setShowError(false);
-  //       setValue(event.target.value);
-  //       if (onChange) onChange(event);
-  //     }
-  //   } else {
-  //     setValue(event.target.value);
-  //     if (onChange) onChange(event);
-  //   }
-  // }
+  
   return (
     <TextField
       {...rest}

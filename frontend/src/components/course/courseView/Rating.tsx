@@ -75,7 +75,7 @@ function RatingBox({
             >
               <Grid item>
                 <Typography className={classes.ratingNumber}>
-                  {data?.ratingValue}
+                  {Math.round((data?.ratingValue || 0) * 10) / 10}
                 </Typography>
               </Grid>
               <Grid

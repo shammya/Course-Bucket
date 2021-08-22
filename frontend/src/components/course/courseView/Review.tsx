@@ -20,6 +20,8 @@ import AuthService from "components/auth/api/AuthService";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { useDialogClasses } from "Theme";
+import ShadowText from "tools/customDesign/ShadowText";
 import { SlidingUpTransition } from "tools/Tools";
 import CourseService from "../api/CourseService";
 
@@ -96,10 +98,11 @@ export function ReviewSection({
               )}
           </Grid>
           {!reviews?.length && (
-            <Grid item container>
-              <Typography variant="h5">
+            <Grid item container direction="column">
+              <Typography variant="h5" align="center">
                 Be first to review this course
               </Typography>
+              <ShadowText>No review yet</ShadowText>
             </Grid>
           )}
           {reviews && (
@@ -157,6 +160,7 @@ export function ReviewBox({ review }: { review: ReviewInfo | undefined }) {
 }
 
 function ReviewInputDialog({ open, onClose, courseId, onReviewSubmit }) {
+  const classes = useDialogClasses();
   const [ratingValue, setRatingValue] = useState<number>(0);
   const [ratingDone, setRatingDone] = useState<boolean>(false);
   const [review, setReview] = useState("");
@@ -168,7 +172,7 @@ function ReviewInputDialog({ open, onClose, courseId, onReviewSubmit }) {
         setRatingValue(response.data);
       });
     }
-  }, [courseId]);
+  }, [courseId, open]);
   async function handleReviewSubmit() {
     let error = false;
     if (!ratingValue) {
@@ -197,13 +201,14 @@ function ReviewInputDialog({ open, onClose, courseId, onReviewSubmit }) {
   }
   return (
     <Dialog
+      classes={{ paper: classes.paper }}
       open={open}
       TransitionComponent={SlidingUpTransition}
       keepMounted
       onClose={onClose}
     >
       <DialogTitle>Write a review</DialogTitle>
-      <DialogContent>
+      <DialogContent classes={{ root: classes.content }}>
         <Grid container direction="column" spacing={3}>
           <Grid
             item

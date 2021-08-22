@@ -153,12 +153,16 @@ const DrawerLayout = ({
         <Responsive displayIn="Mobile">
           <Sticky>
             {({ style }) => (
-              <AppBar position="static" color="default" style={style}>
+              <AppBar
+                position="static"
+                color="default"
+                style={{ ...style, marginBottom: 12 }}
+              >
                 <Tabs
                   value={tabIndex}
                   onChange={(event, newValue) => setTabIndex(newValue)}
                   variant="scrollable"
-                  scrollButtons="auto"
+                  scrollButtons="on"
                 >
                   {objects.map((item, idx) => (
                     <Tab label={item.label} key={idx} />

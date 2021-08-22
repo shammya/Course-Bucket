@@ -2,6 +2,7 @@ import { Button, Grid } from "@material-ui/core";
 import { Files } from "classes/Files";
 import { FileObject } from "material-ui-dropzone";
 import React, { useEffect, useState } from "react";
+import GridImageView from "tools/customDesign/ImageVeiw";
 import { FileUploader } from "tools/FileUploader";
 import { ErrorMessage } from "tools/Tools";
 
@@ -80,15 +81,17 @@ export function ImageUploader({
         <Grid container direction="column" spacing={1}>
           <Grid item container justifyContent="center">
             {console.log(imageDestination)}
-            <img
+            <GridImageView
               src={
                 imageDestination?.content?.file
                   ? URL.createObjectURL(imageDestination?.content?.file)
                   : imageDestination?.content
               }
-              style={{
-                width: "90%",
-                boxShadow: "rgb(0 0 0 / 12%) 0 1px 6px",
+              containerProps={{
+                style: {
+                  width: "90%",
+                  boxShadow: "rgb(0 0 0 / 12%) 0 1px 6px",
+                },
               }}
             />
           </Grid>

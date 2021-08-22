@@ -56,7 +56,7 @@ function Filter({
   onClearAll: () => void;
 }) {
   const classes = useStyle();
-  const [openDrawer, setOpenDrawer] = React.useState(true);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
   const [tabValue, setTabValue] = React.useState(0);
   const [filterDataList2, setFilterDataList2] = useState<Array<IFilterType>>();
 

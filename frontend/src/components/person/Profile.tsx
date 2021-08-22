@@ -21,6 +21,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TeacherMiniInfo } from "./../../classes/Person";
 import PersonService from "./api/PersonService";
+import StudentService from "./api/StudentService";
 import TeacherService from "./api/TeacherService";
 
 const useStyles = makeStyles((theme) => ({
@@ -84,21 +85,51 @@ const Profile = () => {
   const [person, setPerson] = useState<Student | Teacher | Person>();
   const [courses, setCourses] = useState<Array<MiniCourse>>();
   const [miniInfo, setMiniInfo] = useState<TeacherMiniInfo>();
+  const [status, setStatus] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    PersonService.getPersonToShow(username).then((response) => {
+    loadData();
+  }, [username]);
+
+  async function loadData() {
+    await PersonService.getPersonToShow(username).then(async (response) => {
       console.log("Fetched person", response.data);
       setPerson(response.data);
+      switch (response.data.accountType) {
+        case "Teacher":
+          await TeacherService.getCreateCourseByUsername(username).then(
+            (response) => {
+              console.log("Fetched created course list", response.data);
+              setCourses(response.data);
+            }
+          );
+          await TeacherService.getMiniInfo(username).then((response) => {
+            console.log("Teacher mini info ", response.data);
+            setMiniInfo(response.data);
+          });
+          await TeacherService.getDesignation(username).then((response) => {
+            setStatus(response.data.type);
+          });
+          break;
+        case "Student":
+          await StudentService.getPurchaseCourseByUsername(username).then(
+            (response) => {
+              setCourses(response.data);
+            }
+          );
+          await StudentService.getEduStatus(username).then((response) => {
+            setStatus(response.data.type);
+          });
+          await StudentService.getStudentMiniInfo(username).then((response) => {
+            setMiniInfo(response.data);
+          });
+          break;
+      }
     });
-    TeacherService.getCreateCourseByUsername(username).then((response) => {
-      console.log("Fetched created course list", response.data);
-      setCourses(response.data);
-    });
-    TeacherService.getMiniInfo(username).then((response) => {
-      console.log("Teacher mini info ", response.data);
-      setMiniInfo(response.data);
-    });
-  }, []);
+
+    setLoading(false);
+  }
   function LeftComponent() {
     return (
       <Card>
@@ -116,56 +147,70 @@ const Profile = () => {
     );
   }
   function RightComponent() {
+    function InfoCard({
+      title,
+      value,
+      renderTitle,
+    }: {
+      title?: string;
+      value?: string | number;
+      renderTitle?: JSX.Element | JSX.Element[];
+    }) {
+      return (
+        <Card>
+          <CardHeader title={value} classes={{ title: classes.cardHeader }} />
+          <CardContent classes={{ root: classes.cardContent }}>
+            {renderTitle ? renderTitle : title}
+          </CardContent>
+        </Card>
+      );
+    }
     return (
       <Grid container direction="column" spacing={2}>
         <Grid item container justifyContent="space-around" spacing={2}>
-          <Grid item md={3} xs={12}>
-            <Card>
-              <CardHeader
-                title={miniInfo?.courseCount}
-                classes={{ title: classes.cardHeader }}
-              />
-              <CardContent classes={{ root: classes.cardContent }}>
-                Course
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item md={3} xs={12}>
-            <Card>
-              <CardHeader
-                title={miniInfo?.studentCount}
-                classes={{ title: classes.cardHeader }}
-              />
-              <CardContent classes={{ root: classes.cardContent }}>
-                Students
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item md={3} xs={12}>
-            <Card>
-              <CardHeader
-                title={miniInfo?.reviewCount}
-                classes={{ title: classes.cardHeader }}
-              />
-              <CardContent classes={{ root: classes.cardContent }}>
-                Review
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item md={3} xs={12}>
-            <Card>
-              <CardHeader
-                title={miniInfo?.ratingCount}
-                classes={{ title: classes.cardHeader }}
-              />
-              <CardContent classes={{ root: classes.cardContent }}>
-                <Rating value={miniInfo?.rating} precision={0.1} readOnly />
-              </CardContent>
-            </Card>
-          </Grid>
+          {person?.accountType === "Teacher" ? (
+            <>
+              <Grid item md={3} xs={12}>
+                <InfoCard title="Course" value={miniInfo?.courseCount} />
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <InfoCard title="Students" value={miniInfo?.studentCount} />
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <InfoCard title="Review" value={miniInfo?.reviewCount} />
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <InfoCard
+                  renderTitle={
+                    <Rating value={miniInfo?.rating} precision={0.1} readOnly />
+                  }
+                  value={miniInfo?.ratingCount}
+                />
+              </Grid>
+            </>
+          ) : (
+            <>
+              <Grid item md={3} xs={12}>
+                <InfoCard
+                  title="Purchased Course"
+                  value={miniInfo?.courseCount}
+                />
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <InfoCard title="Reviewed" value={miniInfo?.reviewCount} />
+              </Grid>
+            </>
+          )}
         </Grid>
         <Grid item container>
-          <CoursePagination courses={courses} title="Courses" />
+          <CoursePagination
+            courses={courses}
+            title={
+              person?.accountType === "Student"
+                ? "Purchased Courses"
+                : "Created Courses"
+            }
+          />
         </Grid>
       </Grid>
     );
@@ -193,17 +238,29 @@ const Profile = () => {
   //   return null;
   // }
   function Details() {
-    function CreateItem({ attribute, value = "", children = <></> }) {
+    function CreateItem({
+      attribute,
+      value = undefined,
+      children = undefined,
+    }: {
+      attribute: string;
+      value?: string | number;
+      children?: JSX.Element | JSX.Element[];
+    }) {
       return (
-        <Grid item container direction="column" alignItems="flex-start">
-          <Grid item>
-            <Typography variant="h6">{attribute}</Typography>
-          </Grid>
-          <Grid item container>
-            {value && <Typography variant="body1">{value}</Typography>}
-            {children}
-          </Grid>
-        </Grid>
+        <>
+          {((value != undefined && value != "") || children != undefined) && (
+            <Grid item container direction="column" alignItems="flex-start">
+              <Grid item>
+                <Typography variant="h6">{attribute}</Typography>
+              </Grid>
+              <Grid item container>
+                <Typography variant="body1">{value}</Typography>
+                {children}
+              </Grid>
+            </Grid>
+          )}
+        </>
       );
     }
     function ContactChip({ url, icon, text }) {
@@ -225,7 +282,6 @@ const Profile = () => {
           value={person?.firstName + " " + person?.lastName}
         />
         <CreateItem attribute="Country" value={person?.country?.name} />
-        {/* <CreateItem attribute="Designation" value={person?.designation?.name} /> */}
         <CreateItem attribute="Languages">
           <Grid container spacing={1}>
             {person?.languages?.map((lang) => (
@@ -236,6 +292,14 @@ const Profile = () => {
           </Grid>
         </CreateItem>
         <CreateItem attribute="Institution" value={person?.institution} />
+        <CreateItem
+          attribute={
+            person?.accountType === "Student"
+              ? "Educational Status"
+              : "Designation"
+          }
+          value={status}
+        />
         <CreateItem attribute="About" value={person?.about} />
         <CreateItem attribute="Contact">
           <Grid container direction="column" spacing={1}>
@@ -290,13 +354,13 @@ const Profile = () => {
     );
   }
   return (
-    <User>
+    <User loading={loading}>
       <Grid container>
-        <Grid container direction="row" alignItems="flex-start">
-          <Grid item sm={4} lg={3}>
+        <Grid container direction="row" alignItems="flex-start" spacing={2}>
+          <Grid item xs={12} sm={4} lg={3}>
             <LeftComponent />
           </Grid>
-          <Grid item sm={8} lg={9} style={{ paddingLeft: 16 }}>
+          <Grid item xs={12} sm={8} lg={9}>
             <RightComponent />
           </Grid>
         </Grid>

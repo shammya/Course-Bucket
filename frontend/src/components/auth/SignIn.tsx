@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
   },
   image: {
-    backgroundImage:
-      "url(https://st4.depositphotos.com/21087722/22869/i/1600/depositphotos_228693110-stock-photo-amazing-succulents-welcome-handwriting-monogram.jpg)",
+    //https://st4.depositphotos.com/21087722/22869/i/1600/depositphotos_228693110-stock-photo-amazing-succulents-welcome-handwriting-monogram.jpg
+    backgroundImage: "url()",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -102,9 +102,9 @@ export function SignIn({ signOut }: { signOut: boolean }) {
     setOpen(false);
   }
   return (
-    <>
+    <Grid component={Paper} elevation={6} square>
       {signOut && (
-        <Grid item xs={10} sm={8} md={5} component={Paper} elevation={6} square>
+        <>
           <Snackbar
             open={open}
             onClose={handleSnackbarClose}
@@ -149,7 +149,7 @@ export function SignIn({ signOut }: { signOut: boolean }) {
                 name="password"
                 label="Password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="password"
                 onBlur={(event) => {
                   setPassword(event.target.value);
                 }}
@@ -194,8 +194,8 @@ export function SignIn({ signOut }: { signOut: boolean }) {
               </Grid>
             </form>
           </div>
-        </Grid>
+        </>
       )}
-    </>
+    </Grid>
   );
 }

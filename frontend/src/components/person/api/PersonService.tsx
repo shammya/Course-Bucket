@@ -3,7 +3,7 @@ import { Person } from "classes/Person";
 import { authHeaders as authHeaders } from "components/auth/api/AuthService";
 import { GLOBAL } from "Configure.js";
 
-class PersonController {
+class PersonService {
   getPerson(username: string) {
     return axios.get(GLOBAL.HOST + `/get-person`, authHeaders());
   }
@@ -49,4 +49,4 @@ class PersonController {
   //   return axios.get(GLOBAL.HOST + "/get-profile-photo", authHeaders());
   // }
 }
-export default new PersonController();
+export default new PersonService();

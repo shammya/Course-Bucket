@@ -12,6 +12,7 @@ import {
 import { Star } from "@material-ui/icons";
 import React from "react";
 import { useHistory } from "react-router";
+import GridImageView from "tools/customDesign/ImageVeiw";
 import { TeacherMiniInfo } from "./../../../classes/Person";
 
 function InstructorShortDetailsBox({
@@ -32,10 +33,15 @@ function InstructorShortDetailsBox({
               onClick={(event) => history.push(`/profile/${details?.username}`)}
             >
               <Grid container direction="row" wrap="nowrap">
-                <Grid item lg={4} md={5} sm={7} xs={12}>
-                  <img src={details?.photoContent} />
-                </Grid>
-                <Grid item lg={8} md={7} sm={5} xs={12}>
+                {/* <Grid item > */}
+                <GridImageView
+                  item
+                  src={details?.photoContent}
+                  align="left"
+                  containerProps={{ lg: 4, md: 5, sm: 4, xs: 12 }}
+                />
+                {/* </Grid> */}
+                <Grid item lg={8} md={7} sm={8} xs={12}>
                   <Grid
                     container
                     direction="column"
@@ -43,7 +49,7 @@ function InstructorShortDetailsBox({
                   >
                     <List dense={true}>
                       <ListItem>
-                        <ListItemAvatar>
+                        <ListItemAvatar style={{ minWidth: 30 }}>
                           <Star />
                         </ListItemAvatar>
                         <ListItemText>
@@ -55,7 +61,7 @@ function InstructorShortDetailsBox({
                         </ListItemText>
                       </ListItem>
                       <ListItem>
-                        <ListItemAvatar>
+                        <ListItemAvatar style={{ minWidth: 30 }}>
                           <Star />
                         </ListItemAvatar>
                         <ListItemText>
@@ -63,7 +69,7 @@ function InstructorShortDetailsBox({
                         </ListItemText>
                       </ListItem>
                       <ListItem>
-                        <ListItemAvatar>
+                        <ListItemAvatar style={{ minWidth: 30 }}>
                           <Star />
                         </ListItemAvatar>
                         <ListItemText>
@@ -71,7 +77,7 @@ function InstructorShortDetailsBox({
                         </ListItemText>
                       </ListItem>
                       <ListItem>
-                        <ListItemAvatar>
+                        <ListItemAvatar style={{ minWidth: 30 }}>
                           <Star />
                         </ListItemAvatar>
                         <ListItemText>

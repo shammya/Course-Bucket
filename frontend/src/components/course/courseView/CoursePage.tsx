@@ -39,6 +39,7 @@ import { IconPickerItem } from "react-fa-icon-picker";
 import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import { Sticky, StickyContainer } from "react-sticky";
+import GridImageView from "tools/customDesign/ImageVeiw";
 import { Responsive } from "tools/responsive/Responsive";
 import CourseService from "../api/CourseService";
 import { TeacherMiniInfo } from "./../../../classes/Person";
@@ -135,13 +136,13 @@ export function CourseView() {
 
   function handleCongratulationClose() {
     setCongratulationShow(false);
+    loadCourseContent();
     // history.push(`/course/${courseId}`);
   }
 
   function handleOnPurchase() {
     CourseService.purchase(courseId).then((response) => {
       if (response.status == 200) {
-        loadCourseContent();
         setCheckoutShow(false);
         setCongratulationShow(true);
       }
@@ -382,8 +383,11 @@ export function CourseView() {
       <Card style={{ width: "100%" }}>
         <CardContent>
           <Grid container direction="column" spacing={1}>
-            <Grid item>
-              <img src={course?.cover?.content} />
+            <Grid item container>
+              <GridImageView
+                src={course?.cover?.content}
+                wrapperProps={{ xs: 8 }}
+              />
             </Grid>
             <Grid item>
               <TitleSection />
@@ -649,7 +653,6 @@ export function CourseView() {
             container
             direction="column"
             alignItems="center"
-            // style={{ padding: 10 }}
             spacing={2}
             md={8}
           >

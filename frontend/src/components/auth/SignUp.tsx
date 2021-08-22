@@ -1,9 +1,4 @@
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
@@ -18,7 +13,7 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { ControlledTextfield } from "tools/customDesign/ControlledTextfield";
 import { Person } from "../../classes/Person";
@@ -122,7 +117,7 @@ export function SignUp({ signOut }: { signOut: boolean }) {
   return (
     <>
       {signOut && (
-        <Grid item xs={10} sm={8} md={5} component={Paper} elevation={6} square>
+        
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
               <LockOutlinedIcon />
@@ -130,7 +125,11 @@ export function SignUp({ signOut }: { signOut: boolean }) {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-            <form className={classes.form} onSubmit={handleSubmitClicked}>
+            <form
+              className={classes.form}
+              onSubmit={handleSubmitClicked}
+              autoComplete="off"
+            >
               <Grid container spacing={2}>
                 <Grid item container>
                   <FormControl
@@ -164,7 +163,6 @@ export function SignUp({ signOut }: { signOut: boolean }) {
                     required
                     fullWidth
                     label="Username"
-                    name="username"
                     onBlur={(event) => {
                       checkUsername(event.target.value);
                     }}
@@ -184,11 +182,11 @@ export function SignUp({ signOut }: { signOut: boolean }) {
                     required
                     fullWidth
                     label="Email Address"
-                    name="email"
                     type="email"
                     onBlur={(event) => {
                       checkEmail(event.target.value);
                     }}
+                    autoComplete="off"
                     onFocus={(event) => setEmailFound(false)}
                     onChange={(event) => {
                       checkEmail(event.target.value);
@@ -202,9 +200,9 @@ export function SignUp({ signOut }: { signOut: boolean }) {
                     variant="outlined"
                     required
                     fullWidth
-                    name="password"
                     label="Password"
                     type="password"
+                    autoComplete="off"
                     onChange={(event) => setPassword(event.target.value)}
                   />
                 </Grid>
@@ -214,7 +212,6 @@ export function SignUp({ signOut }: { signOut: boolean }) {
                     variant="outlined"
                     required
                     fullWidth
-                    name="again-password"
                     label="Password (Again)"
                     type="password"
                     onChange={(event) => setAgainPassword(event.target.value)}
@@ -247,7 +244,6 @@ export function SignUp({ signOut }: { signOut: boolean }) {
               </Grid>
             </form>
           </div>
-        </Grid>
       )}
     </>
   );

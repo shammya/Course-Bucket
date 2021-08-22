@@ -13,6 +13,8 @@ import com.course.bucket.edustatus.EduStatus;
 import com.course.bucket.person.others.StudentInfo;
 import com.course.bucket.person.others.StudentList;
 import com.course.bucket.tools.ToolKit;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.course.bucket.course.Course;
 import com.course.bucket.course.additionals.MiniCourse;
 
@@ -21,6 +23,9 @@ public class Student extends Person {
 	private EduStatus eduStatus;
 	private Integer courseOwned;
 
+	public Student() {
+		super();
+	}
 	public Integer getCourseOwned() {
 		return courseOwned;
 	}
@@ -212,6 +217,17 @@ public class Student extends Person {
 				person.getUsername()
 				);
 		Person.update(person); 
+	}
+	
+	public static ObjectNode getMiniDetails(ObjectMapper mapper, String username) {
+		Student student = new Student();
+		student.setUsername(username);
+		Integer courseCount = student.getNumOfCourse();
+		Integer reviewCount = student.getNumOfReview();
+		ObjectNode node = mapper.createObjectNode();
+		node.put("courseCount", courseCount);
+		node.put("reviewCount", reviewCount);
+		return node;
 	}
 	
 }

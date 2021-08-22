@@ -48,7 +48,7 @@ public class Teacher extends Person {
 
     public void setDesignation(Designation designation) {
         this.designation = designation;
-        DB.execute("UPDATE TEACHER SET DESIGNATION_ID = '#'", designation.getId().toString());
+        //DB.execute("UPDATE TEACHER SET DESIGNATION_ID = '#'", designation.getId().toString());
     }
     
     public Teacher() {

@@ -2,7 +2,6 @@ import { Snackbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -131,7 +130,7 @@ export function ForgotPassword({ signOut }: { signOut: boolean }) {
   return (
     <>
       {signOut && (
-        <Grid item xs={10} sm={8} md={5} component={Paper} elevation={6} square>
+        <>
           <div className={classes.paper}>
             <Snackbar
               open={openSnackbar}
@@ -290,7 +289,7 @@ export function ForgotPassword({ signOut }: { signOut: boolean }) {
               </Grid>
             </form>
           </div>
-        </Grid>
+        </>
       )}
     </>
   );

@@ -35,7 +35,13 @@ function PurchaseHistoryTable({ data }) {
           : "Teacher",
       field: "student",
       render: (rowData) => (
-        <Grid container direction="row" spacing={1} alignItems="center">
+        <Grid
+          container
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          justifyContent="center"
+        >
           <Grid item>
             <IconButton
               onClick={() =>
@@ -59,10 +65,18 @@ function PurchaseHistoryTable({ data }) {
   return (
     <MaterialTable
       // @ts-ignore
-      columns={columns}
+      columns={columns.map((item) => ({ ...item, align: "center" }))}
       title=""
       data={data}
-      options={{ search: false, toolbar: false }}
+      options={{
+        search: false,
+        toolbar: false,
+        paging: data.length > 5,
+        headerStyle: { textAlign: "center" },
+        editCellStyle: { textAlign: "center" },
+      }}
+
+      // rowsPerPageOptions={AuthService.getCurrentAccountType()==='Student' ? [1] : [5,10,15]}
     />
   );
 }
@@ -90,7 +104,14 @@ export function PurchaseHistoryListView() {
   }, []);
 
   return (
-    <CustomPagination objectsPerPage={3}>
+    <CustomPagination
+      objectsPerPage={3}
+      noContentText={
+        AuthService.getCurrentAccountType() === "Student"
+          ? "You didn't purchase any course"
+          : "No student purchased your course yet"
+      }
+    >
       {purchaseHistories?.map((purchaseHistory) => (
         <ContentHeader
           key={purchaseHistory.courseId}
@@ -98,6 +119,7 @@ export function PurchaseHistoryListView() {
           courseTitle={purchaseHistory.courseTitle}
           courseSubtitle={purchaseHistory.courseSubtitle}
           courseImage={purchaseHistory.courseImage}
+          contentPadding={false}
         >
           <PurchaseHistoryTable data={purchaseHistory.purchaseHistoryInfos} />
           {/* {AuthService.getCurrentAccountType() === "Student" && (

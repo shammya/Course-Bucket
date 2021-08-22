@@ -1,6 +1,7 @@
 import { Divider, Grid, GridSpacing, Typography } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import React, { useState } from "react";
+import ShadowText from "tools/customDesign/ShadowText";
 
 function CustomPagination({
   type = "one-item-per-line",
@@ -9,13 +10,15 @@ function CustomPagination({
   objectsPerPage = 12,
   divider = false,
   spacing = 2,
+  noContentText = "No content"
 }: {
   type?: "one-item-per-line" | "two-item-per-line" | "calculate-by-width";
   children: JSX.Element[];
   title?: string;
   objectsPerPage?: number;
   divider?: boolean;
-  spacing?: GridSpacing | undefined;
+    spacing?: GridSpacing | undefined;
+    noContentText?: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,18 +81,23 @@ function CustomPagination({
         </Typography>
       )}
       <Grid container direction="column" alignItems="center" spacing={2}>
+        {(children == undefined || children.length == 0) && 
+          <ShadowText>{noContentText}</ShadowText>
+        }
         {elementsWithContainer}
-        <Grid item container justifyContent="center">
-          <Pagination
-            count={children ? Math.ceil(children.length / objectsPerPage) : 0}
-            page={currentPage}
-            onChange={paginate}
-            color="secondary"
-            siblingCount={3}
-            size="large"
-            style={{ marginTop: 15 }}
-          />
-        </Grid>
+        {children?.length > objectsPerPage && (
+          <Grid item container justifyContent="center">
+            <Pagination
+              count={children ? Math.ceil(children.length / objectsPerPage) : 0}
+              page={currentPage}
+              onChange={paginate}
+              color="secondary"
+              siblingCount={3}
+              size="large"
+              style={{ marginTop: 15 }}
+            />
+          </Grid>
+        )}
       </Grid>
     </>
   );

@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Button,
   CardActionArea,
   Divider,
@@ -14,7 +13,6 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
 import { Files } from "classes/Files";
@@ -89,6 +87,12 @@ export function Header() {
         .get(GLOBAL.HOST + "/get-teacher-self", authHeaders())
         .then((response) => {
           console.log("Person data from header", response);
+
+          let photo = response.data.photo;
+          response.data.photo = new Files(photo.type, photo.title)
+            .setId(photo.id)
+            .setContent(photo.content);
+
           history.push({
             pathname: "/profile-details",
             state: {
@@ -333,7 +337,12 @@ export function Header() {
   function SideMenuPopUp() {
     return (
       <Grid container direction="column">
-        <Grid item onClick={profileDetailsLoad}>
+        <Grid
+          item
+          onClick={(event) => {
+            history.push(`/profile/${AuthService.getCurrentUsername()}`);
+          }}
+        >
           <CardActionArea style={{ padding: 16 }}>
             <Grid
               container

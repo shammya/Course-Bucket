@@ -24,7 +24,16 @@ import { createTheme, makeStyles } from "@material-ui/core/styles";
 //   //   },
 //   // },
 // });
-
+export const useDialogClasses = makeStyles((theme) => ({
+  paper: {
+    minWidth: 400,
+    maxWidth: 800,
+    width: '100%',
+  },
+  content: {
+    overflowY: 'visible'
+  }
+}))
 export const lightTheme = createTheme({
   palette: {
     type: "light"

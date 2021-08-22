@@ -1,4 +1,3 @@
-import { Grid } from "@material-ui/core";
 import { FaqList } from "classes/Course";
 import AuthService from "components/auth/api/AuthService";
 import { FAQBox } from "components/course/courseView/FAQ";
@@ -30,7 +29,7 @@ export function FaqView() {
     }
   }
   return (
-    <CustomPagination objectsPerPage={3}>
+    <CustomPagination objectsPerPage={3} noContentText={AuthService.getCurrentAccountType() === 'Student' ? "You didn't ask any question" : "No student asked any question yet"}>
       {faqWithCourses?.map((faqWithCourse) => (
         <ContentHeader
           key={faqWithCourse.courseId}

@@ -1,7 +1,6 @@
 import {
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
   Grid,
@@ -9,6 +8,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
+import offerBG from "assets/img/offer_bg.png";
 import classNames from "classnames";
 import React from "react";
 import { useHistory } from "react-router";
@@ -27,6 +27,20 @@ const localStyles = makeStyles((theme) => ({
   offPrice: {
     textDecoration: "line-through",
   },
+  offerBG: {
+    backgroundImage: `url(${offerBG})`,
+    backgroundSize: "cover",
+    color: "white",
+    fontWeight: "bold",
+    width: 60,
+    height: 52,
+    top: -8,
+    left: 0,
+    position: "absolute",
+    textAlign: "center",
+    paddingTop: 9,
+    fontSize: "0.8rem",
+  },
 }));
 
 function CourseBox({ courseData }) {
@@ -40,11 +54,14 @@ function CourseBox({ courseData }) {
       }}
       onClick={(event) => history.push(`/course/${courseData.id}`)}
     >
-      <Card>
+      <Card style={{ position: "relative", overflow: "visible" }}>
         <CardMedia
-          style={{ height: 135, backgroundSize: "contain" }}
+          style={{ height: 135, backgroundSize: "cover" }}
           image={courseData.coverContent}
         />
+        {courseData?.off != undefined && courseData?.off != 0 && (
+          <div className={local.offerBG}>{courseData.off}%</div>
+        )}
         <CardContent style={{ padding: "0px 10px 10px 10px" }}>
           <Grid
             container
@@ -85,13 +102,25 @@ function CourseBox({ courseData }) {
             alignItems="center"
             spacing={1}
           >
-            <Grid item className={classNames(global.medium, local.offPrice)}>
-              {courseData.price}
-            </Grid>
-            <Grid item className={classNames(global.big, global.bold)}>
-              {Math.round(courseData.price * (100 - courseData.off) * 100) /
-                100}
-            </Grid>
+            {courseData.price == 0 ? (
+              <Grid item className={classNames(global.big, global.bold)}>
+                FREE
+              </Grid>
+            ) : (
+              <>
+                {courseData?.off != 0 && (
+                  <Grid
+                    item
+                    className={classNames(global.medium, local.offPrice)}
+                  >
+                    {courseData.price}
+                  </Grid>
+                )}
+                <Grid item className={classNames(global.big, global.bold)}>
+                  {Math.round(courseData.price * (100 - courseData.off)) / 100}
+                </Grid>
+              </>
+            )}
           </Grid>
         </CardContent>
       </Card>

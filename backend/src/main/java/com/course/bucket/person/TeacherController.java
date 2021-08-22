@@ -43,11 +43,18 @@ public class TeacherController {
 //	public Teacher findTeacher(@PathVariable String id){
 //		return new Teacher(ToolKit.getCurrentUserName());
 //	}
+
 	@GetMapping("/public/get-teacher-mini/{username}")
 	public TeacherMiniInfo getTeacherMiniByUsername(@PathVariable String username){
 		return new TeacherMiniInfo(username);
 	}
+	
+	@GetMapping("/public/get-teacher-designation/{username}")
+	public Designation getTeacherDesignation(@PathVariable String username){
+		return Designation.getByUsername(username);
+	}
 
+	@PreAuthorize("hasRole('Teacher')")
 	@GetMapping("/get-teacher-self")
 	public ResponseEntity<?> getTeacherSelf(){
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

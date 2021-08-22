@@ -18,6 +18,8 @@ import axios from "axios";
 import { authHeaders } from "components/auth/api/AuthService";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { StickyContainer } from "react-sticky";
+import GridImageView from "tools/customDesign/ImageVeiw";
 import { GLOBAL } from "./../../Configure";
 
 interface NotificationProps {
@@ -121,7 +123,7 @@ function NotificationItem({
       );
       break;
     case "COURSEAPPROVED":
-      image = <img src={cover} />;
+      image = <GridImageView src={cover} />;
       link = `/course/${courseId}`;
       text = (
         <>
@@ -191,7 +193,7 @@ function NotificationItem({
       );
       break;
     case "FAQANSWER":
-      image = <img src={cover} />;
+      image = <GridImageView src={cover} />;
       link = `/dashboard/faq`;
       text = (
         <>
@@ -222,7 +224,9 @@ function NotificationItem({
       className={seen ? classes.seen : classes.unseen}
     >
       {/* <CardActionArea onClick={() => history.push(link)}> */}
-      <ListItemAvatar>{image ? image : <Avatar />}</ListItemAvatar>
+      <ListItemAvatar style={{ width: 56 }}>
+        {image ? image : <Avatar />}
+      </ListItemAvatar>
       <ListItemText>{text} </ListItemText>
       {/* </CardActionArea> */}
     </ListItem>
@@ -272,39 +276,41 @@ export function Notification() {
           horizontal: "center",
         }}
       >
-        <Grid
-          container
-          direction="row"
-          style={{ maxHeight: "80vh", maxWidth: 350 }}
-        >
+        <StickyContainer>
           <Grid
-            item
             container
             direction="row"
-            wrap="nowrap"
-            justifyContent="space-between"
-            alignContent="center"
-            style={{ padding: 12 }}
-            spacing={3}
+            style={{ maxHeight: "80vh", maxWidth: 350 }}
           >
-            <Grid item>
-              <Typography variant="h5">Notification</Typography>
+            <Grid
+              item
+              container
+              direction="row"
+              wrap="nowrap"
+              justifyContent="space-between"
+              alignContent="center"
+              style={{ padding: 12 }}
+              spacing={3}
+            >
+              <Grid item>
+                <Typography variant="h5">Notification</Typography>
+              </Grid>
+              <Grid item>
+                <Button variant="outlined">See all</Button>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button variant="outlined">See all</Button>
+            <Grid item container>
+              <List style={{ width: "100%" }}>
+                {notifications?.map((item, idx) => (
+                  <React.Fragment key={idx}>
+                    <Divider />
+                    <NotificationItem notification={item} />
+                  </React.Fragment>
+                ))}
+              </List>
             </Grid>
           </Grid>
-          <Grid item container>
-            <List style={{ width: "100%" }}>
-              {notifications?.map((item, idx) => (
-                <React.Fragment key={idx}>
-                  <Divider />
-                  <NotificationItem notification={item} />
-                </React.Fragment>
-              ))}
-            </List>
-          </Grid>
-        </Grid>
+        </StickyContainer>
       </Popover>
     </>
   );

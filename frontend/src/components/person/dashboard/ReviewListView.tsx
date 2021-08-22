@@ -30,7 +30,8 @@ export function ReviewListView() {
     }
   }, []);
   return (
-    <CustomPagination objectsPerPage={3}>
+    <CustomPagination objectsPerPage={3} noContentText={AuthService.getCurrentAccountType()==='Student' ? "You didn't review any course" : "No student reviewed your course yet"
+}>
       {reviewsWithCourses?.map((reviewsWithCourse) => (
         <ContentHeader
           key={reviewsWithCourse.courseId}

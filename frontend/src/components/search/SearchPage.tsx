@@ -262,7 +262,10 @@ const Search = () => {
             </Grid>
           </Responsive>
           <Grid item sm={9} xs={12}>
-            <CoursePagination courses={filteredCourses} title="Search Page" />
+            <CoursePagination
+              courses={filteredCourses}
+              title={`Search result for '${history.location.state.key}'`}
+            />
           </Grid>
         </Grid>
       </StickyContainer>

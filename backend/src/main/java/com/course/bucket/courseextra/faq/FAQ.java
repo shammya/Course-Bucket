@@ -308,7 +308,7 @@ public class FAQ {
 				+ "	c.subtitle,\r\n"
 				+ "	fl.content \r\n"
 				+ "ORDER BY\r\n"
-				+ "	MAX( question_time ) DESC\r\n"
+				+ "	MAX( question_time ) DESC\r\n" 
 				+ " ";
 		ResultSet crs = DB.executeQuery(sql, studentUsername);
 
@@ -319,7 +319,7 @@ public class FAQ {
 				ArrayList<FaqInfo> faqInfos = new ArrayList<>();
 				while (frs.next()) {
 					ResultSet trs = DB.executeQuery(
-							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f on p.photo_id = f.id, course c where c.teacher_id = p.id and c.id = #",
+							"select p.id, concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f on p.photo_id = f.id, course c where c.teacher_id = p.id and c.id = #",
 							crs.getString("course_id"));
 					ResultSet srs = DB.executeQuery(
 							"select concat(concat(p.first_name , ' '),p.last_name) as full_name, f.content from person p left join files f \n"
@@ -328,7 +328,7 @@ public class FAQ {
 					trs.next();
 					srs.next();
 					FaqInfo faqInfo = new FaqInfo(frs.getString("student_id"), srs.getString("full_name"), srs.getString("content"),
-							studentUsername, trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
+							trs.getString("id"), trs.getString("full_name"), trs.getString("content"), frs.getString("question"),
 							frs.getTimestamp("question_time"), frs.getString("answer"),
 							frs.getTimestamp("answer_time"));
 					faqInfo.setId(frs.getInt("ID"));
