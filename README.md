@@ -1,3 +1,29 @@
+# Guideline to Run the Project
+
+`1.` Create an oracle user .\
+username :  `coursebucket` password :  `cb`\
+\
+`2.` Create a database connection if you are using a third party app\
+\
+`3.` Grant all the privileges to the user\
+\
+`4.` Open a sql file and run the query situated at database folder of the project\
+\
+`5.` Open the back end folder in Eclipse IDE\
+\
+`6.` Select `bucketApplication.java` file and run the server.\
+\
+`7.` Open frontend folder in windows terminal\
+\
+`8.` Type the command  `npm install` and wait for installation\
+\
+`9.` Then type the command `npm start`\
+\
+`10.` The app will take at max 5 minutes to fully run on your browser\
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
