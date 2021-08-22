@@ -42,6 +42,7 @@ function CourseApproval(props) {
       )
   }
 
+  
   useEffect(() => {
     getApprovedCourses()
     getUnapprovedCourses()

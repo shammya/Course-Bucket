@@ -896,7 +896,7 @@ public class Course {
 		ArrayList<MiniCourse> free = new ArrayList<>();
 
 		String sql = getMiniCourseSql(
-				" SELECT * FROM course WHERE publish_date BETWEEN CURRENT_DATE-7 AND CURRENT_DATE ");
+				" SELECT * FROM course WHERE publish_date BETWEEN CURRENT_DATE-7 AND CURRENT_DATE and is_approved = 'T'");
 		ResultSet rs = DB.executeQuery(sql);
 		try {
 			if (rs != null) {
@@ -910,7 +910,7 @@ public class Course {
 					+ "	c.teacher_id , c.cover_id, \n"
 					+ "	( SELECT count( course_id ) FROM purchase_history WHERE course_id = c.id ) AS count \n"
 					+ "FROM\n"
-					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM purchase_history ) ) c \n"
+					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM purchase_history ) and is_approved = 'T') c \n"
 					+ "ORDER BY\n" + "	count DESC");
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
@@ -921,7 +921,7 @@ public class Course {
 			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n"
 					+ "	c.teacher_id ,\n" + "	c.cover_id, \n"
 					+ "	( SELECT count( course_id ) FROM rating WHERE course_id = c.id ) AS count \n" + "FROM\n"
-					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM rating ) ) c \n"
+					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM rating ) and is_approved = 'T') c \n"
 					+ "ORDER BY\n" + "	count DESC");
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
@@ -933,7 +933,7 @@ public class Course {
 			sql = getMiniCourseSql("SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer,\n"
 					+ "	c.teacher_id ,\n" + "	c.cover_id, \n"
 					+ "	( SELECT count( course_id ) FROM review WHERE course_id = c.id ) AS count \n" + "FROM\n"
-					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM review ) ) c \n"
+					+ "	( SELECT * FROM course WHERE id IN ( SELECT UNIQUE ( course_id ) FROM review ) and is_approved = 'T') c \n"
 					+ "ORDER BY\n" + "	count DESC");
 			rs = DB.executeQuery(sql);
 			while (rs.next()) {
@@ -945,7 +945,7 @@ public class Course {
 			sql = getMiniCourseSql(
 					"SELECT\n" + "	c.id,\n" + "	c.title,\n" + "	c.price,\n" + "	c.offer, \n" + "	c.teacher_id, \n"
 							+ "	c.cover_id \n"
-							+ "FROM\n" + "	course c \n" + "WHERE\n" + "	( c.price * ( 100-c.offer ) / 100 ) = 0.0");
+							+ "FROM\n" + "	course c \n" + "WHERE\n" + "	( c.price * ( 100-c.offer ) / 100 ) = 0.0 and is_approved = 'T'");
 			rs = DB.executeQuery(sql);
 				while (rs.next()) {
 					free.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
@@ -963,6 +963,25 @@ public class Course {
 		}
 		return null;
 
+	}
+	
+	public static ArrayList<MiniCourse> getCourseByCategory(Integer categoryId){
+		ArrayList<MiniCourse> categoryCourses = new ArrayList<>();
+		String sql = getMiniCourseSql("select * from course where category_id = "+categoryId.toString()+" ");
+		ResultSet rs = DB.executeQuery(sql);
+		try {
+			while (rs.next()) {
+				categoryCourses.add(new MiniCourse(rs.getInt("id"), rs.getString("title"), rs.getString("name"),
+						rs.getString("content"), rs.getDouble("rating"), rs.getInt("rating_count"),
+						rs.getDouble("price"), rs.getDouble("offer_price")));
+			}
+			return categoryCourses;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 
 	public static void notificationCourseUpload(String fromId, Integer courseId) {
