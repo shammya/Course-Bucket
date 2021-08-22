@@ -42,7 +42,7 @@ public class FAQController {
 		if(!ToolKit.getCurrentUserName().equals(username)) {
 			return ResponseEntity.badRequest().body("Requested user is not match with the course creator");
 		}
-		FAQ.addFaqAnswer(faqId, answer);
+		FAQ.addFaqAnswer(faqId, answer,username);
 		return ResponseEntity.ok("");
 	}
 

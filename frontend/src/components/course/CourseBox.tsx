@@ -5,7 +5,7 @@ import {
   CardMedia,
   Grid,
   makeStyles,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import offerBG from "assets/img/offer_bg.png";

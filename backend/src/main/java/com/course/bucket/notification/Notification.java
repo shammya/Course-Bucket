@@ -97,63 +97,64 @@ public class Notification {
 //		}
 //		return null;
 //	}
-	
+
 	public static void notificationSeen(Integer id) {
 		DB.execute("update notification set seen = 'T' where id = #", id.toString());
 	}
-	
-	public static ArrayList<ObjectNode> getNotifications(ObjectMapper mapper, String username){
-		String sql = ""
-				+ "select id, seen, user_id, type, time, course_id, from_id "
-				+ "from notification "
-				+ "where user_id = '#' "
-				+ "order by time desc";
+
+	public static ArrayList<ObjectNode> getNotifications(ObjectMapper mapper, String username) {
+
+		String sql = "select id, seen, user_id, type, time, course_id, from_id " + "from notification ";
+		if (DB.isAdmin(username)) {
+			sql += "where user_id = 'admin'";
+		} else {
+			sql += "where user_id = '#'";
+		}
+		sql += "order by time desc";
 		ResultSet rs = DB.executeQuery(sql, username);
 		ArrayList<ObjectNode> nodes = new ArrayList();
 		try {
-			while(rs.next()) {
+			while (rs.next()) {
 				ObjectNode personNode = mapper.createObjectNode();
 				ObjectNode courseNode = mapper.createObjectNode();
 				ObjectNode node = mapper.createObjectNode();
-				
+
 				Integer id = rs.getInt("id");
 				String type = rs.getString("type");
 				String userId = rs.getString("user_id");
 				String fromId = rs.getString("from_id");
 				Integer courseId = rs.getInt("course_id");
 
-				node.put("id",id);
-				node.put("type",type);
-				node.put("seen",ToolKit.DBoolToJBool(rs.getString("seen")));
-				node.put("time",rs.getTimestamp("time").toString());
-				
+				node.put("id", id);
+				node.put("type", type);
+				node.put("seen", ToolKit.DBoolToJBool(rs.getString("seen")));
+				node.put("time", rs.getTimestamp("time").toString());
+
 				switch (type) {
-				case "REGISTRATION": 
+				case "REGISTRATION":
 					personNode.setAll(personInfo(mapper, fromId));
 					break;
-					
-					
-				case "COURSEUPLOAD": 
-				case "COURSEPURCHASE": 
-				case "REVIEW": 
-				case "FAQQUESTION": 
-				case "FAQANSWER": 
+
+				case "COURSEUPLOAD":
+				case "COURSEPURCHASE":
+				case "REVIEW":
+				case "FAQQUESTION":
+				case "FAQANSWER":
 					personNode.setAll(personInfo(mapper, fromId));
-					courseNode.setAll(courseInfo(mapper, courseId)); 
-					break; 
-					
-					
-				case "RATING": 
+					courseNode.setAll(courseInfo(mapper, courseId));
+					break;
+
+				case "RATING":
 					personNode.setAll(personInfo(mapper, fromId));
-					courseNode.setAll(courseInfo(mapper, courseId)); 
+					courseNode.setAll(courseInfo(mapper, courseId));
 					courseNode.put("rating", ratingInfo(courseId, fromId));
-					break; 
-					
-				case "COURSEAPPROVED": 
-				case "COURSEUNAPPROVED": 
-				case "COURSEUPDATE": 
-					courseNode.setAll(courseInfo(mapper, courseId)); 
-					break;   
+					break;
+
+				case "COURSEAPPROVED":
+				case "COURSEUNAPPROVED":
+				case "COURSEUPDATE":
+					courseNode.setAll(courseInfo(mapper, courseId));
+					break;
 				}
 				node.setAll(courseNode);
 				node.setAll(personNode);
@@ -163,16 +164,14 @@ public class Notification {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return nodes;
 	}
-	
+
 	public static Integer ratingInfo(Integer courseId, String fromId) {
-		ResultSet rs = DB.executeQuery(""
-				+ "select value "
-				+ "from rating "
-				+ "where student_id = '#' "
-				+ "and course_id = #",fromId, courseId.toString());
+		ResultSet rs = DB.executeQuery(
+				"" + "select value " + "from rating " + "where student_id = '#' " + "and course_id = #", fromId,
+				courseId.toString());
 		try {
 			rs.next();
 			return rs.getInt("value");
@@ -182,23 +181,15 @@ public class Notification {
 		}
 		return 0;
 	}
-	
+
 	public static ObjectNode personInfo(ObjectMapper mapper, String fromId) {
 		ObjectNode objectNode = mapper.createObjectNode();
-		String sql = "select \r\n"
-				+ "	p.id username,\r\n"
-				+ "	concat(p.first_name,concat(' ',p.last_name)) full_name,\r\n"
-				+ "	(\r\n"
-				+ "	select content from files f where f.id = p.photo_id\r\n"
-				+ "	) photo,\r\n"
-				+ "	(\r\n"
+		String sql = "select \r\n" + "	p.id username,\r\n"
+				+ "	concat(p.first_name,concat(' ',p.last_name)) full_name,\r\n" + "	(\r\n"
+				+ "	select content from files f where f.id = p.photo_id\r\n" + "	) photo,\r\n" + "	(\r\n"
 				+ "	select unique((case when (select id from student where id = '#') is not null then 'student' else 'teacher' end))  account_type from 		student\r\n"
-				+ "	) account_type\r\n"
-				+ "from\r\n"
-				+ "	person p\r\n"
-				+ "where \r\n"
-				+ "	p.id = '#'";
-		ResultSet personRSet  = DB.executeQuery(sql, fromId, fromId);
+				+ "	) account_type\r\n" + "from\r\n" + "	person p\r\n" + "where \r\n" + "	p.id = '#'";
+		ResultSet personRSet = DB.executeQuery(sql, fromId, fromId);
 		try {
 			personRSet.next();
 			objectNode.put("username", personRSet.getString("username"));
@@ -211,14 +202,11 @@ public class Notification {
 		}
 		return objectNode;
 	}
-	
+
 	public static ObjectNode courseInfo(ObjectMapper mapper, Integer courseId) {
 		ObjectNode objectNode = mapper.createObjectNode();
-		String sql = ""
-				+ "select id, title, "
-				+ "(select content from files where id = c.cover_id) content "
-				+ "from course c "
-				+ "where id = #";
+		String sql = "" + "select id, title, " + "(select content from files where id = c.cover_id) content "
+				+ "from course c " + "where id = #";
 		ResultSet courseRS = DB.executeQuery(sql, courseId.toString());
 		try {
 			courseRS.next();
@@ -230,6 +218,15 @@ public class Notification {
 			e.printStackTrace();
 		}
 		return objectNode;
+	}
+
+	public static void generateNotification(String userId, String fromId, Integer courseId, String type,
+			Integer eventId) {
+		Integer id = DB.generateId("notification");
+		String sql = "insert into notification values( #,'#','#',#,'F',#,'#',#)";
+		DB.execute(sql, id.toString(), userId, fromId, ToolKit.JDateToDDate(new Date()), courseId.toString(), type,
+				eventId.toString());
+
 	}
 
 //	public static ObjectNode getRegisteredPersonNotification(ObjectMapper mapper, String fromId) {
@@ -654,4 +651,5 @@ public class Notification {
 //		return null;
 //		
 //	}
+
 }

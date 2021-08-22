@@ -23,6 +23,7 @@ import com.course.bucket.creditcard.CreditCard;
 import com.course.bucket.database.DB;
 import com.course.bucket.files.Files;
 import com.course.bucket.language.Language;
+import com.course.bucket.notification.Notification;
 import com.course.bucket.tools.HashPassword;
 import com.course.bucket.tools.ToolKit;
 
@@ -421,7 +422,7 @@ public class Person {
 			DB.execute("INSERT INTO PERSON_LANGUAGE VALUES(#, '#', #)", id.toString(), person.getUsername(),
 					lang.getId().toString());
 		}
-		notificationRegistration(person.getUsername());
+		Notification.generateNotification("admin", person.getUsername(), 0, "REGISTRATION", 0);
 	}
 
 	
@@ -547,35 +548,35 @@ public class Person {
 		DB.execute("UPDATE PERSON SET PASSWORD = '#' WHERE ID = '#'", newPassword, username);
 	}
 	
-	public static void notificationRegistration(String userId) {
-		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values(# ,'admin','#',# , 'F', NULL,'REGISTRATION')";
-		DB.execute(sql, id.toString(), userId, ToolKit.JDateToDDate(new Date()));
-	}
+//	public static void notificationRegistration(String userId) {
+//		Integer id = DB.generateId("notification");
+//		String sql = "insert into notification values(# ,'admin','#',# , 'F', NULL,'REGISTRATION')";
+//		DB.execute(sql, id.toString(), userId, ToolKit.JDateToDDate(new Date()));
+//	}
 
-	public static void approveCourse(Integer courseId) {
-		DB.execute("update course set is_approved = 'T' where id = #", courseId.toString());
-		notificationCourseUpload(courseId);
-	}
-	public static void notificationCourseUpload(Integer courseId) {
-		ResultSet rs = DB.executeQuery("SELECT teacher_id FROM course WHERE id = #", courseId.toString());
-		try {
-			rs.next();
-			String teacherId = rs.getString("teacher_id");
-			String sql = "SELECT\n" + "	student_id \n" + "FROM\n" + "	purchase_history \n" + "WHERE\n"
-					+ "	course_id IN ( SELECT id FROM course WHERE teacher_id = '#' )";
-			rs = DB.executeQuery(sql, teacherId);
-			while (rs.next()) {
-				Integer id = DB.generateId("notification");
-				sql = "insert into notification values(# ,'#','#',# , 'F', #,'COURSEUPLOAD')";
-				DB.execute(sql, id.toString(), rs.getString("student_id"), teacherId, ToolKit.JDateToDDate(new Date()),courseId.toString());
-			}
-			rs.close();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
+//	public static void approveCourse(Integer courseId) {
+//		DB.execute("update course set is_approved = 'T' where id = #", courseId.toString());
+//		notificationCourseUpload(courseId);
+//	}
+//	public static void notificationCourseUpload(Integer courseId) {
+//		ResultSet rs = DB.executeQuery("SELECT teacher_id FROM course WHERE id = #", courseId.toString());
+//		try {
+//			rs.next();
+//			String teacherId = rs.getString("teacher_id");
+//			String sql = "SELECT\n" + "	student_id \n" + "FROM\n" + "	purchase_history \n" + "WHERE\n"
+//					+ "	course_id IN ( SELECT id FROM course WHERE teacher_id = '#' )";
+//			rs = DB.executeQuery(sql, teacherId);
+//			while (rs.next()) {
+//				Integer id = DB.generateId("notification");
+//				sql = "insert into notification values(# ,'#','#',# , 'F', #,'COURSEUPLOAD')";
+//				DB.execute(sql, id.toString(), rs.getString("student_id"), teacherId, ToolKit.JDateToDDate(new Date()),courseId.toString());
+//			}
+//			rs.close();
+//		} catch (SQLException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//	}
 
 	public static Files getPhoto(String username) {
 		ResultSet rs = DB.executeQuery("SELECT PHOTO_ID FROM PERSON WHERE ID = '#'", username);

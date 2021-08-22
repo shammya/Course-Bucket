@@ -2,7 +2,7 @@
 
 # dependencies
 /frontend/node_modules/
-/backend/uploads/
+#/backend/uploads/
 /.pnp
 .pnp.js
 

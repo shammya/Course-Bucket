@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import com.course.bucket.course.Course;
 import com.course.bucket.database.DB;
+import com.course.bucket.notification.Notification;
 import com.course.bucket.person.Student;
 import com.course.bucket.tools.ToolKit;
 
@@ -255,21 +256,23 @@ public class PurchaseHistory {
 		Integer id = DB.generateId("purchase_history");
 		String sql = "insert into purchase_history values(#, # , '#', #, #)";
 		DB.execute(sql, id.toString(),phd.getCourseId().toString(),phd.getStudentId(),ToolKit.JDateToDDate(phd.getTime()),phd.getCost().toString());
-		notificationCoursePurchase(phd);
+		
+		String teacherUsername = DB.getString("course", "id", phd.getCourseId().toString(), "teacher_id");
+		Notification.generateNotification(teacherUsername, phd.getStudentId(), phd.getCourseId(), "COURSEPURCHASE", 0);
 	}
 	
-	public static void notificationCoursePurchase(PurchaseHistoryDb phd) {
-		Integer id = DB.generateId("notification");
-		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'COURSEPURCHASE'";
-		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", phd.getCourseId().toString());
-		try {
-			rs.next();
-			DB.execute(sql,id.toString(),rs.getString("teacher_id"),phd.getStudentId(),ToolKit.JDateToDDate(new Date()),phd.getCourseId().toString());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public static void notificationCoursePurchase(PurchaseHistoryDb phd) {
+//		Integer id = DB.generateId("notification");
+//		String sql = "insert into notification values(# ,'#','#',# , 'F', #,'COURSEPURCHASE'";
+//		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #", phd.getCourseId().toString());
+//		try {
+//			rs.next();
+//			DB.execute(sql,id.toString(),rs.getString("teacher_id"),phd.getStudentId(),ToolKit.JDateToDDate(new Date()),phd.getCourseId().toString());
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public static boolean isBought(Integer courseId, String username) {
 		ResultSet rs = DB.executeQuery("select * from purchase_history where course_id = # and student_id = '#'", courseId.toString(), username);

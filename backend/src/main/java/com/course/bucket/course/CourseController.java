@@ -66,6 +66,11 @@ public class CourseController {
 		return ResponseEntity.ok(course);
 	}
 	
+	@GetMapping("/public/get-course-by-category/{id}")
+	public ArrayList<MiniCourse> getCourseByCategory(@PathVariable Integer id) {
+		return Course.getCourseByCategory(id);
+	}
+	
 	@GetMapping("/public/get-course-to-show/{id}")
 	public Course getCourseToShow(@PathVariable Integer id) {
 		return Course.getCourseAfterAuthentication(ToolKit.getCurrentUserName(),id);

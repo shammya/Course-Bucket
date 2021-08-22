@@ -231,4 +231,17 @@ public class DB {
     public static void update(String tableName, String idColumnName, String id, String dataColumnName, String data) {
     	update(tableName, idColumnName, id, dataColumnName, data, false);
     }
+    
+    public static boolean isAdmin(String username) {
+    	ResultSet rs = DB.executeQuery("select id from admin where id = '#'", username);
+    	try {
+			while(rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return false;
+    }
 }
