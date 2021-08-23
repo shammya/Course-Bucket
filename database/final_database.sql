@@ -1,5 +1,5 @@
 --------------------------------------------------------
---  File created - Sunday-August-22-2021   
+--  File created - Monday-August-23-2021   
 --------------------------------------------------------
 --------------------------------------------------------
 --  DDL for Sequence AUTO_ID
@@ -15,7 +15,7 @@
 --  DDL for Sequence NOTIFICATION_ID
 --------------------------------------------------------
 
-   CREATE SEQUENCE  "COURSEBUCKET"."NOTIFICATION_ID"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 107 NOCACHE  NOORDER  NOCYCLE ;
+   CREATE SEQUENCE  "COURSEBUCKET"."NOTIFICATION_ID"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 66 NOCACHE  NOORDER  NOCYCLE ;
 --------------------------------------------------------
 --  DDL for Sequence id
 --------------------------------------------------------
@@ -350,7 +350,8 @@
   CREATE TABLE "COURSEBUCKET"."SLIDER" 
    (	"ID" NUMBER, 
 	"FILES_ID" NUMBER, 
-	"ADMIN_ID" VARCHAR2(255 BYTE)
+	"ADMIN_ID" VARCHAR2(255 BYTE), 
+	"SERIAL" NUMBER
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
@@ -653,6 +654,73 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
 So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',5000,12,to_date('19-AUG-21','DD-MON-RR'),'F','sumit',74,11,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (8,'spring Framework for Beginners with Spring Boot','In this course, you will learn the highly demanded frameworks of enterprise world: Spring Framework 5 with Spring Boot','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
+
+This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
+
+With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
+
+Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
+
+This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
+
+We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
+
+We cover a wide variety of topics, including:
+
+Command Line Basics
+
+Installing Python
+
+Running Python Code
+
+Strings
+
+Lists 
+
+Dictionaries
+
+Tuples
+
+Sets
+
+Number Data Types
+
+Print Formatting
+
+Functions
+
+Scope
+
+args/kwargs
+
+Built-in Functions
+
+Debugging and Error Handling
+
+Modules
+
+External Modules
+
+Object Oriented Programming
+
+Inheritance
+
+Polymorphism
+
+File I/O
+
+Advanced Methods
+
+Unit Tests
+
+and much more!
+
+You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
+
+This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
+
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,20,to_date('22-AUG-21','DD-MON-RR'),'T','papon',86,11,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
 Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (10,'Mastering Architecture and Real Estate Photography','Start a business photographing real estate photography jobs for architects, builders, and real estate agents','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
@@ -1055,7 +1123,7 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
 So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',5000,10,to_date('21-AUG-21','DD-MON-RR'),'T','ashikur',2,3,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
-Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (8,'spring Framework for Beginners with Spring Boot','In this course, you will learn the highly demanded frameworks of enterprise world: Spring Framework 5 with Spring Boot','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
+Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (21,'Microsoft Excel - Excel from Beginner to Advanced','Excel with this A-Z Microsoft Excel Course. Microsoft Excel 2010, 2013, 2016, Excel 2019 and Office 365','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
 
@@ -1121,7 +1189,74 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,20,to_date('22-AUG-21','DD-MON-RR'),'T','papon',86,11,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',2000,0,to_date('20-AUG-21','DD-MON-RR'),'F','ashikur',242,22,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (23,'Master Microcontroller and Embedded Driver Development(MCU1)','Learn bare metal driver development using Embedded C: Writing drivers for STM32 GPIO,I2C,SPI,USART from scratch','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
+
+This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
+
+With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
+
+Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
+
+This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
+
+We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
+
+We cover a wide variety of topics, including:
+
+Command Line Basics
+
+Installing Python
+
+Running Python Code
+
+Strings
+
+Lists 
+
+Dictionaries
+
+Tuples
+
+Sets
+
+Number Data Types
+
+Print Formatting
+
+Functions
+
+Scope
+
+args/kwargs
+
+Built-in Functions
+
+Debugging and Error Handling
+
+Modules
+
+External Modules
+
+Object Oriented Programming
+
+Inheritance
+
+Polymorphism
+
+File I/O
+
+Advanced Methods
+
+Unit Tests
+
+and much more!
+
+You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
+
+This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
+
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,10,to_date('20-AUG-21','DD-MON-RR'),'F','razi',266,34,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
 Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (11,'Autodesk Revit - beginner to an intermediate level','Includes 15 quizzes & a Final Exam. For users of Revit 2016, 2017, 2018, 2019, 2020 & 2021.','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
@@ -1590,7 +1725,7 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',2000,0,to_date('23-AUG-21','DD-MON-RR'),'F','kashem',134,15,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',2000,0,to_date('23-AUG-21','DD-MON-RR'),'T','kashem',134,15,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
 Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (14,'Identify & Define the Problem with Business Analysis','Use business analysis techniques to identify a business pain point, find its root cause, and sell the value of fixing it','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
@@ -1657,7 +1792,7 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',0,0,to_date('22-AUG-21','DD-MON-RR'),'F','ashikur',158,17,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',0,0,to_date('22-AUG-21','DD-MON-RR'),'T','ashikur',158,17,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
 Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (17,'Structural Engineering','Get all Fundamentals knowledge about the Structural Engineering, Load, Forces, Column, Beam, Slab, Footing, SF, BM etc','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
@@ -1791,7 +1926,7 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',2000,20,to_date('22-AUG-21','DD-MON-RR'),'F','tanzima',302,26,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',2000,20,to_date('22-AUG-21','DD-MON-RR'),'T','tanzima',302,26,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
 Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (13,'Business Analysis Modeling Skills & Techniques','Learn to create Process Flowcharts, User Stories, Use Cases, SWOT, RACI Matrices, Org Charts, User Stories, and more!','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
@@ -2060,7 +2195,7 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
 So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',5000,15,to_date('20-AUG-21','DD-MON-RR'),'F','rohel',230,33,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
-Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (21,'Microsoft Excel - Excel from Beginner to Advanced','Excel with this A-Z Microsoft Excel Course. Microsoft Excel 2010, 2013, 2016, Excel 2019 and Office 365','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
+Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (31,'Beginner to Pro in PowerPoint: Complete PowerPoint Training','PowerPoint lessons that are easy to apply at work! Become the top PowerPoint user in your office. #1 PowerPoint training','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
 
@@ -2126,8 +2261,8 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',2000,0,to_date('20-AUG-21','DD-MON-RR'),'F','ashikur',242,22,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
-Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (23,'Master Microcontroller and Embedded Driver Development(MCU1)','Learn bare metal driver development using Embedded C: Writing drivers for STM32 GPIO,I2C,SPI,USART from scratch','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,10,to_date('20-AUG-21','DD-MON-RR'),'F','navin',362,21,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (36,'The Complete Oracle SQL Bootcamp (2021)','Become an In-demand SQL Professional & Pass Oracle SQL 1Z0-071 (OCA) Certification Exam Confidently!','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
 
@@ -2193,7 +2328,208 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,10,to_date('20-AUG-21','DD-MON-RR'),'F','razi',266,34,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',4996,20,to_date('20-AUG-21','DD-MON-RR'),'F','ashikur',422,30,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (29,'Linux Operating System with Shell from Scratch for Beginners','Learn the Linux Command Line from Scratch and hound your Skills towards becoming a Master','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
+
+This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
+
+With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
+
+Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
+
+This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
+
+We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
+
+We cover a wide variety of topics, including:
+
+Command Line Basics
+
+Installing Python
+
+Running Python Code
+
+Strings
+
+Lists 
+
+Dictionaries
+
+Tuples
+
+Sets
+
+Number Data Types
+
+Print Formatting
+
+Functions
+
+Scope
+
+args/kwargs
+
+Built-in Functions
+
+Debugging and Error Handling
+
+Modules
+
+External Modules
+
+Object Oriented Programming
+
+Inheritance
+
+Polymorphism
+
+File I/O
+
+Advanced Methods
+
+Unit Tests
+
+and much more!
+
+You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
+
+This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
+
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,20,to_date('20-AUG-21','DD-MON-RR'),'F','rifat',338,33,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (33,'GUI Development with Python and Tkinter','Master Python GUI development using Tkinter to build desktop applications!','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
+
+This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
+
+With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
+
+Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
+
+This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
+
+We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
+
+We cover a wide variety of topics, including:
+
+Command Line Basics
+
+Installing Python
+
+Running Python Code
+
+Strings
+
+Lists 
+
+Dictionaries
+
+Tuples
+
+Sets
+
+Number Data Types
+
+Print Formatting
+
+Functions
+
+Scope
+
+args/kwargs
+
+Built-in Functions
+
+Debugging and Error Handling
+
+Modules
+
+External Modules
+
+Object Oriented Programming
+
+Inheritance
+
+Polymorphism
+
+File I/O
+
+Advanced Methods
+
+Unit Tests
+
+and much more!
+
+You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
+
+This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
+
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,10,to_date('20-AUG-21','DD-MON-RR'),'F','ashikur',386,7,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
+Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (34,'Unreal Engine C++ Developer: Learn C++ and Make Video Games','Created in collaboration with Epic Games. Learn C++ from basics while making your first 4 video games in Unreal','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
+
+This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
+
+With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
+
+Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
+
+This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
+
+We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
+
+We cover a wide variety of topics, including:
+
+Command Line Basics
+
+Installing Python
+
+Running Python Code
+
+Strings
+
+Lists 
+
+Dictionaries
+
+Tuples
+
+Sets
+
+Number Data Types
+
+Print Formatting
+
+Functions
+
+Scope
+
+args/kwargs
+
+Built-in Functions
+
+Debugging and Error Handling
+
+Modules
+
+External Modules
+
+Object Oriented Programming
+
+Inheritance
+
+Polymorphism
+
+File I/O
+
+Advanced Methods
+
+Unit Tests
+
+and much more!
+
+You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
+
+This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
+
+So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',5000,10,to_date('20-AUG-21','DD-MON-RR'),'F','tanzima',398,10,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
 Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (28,'Maya for Beginners: Complete Guide to 3D Animation in Maya','Learn everything you need for 3D animation in Autodesk Maya: Modeling, Texturing, Lighting, Rigging, Animation, Dynamics','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
 
 This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
@@ -2596,341 +2932,6 @@ You will get lifetime access to over 100 lectures plus corresponding Notebooks f
 This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
 
 So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',6000,10,to_date('20-AUG-21','DD-MON-RR'),'F','navin',410,10,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
-Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (31,'Beginner to Pro in PowerPoint: Complete PowerPoint Training','PowerPoint lessons that are easy to apply at work! Become the top PowerPoint user in your office. #1 PowerPoint training','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
-
-This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
-
-With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
-
-Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
-
-This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
-
-We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
-
-We cover a wide variety of topics, including:
-
-Command Line Basics
-
-Installing Python
-
-Running Python Code
-
-Strings
-
-Lists 
-
-Dictionaries
-
-Tuples
-
-Sets
-
-Number Data Types
-
-Print Formatting
-
-Functions
-
-Scope
-
-args/kwargs
-
-Built-in Functions
-
-Debugging and Error Handling
-
-Modules
-
-External Modules
-
-Object Oriented Programming
-
-Inheritance
-
-Polymorphism
-
-File I/O
-
-Advanced Methods
-
-Unit Tests
-
-and much more!
-
-You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
-
-This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
-
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,10,to_date('20-AUG-21','DD-MON-RR'),'F','navin',362,21,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
-Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (36,'The Complete Oracle SQL Bootcamp (2021)','Become an In-demand SQL Professional & Pass Oracle SQL 1Z0-071 (OCA) Certification Exam Confidently!','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
-
-This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
-
-With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
-
-Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
-
-This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
-
-We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
-
-We cover a wide variety of topics, including:
-
-Command Line Basics
-
-Installing Python
-
-Running Python Code
-
-Strings
-
-Lists 
-
-Dictionaries
-
-Tuples
-
-Sets
-
-Number Data Types
-
-Print Formatting
-
-Functions
-
-Scope
-
-args/kwargs
-
-Built-in Functions
-
-Debugging and Error Handling
-
-Modules
-
-External Modules
-
-Object Oriented Programming
-
-Inheritance
-
-Polymorphism
-
-File I/O
-
-Advanced Methods
-
-Unit Tests
-
-and much more!
-
-You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
-
-This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
-
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',4996,20,to_date('20-AUG-21','DD-MON-RR'),'F','ashikur',422,30,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
-Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (29,'Linux Operating System with Shell from Scratch for Beginners','Learn the Linux Command Line from Scratch and hound your Skills towards becoming a Master','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
-
-This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
-
-With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
-
-Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
-
-This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
-
-We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
-
-We cover a wide variety of topics, including:
-
-Command Line Basics
-
-Installing Python
-
-Running Python Code
-
-Strings
-
-Lists 
-
-Dictionaries
-
-Tuples
-
-Sets
-
-Number Data Types
-
-Print Formatting
-
-Functions
-
-Scope
-
-args/kwargs
-
-Built-in Functions
-
-Debugging and Error Handling
-
-Modules
-
-External Modules
-
-Object Oriented Programming
-
-Inheritance
-
-Polymorphism
-
-File I/O
-
-Advanced Methods
-
-Unit Tests
-
-and much more!
-
-You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
-
-This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
-
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,20,to_date('20-AUG-21','DD-MON-RR'),'F','rifat',338,33,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
-Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (33,'GUI Development with Python and Tkinter','Master Python GUI development using Tkinter to build desktop applications!','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
-
-This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
-
-With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
-
-Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
-
-This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
-
-We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
-
-We cover a wide variety of topics, including:
-
-Command Line Basics
-
-Installing Python
-
-Running Python Code
-
-Strings
-
-Lists 
-
-Dictionaries
-
-Tuples
-
-Sets
-
-Number Data Types
-
-Print Formatting
-
-Functions
-
-Scope
-
-args/kwargs
-
-Built-in Functions
-
-Debugging and Error Handling
-
-Modules
-
-External Modules
-
-Object Oriented Programming
-
-Inheritance
-
-Polymorphism
-
-File I/O
-
-Advanced Methods
-
-Unit Tests
-
-and much more!
-
-You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
-
-This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
-
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',3000,10,to_date('20-AUG-21','DD-MON-RR'),'F','ashikur',386,7,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
-Insert into COURSEBUCKET.COURSE (ID,TITLE,SUBTITLE,DESCRIPTION,PRICE,OFFER,PUBLISH_DATE,IS_APPROVED,TEACHER_ID,COVER_ID,CATEGORY_ID,PREREQUISITES,OUTCOMES) values (34,'Unreal Engine C++ Developer: Learn C++ and Make Video Games','Created in collaboration with Epic Games. Learn C++ from basics while making your first 4 video games in Unreal','Become a Python Programmer and learn one of employer''s most requested skills of 2021!
-
-This is the most comprehensive, yet straight-forward, course for the Python programming language on Udemy! Whether you have never programmed before, already know basic syntax, or want to learn about the advanced features of Python, this course is for you! In this course we will teach you Python 3.
-
-With over 100 lectures and more than 21 hours of video this comprehensive course leaves no stone unturned! This course includes quizzes, tests, coding exercises and homework assignments as well as 3 major projects to create a Python project portfolio!
-
-Learn how to use Python for real-world tasks, such as working with PDF Files, sending emails, reading Excel files, Scraping websites for informations, working with image files, and much more!
-
-This course will teach you Python in a practical manner, with every lecture comes a full coding screencast and a corresponding code notebook! Learn in whatever manner is best for you!
-
-We will start by helping you get Python installed on your computer, regardless of your operating system, whether its Linux, MacOS, or Windows, we''ve got you covered.
-
-We cover a wide variety of topics, including:
-
-Command Line Basics
-
-Installing Python
-
-Running Python Code
-
-Strings
-
-Lists 
-
-Dictionaries
-
-Tuples
-
-Sets
-
-Number Data Types
-
-Print Formatting
-
-Functions
-
-Scope
-
-args/kwargs
-
-Built-in Functions
-
-Debugging and Error Handling
-
-Modules
-
-External Modules
-
-Object Oriented Programming
-
-Inheritance
-
-Polymorphism
-
-File I/O
-
-Advanced Methods
-
-Unit Tests
-
-and much more!
-
-You will get lifetime access to over 100 lectures plus corresponding Notebooks for the lectures!
-
-This course comes with a 30 day money back guarantee! If you are not satisfied in any way, you''ll get your money back. Plus you will keep access to the Notebooks as a thank you for trying out the course!
-
-So what are you waiting for? Learn Python in a way that will advance your career and increase your knowledge, all in a fun and practical way!',5000,10,to_date('20-AUG-21','DD-MON-RR'),'F','tanzima',398,10,'Access to computer and internet connection><Basic programming knowledge><Fundamental Mathematics><English as a learning language ><','Learn to use Python professionally, learning both Python 2 and Python 3!>< Create games with Python, like Tic Tac Toe and Blackjack!><Learn advanced Python features, like the collections module and how to work with timestamps!><Learn to use Object Oriented Programming with classes!><Understand complex topics, like decorators.>< Understand how to use both the Jupyter Notebook and create .py files>< Get an understanding of how to create GUIs in the Jupyter Notebook system!><Build a complete understanding of Python from the ground up!><');
 REM INSERTING into COURSEBUCKET.COURSE_LANGUAGE
 SET DEFINE OFF;
 Insert into COURSEBUCKET.COURSE_LANGUAGE (ID,COURSE_ID,LANGUAGE_ID) values (25,11,2);
@@ -3283,7 +3284,8 @@ Insert into COURSEBUCKET.EDUCATIONAL_STATUS (ID,TYPE,ADMIN_ID) values (11,'CA','
 Insert into COURSEBUCKET.EDUCATIONAL_STATUS (ID,TYPE,ADMIN_ID) values (12,'SA','shammya');
 REM INSERTING into COURSEBUCKET.FAQ
 SET DEFINE OFF;
-Insert into COURSEBUCKET.FAQ (ID,COURSE_ID,STUDENT_ID,QUESTION,QUESTION_TIME,ANSWER,ANSWER_TIME) values (1,1,'shafayat','{"blocks":[{"key":"6c1ij","text":"jodi nicher code er output bolte paren taile kinbo","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"bigut","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"e6cso","text":"void print()","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"ctbpt","text":"{","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"86kuj","text":"cout<<"Ashik sir is the best"","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"eei0b","text":"}","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('22-AUG-21','DD-MON-RR'),null,null);
+Insert into COURSEBUCKET.FAQ (ID,COURSE_ID,STUDENT_ID,QUESTION,QUESTION_TIME,ANSWER,ANSWER_TIME) values (2,17,'shafayat','{"blocks":[{"key":"9klsk","text":"How many topics are covered in this course?","type":"header-two","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('22-AUG-21','DD-MON-RR'),'{"blocks":[{"key":"6vsob","text":"More than enough","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":0,"length":16,"style":"ITALIC"}],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('22-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FAQ (ID,COURSE_ID,STUDENT_ID,QUESTION,QUESTION_TIME,ANSWER,ANSWER_TIME) values (3,17,'shafayat','{"blocks":[{"key":"e34vi","text":"Hello sir you didn''t answer to my question","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":0,"length":42,"style":"HIGHLIGHT"}],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('22-AUG-21','DD-MON-RR'),'{"blocks":[{"key":"coc80","text":"Please check, I did","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('22-AUG-21','DD-MON-RR'));
 REM INSERTING into COURSEBUCKET.FILES
 SET DEFINE OFF;
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (1,1,'Profile Picture','http://localhost:8800/resources/pb/hSicm9vYgEwT1TjErjaEgmI7hlw7J5KQEIHpi7ctureXIoWukTPjyrjTo7otp3ng1RbWJyV38F3amd',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
@@ -3325,6 +3327,41 @@ Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) v
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (145,10,'PROPERTY','FaUserGraduate',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (74,1,'Course Cover','http://localhost:8800/resources/pb/oImoQEEkCOgCUTjErjay9WqnUZJdWvH8pjppi7cturezN0YLmOi62R9Kma9Kj3pgq5sygOCqXchNKo',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (75,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (4,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (5,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (6,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (7,2,'{"blocks":[{"key":"9vf47","text":"In this video you will learn about function and recursion.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/FZICytcBaEzRcJRyFykYxk5fuR1Fsi0JXQWvi5deoZzMZA3aZlP8zYX6kbm3p4smCC77HQHNMv1X',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (8,10,'PROPERTY','FaYoutubeSquare',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (9,10,'PROPERTY','FaRegFileWord',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (10,10,'PROPERTY','FaCode',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (11,10,'PROPERTY','FaRegClock',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (12,10,'PROPERTY','FaMobileAlt',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (13,10,'PROPERTY','FaUserGraduate',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (86,1,'Course Cover','http://localhost:8800/resources/pb/HSxA57SDafeZNTjErja4YOvJ2U1aMiBH4fJpi7cturePiMvR1L30BZRikYNoj3pgwPepgTb6seph0I',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (87,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (88,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (89,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (90,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (91,2,'{"blocks":[{"key":"9vf47","text":"In this video you will learn about function and recursion.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/FZICytcBaEzRcJRyFykYxk5fuR1Fsi0JXQWvi5deoZzMZA3aZlP8zYX6kbm3p4smCC77HQHNMv1X',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (92,10,'PROPERTY','FaYoutubeSquare',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (93,10,'PROPERTY','FaRegFileWord',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (94,10,'PROPERTY','FaCode',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (95,10,'PROPERTY','FaRegClock',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (96,10,'PROPERTY','FaMobileAlt',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (97,10,'PROPERTY','FaUserGraduate',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (110,1,'Course Cover','http://localhost:8800/resources/pb/gsDl7Cjl86d5NTjErjao6H4lGpofUHdbkxbpi7ctureKqmci3MkFLfSfMeAdj3pg8fX5XpqpfOsoFO',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (111,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (112,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (113,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (114,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (115,2,'{"blocks":[{"key":"9vf47","text":"In this video you will learn about function and recursion.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/FZICytcBaEzRcJRyFykYxk5fuR1Fsi0JXQWvi5deoZzMZA3aZlP8zYX6kbm3p4smCC77HQHNMv1X',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (116,10,'PROPERTY','FaYoutubeSquare',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (117,10,'PROPERTY','FaRegFileWord',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (118,10,'PROPERTY','FaCode',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (119,10,'PROPERTY','FaRegClock',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (120,10,'PROPERTY','FaMobileAlt',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (121,10,'PROPERTY','FaUserGraduate',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (386,1,'Course Cover','http://localhost:8800/resources/pb/n0tnYVmC8M6b2TjErjaSvOCesjdZwrAGXXZpi7cture80BTDYMuCkITsWHEyj3pgqtzHIO00JfCxBc',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (76,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (77,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (78,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
@@ -3435,41 +3472,23 @@ Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) v
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (39,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (2,1,'Course Cover','http://localhost:8800/resources/pb/IbTag107vRVMCTjErjaelDwcqnc3qb2AE9Fpi7cture3h9ju59al1CRXVKCEj3pgH9zy1DyHgJenCE',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (3,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (4,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (5,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (6,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (7,2,'{"blocks":[{"key":"9vf47","text":"In this video you will learn about function and recursion.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/FZICytcBaEzRcJRyFykYxk5fuR1Fsi0JXQWvi5deoZzMZA3aZlP8zYX6kbm3p4smCC77HQHNMv1X',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (8,10,'PROPERTY','FaYoutubeSquare',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (9,10,'PROPERTY','FaRegFileWord',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (10,10,'PROPERTY','FaCode',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (11,10,'PROPERTY','FaRegClock',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (12,10,'PROPERTY','FaMobileAlt',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (13,10,'PROPERTY','FaUserGraduate',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (86,1,'Course Cover','http://localhost:8800/resources/pb/HSxA57SDafeZNTjErja4YOvJ2U1aMiBH4fJpi7cturePiMvR1L30BZRikYNoj3pgwPepgTb6seph0I',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (87,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (88,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (89,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (90,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (91,2,'{"blocks":[{"key":"9vf47","text":"In this video you will learn about function and recursion.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/FZICytcBaEzRcJRyFykYxk5fuR1Fsi0JXQWvi5deoZzMZA3aZlP8zYX6kbm3p4smCC77HQHNMv1X',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (92,10,'PROPERTY','FaYoutubeSquare',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (93,10,'PROPERTY','FaRegFileWord',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (94,10,'PROPERTY','FaCode',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (95,10,'PROPERTY','FaRegClock',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (96,10,'PROPERTY','FaMobileAlt',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (97,10,'PROPERTY','FaUserGraduate',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (110,1,'Course Cover','http://localhost:8800/resources/pb/gsDl7Cjl86d5NTjErjao6H4lGpofUHdbkxbpi7ctureKqmci3MkFLfSfMeAdj3pg8fX5XpqpfOsoFO',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (111,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (112,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (113,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (114,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (115,2,'{"blocks":[{"key":"9vf47","text":"In this video you will learn about function and recursion.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/FZICytcBaEzRcJRyFykYxk5fuR1Fsi0JXQWvi5deoZzMZA3aZlP8zYX6kbm3p4smCC77HQHNMv1X',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (116,10,'PROPERTY','FaYoutubeSquare',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (117,10,'PROPERTY','FaRegFileWord',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (118,10,'PROPERTY','FaCode',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (119,10,'PROPERTY','FaRegClock',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (120,10,'PROPERTY','FaMobileAlt',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (121,10,'PROPERTY','FaUserGraduate',to_date('19-AUG-21','DD-MON-RR'),to_date('19-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (386,1,'Course Cover','http://localhost:8800/resources/pb/n0tnYVmC8M6b2TjErjaSvOCesjdZwrAGXXZpi7cture80BTDYMuCkITsWHEyj3pgqtzHIO00JfCxBc',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (362,1,'Course Cover','http://localhost:8800/resources/pb/GlQPduiWof0drTjErjaS0Inq18LSxprjf4Ipi7ctureQ66Br7D3X1c4Nw6cMj3pgZKOAJLAqQfFEKK',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (363,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (364,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (365,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (366,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (367,2,'{"blocks":[{"key":"9vf47","text":"In this video you will learn about function and recursion.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/FZICytcBaEzRcJRyFykYxk5fuR1Fsi0JXQWvi5deoZzMZA3aZlP8zYX6kbm3p4smCC77HQHNMv1X',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (368,10,'PROPERTY','FaYoutubeSquare',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (369,10,'PROPERTY','FaRegFileWord',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (370,10,'PROPERTY','FaCode',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (371,10,'PROPERTY','FaRegClock',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (372,10,'PROPERTY','FaMobileAlt',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (373,10,'PROPERTY','FaUserGraduate',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (414,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (475,1,'SLIDER','http://localhost:8800/resources/pb/3FYNju3utvhRaTjErjaPuTwR2nnz8rahhRopi7ctureOWb05pnmV3AUcmwfXj3pg69Qz5UdXoTPzxU',to_date('23-AUG-21','DD-MON-RR'),to_date('23-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (476,1,'SLIDER','http://localhost:8800/resources/pb/WUk2UgIHW8kFGTjErjavDRBRMLZnw3NEEE6pi7cturejhulW4kHXKmxpNwydj3pgbnT4eamRWncDZT',to_date('23-AUG-21','DD-MON-RR'),to_date('23-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (477,1,'SLIDER','http://localhost:8800/resources/pb/Ak4A2mJQbAY1VTjErjansqDnNk48LlYc5qHpi7cturesnl3cLOPsT5kGDOPaj3pgWxoaVLNW89njtF',to_date('23-AUG-21','DD-MON-RR'),to_date('23-AUG-21','DD-MON-RR'));
+Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (478,1,'SLIDER','http://localhost:8800/resources/pb/lmjvKxyRI8YcFTjErja77BnpZj5FNeySgOWpi7ctureG0i2RZefSzbbsgHFtj3pgm3liB9H1DC9agR',to_date('23-AUG-21','DD-MON-RR'),to_date('23-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (387,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (388,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (389,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
@@ -3737,19 +3756,6 @@ Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) v
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (299,10,'PROPERTY','FaRegClock',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (300,10,'PROPERTY','FaMobileAlt',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
 Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (301,10,'PROPERTY','FaUserGraduate',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (362,1,'Course Cover','http://localhost:8800/resources/pb/GlQPduiWof0drTjErjaS0Inq18LSxprjf4Ipi7ctureQ66Br7D3X1c4Nw6cMj3pgZKOAJLAqQfFEKK',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (363,4,'input and output operations','{"blocks":[{"key":"2qijs","text":"In this lecture we will learn about basic input and output operations","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drkad","text":"cin >> variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"cagls","text":"cout << variable;","type":"code-block","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (364,2,'{"blocks":[{"key":"2e6ma","text":"In this video we learn about if else conditional","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/n0ddo12MSNS6GJRyFykJpYZqpbdaNiBfDQTvi5deoUjyZYSiIMGoRNCDfJm3p4C52FcWOy0eF9IR',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (365,3,'{"blocks":[{"key":"9f1uo","text":"In this lesson we learn about for and while loop and how to traverse an array.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/6uDImlL16yYOlJRyFykuEw3jxFRm9iXCs8Opd3fKP0H7cH2Jypx94D2Ep3dfXUmP6a0OwGkoZp',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (366,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (367,2,'{"blocks":[{"key":"9vf47","text":"In this video you will learn about function and recursion.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}','http://localhost:8800/resources/pv/FZICytcBaEzRcJRyFykYxk5fuR1Fsi0JXQWvi5deoZzMZA3aZlP8zYX6kbm3p4smCC77HQHNMv1X',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (368,10,'PROPERTY','FaYoutubeSquare',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (369,10,'PROPERTY','FaRegFileWord',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (370,10,'PROPERTY','FaCode',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (371,10,'PROPERTY','FaRegClock',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (372,10,'PROPERTY','FaMobileAlt',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (373,10,'PROPERTY','FaUserGraduate',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
-Insert into COURSEBUCKET.FILES (ID,TYPE,TITLE,CONTENT,UPLOAD_TIME,LAST_UPDATE) values (414,5,'https://www.youtube.com/channel/UCXbiXmHE4JJIVITUMKpyIwA','{"blocks":[{"key":"arccb","text":"In this link you can learn about basic operations of arra and string in python programming language.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',to_date('20-AUG-21','DD-MON-RR'),to_date('20-AUG-21','DD-MON-RR'));
 REM INSERTING into COURSEBUCKET.FILE_TYPE
 SET DEFINE OFF;
 Insert into COURSEBUCKET.FILE_TYPE (ID,TYPE,ADMIN_ID) values (1,'Picture','mehedi');
@@ -3972,14 +3978,14 @@ Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TY
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (96,'ashikur','shafayat',to_date('22-AUG-21','DD-MON-RR'),'T',1,'FAQQUESTION',1);
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (97,'rifat','shafayat',to_date('22-AUG-21','DD-MON-RR'),'F',9,'COURSEPURCHASE',0);
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (81,'rifat','shammya',to_date('21-AUG-21','DD-MON-RR'),'F',9,'COURSEAPPROVED',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (82,'admin','abrar',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (83,'admin','kamrul',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (84,'admin','shafayat',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (85,'admin','saurav',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (86,'admin','utsha',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (87,'admin','sabbir',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (88,'admin','kashem',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (89,'admin','sohel',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (82,'admin','abrar',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (83,'admin','kamrul',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (84,'admin','shafayat',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (85,'admin','saurav',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (86,'admin','utsha',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (87,'admin','sabbir',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (88,'admin','kashem',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (89,'admin','sohel',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (90,'papon','shammya',to_date('21-AUG-21','DD-MON-RR'),'F',8,'COURSEAPPROVED',0);
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (91,'maleq','shammya',to_date('21-AUG-21','DD-MON-RR'),'F',13,'COURSEAPPROVED',0);
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (92,'kashem','shammya',to_date('21-AUG-21','DD-MON-RR'),'F',11,'COURSEAPPROVED',0);
@@ -3987,8 +3993,15 @@ Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TY
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (94,'sumit','shammya',to_date('21-AUG-21','DD-MON-RR'),'F',6,'COURSEAPPROVED',0);
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (77,'rifat','pranto',to_date('21-AUG-21','DD-MON-RR'),'T',9,'COURSEPURCHASE',0);
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (95,'sourav','shammya',to_date('21-AUG-21','DD-MON-RR'),'F',17,'COURSEAPPROVED',0);
-Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (80,'admin','sakib',to_date('21-AUG-21','DD-MON-RR'),'F',0,'REGISTRATION',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (80,'admin','sakib',to_date('21-AUG-21','DD-MON-RR'),'T',0,'REGISTRATION',0);
 Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (100,'tanzima','shammya',to_date('22-AUG-21','DD-MON-RR'),'F',2,'COURSEAPPROVED',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (111,'kashem','shammya',to_date('23-AUG-21','DD-MON-RR'),'F',12,'COURSEAPPROVED',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (112,'ashikur','shammya',to_date('23-AUG-21','DD-MON-RR'),'F',14,'COURSEAPPROVED',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (113,'tanzima','shammya',to_date('23-AUG-21','DD-MON-RR'),'F',26,'COURSEAPPROVED',0);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (107,'sourav','shafayat',to_date('22-AUG-21','DD-MON-RR'),'F',17,'FAQQUESTION',2);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (108,'sourav','shafayat',to_date('22-AUG-21','DD-MON-RR'),'T',17,'FAQQUESTION',3);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (109,'shafayat','sourav',to_date('22-AUG-21','DD-MON-RR'),'F',17,'FAQANSWER',2);
+Insert into COURSEBUCKET.NOTIFICATION (ID,USER_ID,FROM_ID,TIME,SEEN,COURSE_ID,TYPE,EVENT_ID) values (110,'shafayat','sourav',to_date('22-AUG-21','DD-MON-RR'),'T',17,'FAQANSWER',3);
 REM INSERTING into COURSEBUCKET.PERSON
 SET DEFINE OFF;
 Insert into COURSEBUCKET.PERSON (ID,EMAIL,PASSWORD,FIRST_NAME,LAST_NAME,DOB,INSTITUTION,FB_URL,LINKEDIN_URL,SIGNUP_DATE,ABOUT,COUNTRY_ID,PHOTO_ID,CARD_ID,YOUTUBE_URL,WEBSITE) values ('ashikur','ashikur@gmail.com','$2a$10$H3sU2GqsmMzYDZ2e3Qm0O.xDuj2tPUKpIDX8Rpmx3BQHedwl94Vxa','Ashikur ','Rahman',to_date('19-AUG-80','DD-MON-RR'),'BUET','ashikur','ashikur',to_date('19-AUG-21','DD-MON-RR'),'Assistant Professor of CSE at BUET',1,1,8,'ashikur',null);
@@ -4085,6 +4098,10 @@ Insert into COURSEBUCKET.REVIEW (ID,COURSE_ID,STUDENT_ID,TIME,TEXT) values (1,9,
 Insert into COURSEBUCKET.REVIEW (ID,COURSE_ID,STUDENT_ID,TIME,TEXT) values (2,2,'shafayat',to_date('22-AUG-21','DD-MON-RR'),'This was a very beautiful course .Learned a lot about C++.');
 REM INSERTING into COURSEBUCKET.SLIDER
 SET DEFINE OFF;
+Insert into COURSEBUCKET.SLIDER (ID,FILES_ID,ADMIN_ID,SERIAL) values (11,475,'shammya',1);
+Insert into COURSEBUCKET.SLIDER (ID,FILES_ID,ADMIN_ID,SERIAL) values (12,476,'shammya',2);
+Insert into COURSEBUCKET.SLIDER (ID,FILES_ID,ADMIN_ID,SERIAL) values (13,477,'shammya',3);
+Insert into COURSEBUCKET.SLIDER (ID,FILES_ID,ADMIN_ID,SERIAL) values (14,478,'shammya',4);
 REM INSERTING into COURSEBUCKET.STUDENT
 SET DEFINE OFF;
 Insert into COURSEBUCKET.STUDENT (ID,EDU_STATUS_ID) values ('sakib',5);
@@ -4756,19 +4773,19 @@ Insert into COURSEBUCKET.WEEK (ID,WEEK_NO,TITLE,LAST_UPDATE,COURSE_ID) values (1
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS" ;
 --------------------------------------------------------
---  DDL for Index SYS_C0021614
+--  DDL for Index SLD_UNQ
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "COURSEBUCKET"."SYS_C0021614" ON "COURSEBUCKET"."SLIDER" ("ID") 
+  CREATE UNIQUE INDEX "COURSEBUCKET"."SLD_UNQ" ON "COURSEBUCKET"."SLIDER" ("ID", "FILES_ID") 
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS" ;
 --------------------------------------------------------
---  DDL for Index SLD_UNQ
+--  DDL for Index SYS_C0021614
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "COURSEBUCKET"."SLD_UNQ" ON "COURSEBUCKET"."SLIDER" ("ID", "FILES_ID") 
+  CREATE UNIQUE INDEX "COURSEBUCKET"."SYS_C0021614" ON "COURSEBUCKET"."SLIDER" ("ID") 
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
@@ -4801,160 +4818,6 @@ Insert into COURSEBUCKET.WEEK (ID,WEEK_NO,TITLE,LAST_UPDATE,COURSE_ID) values (1
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS" ;
 --------------------------------------------------------
---  DDL for Trigger COURSE_DELETE
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "COURSEBUCKET"."COURSE_DELETE" 
-BEFORE DELETE
-ON COURSE
-FOR EACH ROW 
-BEGIN
-	DELETE FROM COURSE_LANGUAGE WHERE COURSE_ID = :OLD.ID;
-	DELETE FROM COURSE_PROPERTIES WHERE COURSE_ID = :OLD.ID;
-	DELETE FROM WEEK WHERE COURSE_ID = :OLD.ID;
-	DELETE FROM REVIEW WHERE COURSE_ID = :OLD.ID;
-	DELETE FROM RATING WHERE COURSE_ID = :OLD.ID;
-	DBMS_OUTPUT.put_line('Ok');
-END;
-
-/
-ALTER TRIGGER "COURSEBUCKET"."COURSE_DELETE" ENABLE;
---------------------------------------------------------
---  DDL for Trigger NTFCN_AUTO_DELETE
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "COURSEBUCKET"."NTFCN_AUTO_DELETE" 
-BEFORE INSERT 
-ON NOTIFICATION 
-FOR EACH ROW
-
-BEGIN
-  ERASE_NOTIFICATION(10,:new.USER_ID);
-END;
-
-/
-ALTER TRIGGER "COURSEBUCKET"."NTFCN_AUTO_DELETE" ENABLE;
---------------------------------------------------------
---  DDL for Trigger NTFCN_AUTO_ID
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "COURSEBUCKET"."NTFCN_AUTO_ID" 
-BEFORE INSERT 
-ON NOTIFICATION 
-FOR EACH ROW
-
-BEGIN
-  :new.ID := NOTIFICATION_ID.nextval;
-END;
-
-/
-ALTER TRIGGER "COURSEBUCKET"."NTFCN_AUTO_ID" ENABLE;
---------------------------------------------------------
---  DDL for Trigger WEEK_DELETE
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "COURSEBUCKET"."WEEK_DELETE" 
-BEFORE DELETE
-ON WEEK
-FOR EACH ROW 
-BEGIN
-	DELETE FROM LECTURE WHERE WEEK_ID = :OLD.ID;
-	DBMS_OUTPUT.put_line('Ok');
-END;
-
-/
-ALTER TRIGGER "COURSEBUCKET"."WEEK_DELETE" ENABLE;
---------------------------------------------------------
---  DDL for Trigger COURSE_DELETE
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "COURSEBUCKET"."COURSE_DELETE" 
-BEFORE DELETE
-ON COURSE
-FOR EACH ROW 
-BEGIN
-	DELETE FROM COURSE_LANGUAGE WHERE COURSE_ID = :OLD.ID;
-	DELETE FROM COURSE_PROPERTIES WHERE COURSE_ID = :OLD.ID;
-	DELETE FROM WEEK WHERE COURSE_ID = :OLD.ID;
-	DELETE FROM REVIEW WHERE COURSE_ID = :OLD.ID;
-	DELETE FROM RATING WHERE COURSE_ID = :OLD.ID;
-	DBMS_OUTPUT.put_line('Ok');
-END;
-
-/
-ALTER TRIGGER "COURSEBUCKET"."COURSE_DELETE" ENABLE;
---------------------------------------------------------
---  DDL for Trigger NTFCN_AUTO_ID
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "COURSEBUCKET"."NTFCN_AUTO_ID" 
-BEFORE INSERT 
-ON NOTIFICATION 
-FOR EACH ROW
-
-BEGIN
-  :new.ID := NOTIFICATION_ID.nextval;
-END;
-
-/
-ALTER TRIGGER "COURSEBUCKET"."NTFCN_AUTO_ID" ENABLE;
---------------------------------------------------------
---  DDL for Trigger NTFCN_AUTO_DELETE
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "COURSEBUCKET"."NTFCN_AUTO_DELETE" 
-BEFORE INSERT 
-ON NOTIFICATION 
-FOR EACH ROW
-
-BEGIN
-  ERASE_NOTIFICATION(10,:new.USER_ID);
-END;
-
-/
-ALTER TRIGGER "COURSEBUCKET"."NTFCN_AUTO_DELETE" ENABLE;
---------------------------------------------------------
---  DDL for Trigger WEEK_DELETE
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "COURSEBUCKET"."WEEK_DELETE" 
-BEFORE DELETE
-ON WEEK
-FOR EACH ROW 
-BEGIN
-	DELETE FROM LECTURE WHERE WEEK_ID = :OLD.ID;
-	DBMS_OUTPUT.put_line('Ok');
-END;
-
-/
-ALTER TRIGGER "COURSEBUCKET"."WEEK_DELETE" ENABLE;
---------------------------------------------------------
---  DDL for Procedure ERASE_NOTIFICATION
---------------------------------------------------------
-set define off;
-
-  CREATE OR REPLACE PROCEDURE "COURSEBUCKET"."ERASE_NOTIFICATION" (n IN NUMBER,userid IN VARCHAR2) IS
-
-	r NUMBER := 1;
-
-BEGIN
-	FOR it IN (SELECT ID from NOTIFICATION WHERE USER_ID = userid ORDER BY TIME DESC) LOOP
-        IF r > n THEN
-            DELETE FROM NOTIFICATION WHERE ID = it.ID ;
-        END IF;
-        r := r+1;
-	END LOOP;
-
-EXCEPTION
-    WHEN no_data_found THEN
-        dbms_output.put_line('invalid employee id');
-    WHEN others THEN
-        dbms_output.put_line('unknown error' );
-
-END;
-
-/
---------------------------------------------------------
 --  DDL for Function GET_RATING
 --------------------------------------------------------
 
@@ -4979,6 +4842,7 @@ BEGIN
 	RETURN RATING_VALUE;
 END;
 
+
 /
 --------------------------------------------------------
 --  DDL for Function GET_REVIEW
@@ -5001,6 +4865,7 @@ BEGIN
 	RETURN REVIEW_VALUE;
 END;
 
+
 /
 --------------------------------------------------------
 --  DDL for Function NUM_OF_STUDENT
@@ -5022,6 +4887,7 @@ BEGIN
 	END LOOP;
 	RETURN NUM;
 END;
+
 
 /
 --------------------------------------------------------
@@ -5950,6 +5816,8 @@ END;
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS"  ENABLE;
+ 
+  ALTER TABLE "COURSEBUCKET"."SLIDER" MODIFY ("SERIAL" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table STUDENT
 --------------------------------------------------------

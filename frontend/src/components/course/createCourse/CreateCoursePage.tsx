@@ -12,51 +12,7 @@ import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import CourseService from "../api/CourseService";
 import { LandingPage } from "./Landing";
-import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "#282C34",
-    flexGrow: 1,
-    padding: 5,
-    "& > *": {
-      color: "white",
-    },
-    "& input": {
-      color: "white",
-    },
-    "& fieldset": {
-      border: "2px solid white",
-    },
-    "& fieldset:focus": {
-      border: "2px solid gray",
-    },
-  },
-  logo: {
-    width: 50,
-    height: 50,
-  },
-  title: {
-    display: "block-inline",
-    textAlign: "center",
-    marginLeft: theme.spacing(1),
-    [theme.breakpoints.down("sm")]: {
-      flexGrow: 1,
-      padding: 0,
-    },
-    color: "inherit",
-  },
-  input: {
-    flexGrow: 1,
-  },
-  inputRoot: {
-    flexGrow: 1,
-    color: "inherit",
-    borderRadius: "35px",
-    padding: theme.spacing(0, 2, 0, 3),
-    margin: theme.spacing(0, 3),
-  },
-}));
 function CreateCourse(props) {
   let { courseId } = useParams();
   let history = useHistory();
@@ -276,16 +232,10 @@ function CreateCourse(props) {
     console.log(course);
   }
 
-  const classes = useStyles();
   const topics: Array<IDrawerLayoutObject> = [
     {
       label: "Landing Page",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/landingpage.png").default}
-        />
-      ),
+      icon: icon,
       content: (
         <LandingPage
           course={course}
@@ -295,12 +245,7 @@ function CreateCourse(props) {
     },
     {
       label: "Target Your Student",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/target.png").default}
-        />
-      ),
+      icon: <InboxIcon />,
       content: (
         <TargetStudent
           course={course}
@@ -310,12 +255,7 @@ function CreateCourse(props) {
     },
     {
       label: "Set your curriculum",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/curriculum.png").default}
-        />
-      ),
+      icon: icon,
       content: (
         <Curriculum
           editable={true}
@@ -326,12 +266,7 @@ function CreateCourse(props) {
     },
     {
       label: "Set a price",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/price.png").default}
-        />
-      ),
+      icon: icon,
       content: (
         <CoursePrice
           course={course}

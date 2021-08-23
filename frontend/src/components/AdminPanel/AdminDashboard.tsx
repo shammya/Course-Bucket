@@ -18,51 +18,6 @@ import LanguageComponent from "./LanguageComponent";
 import SliderComponent from "./SliderComponent";
 import StudentInfoComponent from "./StudentInfoComponent";
 import TeacherInfoComponent from "./TeacherInfoComponent";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "#282C34",
-    flexGrow: 1,
-    padding: 5,
-    "& > *": {
-      color: "white",
-    },
-    "& input": {
-      color: "white",
-    },
-    "& fieldset": {
-      border: "2px solid white",
-    },
-    "& fieldset:focus": {
-      border: "2px solid gray",
-    },
-  },
-  logo: {
-    width: 50,
-    height: 50,
-  },
-  title: {
-    display: "block-inline",
-    textAlign: "center",
-    marginLeft: theme.spacing(1),
-    [theme.breakpoints.down("sm")]: {
-      flexGrow: 1,
-      padding: 0,
-    },
-    color: "inherit",
-  },
-  input: {
-    flexGrow: 1,
-  },
-  inputRoot: {
-    flexGrow: 1,
-    color: "inherit",
-    borderRadius: "35px",
-    padding: theme.spacing(0, 2, 0, 3),
-    margin: theme.spacing(0, 3),
-  },
-}));
 
 function AdminDashboard() {
   const [columns, setColumns] = useState([
@@ -79,7 +34,6 @@ function AdminDashboard() {
     // { title: "Purchase time", field: "time", editable: "never" },
     // { title: "Purchase Amount", field: "amount", editable: "never" },
   ]);
-  const classes = useStyles();
   const [data, setData] = useState([
     {
       image: <Image />,
@@ -94,12 +48,7 @@ function AdminDashboard() {
     {
       label: "Overview",
       urlShort: "overview",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/overview.png").default}
-        />
-      ),
+      icon: <Looks />,
       content: (
         <Grid container spacing={2}>
           <Grid item>
@@ -120,100 +69,55 @@ function AdminDashboard() {
     {
       label: "Homepage Slider",
       urlShort: "slider-manager",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/list.png").default}
-        />
-      ),
+      icon: <Language />,
       content: <SliderComponent />,
     },
     {
       label: "Student Info",
       urlShort: "student-info",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/student.png").default}
-        />
-      ),
+      icon: <Language />,
       content: <StudentInfoComponent />,
     },
     {
       label: "Teacher Info",
       urlShort: "teacher-info",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/teacher.png").default}
-        />
-      ),
+      icon: <Language />,
       content: <TeacherInfoComponent />,
     },
     {
       label: "Course Approval",
       urlShort: "course-approval",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/course.png").default}
-        />
-      ),
+      icon: <Language />,
       content: <CourseApprovalComponent />,
     },
     {
       label: "Category",
       urlShort: "category",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/root.png").default}
-        />
-      ),
+      icon: <Category />,
       content: <MultiSelectTreeView />,
     },
     {
       label: "Country",
       urlShort: "country",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/country.png").default}
-        />
-      ),
+      icon: <ImEarth />,
       content: <CountryComponent />,
     },
     {
       label: "Language",
       urlShort: "language",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/language.png").default}
-        />
-      ),
+      icon: <Language />,
       content: <LanguageComponent />,
     },
     {
       label: "Designation",
       urlShort: "designation",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/designation.png").default}
-        />
-      ),
+      icon: <Language />,
       content: <DesignationComponent />,
     },
     {
       label: "Educational Status",
       urlShort: "educational-status",
-      icon: (
-        <img
-          className={classes.logo}
-          src={require("assets/img/edustatus.png").default}
-        />
-      ),
+      icon: <Language />,
       content: <EduStatusComponent />,
     },
   ];

@@ -1,4 +1,5 @@
 // components
+import Footer from "components/footer/Footer";
 import { Header } from "components/header/Header";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
@@ -21,7 +22,7 @@ export default function User({
           <div style={{ margin: "0 auto", maxWidth: "1400px", padding: 20 }}>
             {loading ? <SimpleBackdrop /> : children}
           </div>
-          {/* <Footer /> */}
+          {!loading && <Footer />}
         </section>
       </main>
     </>
