@@ -1,19 +1,19 @@
+import AdminDashboard from "components/AdminPanel/AdminDashboard";
+import CategoryCourse from "components/course/CategoryCourse";
 import { CourseView } from "components/course/courseView/CoursePage";
 import CreateCourse from "components/course/createCourse/CreateCoursePage";
 import { Home } from "components/Home";
-import Profile from "components/person/Profile";
-import ProfileDetails from "components/person/ProfileDetails";
-import "devextreme/dist/css/dx.common.css";
-import "devextreme/dist/css/dx.light.css";
-import React from "react";
-import { Fade } from "@material-ui/core";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { FileUploader } from "tools/FileUploader";
-import AdminDashboard from "components/AdminPanel/AdminDashboard";
 import Dashboard from "components/person/dashboard/Dashboard";
 import MyCourse from "components/person/MyCourse";
+import Profile from "components/person/Profile";
+import ProfileDetails from "components/person/ProfileDetails";
 import Search from "components/search/SearchPage";
+import "devextreme/dist/css/dx.common.css";
+import "devextreme/dist/css/dx.light.css";
 import Auth from "layout/Auth";
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { FileUploader } from "tools/FileUploader";
 
 // export const RouteAddress = {
 //   home: { route: "/home", child: [] },
@@ -44,6 +44,7 @@ function App() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/my-course" component={MyCourse} />
         <Route path="/admin" component={AdminDashboard} />
+        <Route path="/category/:categoryId" component={CategoryCourse} />
 
         <Route path="/file-upload" component={FileUploader} />
         <Route path="/test" component={Auth} />

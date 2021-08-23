@@ -23,12 +23,16 @@ export function InputLayout({
         {children}
       </Grid>
       <Grid item container direction="row" justifyContent="center">
-        <Button color="primary" variant="outlined" onClick={onSave}>
-          Save
-        </Button>
-        <Button color="secondary" variant="outlined" onClick={onCancel}>
-          Cancel
-        </Button>
+        <Grid item>
+          <Button color="primary" variant="outlined" onClick={onSave}>
+            Save
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button color="secondary" variant="outlined" onClick={onCancel}>
+            Cancel
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   );

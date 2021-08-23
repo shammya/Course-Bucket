@@ -4,7 +4,7 @@ import { GLOBAL } from "Configure.js";
 
 class SliderService {
   getSliders() {
-    return axios.get(GLOBAL.HOST + "/get-slider-images", authHeaders());
+    return axios.get(GLOBAL.HOST + "/public/get-slider-images", authHeaders());
   }
   deleteSlider(id) {
     return axios.delete(GLOBAL.HOST + `/delete-slider/${id}`, authHeaders());

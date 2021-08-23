@@ -58,7 +58,7 @@ export function RatingLineChart() {
   }, []);
   console.log(dataSource);
   return (
-    <Card>
+    <Card className="chart">
       <CardContent style={{ textAlign: "center" }}>
         <Chart title="Rating" dataSource={dataSource}>
           <CommonSeriesSettings argumentField="date" type="spline" />

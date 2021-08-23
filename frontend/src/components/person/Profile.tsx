@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -323,7 +322,7 @@ const Profile = () => {
         <CreateItem attribute="About" value={person?.about} />
         <CreateItem attribute="Contact">
           <Grid container direction="column" spacing={1}>
-            <Grid item container>
+            {/* <Grid item container>
               <Button
                 style={{ width: "100%" }}
                 variant="contained"
@@ -331,7 +330,7 @@ const Profile = () => {
               >
                 Send Message
               </Button>
-            </Grid>
+            </Grid> */}
             {person?.fbURL && (
               <Grid item>
                 <ContactChip

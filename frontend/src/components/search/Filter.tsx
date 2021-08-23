@@ -12,7 +12,6 @@ import {
 } from "@material-ui/core";
 import { Cancel } from "@material-ui/icons";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import input from "postcss/lib/input";
 import React, { useEffect, useState } from "react";
 import { Sticky } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
@@ -188,7 +187,7 @@ function Filter({
           )}
         </Sticky>
 
-        {filterDataList.map((filter, index) => (
+        {filterDataList2?.map((filter, index) => (
           <TabPanel value={tabValue} index={index} key={index}>
             <GenerateFilterValue
               filteredData={filteredData}
@@ -218,15 +217,17 @@ function Filter({
   return (
     <>
       <Grid
-        sm={12}
-        xs={6}
-        item
         container
         justifyContent="space-between"
+        alignItems="center"
         onClick={(event) => setOpenDrawer(true)}
       >
-        <Typography variant="h6">Filter by</Typography>
-        <FilterListIcon />
+        <Grid item>
+          <Typography variant="h6">Filter by</Typography>
+        </Grid>
+        <Grid item>
+          <FilterListIcon />
+        </Grid>
       </Grid>
 
       <Responsive displayIn={["Mobile"]}>

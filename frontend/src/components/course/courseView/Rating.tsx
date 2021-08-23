@@ -49,7 +49,7 @@ function RatingBox({
         setRatingValue(response.data);
       });
     }
-  }, [courseId]);
+  }, [courseId, data]);
   function handleRatingSubmit() {
     CourseService.submitRating(courseId, ratingValue).then((response) => {
       if (response.status == 200) {

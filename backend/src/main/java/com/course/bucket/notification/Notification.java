@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.course.bucket.course.Course;
 import com.course.bucket.database.DB;
+import com.course.bucket.person.Admin;
 import com.course.bucket.tools.ToolKit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -231,6 +232,11 @@ public class Notification {
 		DB.execute(sql, id.toString(), userId, fromId, ToolKit.JDateToDDate(new Date()), courseId.toString(), type,
 				eventId.toString());
 
+	}
+	
+	public static void seenAllNotification(String username) {
+		boolean admin = Admin.isAdmin(username);
+		DB.execute("UPDATE NOTIFICATION SET SEEN = 'T' WHERE USER_ID = '#'", admin?"admin":username);
 	}
 
 //	public static ObjectNode getRegisteredPersonNotification(ObjectMapper mapper, String fromId) {

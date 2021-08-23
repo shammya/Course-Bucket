@@ -266,6 +266,7 @@ export function Header() {
             className={classes.title}
             variant="h6"
             noWrap
+            style={{ cursor: "pointer" }}
             onClick={(event) => history.push("/home")}
           >
             Course Bucket
@@ -431,10 +432,11 @@ export function Header() {
             </Grid>
           </>
         ) : (
-          <Responsive displayIn={["Laptop", "Tablet"]}>
+          <Responsive displayIn={["Laptop", "Tablet", "Mobile"]}>
             <Button
               variant="contained"
               color="primary"
+              style={{ margin: 12 }}
               onClick={(event) => {
                 history.push("/auth/signin");
               }}

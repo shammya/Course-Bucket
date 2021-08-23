@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       color: "rgba(255, 255, 255)",
       border: "2px solid #b0bec5",
+      backgroundColor: "#445F67",
     },
   })
 );
@@ -144,7 +145,6 @@ export default function BasicImageList() {
       </Grid>
       <Grid item container>
         <FileUploader
-          classes={{ text: "color-white" }}
           fileObjects={files}
           onChange={setFiles}
           filesLimit={10}

@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { Grid, IconButton, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import TreeView from '@material-ui/lab/TreeView';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import TreeItem from '@material-ui/lab/TreeItem';
-import { Grid, IconButton, Typography, TextField } from '@material-ui/core'
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import UpdateIcon from '@material-ui/icons/Update';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CancelIcon from '@material-ui/icons/Cancel';
-import CategoryService from '../AdminPanel/api/CategoryService.js'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import UpdateIcon from '@material-ui/icons/Update';
+import TreeItem from '@material-ui/lab/TreeItem';
+import TreeView from '@material-ui/lab/TreeView';
+import React, { useEffect, useState } from 'react';
+import CategoryService from '../AdminPanel/api/CategoryService.js';
 
 const useStyles = makeStyles({
   root: {
-    height: 216,
     flexGrow: 1,
     maxWidth: 400,
+    color: 'wheat',
+    backgroundColor: '#234042',
+    margin: '0 auto',
   },
   iconContainer: {
     opacity: "0.3",
@@ -127,7 +129,7 @@ export default function MultiSelectTreeView() {
     }
 
     function onUpdateClicked(id) {
-       setShowTextField(id);
+      setShowTextField(id);
     }
     //console.log(data)
     if (data.length === 0) return null;
@@ -143,13 +145,20 @@ export default function MultiSelectTreeView() {
                   </Grid>
                   <Grid item className={classes.iconContainer}>
                     <IconButton>
-                      <UpdateIcon onClick={() => onUpdateClicked(item.id) } />
+                      <UpdateIcon onClick={(event) => {
+                        event.stopPropagation();
+                        onUpdateClicked(item.id)
+                      }} />
                     </IconButton>
                     <IconButton>
-                      <DeleteForeverIcon onClick={() => { callDeleteCategory(item.id) }} />
+                      <DeleteForeverIcon onClick={(event) => {
+                        event.stopPropagation();
+                        callDeleteCategory(item.id)
+                      }} />
                     </IconButton>
                     <IconButton>
-                      <AddCircleIcon onClick={() => {
+                      <AddCircleIcon onClick={(event) => {
+                        event.stopPropagation();
                         let obj = { name: "New category", parentId: item.id, adminId: 'shammya', children: [] };
                         //item.children = [...item.children, obj];
 
@@ -169,18 +178,26 @@ export default function MultiSelectTreeView() {
                       variant="outlined"
                       defaultValue={item.name}
                       onChange={handleTextFieldDataChange}
+                      onClick={event =>
+                        event.stopPropagation()}
                     />
                   </Grid>
                   <Grid item className={classes.iconContainer}>
                     <IconButton>
-                      <CheckCircleOutlineIcon onClick={() => { 
-                        let category = { id :item.id ,name: textFieldData, parentId: item.parentId, adminId: 'shammya', children: [] };
-                        callUpdateCategory(category) ; setShowTextField(0); }} 
-                        />
+                      <CheckCircleOutlineIcon onClick={(event) => {
+                        event.stopPropagation();
+                        let category = { id: item.id, name: textFieldData, parentId: item.parentId, adminId: 'shammya', children: [] };
+                        callUpdateCategory(category); setShowTextField(0);
+                      }}
+                      />
                       {/* <CheckCircleOutlineIcon onClick={() => onTickClicked(item.id, textFieldData)} /> */}
                     </IconButton>
                     <IconButton>
-                      <CancelIcon onClick={onCancelClicked} />
+                      <CancelIcon onClick={event => {
+
+                        event.stopPropagation();
+                        onCancelClicked();
+                      }} />
                     </IconButton>
                   </Grid>
                 </Grid>)}
@@ -195,17 +212,23 @@ export default function MultiSelectTreeView() {
     )
   }
   return (
-    <>
-      <h3>Category List</h3>
-      <TreeView
-        className={classes.root}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-        multiSelect
-        onNodeSelect={PrintClickedLabel}
-      >
-        <AddData data={treeData} />
-      </TreeView>
-    </>
+    <Grid container direction="column" spacing={2} justifyContent='center'>
+      <Grid item>
+
+        <h3 style={{ textAlign: 'center', color: 'white' }}>Category List</h3>
+      </Grid>
+      <Grid item>
+
+        <TreeView
+          className={classes.root}
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+          multiSelect
+          onNodeSelect={PrintClickedLabel}
+        >
+          <AddData data={treeData} />
+        </TreeView>
+      </Grid>
+    </Grid>
   );
 }

@@ -1,4 +1,7 @@
 import { Card, CardContent } from "@material-ui/core";
+import axios from "axios";
+import { authHeaders } from "components/auth/api/AuthService";
+import { GLOBAL } from "Configure.js";
 import {
   Chart,
   Export,
@@ -9,9 +12,6 @@ import {
   Tooltip,
   ZoomAndPan,
 } from "devextreme-react/chart";
-import axios from "axios";
-import { authHeaders } from "components/auth/api/AuthService";
-import { GLOBAL } from "Configure.js";
 import React, { useEffect, useState } from "react";
 
 function PopularCategoryChart() {
@@ -42,7 +42,7 @@ function PopularCategoryChart() {
   }, []);
 
   return (
-    <Card>
+    <Card className="chart">
       <CardContent>
         <Chart title="Popular Category" dataSource={dataSource} rotated={true}>
           <Series

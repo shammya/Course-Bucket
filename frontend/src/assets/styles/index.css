@@ -48,3 +48,32 @@ img {
 .color-white {
   color: white;
 }
+
+.carousel-root {
+  width: "100%";
+  justify-content: "center";
+}
+.chart {
+  background-color: #b3eced !important;
+}
+.chart .MuiInputBase-root {
+  background-color: "#234042";
+}
+.MuiGrid-root a:hover {
+  color: aquamarine !important;
+}
+.main-nav-name {
+  color: black !important;
+}
+a {
+  cursor: pointer;
+}
+/* a:hover .main-nav-name a {
+  color: rgb(71, 71, 71) !important;
+} */
+/* .dx-visibility-change-handler text {
+  fill: white !important;
+}
+.dx-export-menu-list{
+  fill: #234042;
+} */

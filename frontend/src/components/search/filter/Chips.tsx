@@ -10,10 +10,10 @@ function CustomChip({
   label: string;
 }) {
   return (
-    <Grid item sm>
+    <Grid item>
       <Chip
         size="medium"
-        style={{ width: "100%", marginTop: 5, marginRight: 5 }}
+        style={{ marginTop: 5, marginRight: 5 }}
         label={label}
         onDelete={onDelete}
         color="secondary"
@@ -30,7 +30,7 @@ export function FilterChips({
   onDelete: (value: IFilteredValue, type: "ADD" | "REMOVE") => void;
 }) {
   return (
-    <Grid id="chipsContainer" sm item container>
+    <Grid id="chipsContainer" item container>
       {filteredData.map((filter, index) => (
         <React.Fragment key={filter.id + filter.title}>
           {filter.type === "SLIDER" ? (
