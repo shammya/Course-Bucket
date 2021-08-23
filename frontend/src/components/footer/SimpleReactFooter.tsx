@@ -17,31 +17,34 @@ function SimpleReactFooter(props) {
       className="footer-container"
     >
       <Grid container>
-        <Grid item container sm={4} xs={12}>
-          {props.columns.map((column) => (
-            <Grid className="grid-item" item sm={12} xs={6}>
-              <div
-                style={{ color: props.fontColor || "black" }}
-                className="second-title"
-              >
-                {column.title}
-              </div>
-              {column.resources.map((resource) => (
-                <div key={resource.id}>
-                  <a
-                    href={`${resource.link}`}
-                    target="_blank"
-                    style={{ color: props.fontColor || "black" }}
-                    className="resources"
-                  >
-                    {resource.name}
-                  </a>
+        {props.columns.length !== 0 && (
+          <Grid item container sm={4} xs={12}>
+            {props.columns.map((column) => (
+              <Grid className="grid-item" item sm={12} xs={6}>
+                <div
+                  style={{ color: props.fontColor || "black" }}
+                  className="second-title"
+                >
+                  {column.title}
                 </div>
-              ))}
-            </Grid>
-          ))}
-        </Grid>
-        <Grid item xs={6} sm={4}>
+                {column.resources.map((resource) => (
+                  <div key={resource.id}>
+                    <a
+                      href={`${resource.link}`}
+                      target="_blank"
+                      style={{ color: props.fontColor || "black" }}
+                      className="resources"
+                    >
+                      as {resource.name}
+                    </a>
+                  </div>
+                ))}
+              </Grid>
+            ))}
+          </Grid>
+        )}
+
+        <Grid item xs={6} sm={props.columns.length === 0 ? 6 : 4}>
           <Grid
             container
             direction="column"
@@ -49,7 +52,10 @@ function SimpleReactFooter(props) {
             alignItems="center"
           >
             <Grid item>
-              <Avatar src="" style={{ width: 180, height: 180 }} />
+              <Avatar
+                src="https://avatars.githubusercontent.com/u/46004817?v=4"
+                style={{ width: 180, height: 180 }}
+              />
             </Grid>
             <Grid
               item
@@ -67,19 +73,19 @@ function SimpleReactFooter(props) {
             </Grid>
             <Grid item container justifyContent="center">
               <Grid item>
-                <IconButton href="wwww.fb.com/66.mehedi">
+                <IconButton href="https://www.fb.com/66.mehedi">
                   <Facebook style={{ color: "#FFFFBA" }} />
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton href="wwww.google.com/66.mehedi">
+                <IconButton href="https://www.google.com/66.mehedi">
                   <Mail style={{ color: "#FFFFBA" }} />
                 </IconButton>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={6} sm={props.columns.length === 0 ? 6 : 4}>
           <Grid
             container
             direction="column"
@@ -87,7 +93,10 @@ function SimpleReactFooter(props) {
             alignItems="center"
           >
             <Grid item>
-              <Avatar src="" style={{ width: 180, height: 180 }} />
+              <Avatar
+                src="https://avatars.githubusercontent.com/u/46061332?v=4"
+                style={{ width: 180, height: 180 }}
+              />
             </Grid>
             <Grid
               item
@@ -105,12 +114,12 @@ function SimpleReactFooter(props) {
             </Grid>
             <Grid item container justifyContent="center">
               <Grid item>
-                <IconButton href="wwww.fb.com/kazishammu">
+                <IconButton href="https://www.fb.com/kazishammu">
                   <Facebook style={{ color: "#FFFFBA" }} />
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton href="wwww.google.com/kazishammu">
+                <IconButton href="https://www.google.com/kazishammu">
                   <Mail style={{ color: "#FFFFBA" }} />
                 </IconButton>
               </Grid>
