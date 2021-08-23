@@ -1,4 +1,4 @@
-import { Snackbar } from "@material-ui/core";
+import { Paper, Snackbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -128,7 +128,7 @@ export function ForgotPassword({ signOut }: { signOut: boolean }) {
     setOpenSuccess(false);
   }
   return (
-    <>
+    <Grid component={Paper} elevation={6} square style={{ padding: 5 }}>
       {signOut && (
         <>
           <div className={classes.paper}>
@@ -291,6 +291,6 @@ export function ForgotPassword({ signOut }: { signOut: boolean }) {
           </div>
         </>
       )}
-    </>
+    </Grid>
   );
 }

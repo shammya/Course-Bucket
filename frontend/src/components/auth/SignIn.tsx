@@ -102,7 +102,7 @@ export function SignIn({ signOut }: { signOut: boolean }) {
     setOpen(false);
   }
   return (
-    <Grid component={Paper} elevation={6} square>
+    <Grid component={Paper} elevation={6} square style={{ padding: 5 }}>
       {signOut && (
         <>
           <Snackbar

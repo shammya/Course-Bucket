@@ -115,136 +115,135 @@ export function SignUp({ signOut }: { signOut: boolean }) {
     }
   }
   return (
-    <>
+    <Grid component={Paper} elevation={6} square style={{ padding: 5 }}>
       {signOut && (
-        
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign up
-            </Typography>
-            <form
-              className={classes.form}
-              onSubmit={handleSubmitClicked}
-              autoComplete="off"
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form
+            className={classes.form}
+            onSubmit={handleSubmitClicked}
+            autoComplete="off"
+          >
+            <Grid container spacing={2}>
+              <Grid item container>
+                <FormControl
+                  variant="outlined"
+                  className={classes.formControl}
+                  fullWidth
+                  required
+                >
+                  <InputLabel>Your Status</InputLabel>
+                  <Select
+                    label="Your Status"
+                    variant="outlined"
+                    value={status}
+                    onChange={(event) =>
+                      setStatus(event.target.value as string)
+                    }
+                  >
+                    <MenuItem key="Student" value={"Student"}>
+                      Student
+                    </MenuItem>
+                    <MenuItem key="Teacher" value={"Teacher"}>
+                      Teacher
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item container>
+                <ControlledTextfield
+                  error={usernameFound}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Username"
+                  onBlur={(event) => {
+                    checkUsername(event.target.value);
+                  }}
+                  onFocus={(event) => setUsernameFound(false)}
+                  onChange={(event) => {
+                    checkUsername(event.target.value);
+                    setUsername(event.target.value);
+                  }}
+                  helperText={usernameFound ? "Username already exist" : ""}
+                  pattern="letters-digits"
+                />
+              </Grid>
+              <Grid item container>
+                <TextField
+                  error={emailFound}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Email Address"
+                  type="email"
+                  onBlur={(event) => {
+                    checkEmail(event.target.value);
+                  }}
+                  autoComplete="off"
+                  onFocus={(event) => setEmailFound(false)}
+                  onChange={(event) => {
+                    checkEmail(event.target.value);
+                    setEmail(event.target.value);
+                  }}
+                  helperText={emailFound ? "E-mail already exist" : ""}
+                />
+              </Grid>
+              <Grid item container>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  autoComplete="off"
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </Grid>
+              <Grid item container>
+                <TextField
+                  error={againPassword != "" && password !== againPassword}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Password (Again)"
+                  type="password"
+                  onChange={(event) => setAgainPassword(event.target.value)}
+                  helperText={
+                    password !== againPassword ? "Password mismatch" : ""
+                  }
+                />
+              </Grid>
+            </Grid>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              type="submit"
             >
-              <Grid container spacing={2}>
-                <Grid item container>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                    fullWidth
-                    required
-                  >
-                    <InputLabel>Your Status</InputLabel>
-                    <Select
-                      label="Your Status"
-                      variant="outlined"
-                      value={status}
-                      onChange={(event) =>
-                        setStatus(event.target.value as string)
-                      }
-                    >
-                      <MenuItem key="Student" value={"Student"}>
-                        Student
-                      </MenuItem>
-                      <MenuItem key="Teacher" value={"Teacher"}>
-                        Teacher
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item container>
-                  <ControlledTextfield
-                    error={usernameFound}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    label="Username"
-                    onBlur={(event) => {
-                      checkUsername(event.target.value);
-                    }}
-                    onFocus={(event) => setUsernameFound(false)}
-                    onChange={(event) => {
-                      checkUsername(event.target.value);
-                      setUsername(event.target.value);
-                    }}
-                    helperText={usernameFound ? "Username already exist" : ""}
-                    pattern="letters-digits"
-                  />
-                </Grid>
-                <Grid item container>
-                  <TextField
-                    error={emailFound}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    label="Email Address"
-                    type="email"
-                    onBlur={(event) => {
-                      checkEmail(event.target.value);
-                    }}
-                    autoComplete="off"
-                    onFocus={(event) => setEmailFound(false)}
-                    onChange={(event) => {
-                      checkEmail(event.target.value);
-                      setEmail(event.target.value);
-                    }}
-                    helperText={emailFound ? "E-mail already exist" : ""}
-                  />
-                </Grid>
-                <Grid item container>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    label="Password"
-                    type="password"
-                    autoComplete="off"
-                    onChange={(event) => setPassword(event.target.value)}
-                  />
-                </Grid>
-                <Grid item container>
-                  <TextField
-                    error={againPassword != "" && password !== againPassword}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    label="Password (Again)"
-                    type="password"
-                    onChange={(event) => setAgainPassword(event.target.value)}
-                    helperText={
-                      password !== againPassword ? "Password mismatch" : ""
-                    }
-                  />
-                </Grid>
+              Sign Up
+            </Button>
+            <Grid container justifyContent="center">
+              <Grid item>
+                <Link
+                  to={
+                    location.pathname.split("/").slice(0, -1).join("/") +
+                    "/signin"
+                  }
+                >
+                  Already have an account? Sign in
+                </Link>
               </Grid>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                type="submit"
-              >
-                Sign Up
-              </Button>
-              <Grid container justifyContent="center">
-                <Grid item>
-                  <Link
-                    to={
-                      location.pathname.split("/").slice(0, -1).join("/") +
-                      "/signin"
-                    }
-                  >
-                    Already have an account? Sign in
-                  </Link>
-                </Grid>
-              </Grid>
-            </form>
-          </div>
+            </Grid>
+          </form>
+        </div>
       )}
-    </>
+    </Grid>
   );
 }
