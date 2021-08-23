@@ -14,7 +14,7 @@ import React from "react";
 
 export const useStyles = makeStyles((theme) => ({
   menuContainer: {
-    backgroundColor: "#ffc107",
+    backgroundColor: "#F3AA08",
     padding: 8,
   },
   menuItemWrapper: {
@@ -30,17 +30,16 @@ export const useStyles = makeStyles((theme) => ({
   subMenuContainer: {
     position: "absolute",
     overflow: "hidden",
-    backgroundColor: "#fd7e14",
+    backgroundColor: "#445F67",
     zIndex: 100,
     [theme.breakpoints.down("sm")]: {
       position: "relative",
       marginLeft: "20px",
-      // right: "80%",
-      // width: "100%",
     },
   },
   subMenuItem: {
     padding: theme.spacing(1, 3),
+    color: "white",
   },
   drawer: {
     [theme.breakpoints.down("sm")]: {

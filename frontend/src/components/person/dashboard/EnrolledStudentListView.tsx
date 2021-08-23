@@ -25,7 +25,10 @@ export function EnrolledStudentListView() {
     });
   }, []);
   return (
-    <CustomPagination objectsPerPage={3} noContentText="You have no enrolled student">
+    <CustomPagination
+      objectsPerPage={3}
+      noContentText="You have no enrolled student"
+    >
       {studentsWithCourses?.map((studentsWithCourse) => (
         <ContentHeader
           key={studentsWithCourse.courseId}
@@ -36,7 +39,10 @@ export function EnrolledStudentListView() {
         >
           <CustomPagination type="calculate-by-width">
             {studentsWithCourse?.studentInfoList?.map((student) => (
-              <Card key={student.studentUsername}>
+              <Card
+                key={student.studentUsername}
+                style={{ backgroundColor: "#546e7a" }}
+              >
                 <CardActionArea
                   onClick={(event) =>
                     history.push(`/profile/${student.studentUsername}`)

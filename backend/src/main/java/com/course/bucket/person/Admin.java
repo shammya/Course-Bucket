@@ -462,32 +462,6 @@ public class Admin extends Person{
 		return null;
  	}
 	
-	public static ArrayList<Slider> getSliderImages(){
-		ArrayList<Slider> sliders = new ArrayList<>();
-		
-		String sql = "SELECT\r\n"
-				+ "	s.id slider_id,\r\n"
-				+ "	f.id file_id,\r\n"
-				+ "	f.content content \r\n"
-				+ "FROM\r\n"
-				+ "	slider s,\r\n"
-				+ "	files f \r\n"
-				+ "WHERE\r\n"
-				+ "	s.files_id = f.id";
-		ResultSet rs = DB.executeQuery(sql);
-		
-		try {
-			while(rs.next()) {
-				sliders.add(new Slider(rs.getInt("slider_id"), rs.getInt("file_id"), rs.getString("content")));
-			}
-			return sliders;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	public static void approveCourse(Integer courseId,String adminId) {
 		DB.execute("update course set is_approved = 'T' where id = # ",courseId.toString());
 		ResultSet rs = DB.executeQuery("select teacher_id from course where id = #",courseId.toString() );

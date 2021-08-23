@@ -19,7 +19,7 @@ import {
 } from "@material-ui/core";
 import { DoneAll, LabelImportant, NavigateNext } from "@material-ui/icons";
 import { Rating } from "@material-ui/lab";
-import { Course, Property, PublicResponse, Week } from "classes/Course";
+import { Course, PublicResponse } from "classes/Course";
 import AuthService from "components/auth/api/AuthService";
 import {
   CheckoutDialog,
@@ -43,58 +43,6 @@ import GridImageView from "tools/customDesign/ImageVeiw";
 import { Responsive } from "tools/responsive/Responsive";
 import CourseService from "../api/CourseService";
 import { TeacherMiniInfo } from "./../../../classes/Person";
-
-export const lorem =
-  "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid magni adipisci, a quibusdam deserunt cupiditate. Reprehenderit, molestiae quas minima corporis non nulla perspiciatis esse nostrum in harum eveniet. Repellendus, animi!";
-let course = new Course();
-course = {
-  ...course,
-  title:
-    'Course title Lorem ipsum dolor sit amet consectetur adipisicing "Lorem ipsum dolor sit amet consectetur adipisicing ',
-  subTitle: "Sub",
-  description:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet perspiciatis earum quidem. Numquam, quasi obcaecati similique, architecto dolore laboriosam consectetur sed aliquam nemo, inventore illo! Temporibus vitae harum quaerat earum.",
-  mainPrice: 1200,
-  off: 30,
-  outcomes: [
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-  ],
-  prerequisites: [
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-    lorem,
-  ],
-  properties: [
-    new Property("Lorem ipsum dolor sit ok boss khela hobe amet"),
-    new Property("Lorem ipsum dolor sit ok boss khela hobe amet"),
-    new Property("Lorem ipsum dolor sit ok boss khela hobe amet"),
-    new Property("Lorem ipsum dolor sit ok boss khela hobe amet"),
-    new Property("Lorem ipsum dolor sit ok boss khela hobe amet"),
-    new Property("Lorem ipsum dolor sit ok boss khela hobe amet"),
-    new Property("Lorem ipsum dolor sit ok boss khela hobe amet"),
-    new Property("Lorem ipsum dolor sit ok boss khela hobe amet"),
-  ],
-  weeks: [new Week(), new Week(), new Week()],
-};
 
 const useStyles = makeStyles((theme) => ({
   MuiListItemRoot: {
@@ -264,7 +212,11 @@ export function CourseView() {
             </Grid>
             {course?.languages.map((lang) => (
               <Grid item key={lang.id}>
-                <Chip variant="outlined" color="primary" label={lang.name} />
+                <Chip
+                  style={{ color: "#ACE1E1", border: "2px solid #ACE1E1" }}
+                  variant="outlined"
+                  label={lang.name}
+                />
               </Grid>
             ))}
           </Grid>
@@ -292,7 +244,7 @@ export function CourseView() {
                   // classes={{ root: classes.MuiSvgIconRoot }}
                   //@ts-ignore
                   icon={item.icon.content}
-                  containerStyles={{ fontSize: "15px" }}
+                  containerStyles={{ fontSize: "15px", color: "white" }}
                 />
               </ListItemAvatar>
               <ListItemText>{item.text}</ListItemText>
@@ -307,9 +259,11 @@ export function CourseView() {
     return (
       <Card
         style={{
-          backgroundColor: "cyan",
+          backgroundColor: "black",
           position: "relative",
           overflow: "inherit",
+          boxShadow:
+            "rgb(255 255 255 / 20%) 0px 0px 6px 3px, rgb(120 120 120 / 19%) 0px 0px 20px 7px",
         }}
       >
         <CardContent>
@@ -380,7 +334,7 @@ export function CourseView() {
   }
   function MobileHeader() {
     return (
-      <Card style={{ width: "100%" }}>
+      <Card style={{ width: "100%", backgroundColor: "black" }}>
         <CardContent>
           <Grid container direction="column" spacing={1}>
             <Grid item container>

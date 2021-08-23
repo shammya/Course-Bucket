@@ -9,10 +9,12 @@ import {
   ListItem,
   Popover,
   TextField,
+  Tooltip,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import { Dashboard } from "@material-ui/icons";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
 import { Files } from "classes/Files";
@@ -27,7 +29,7 @@ import { Notification } from "./NotificationPopUp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#2D394B",
+    backgroundColor: "#282C34",
     flexGrow: 1,
     padding: 5,
     "& > *": {
@@ -307,6 +309,7 @@ export function Header() {
         <Grid container spacing={1} alignItems="center">
           <Grid item className={classes.input}>
             <TextField
+              style={{ backgroundColor: "#656B81", color: "white" }}
               placeholder="Search course..."
               fullWidth
               value={value}
@@ -336,7 +339,7 @@ export function Header() {
   }
   function SideMenuPopUp() {
     return (
-      <Grid container direction="column">
+      <Grid container direction="column" style={{ backgroundColor: "#646BB3" }}>
         <Grid
           item
           onClick={(event) => {
@@ -393,6 +396,15 @@ export function Header() {
         {AuthService.isLogin() ? (
           <>
             <Notification />
+            {AuthService.getCurrentAccountType() === "Admin" && (
+              <Tooltip title="Admin Dashboard">
+                <IconButton onClick={(event) => history.push("/admin")}>
+                  <Avatar>
+                    <Dashboard style={{ color: "white" }} />
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+            )}
             <Grid style={{ display: "flex" }}>
               <IconButton
                 onClick={(event: React.MouseEvent<any>) =>

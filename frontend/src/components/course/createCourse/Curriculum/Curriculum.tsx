@@ -1,11 +1,9 @@
 import { Button, Grid } from "@material-ui/core";
 import AddCircle from "@material-ui/icons/AddCircle";
 import { Week } from "classes/Course";
-import React, { useEffect, useState } from "react";
-import { ReactSortable } from "react-sortablejs";
-import { WeekView } from "./WeekView";
 import { useSnackbar } from "notistack";
-import AuthService from "components/auth/api/AuthService";
+import React, { useEffect, useState } from "react";
+import { WeekView } from "./WeekView";
 
 export function Curriculum({ editable, course, onCourseAttrChange }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -38,7 +36,7 @@ export function Curriculum({ editable, course, onCourseAttrChange }) {
     setWeeks([...updWeeks]);
   }
   return (
-    <Grid container direction="column" spacing={1}>
+    <Grid container direction="column" spacing={0}>
       {/*      <ReactSortable
         list={weeks}
         setList={setWeeks}
@@ -47,7 +45,7 @@ export function Curriculum({ editable, course, onCourseAttrChange }) {
       {/* <ReactSortable list={weeks} setList={setWeeks} style={{ width: "100%" }}> */}
       {weeks.map((item, index) => (
         // <div key={item.id}>
-        <Grid item container key={index} style={{ marginBottom: 12 }}>
+        <Grid item container key={index}>
           <WeekView
             editable={editable}
             week={item}

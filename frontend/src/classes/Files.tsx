@@ -55,4 +55,11 @@ export class Files {
   }
 }
 
+export class Slider {
+  id: number;
+  serial: number;
+  file: Files;
+  adminId: string;
+}
+
 export {};

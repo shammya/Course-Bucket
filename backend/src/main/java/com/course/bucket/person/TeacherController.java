@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.course.bucket.authentication.JwtUtils;
 import com.course.bucket.designation.Designation;
+import com.course.bucket.person.others.CourseOverview;
 import com.course.bucket.person.others.CumulativeRating;
 import com.course.bucket.person.others.TeacherMiniInfo;
 import com.course.bucket.course.Course;
@@ -92,6 +93,13 @@ public class TeacherController {
 	@GetMapping("/get-income-per-course-teacher")
 	public ArrayList<IncomePerCourse> getIncomePerCourseTeacher() {
 		return Teacher.getIncomePerCourseTeacher(ToolKit.getCurrentUserName());
+	}
+	
+
+	@PreAuthorize("hasRole('Teacher')")
+	@GetMapping("/get-course-overview-teacher/{id}")
+	public CourseOverview getCourseOverview(@PathVariable Integer id) {
+		return Admin.getCourseOverview(id);
 	}
 //	
 //	@GetMapping("/get-person-by-name/{name}")

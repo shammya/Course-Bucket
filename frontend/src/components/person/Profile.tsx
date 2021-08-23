@@ -17,7 +17,7 @@ import { MiniCourse } from "classes/Course";
 import { Person, Student, Teacher } from "classes/Person";
 import CoursePagination from "components/course/CustomPagination";
 import User from "layout/User";
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TeacherMiniInfo } from "./../../classes/Person";
 import PersonService from "./api/PersonService";
@@ -151,13 +151,15 @@ const Profile = () => {
       title,
       value,
       renderTitle,
+      style,
     }: {
       title?: string;
       value?: string | number;
       renderTitle?: JSX.Element | JSX.Element[];
+      style?: CSSProperties;
     }) {
       return (
-        <Card>
+        <Card style={style}>
           <CardHeader title={value} classes={{ title: classes.cardHeader }} />
           <CardContent classes={{ root: classes.cardContent }}>
             {renderTitle ? renderTitle : title}
@@ -171,16 +173,29 @@ const Profile = () => {
           {person?.accountType === "Teacher" ? (
             <>
               <Grid item md={3} xs={12}>
-                <InfoCard title="Course" value={miniInfo?.courseCount} />
-              </Grid>
-              <Grid item md={3} xs={12}>
-                <InfoCard title="Students" value={miniInfo?.studentCount} />
-              </Grid>
-              <Grid item md={3} xs={12}>
-                <InfoCard title="Review" value={miniInfo?.reviewCount} />
+                <InfoCard
+                  style={{ backgroundColor: "#607d8b" }}
+                  title="Course"
+                  value={miniInfo?.courseCount}
+                />
               </Grid>
               <Grid item md={3} xs={12}>
                 <InfoCard
+                  style={{ backgroundColor: "#607d8b" }}
+                  title="Students"
+                  value={miniInfo?.studentCount}
+                />
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <InfoCard
+                  style={{ backgroundColor: "#607d8b" }}
+                  title="Review"
+                  value={miniInfo?.reviewCount}
+                />
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <InfoCard
+                  style={{ backgroundColor: "#607d8b" }}
                   renderTitle={
                     <Rating value={miniInfo?.rating} precision={0.1} readOnly />
                   }
@@ -192,12 +207,17 @@ const Profile = () => {
             <>
               <Grid item md={3} xs={12}>
                 <InfoCard
+                  style={{ backgroundColor: "#0091ea" }}
                   title="Purchased Course"
                   value={miniInfo?.courseCount}
                 />
               </Grid>
               <Grid item md={3} xs={12}>
-                <InfoCard title="Reviewed" value={miniInfo?.reviewCount} />
+                <InfoCard
+                  style={{ backgroundColor: "#0091ea" }}
+                  title="Reviewed"
+                  value={miniInfo?.reviewCount}
+                />
               </Grid>
             </>
           )}

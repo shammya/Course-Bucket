@@ -1,29 +1,5 @@
 import { createTheme, makeStyles } from "@material-ui/core/styles";
 
-// export const theme = createTheme({
-//   typography: {
-//     subtitle2: {
-//       fontSize: 13
-//     }
-//   },
-//   breakpoints: {
-//     values: {
-//       xs: 0,
-//       sm: 767,
-//       md: 991,
-//       lg: 1199,
-//       xl: 1439
-//     }
-//   },
-
-//   // overrides: {
-//   //   MuiCssBaseline: {
-//   //     '@global': {
-//   //       '@font-face': [raleway],
-//   //     },
-//   //   },
-//   // },
-// });
 export const useDialogClasses = makeStyles((theme) => ({
   paper: {
     minWidth: 400,
@@ -34,23 +10,38 @@ export const useDialogClasses = makeStyles((theme) => ({
     overflowY: 'visible'
   }
 }))
+
+export const darkTheme = createTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: '#5DCDC8',
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#EC5252',
+      contrastText: '#fff',
+    },
+  }
+});
+
 export const lightTheme = createTheme({
   palette: {
     type: "light"
   },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 768,
-      md: 992,
-      lg: 1100,
-      xl: 1440
-    }
-  }
 });
-Object.assign(lightTheme, {
+Object.assign(darkTheme, {
   overrides: {
     ...lightTheme.overrides,
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 768,
+        md: 992,
+        lg: 1100,
+        xl: 1440
+      }
+    },
     MUIRichTextEditor: {
       placeHolder: {
         position: 'relative'
@@ -109,20 +100,22 @@ Object.assign(lightTheme, {
     },
     MuiRating: {
       root: {
-        color: '#b4690e',
+        color: '#ffc107',
+      }
+    },
+
+    MuiAvatar: {
+      root: {
+        border: '2px solid white'
+      }
+    },
+    MuiPickersToolbar: {
+      toolbar: {
+        backgroundColor: '#5DCDC8'
       }
     }
-    // spacing: {
-    //   '&:hover': {
-    //   },
-    // }
   }
 })
-export const darkTheme = createTheme({
-  palette: {
-    type: "dark"
-  }
-});
 
 export const useStyles = makeStyles(theme => ({
   tiny: {

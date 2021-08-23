@@ -7,7 +7,7 @@ import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";
-import { lightTheme } from 'Theme';
+import { darkTheme } from 'Theme';
 import App from './App';
 import './assets/styles/index.css';
 import reportWebVitals from './reportWebVitals';
@@ -22,7 +22,7 @@ ReactDOM.render(
   <BrowserRouter>
     <Fade>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <MuiThemeProvider theme={lightTheme}>
+        <MuiThemeProvider theme={darkTheme}>
           <SnackbarProvider maxSnack={12}>
             <ScrollToTop />
             <App />

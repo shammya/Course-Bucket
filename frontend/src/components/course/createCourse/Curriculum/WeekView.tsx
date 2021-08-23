@@ -17,9 +17,9 @@ import {
 } from "@material-ui/icons";
 import AddCircle from "@material-ui/icons/AddCircle";
 import { Lecture, Week } from "classes/Course";
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { LectureView } from "./LectureView";
-import { useSnackbar } from "notistack";
 
 const defaultLecture = {
   id: 0,
@@ -80,7 +80,15 @@ export function WeekView({
   }
 
   return (
-    <Accordion style={{ width: "100%" }}>
+    <Accordion
+      style={{
+        width: "100%",
+        // backgroundColor: "#5f5f5f",
+        border: "2px solid #ffca28",
+        borderRadius: 0,
+        marginTop: -2,
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMore />}>
         {/* <IconButton>
           <ImportExport />
@@ -176,7 +184,7 @@ export function WeekView({
             style={{ width: "100%" }}
           > */}
           {lectures.map((item, index) => (
-            <Grid item container key={index} style={{ marginBottom: 12 }}>
+            <Grid item container key={index}>
               <LectureView
                 editable={editable}
                 lecture={item}

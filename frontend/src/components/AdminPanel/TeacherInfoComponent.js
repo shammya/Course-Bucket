@@ -1,17 +1,16 @@
 import { Grid } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
 import MaterialTable from 'material-table';
 import React, { useEffect } from 'react';
-import InfoService from '../AdminPanel/api/InfoService.js';
-import Visibility from '@material-ui/icons/Visibility';
 import { useHistory } from "react-router";
-import Avatar from '@material-ui/core/Avatar';
+import InfoService from '../AdminPanel/api/InfoService.js';
 
 
 function TeacherInfoComponent(props) {
   const { useState } = React;
 
   const [columns, setColumns] = useState([
-    { title: 'Avatar', field: 'avatar', editable: false, render: item => <Avatar src={item.content} alt="" border="3" height="100" width="100" />},
+    { title: 'Avatar', field: 'avatar', editable: false, render: item => <Grid container justifyContent='center'><Avatar src={item.content} alt="" border="3" height="100" width="100" /></Grid> },
     { title: 'Username', field: 'username', editable: false },
     { title: 'Course Created', field: 'courseCreated', editable: false },
     { title: 'Course purchased', field: 'coursePurchased', editable: false },
@@ -50,10 +49,13 @@ function TeacherInfoComponent(props) {
       <Grid item container>
         <MaterialTable
           style={{ width: "100%" }}
-          columns={columns}
+          columns={columns.map((item) => ({ ...item, align: "center" }))}
+
           title="Teacher Information"
           data={data}
           options={{
+            paging: data.length > 10,
+            headerStyle: { textAlign: "center" },
             actionsColumnIndex: -1, addRowPosition: "first", pageSize: 10
           }}
           actions={[

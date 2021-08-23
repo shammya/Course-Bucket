@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,7 +64,7 @@ public class AdminController {
 	}
 
 	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-course-overview/{id}")
+	@GetMapping("/get-course-overview-admin/{id}")
 	public CourseOverview getCourseOverview(@PathVariable Integer id) {
 		return Admin.getCourseOverview(id);
 	}
@@ -110,9 +111,27 @@ public class AdminController {
 		return Admin.getUnapprovedCoursesAdmin();
 	}
 
-	 @PreAuthorize("hasRole('Admin')")
+	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/get-slider-images")
 	public ArrayList<Slider> getSliderImages() {
-		return Admin.getSliderImages();
+		return Slider.getSliderImages();
+	}
+
+	@PreAuthorize("hasRole('Admin')")
+	@PostMapping("/add-slider")
+	public void addSlider(@RequestBody Slider slider) {
+		Slider.createNewSlider(slider);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@PostMapping("/update-slider-serial")
+	public void updateSliderSerial(@RequestBody ArrayList<Slider> sliders) {
+		Slider.updateSerial(sliders);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@DeleteMapping("/delete-slider/{id}")
+	public void deleteSlider(@PathVariable Integer id) {
+		Slider.deleteSlider(id);
 	}
 }

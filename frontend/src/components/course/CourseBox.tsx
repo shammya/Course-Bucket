@@ -5,7 +5,7 @@ import {
   CardMedia,
   Grid,
   makeStyles,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import offerBG from "assets/img/offer_bg.png";
@@ -54,7 +54,13 @@ function CourseBox({ courseData }) {
       }}
       onClick={(event) => history.push(`/course/${courseData.id}`)}
     >
-      <Card style={{ position: "relative", overflow: "visible" }}>
+      <Card
+        style={{
+          position: "relative",
+          overflow: "visible",
+          backgroundColor: "black",
+        }}
+      >
         <CardMedia
           style={{ height: 135, backgroundSize: "cover" }}
           image={courseData.coverContent}

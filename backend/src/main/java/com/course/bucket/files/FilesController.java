@@ -103,6 +103,7 @@ public class FilesController {
 				.body(resource);
 	}
 	
+	
 //	@PostMapping("/add-coursePreview-photo-by-id/{id}")
 //	public void addFiles(@RequestBody Files files,@PathVariable Integer id) {
 //		Files.createPhoto(files, email);

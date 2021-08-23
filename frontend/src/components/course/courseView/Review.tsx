@@ -99,9 +99,11 @@ export function ReviewSection({
           </Grid>
           {!reviews?.length && (
             <Grid item container direction="column">
-              <Typography variant="h5" align="center">
-                Be first to review this course
-              </Typography>
+              {AuthService.getCurrentAccountType() === "Student" && (
+                <Typography variant="h5" align="center">
+                  Be first to review this course
+                </Typography>
+              )}
               <ShadowText>No review yet</ShadowText>
             </Grid>
           )}

@@ -153,7 +153,10 @@ export function OverviewBarChart() {
   async function handleCourseChange(course) {
     await setSelectedCourse(course);
     await axios
-      .get(GLOBAL.HOST + `/get-course-overview/${course.id}`, authHeaders())
+      .get(
+        GLOBAL.HOST + `/get-course-overview-teacher/${course.id}`,
+        authHeaders()
+      )
       .then((response) => {
         console.log("overview fetch for course " + course.title, response.data);
         let source = response.data.overviewContents.map((item) => ({

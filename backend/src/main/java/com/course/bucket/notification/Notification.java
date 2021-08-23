@@ -106,15 +106,16 @@ public class Notification {
 
 		String sql = "select id, seen, user_id, type, time, course_id, from_id " + "from notification ";
 		if (DB.isAdmin(username)) {
-			sql += "where user_id = 'admin'";
+			sql += "where user_id = 'admin'  ";
 		} else {
-			sql += "where user_id = '#'";
+			sql += "where user_id = '#'  ";
 		}
 		sql += "order by time desc";
 		ResultSet rs = DB.executeQuery(sql, username);
 		ArrayList<ObjectNode> nodes = new ArrayList();
 		try {
 			while (rs.next()) {
+				System.out.println(rs.getFetchSize());
 				ObjectNode personNode = mapper.createObjectNode();
 				ObjectNode courseNode = mapper.createObjectNode();
 				ObjectNode node = mapper.createObjectNode();
@@ -138,8 +139,8 @@ public class Notification {
 				case "COURSEUPLOAD":
 				case "COURSEPURCHASE":
 				case "REVIEW":
-				case "FAQQUESTION":
 				case "FAQANSWER":
+				case "FAQQUESTION":
 					personNode.setAll(personInfo(mapper, fromId));
 					courseNode.setAll(courseInfo(mapper, courseId));
 					break;
@@ -155,6 +156,8 @@ public class Notification {
 				case "COURSEUPDATE":
 					courseNode.setAll(courseInfo(mapper, courseId));
 					break;
+				default: 
+					System.out.println("Notification type is not found");
 				}
 				node.setAll(courseNode);
 				node.setAll(personNode);
@@ -164,6 +167,7 @@ public class Notification {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("\t\tNode size: "+nodes.size());
 
 		return nodes;
 	}

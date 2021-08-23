@@ -224,9 +224,12 @@ export function LectureView({
             {!expanded && editable && lecture.file == undefined && (
               <Grid item>
                 <Button
-                  variant="outlined"
-                  color="primary"
-                  style={{ marginLeft: 10 }}
+                  variant="contained"
+                  style={{
+                    marginLeft: 10,
+                    color: "black",
+                    backgroundColor: "rgb(255, 202, 40)",
+                  }}
                 >
                   <Typography style={{ whiteSpace: "nowrap" }}>
                     Content +
@@ -296,7 +299,7 @@ export function LectureView({
     <Accordion
       key={lecture.id}
       expanded={expanded}
-      style={{ backgroundColor: "pink", width: "100%" }}
+      style={{ backgroundColor: "#3ABBB5", borderRadius: 0, width: "100%" }}
     >
       <AccordionSummary
         expandIcon={lecture.file != undefined && <ExpandMore />}

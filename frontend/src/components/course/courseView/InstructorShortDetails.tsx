@@ -28,7 +28,7 @@ function InstructorShortDetailsBox({
           <Grid item>
             <Typography variant="h5">{details?.teacherName}</Typography>
           </Grid>
-          <Grid item>
+          <Grid item container>
             <CardActionArea
               onClick={(event) => history.push(`/profile/${details?.username}`)}
             >

@@ -13,6 +13,7 @@ import {
   Popover,
   Typography,
 } from "@material-ui/core";
+import { lightBlue } from "@material-ui/core/colors";
 import { Notifications } from "@material-ui/icons";
 import axios from "axios";
 import { authHeaders } from "components/auth/api/AuthService";
@@ -38,14 +39,20 @@ interface NotificationProps {
 }
 
 const useStyles = makeStyles(() => ({
+  background: {
+    backgroundColor: lightBlue["A700"],
+  },
   bold: {
     fontWeight: "bold",
   },
   seen: {
-    backgroundColor: "green",
+    // backgroundColor: "#BAFFC9",
   },
   unseen: {
-    backgroundColor: "red",
+    backgroundColor: lightBlue[800],
+    "&:hover": {
+      backgroundColor: lightBlue[700],
+    },
   },
 }));
 
@@ -91,7 +98,7 @@ function NotificationItem({
           <Typography display="inline" className={classes.bold}>
             {username}
           </Typography>
-          <Typography display="inline">is registered</Typography>
+          <Typography display="inline"> registered</Typography>
         </>
       );
       break;
@@ -233,6 +240,7 @@ function NotificationItem({
   );
 }
 export function Notification() {
+  const classes = useStyles();
   const [notificationAnchorRef, setNotificationAnchorRef] =
     useState<HTMLButtonElement | null>(null);
   const [notifications, setNotifications] = useState<
@@ -278,6 +286,7 @@ export function Notification() {
       >
         <StickyContainer>
           <Grid
+            className={classes.background}
             container
             direction="row"
             style={{ maxHeight: "80vh", maxWidth: 350 }}

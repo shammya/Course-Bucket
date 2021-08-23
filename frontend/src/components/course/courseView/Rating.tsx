@@ -18,11 +18,12 @@ const useStyles = makeStyles(() => ({
   ratingNumber: {
     fontSize: "6.4rem",
     fontWeight: 700,
-    color: "#b4690e",
+    color: "#ffc107",
     lineHeight: "1",
+    textShadow: "2px 0px 0 #ffffff",
   },
   ratingText: {
-    color: "#b4690e",
+    color: "#ffc107",
     fontSize: "1.2rem",
     fontWeight: 700,
   },
