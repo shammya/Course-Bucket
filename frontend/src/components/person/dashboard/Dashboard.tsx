@@ -23,6 +23,50 @@ import { PurchaseHistoryListView } from "./PurchaseHistoryLIstView";
 import { ReviewListView } from "./ReviewListView";
 import { makeStyles } from "@material-ui/core/styles";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: "#282C34",
+    flexGrow: 1,
+    padding: 5,
+    "& > *": {
+      color: "white",
+    },
+    "& input": {
+      color: "white",
+    },
+    "& fieldset": {
+      border: "2px solid white",
+    },
+    "& fieldset:focus": {
+      border: "2px solid gray",
+    },
+  },
+  logo: {
+    width: 50,
+    height: 50,
+  },
+  title: {
+    display: "block-inline",
+    textAlign: "center",
+    marginLeft: theme.spacing(1),
+    [theme.breakpoints.down("sm")]: {
+      flexGrow: 1,
+      padding: 0,
+    },
+    color: "inherit",
+  },
+  input: {
+    flexGrow: 1,
+  },
+  inputRoot: {
+    flexGrow: 1,
+    color: "inherit",
+    borderRadius: "35px",
+    padding: theme.spacing(0, 2, 0, 3),
+    margin: theme.spacing(0, 3),
+  },
+}));
+
 export function ContentHeader({
   courseId,
   courseTitle,
@@ -72,52 +116,78 @@ interface PurchaseHistory {
   amount: number;
 }
 
-const Overview = {
-  label: "Overview",
-  urlShort: "overview",
-  icon: <Looks />,
-  content: (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <OverviewBarChart />
-      </Grid>
-      <Grid item xs={12}>
-        <RatingLineChart />
-      </Grid>
-      <Grid item md={6} xs={12}>
-        <CoursePopularityPieChart />
-      </Grid>
-      <Grid item md={6} xs={12}>
-        <IncomePerCourseChart />
-      </Grid>
-    </Grid>
-  ),
-};
-const PurchaseHistory = {
-  label: "Purchase History",
-  urlShort: "purchase-history",
-  icon: <FaDollarSign />,
-  content: <PurchaseHistoryListView />,
-};
-const Review = {
-  label: "Reviews",
-  urlShort: "review",
-  icon: <RateReview />,
-  content: <ReviewListView />,
-};
-const FAQ = {
-  label: "FAQ",
-  urlShort: "faq",
-  icon: <FaQq />,
-  content: <FaqView />,
-};
-const StudentList = {
-  label: "Enrolled Students",
-  urlShort: "enrolled-student",
-  icon: <FaChalkboardTeacher />,
-  content: <EnrolledStudentListView />,
-};
 function Dashboard() {
+  const classes = useStyles();
+  const Overview = {
+    label: "Overview",
+    urlShort: "overview",
+    icon: (
+      <img
+        className={classes.logo}
+        src={require("assets/img/overview.png").default}
+      />
+    ),
+    content: (
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <OverviewBarChart />
+        </Grid>
+        <Grid item xs={12}>
+          <RatingLineChart />
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <CoursePopularityPieChart />
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <IncomePerCourseChart />
+        </Grid>
+      </Grid>
+    ),
+  };
+  const PurchaseHistory = {
+    label: "Purchase History",
+    urlShort: "purchase-history",
+    icon: (
+      <img
+        className={classes.logo}
+        src={require("assets/img/purchase.png").default}
+      />
+    ),
+    content: <PurchaseHistoryListView />,
+  };
+  const Review = {
+    label: "Reviews",
+    urlShort: "review",
+    icon: (
+      <img
+        className={classes.logo}
+        src={require("assets/img/review.png").default}
+      />
+    ),
+    content: <ReviewListView />,
+  };
+  const FAQ = {
+    label: "FAQ",
+    urlShort: "faq",
+    icon: (
+      <img
+        className={classes.logo}
+        src={require("assets/img/faq.png").default}
+      />
+    ),
+    content: <FaqView />,
+  };
+  const StudentList = {
+    label: "Enrolled Students",
+    urlShort: "enrolled-student",
+    icon: (
+      <img
+        className={classes.logo}
+        src={require("assets/img/student.png").default}
+      />
+    ),
+    content: <EnrolledStudentListView />,
+  };
   const StudentObject: Array<IDrawerLayoutObject> = [
     Review,
     FAQ,
