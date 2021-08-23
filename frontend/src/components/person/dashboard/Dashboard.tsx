@@ -21,6 +21,7 @@ import { EnrolledStudentListView } from "./EnrolledStudentListView";
 import { FaqView } from "./FAQview";
 import { PurchaseHistoryListView } from "./PurchaseHistoryLIstView";
 import { ReviewListView } from "./ReviewListView";
+import { makeStyles } from "@material-ui/core/styles";
 
 export function ContentHeader({
   courseId,
