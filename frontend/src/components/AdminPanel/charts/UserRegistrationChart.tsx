@@ -131,7 +131,7 @@ export function UserRegistrationChart() {
   }
 
   return (
-    <Card>
+    <Card className="chart">
       <CardContent style={{ textAlign: "center" }}>
         <Chart title="Teacher and Student Registration" dataSource={temp}>
           <CommonSeriesSettings argumentField="date" type="stackedBar" />

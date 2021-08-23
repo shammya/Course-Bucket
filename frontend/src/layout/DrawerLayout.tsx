@@ -11,14 +11,21 @@ import {
   Tabs,
 } from "@material-ui/core";
 import InboxIcon from "@material-ui/icons/Inbox";
+import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { Sticky, StickyContainer } from "react-sticky";
 import { Responsive } from "tools/responsive/Responsive";
 import User from "./User";
 
-const drawerWidth = 600;
+const drawerWidth = 300;
 const icon = <InboxIcon />;
 const useStyles = makeStyles((theme) => ({
+  withDivider: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  topBorder: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+  },
   root: {},
   drawer: {
     [theme.breakpoints.up("sm")]: {
@@ -42,11 +49,14 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     position: "relative",
+    height: "97vh",
   },
   content: {
     flexGrow: 1,
-    width: `calc(100% - ${drawerWidth}px)`,
-    padding: theme.spacing(3),
+    margin: 8,
+    // width: `calc(100% - ${drawerWidth}px)`,
+    // padding: theme.spacing(2),
+    // margin: -theme.spacing(2),
   },
 }));
 
@@ -109,15 +119,16 @@ const DrawerLayout = ({
     <User>
       <StickyContainer>
         <Responsive displayIn={["Tablet", "Laptop"]}>
-          <Grid container direction="row">
-            <Grid style={{ width: drawerWidth }} item sm>
+          <Grid container direction="row" spacing={2} wrap="nowrap">
+            <Grid style={{ width: drawerWidth }} item>
               <Sticky>
                 {({ style }) => (
                   <Drawer
                     classes={{
                       paper: classes.drawerPaper,
                     }}
-                    style={{ ...style, marginTop: 24, marginBottom: 24 }}
+                    style={style}
+                    // style={{ ...style, marginTop: 24, marginBottom: 24 }}
                     variant="permanent"
                     open
                   >
@@ -129,16 +140,29 @@ const DrawerLayout = ({
                       scrollButtons="auto"
                     >
                       {objects.map((item, idx) => (
-                        <Tab label={item.label} icon={item.icon} key={idx} />
+                        <Tab
+                          className={clsx(
+                            classes.withDivider,
+                            idx === 0 ? classes.topBorder : ""
+                          )}
+                          label={item.label}
+                          icon={item.icon}
+                          key={idx}
+                        />
                       ))}
                     </Tabs>
                   </Drawer>
                 )}
               </Sticky>
             </Grid>
-            <Grid item className={classes.content}>
+            <Grid item className={classes.content} container>
               {objects.map((item, idx) => (
-                <TabPanel value={tabIndex} index={idx} key={idx}>
+                <TabPanel
+                  value={tabIndex}
+                  index={idx}
+                  key={idx}
+                  style={{ width: "100%" }}
+                >
                   {item.content}
                 </TabPanel>
               ))}
@@ -156,7 +180,8 @@ const DrawerLayout = ({
               <AppBar
                 position="static"
                 color="default"
-                style={{ ...style, marginBottom: 12 }}
+                style={style}
+                // style={{ ...style, marginBottom: 12 }}
               >
                 <Tabs
                   value={tabIndex}

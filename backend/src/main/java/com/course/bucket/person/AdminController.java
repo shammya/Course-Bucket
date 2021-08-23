@@ -111,8 +111,7 @@ public class AdminController {
 		return Admin.getUnapprovedCoursesAdmin();
 	}
 
-	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-slider-images")
+	@GetMapping("/public/get-slider-images")
 	public ArrayList<Slider> getSliderImages() {
 		return Slider.getSliderImages();
 	}

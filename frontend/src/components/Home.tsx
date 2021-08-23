@@ -412,11 +412,11 @@ export const Home = (props) => {
   return (
     <User loading={loading}>
       <Grid container className={classes.homeContainer} direction="column">
-        <Grid item>
+        <Grid item container>
           <ImageSlider />
         </Grid>
         <Grid item container direction="column" spacing={2}>
-          <Grid item container>
+          <Grid item>
             <CourseCarousel
               title={"Most Rated"}
               courses={carouselCourses.mostRated}

@@ -75,10 +75,34 @@ function Sort({ sortTypes, sortType, setSortType }) {
   };
 
   return (
-    <Grid item sm={12} xs={6} container>
-      <Grid container justifyContent="space-between" onClick={handleOpen}>
-        <Typography variant="h6">Sort by</Typography>
-        <SortIcon />
+    <Grid container style={{ cursor: "pointer" }}>
+      <Grid
+        container
+        direction="row"
+        wrap="nowrap"
+        justifyContent="space-between"
+        alignItems="center"
+        onClick={handleOpen}
+      >
+        <Grid item>
+          <Grid container direction="row" alignItems="center">
+            <Grid item>
+              <Typography variant="h6">{"Sort by : "}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography
+                variant="h6"
+                color="primary"
+                style={{ fontWeight: "bold", marginLeft: 5 }}
+              >
+                {sortType}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <SortIcon />
+        </Grid>
       </Grid>
       <CustomSelect
         title={"Set sort type"}

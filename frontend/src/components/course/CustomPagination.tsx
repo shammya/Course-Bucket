@@ -43,7 +43,7 @@ const CoursePagination = ({ courses, title }) => {
       container
       direction="column"
       alignItems="center"
-      justifyContent="space-between"
+      justifyContent="flex-start"
       spacing={2}
     >
       <Grid item container>
@@ -59,7 +59,7 @@ const CoursePagination = ({ courses, title }) => {
         <CourseBoxContainer courses={currentCourses} />
       </Grid>
       {courses?.length > coursePerPage && (
-        <Grid item container justifyContent='center'>
+        <Grid item container justifyContent="center">
           <Pagination
             count={Math.ceil(courses.length / coursePerPage)}
             page={currentPage}

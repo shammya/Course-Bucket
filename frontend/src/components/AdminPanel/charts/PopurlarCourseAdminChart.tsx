@@ -58,7 +58,7 @@ export function PopularCourseAdminChart() {
     );
   }
   return (
-    <Card>
+    <Card className="chart">
       <CardContent>
         <PieChart
           type="doughnut"

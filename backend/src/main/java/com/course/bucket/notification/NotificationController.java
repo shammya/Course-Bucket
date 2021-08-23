@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.course.bucket.Global;
 import com.course.bucket.course.Course;
 import com.course.bucket.database.DB;
+import com.course.bucket.person.Admin;
 import com.course.bucket.tools.ToolKit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,13 +39,20 @@ public class NotificationController {
 	@PutMapping("/notification-seen/{id}")
 	public ResponseEntity<?> notificationSeen(@PathVariable Integer id) {
 		String userId = DB.getString("notification", "id", id.toString(), "user_id");
-		if(!ToolKit.getCurrentUserName().equals(userId)) {
+		if(!ToolKit.getCurrentUserName().equals(userId) && !Admin.isAdmin(userId)) {
 			return ResponseEntity.badRequest().body("Requested user is not the owner of the notification");
 		}
 		Notification.notificationSeen(id);
 		return ResponseEntity.ok("");
 	}
 
+	@PreAuthorize("hasRole('Admin') or hasRole('Teacher') or hasRole('Student')")
+	@PutMapping("/seen-all-notification")
+	public void seenAllNotification() {
+//		return Notification.getNotifications(mapper, ToolKit.getCurrentUserName());
+		Notification.seenAllNotification(ToolKit.getCurrentUserName());
+	}
+	
 //	@GetMapping("/api/auth/get-registration-notification")
 //	public   ArrayList<ObjectNode> getRegisteredPerson(){
 //		return Notification.getRegisteredPersonNotification(mapper);

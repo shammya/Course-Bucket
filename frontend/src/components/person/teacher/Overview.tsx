@@ -184,7 +184,7 @@ export function OverviewBarChart() {
   }
 
   return (
-    <Card>
+    <Card className="chart">
       <CardContent style={{ textAlign: "center" }}>
         <Chart title="Overview" dataSource={temp}>
           <CommonSeriesSettings argumentField="date" type="stackedBar" />

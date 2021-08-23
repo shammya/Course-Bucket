@@ -1,6 +1,7 @@
 import {
   Collapse,
   Grid,
+  Link,
   List,
   ListItem,
   ListItemText,
@@ -16,35 +17,36 @@ export const useStyles = makeStyles((theme) => ({
   menuContainer: {
     backgroundColor: "#F3AA08",
     padding: 8,
+    color: "black",
   },
   menuItemWrapper: {
     height: "auto",
   },
   menu: {
     cursor: "pointer",
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "space-between",
-      borderBottom: "1px solid black",
-    },
+    // [theme.breakpoints.down("sm")]: {
+    //   justifyContent: "space-between",
+    //   borderBottom: "1px solid black",
+    // },
   },
   subMenuContainer: {
     position: "absolute",
     overflow: "hidden",
     backgroundColor: "#445F67",
     zIndex: 100,
-    [theme.breakpoints.down("sm")]: {
-      position: "relative",
-      marginLeft: "20px",
-    },
+    // [theme.breakpoints.down("sm")]: {
+    //   position: "relative",
+    //   marginLeft: "20px",
+    // },
   },
   subMenuItem: {
     padding: theme.spacing(1, 3),
     color: "white",
   },
   drawer: {
-    [theme.breakpoints.down("sm")]: {
-      width: "50%",
-    },
+    // [theme.breakpoints.down("sm")]: {
+    //   width: "50%",
+    // },
   },
   signInBtn: {
     justify: "start",
@@ -54,104 +56,104 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const menuItems = {
-  defaultExpanded: [],
-  data: [
-    {
-      title: "Menu 1",
-      items: [],
-      checked: false,
-    },
-    {
-      title: "Menu 2",
-      items: [
-        {
-          title: "Sub menu 1",
-          items: [],
-          checked: false,
-        },
-        {
-          title: "Sub menu 2",
-          items: [],
-          checked: false,
-        },
-        {
-          title: "Sub menu 3",
-          items: [],
-          checked: false,
-        },
-      ],
-      checked: false,
-    },
-    {
-      title: "Menu 3",
-      items: [],
-      checked: false,
-    },
-    {
-      title: "Menu 4",
-      items: [],
-      checked: false,
-    },
-    {
-      title: "Menu 5",
-      items: [
-        {
-          title: "Sub menu 4",
-          items: [],
-          checked: false,
-        },
-        {
-          title: "Sub menu 5",
-          items: [],
-          checked: false,
-        },
-        {
-          title: "Sub menu 6",
-          items: [],
-          checked: false,
-        },
-        {
-          title: "Sub menu 6",
-          items: [],
-          checked: false,
-        },
-      ],
-      checked: false,
-    },
-    {
-      title: "Menu 6",
-      items: [],
-      checked: false,
-    },
-    {
-      title: "Menu 7",
-      items: [],
-      checked: false,
-    },
-    {
-      title: "Menu 8",
-      items: [
-        {
-          title: "Sub menu 4",
-          items: [],
-          checked: false,
-        },
-        {
-          title: "Sub menu 5",
-          items: [],
-          checked: false,
-        },
-        {
-          title: "Sub menu 6",
-          items: [],
-          checked: false,
-        },
-      ],
-      checked: false,
-    },
-  ],
-};
+// export const menuItems = {
+//   defaultExpanded: [],
+//   data: [
+//     {
+//       title: "Menu 1",
+//       items: [],
+//       checked: false,
+//     },
+//     {
+//       title: "Menu 2",
+//       items: [
+//         {
+//           title: "Sub menu 1",
+//           items: [],
+//           checked: false,
+//         },
+//         {
+//           title: "Sub menu 2",
+//           items: [],
+//           checked: false,
+//         },
+//         {
+//           title: "Sub menu 3",
+//           items: [],
+//           checked: false,
+//         },
+//       ],
+//       checked: false,
+//     },
+//     {
+//       title: "Menu 3",
+//       items: [],
+//       checked: false,
+//     },
+//     {
+//       title: "Menu 4",
+//       items: [],
+//       checked: false,
+//     },
+//     {
+//       title: "Menu 5",
+//       items: [
+//         {
+//           title: "Sub menu 4",
+//           items: [],
+//           checked: false,
+//         },
+//         {
+//           title: "Sub menu 5",
+//           items: [],
+//           checked: false,
+//         },
+//         {
+//           title: "Sub menu 6",
+//           items: [],
+//           checked: false,
+//         },
+//         {
+//           title: "Sub menu 6",
+//           items: [],
+//           checked: false,
+//         },
+//       ],
+//       checked: false,
+//     },
+//     {
+//       title: "Menu 6",
+//       items: [],
+//       checked: false,
+//     },
+//     {
+//       title: "Menu 7",
+//       items: [],
+//       checked: false,
+//     },
+//     {
+//       title: "Menu 8",
+//       items: [
+//         {
+//           title: "Sub menu 4",
+//           items: [],
+//           checked: false,
+//         },
+//         {
+//           title: "Sub menu 5",
+//           items: [],
+//           checked: false,
+//         },
+//         {
+//           title: "Sub menu 6",
+//           items: [],
+//           checked: false,
+//         },
+//       ],
+//       checked: false,
+//     },
+//   ],
+// };
 
 export function SubMenu({
   subCategories,
@@ -168,9 +170,11 @@ export function SubMenu({
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {subCategories.map((item) => (
-              <ListItem className={classes.subMenuItem} button key={item.id}>
-                <ListItemText primary={item.name} />
-              </ListItem>
+              <Link href={`/category/${item.id}`}>
+                <ListItem className={classes.subMenuItem} button key={item.id}>
+                  <ListItemText primary={item.name} />
+                </ListItem>
+              </Link>
             ))}
           </List>
         </Collapse>
@@ -193,13 +197,16 @@ function Menu({ mainCategory }: { mainCategory: Category }) {
       className={classes.menuItemWrapper}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
+      // style={{color: 'white'}}
     >
-      {mainCategory.name}
-      {mainCategory.children.length > 0 && !open ? (
-        <ExpandMore />
-      ) : (
-        <ExpandLess />
-      )}
+      <Link href={`/category/${mainCategory.id}`} className="main-nav-name">
+        {mainCategory.name}
+        {mainCategory.children.length > 0 && !open ? (
+          <ExpandMore />
+        ) : (
+          <ExpandLess />
+        )}
+      </Link>
       <SubMenu subCategories={mainCategory.children} open={open} />
     </Grid>
   );

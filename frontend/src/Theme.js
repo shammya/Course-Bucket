@@ -22,7 +22,16 @@ export const darkTheme = createTheme({
       main: '#EC5252',
       contrastText: '#fff',
     },
-  }
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 768,
+      md: 992,
+      lg: 1100,
+      xl: 1440
+    }
+  },
 });
 
 export const lightTheme = createTheme({
@@ -32,16 +41,7 @@ export const lightTheme = createTheme({
 });
 Object.assign(darkTheme, {
   overrides: {
-    ...lightTheme.overrides,
-    breakpoints: {
-      values: {
-        xs: 0,
-        sm: 768,
-        md: 992,
-        lg: 1100,
-        xl: 1440
-      }
-    },
+    ...darkTheme.overrides,
     MUIRichTextEditor: {
       placeHolder: {
         position: 'relative'
@@ -49,11 +49,6 @@ Object.assign(darkTheme, {
       // root: {
       //   minHeight: 200
       // },
-    },
-    MuiDropzoneArea: {
-      root: {
-        minHeight: "100%"
-      },
     },
     MuiDropzonePreviewList: {
       root: {
@@ -76,7 +71,8 @@ Object.assign(darkTheme, {
         minHeight: 0,
       },
       text: {
-        textAlign: "center"
+        textAlign: "center",
+        color: 'white',
       }
     },
     MuiTypography: {
@@ -113,7 +109,7 @@ Object.assign(darkTheme, {
       toolbar: {
         backgroundColor: '#5DCDC8'
       }
-    }
+    },
   }
 })
 

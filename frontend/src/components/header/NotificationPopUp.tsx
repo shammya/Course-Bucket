@@ -231,7 +231,9 @@ function NotificationItem({
       className={seen ? classes.seen : classes.unseen}
     >
       {/* <CardActionArea onClick={() => history.push(link)}> */}
-      <ListItemAvatar style={{ width: 56 }}>
+      <ListItemAvatar
+        style={{ width: 56, textAlign: "center", marginRight: 7 }}
+      >
         {image ? image : <Avatar />}
       </ListItemAvatar>
       <ListItemText>{text} </ListItemText>
@@ -255,6 +257,19 @@ export function Notification() {
       });
     return () => setNotifications(null);
   }, []);
+
+  function handleSeeAllClicked() {
+    axios
+      .put(GLOBAL.HOST + "/seen-all-notification", {}, authHeaders())
+      .then(() => {
+        axios
+          .get(GLOBAL.HOST + "/get-notification", authHeaders())
+          .then((response) => {
+            console.log(response.data);
+            setNotifications(response.data);
+          });
+      });
+  }
 
   let unseenCount = 0;
   notifications?.forEach((item) => {
@@ -305,7 +320,9 @@ export function Notification() {
                 <Typography variant="h5">Notification</Typography>
               </Grid>
               <Grid item>
-                <Button variant="outlined">See all</Button>
+                <Button variant="outlined" onClick={handleSeeAllClicked}>
+                  See all
+                </Button>
               </Grid>
             </Grid>
             <Grid item container>

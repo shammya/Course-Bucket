@@ -19,9 +19,9 @@ export class Responsive extends React.PureComponent {
     const { width, height } = this.state
     const shouldRenderChildren = this.shouldRender(displayIn, width, height)
     return (
-      <React.Fragment>
+      <>
         {shouldRenderChildren ? children : null}
-      </React.Fragment>
+      </>
     )
   }
   handleResize = () => {

@@ -36,7 +36,7 @@ public class CategoryController {
 	
 	
 //	@PreAuthorize("hasRole('Admin')")
-	@GetMapping("/get-category-by-name/{id}")
+	@GetMapping("/public/get-category-by-name/{id}")
 	public Category findById(@PathVariable Integer id) {
 		return new Category(id);
 	}

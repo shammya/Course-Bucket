@@ -146,7 +146,13 @@ export function CourseView() {
 
   function Price() {
     return (
-      <>
+      <Grid
+        item
+        container
+        alignItems="center"
+        justifyContent="center"
+        spacing={1}
+      >
         <Grid item>
           <Typography variant="h5">
             ৳
@@ -166,7 +172,7 @@ export function CourseView() {
         <Grid item>
           <Typography variant="body1">{course?.off}% off</Typography>
         </Grid>
-      </>
+      </Grid>
     );
   }
   function TitleSection() {
@@ -203,7 +209,10 @@ export function CourseView() {
             {publicResponse?.enrolledStudentCount} student enrolled
           </Grid>
         </Grid>
-        <Grid item>Created by {course?.teacherName}</Grid>
+        <Grid item container direction="row">
+          <Typography>Created by :</Typography>
+          <Link color="primary">{course?.teacherName}</Link>
+        </Grid>
         <Grid item container direction="row">
           <Grid item>Published date: {formattedDate}</Grid>
           <Grid item container direction="row" alignItems="center" spacing={1}>
@@ -286,18 +295,21 @@ export function CourseView() {
                   <Card style={{ ...style, zIndex: 999, marginLeft: 16 }}>
                     <CardContent>
                       <img src={course?.cover?.content} />
+                      <Grid container>
+                        <Grid
+                          item
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="center"
+                          spacing={1}
+                        >
+                          <Price />
+                        </Grid>
+                      </Grid>
+
                       {buyNowShow && (
                         <>
-                          <Grid
-                            item
-                            container
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="center"
-                            spacing={1}
-                          >
-                            <Price />
-                          </Grid>
                           <Grid item>
                             <Button
                               variant="contained"
@@ -350,40 +362,34 @@ export function CourseView() {
               <CourseProperties />
             </Grid>
 
-            {buyNowShow && (
-              <Grid
-                item
-                container
-                direction="row"
-                style={{
-                  zIndex: 999,
-                  position: "fixed",
-                  bottom: 0,
-                  left: 0,
-                  backgroundColor: "pink",
-                }}
-              >
-                <Grid item xs={6}>
-                  <Grid
-                    container
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="center"
-                    spacing={1}
+            <Grid
+              item
+              container
+              direction="row"
+              style={{
+                zIndex: 999,
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                padding: 0,
+                backgroundColor: "#F3AA08",
+                color: "black",
+              }}
+            >
+              <Grid item xs={buyNowShow ? 6 : 12}>
+                <Price />
+              </Grid>
+
+              {buyNowShow && (
+                <Grid item container xs={6}>
+                  <Button
+                    onClick={handleBuyNowClick}
+                    variant="contained"
+                    color="primary"
+                    style={{ width: "100%", borderRadius: 0, color: "black" }}
                   >
-                    <Price />
-                  </Grid>
-                </Grid>
-                <Grid item xs={6}>
-                  <div onClick={() => setCheckoutShow(true)}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      style={{ width: "100%" }}
-                    >
-                      Buy now
-                    </Button>
-                  </div>
+                    Buy now
+                  </Button>
                   <CheckoutDialog
                     open={checkoutShow}
                     course={course}
@@ -396,8 +402,8 @@ export function CourseView() {
                     onClose={handleCongratulationClose}
                   />
                 </Grid>
-              </Grid>
-            )}
+              )}
+            </Grid>
           </Grid>
         </CardContent>
       </Card>

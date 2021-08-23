@@ -26,6 +26,7 @@ export function FileUploader(props: IFileUploader) {
     Icon,
     type,
     showPreviewsInDropzone,
+    classes,
     ...rest
   } = props;
   const [state, setState] = useState({
@@ -74,8 +75,8 @@ export function FileUploader(props: IFileUploader) {
   }, [type, fileObjects]);
 
   function handleChange(files: FileObject[]) {
-    if (filesLimit)
-      files = files.slice(files.length - filesLimit, files.length);
+    // if (filesLimit)
+    //   files = files.slice(files.length - filesLimit, files.length);
     setState({ ...state, fileObjects: files });
     if (onChange) onChange(files);
   }
@@ -85,7 +86,7 @@ export function FileUploader(props: IFileUploader) {
         {...rest}
         //@ts-ignore
         Icon={state.Icon}
-        classes={{ icon: state.fileObjects ? "display-none" : "" }}
+        classes={{ ...classes, icon: state.fileObjects ? "display-none" : "" }}
         filesLimit={filesLimit}
         acceptedFiles={state.acceptedFiles}
         fileObjects={state.fileObjects}

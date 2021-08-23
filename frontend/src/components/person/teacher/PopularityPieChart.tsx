@@ -11,7 +11,6 @@ import PieChart, {
   Legend,
   Tooltip,
 } from "devextreme-react/pie-chart";
-import Popover from "devextreme-react/popover";
 import React, { useEffect, useState } from "react";
 
 export function CoursePopularityPieChart() {
@@ -53,7 +52,7 @@ export function CoursePopularityPieChart() {
     );
   }
   return (
-    <Card>
+    <Card className="chart">
       <CardContent>
         <PieChart
           type="doughnut"

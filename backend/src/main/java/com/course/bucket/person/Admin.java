@@ -490,4 +490,8 @@ public class Admin extends Person{
 		}
 	}
 	
+	public static boolean isAdmin(String username) {
+		return DB.valueExist("admin", "id", username);
+	}
+	
 }

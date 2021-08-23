@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Card, CardContent, Grid } from "@material-ui/core";
 import { Category } from "classes/Category";
 import { MiniCourse } from "classes/Course";
 import CoursePagination from "components/course/CustomPagination";
@@ -147,12 +147,14 @@ const Search = () => {
       }
     } else if (type === "REMOVE") {
       let idx;
-      if (value.type === "SLIDER") {
+      console.log("filteredData", filteredData);
+      console.log("filter to be delete", value);
+      if (value.type !== "SLIDER") {
         idx = filteredData.findIndex(
-          (item) => item.type === value.type && item.id === value.id
+          (item) => item.title === value.title && item.id === value.id
         );
       } else {
-        idx = filteredData.findIndex((item) => item.type === value.type);
+        idx = filteredData.findIndex((item) => item.title === value.title);
       }
       array = [...filteredData];
       array.splice(idx, 1);
@@ -214,54 +216,87 @@ const Search = () => {
   }
   function clearAll() {
     setFilteredData([]);
+    fetchCourses([], sortType);
   }
   return (
     <User loading={!filteredCourses}>
       <StickyContainer>
-        <Grid container>
-          <Responsive displayIn={["Laptop", "Tablet"]}>
-            <Grid item sm={3}>
-              <Grid container direction="column">
-                <Sort
-                  sortTypes={sortTypes}
-                  sortType={sortType}
-                  setSortType={handleSortTypeChange}
-                />
-                <FilterChips
-                  filteredData={filteredData}
-                  onDelete={onObjectsChange}
-                />
-                <Filter
-                  filteredData={filteredData}
-                  filterDataList={filterObjectList}
-                  onFilterChange={onObjectsChange}
-                  onClearAll={clearAll}
-                />
-              </Grid>
+        <Grid container spacing={1}>
+          <Grid item container sm={5} md={4} lg={3}>
+            <Grid item container>
+              <Responsive displayIn={["Laptop", "Tablet"]}>
+                <Grid item container>
+                  <Grid container direction="column" spacing={1}>
+                    <Grid item container>
+                      <Card style={{ width: "100%", cursor: "pointer" }}>
+                        <CardContent>
+                          <Sort
+                            sortTypes={sortTypes}
+                            sortType={sortType}
+                            setSortType={handleSortTypeChange}
+                          />
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    <Grid item container style={{ cursor: "pointer" }}>
+                      <FilterChips
+                        filteredData={filteredData}
+                        onDelete={onObjectsChange}
+                      />
+                    </Grid>
+                    <Grid item container>
+                      <Card>
+                        <CardContent>
+                          <Filter
+                            filteredData={filteredData}
+                            filterDataList={filterObjectList}
+                            onFilterChange={onObjectsChange}
+                            onClearAll={clearAll}
+                          />
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Responsive>
+              <Responsive displayIn={["Mobile"]}>
+                <Grid container>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Card style={{ width: "100%", cursor: "pointer" }}>
+                        <CardContent>
+                          <Sort
+                            sortTypes={sortTypes}
+                            sortType={sortType}
+                            setSortType={handleSortTypeChange}
+                          />
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Card style={{ width: "100%", cursor: "pointer" }}>
+                        <CardContent>
+                          <Filter
+                            filteredData={filteredData}
+                            filterDataList={filterObjectList}
+                            onFilterChange={onObjectsChange}
+                            onClearAll={clearAll}
+                          />
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FilterChips
+                      filteredData={filteredData}
+                      onDelete={onObjectsChange}
+                    />
+                  </Grid>
+                </Grid>
+              </Responsive>
             </Grid>
-          </Responsive>
-          <Responsive displayIn={["Mobile"]}>
-            <Grid container>
-              <Grid container>
-                <Sort
-                  sortTypes={sortTypes}
-                  sortType={sortType}
-                  setSortType={handleSortTypeChange}
-                />
-                <Filter
-                  filteredData={filteredData}
-                  filterDataList={filterObjectList}
-                  onFilterChange={onObjectsChange}
-                  onClearAll={clearAll}
-                />
-              </Grid>
-              <FilterChips
-                filteredData={filteredData}
-                onDelete={onObjectsChange}
-              />
-            </Grid>
-          </Responsive>
-          <Grid item sm={9} xs={12}>
+          </Grid>
+          <Grid item container lg={9} md={8} sm={7} xs={12}>
             <CoursePagination
               courses={filteredCourses}
               title={`Search result for '${history.location.state.key}'`}

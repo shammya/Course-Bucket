@@ -17,6 +17,7 @@ export interface ImageViewProps {
   options?: JSX.Element | JSX.Element[];
   containerProps?: DefaultComponentProps<any>;
   wrapperProps?: DefaultComponentProps<any>;
+  imgProps?: DefaultComponentProps<any>;
 }
 export default function GridImageView(props: ImageViewProps) {
   const classes = useStyles();
@@ -42,7 +43,7 @@ export default function GridImageView(props: ImageViewProps) {
             style={{ position: "relative" }}
           >
             <Grid item container>
-              <img src={props.src} />
+              <img src={props.src} {...props.imgProps} />
             </Grid>
             <Grid item className={classes.optionsWrapper}>
               {options}
