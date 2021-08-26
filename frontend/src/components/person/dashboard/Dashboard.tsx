@@ -4,12 +4,14 @@ import {
   CardContent,
   Divider,
   Grid,
-  makeStyles,
   Typography,
+  makeStyles,
 } from "@material-ui/core";
+import { Looks, RateReview } from "@material-ui/icons";
 import AuthService from "components/auth/api/AuthService";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import React from "react";
+import { FaChalkboardTeacher, FaDollarSign, FaQq } from "react-icons/fa";
 import { Redirect, Route, Switch, useHistory } from "react-router";
 import { useRouteMatch } from "react-router-dom";
 import IncomePerCourseChart from "../teacher/IncomePerCourseChart";

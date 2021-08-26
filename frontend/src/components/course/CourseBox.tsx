@@ -58,7 +58,7 @@ function CourseBox({ courseData }) {
         style={{
           position: "relative",
           overflow: "visible",
-          backgroundColor: "black",
+          backgroundColor: "#37474f",
         }}
       >
         <CardMedia
