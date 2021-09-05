@@ -14,6 +14,7 @@ import YouTubeIcon from "@material-ui/icons/YouTube";
 import { Rating } from "@material-ui/lab";
 import { MiniCourse } from "classes/Course";
 import { Person, Student, Teacher } from "classes/Person";
+import AuthService from "components/auth/api/AuthService";
 import CoursePagination from "components/course/CustomPagination";
 import User from "layout/User";
 import React, { CSSProperties, useEffect, useState } from "react";
@@ -86,48 +87,56 @@ const Profile = () => {
   const [miniInfo, setMiniInfo] = useState<TeacherMiniInfo>();
   const [status, setStatus] = useState();
   const [loading, setLoading] = useState(true);
+  const [pageNotFound, setPageNotFound] = useState(false);
 
   useEffect(() => {
     loadData();
   }, [username]);
 
   async function loadData() {
-    await PersonService.getPersonToShow(username).then(async (response) => {
-      console.log("Fetched person", response.data);
-      setPerson(response.data);
-      switch (response.data.accountType) {
-        case "Teacher":
-          await TeacherService.getCreateCourseByUsername(username).then(
-            (response) => {
-              console.log("Fetched created course list", response.data);
-              setCourses(response.data);
-            }
-          );
-          await TeacherService.getMiniInfo(username).then((response) => {
-            console.log("Teacher mini info ", response.data);
-            setMiniInfo(response.data);
-          });
-          await TeacherService.getDesignation(username).then((response) => {
-            setStatus(response.data.type);
-          });
-          break;
-        case "Student":
-          await StudentService.getPurchaseCourseByUsername(username).then(
-            (response) => {
-              setCourses(response.data);
-            }
-          );
-          await StudentService.getEduStatus(username).then((response) => {
-            setStatus(response.data.type);
-          });
-          await StudentService.getStudentMiniInfo(username).then((response) => {
-            setMiniInfo(response.data);
-          });
-          break;
+    AuthService.existByUsername(username).then(async (response) => {
+      if (response.data) {
+        await PersonService.getPersonToShow(username).then(async (response) => {
+          console.log("Fetched person", response.data);
+          setPerson(response.data);
+          switch (response.data.accountType) {
+            case "Teacher":
+              await TeacherService.getCreateCourseByUsername(username).then(
+                (response) => {
+                  console.log("Fetched created course list", response.data);
+                  setCourses(response.data);
+                }
+              );
+              await TeacherService.getMiniInfo(username).then((response) => {
+                console.log("Teacher mini info ", response.data);
+                setMiniInfo(response.data);
+              });
+              await TeacherService.getDesignation(username).then((response) => {
+                setStatus(response.data.type);
+              });
+              break;
+            case "Student":
+              await StudentService.getPurchaseCourseByUsername(username).then(
+                (response) => {
+                  setCourses(response.data);
+                }
+              );
+              await StudentService.getEduStatus(username).then((response) => {
+                setStatus(response.data.type);
+              });
+              await StudentService.getStudentMiniInfo(username).then(
+                (response) => {
+                  setMiniInfo(response.data);
+                }
+              );
+              break;
+          }
+        });
+      } else {
+        setPageNotFound(true);
       }
+      setLoading(false);
     });
-
-    setLoading(false);
   }
   function LeftComponent() {
     return (
@@ -373,7 +382,7 @@ const Profile = () => {
     );
   }
   return (
-    <User loading={loading}>
+    <User loading={loading} pageNotFound={pageNotFound}>
       <Grid container>
         <Grid container direction="row" alignItems="flex-start" spacing={2}>
           <Grid item xs={12} sm={4} lg={3}>

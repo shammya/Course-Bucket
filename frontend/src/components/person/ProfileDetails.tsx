@@ -89,7 +89,11 @@ const useStyles = makeStyles((theme) => ({
 const ProfileDetails = (props) => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const [person, setPerson] = useState<Person>(props.location.state.person);
+  const [person, setPerson] = useState<Person>(
+    props.location.state.person
+      ? props.location.state.person
+      : new Person("", "", "")
+  );
   // let person: Person;
 
   const [error, setError] = useState(false);
@@ -127,11 +131,16 @@ const ProfileDetails = (props) => {
             response.data.photo = new Files(photo.type, photo.title)
               .setId(photo.id)
               .setContent(photo.content);
-
-            history.push({
-              pathname: "/profile-details",
-              state: response.data,
-            });
+            props.location.state.person = response.data;
+            props.location.state.registered = true;
+            setPerson(props.location.state.person);
+            // history.push({
+            //   pathname: "/profile-details",
+            //   state: {
+            //     person: response.data,
+            //     registered: true,
+            //   },
+            // });
           });
       } else if (AuthService.getCurrentAccountType() == "Student") {
         axios

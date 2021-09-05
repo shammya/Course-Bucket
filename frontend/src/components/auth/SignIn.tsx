@@ -91,7 +91,11 @@ export function SignIn({ signOut }: { signOut: boolean }) {
         console.log(username);
         localStorage.setItem("user", JSON.stringify(response.data));
         console.log(AuthService.getCurrentUser());
-        history.push({ pathname: "/home" });
+        if (response.data.accountType === "Admin") {
+          history.push({ pathname: "/admin" });
+        } else {
+          history.push({ pathname: "/home" });
+        }
       }
     });
   }
