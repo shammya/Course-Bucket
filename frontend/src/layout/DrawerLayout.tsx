@@ -77,9 +77,13 @@ function TabPanel({ children, value, index, ...other }) {
 const DrawerLayout = ({
   objects,
   defaultTabIndex = 0,
+  pageNotFound = false,
+  loading = false,
 }: {
   objects: Array<IDrawerLayoutObject>;
   defaultTabIndex?: number;
+  pageNotFound?: boolean;
+  loading?: boolean;
 }) => {
   const classes = useStyles();
   const [tabIndex, setTabIndex] = useState(defaultTabIndex);
@@ -116,7 +120,7 @@ const DrawerLayout = ({
     );
   }
   return (
-    <User>
+    <User pageNotFound={pageNotFound} loading={loading}>
       <StickyContainer>
         <Responsive displayIn={["Tablet", "Laptop"]}>
           <Grid container direction="row" spacing={2} wrap="nowrap">

@@ -43,7 +43,7 @@ export default function ImageSlider(props) {
     // style={{ width: '100%' }}
     >
       {
-        sliders?.map((slider, i) => <GridImageView key={slider.id} src={slider.file.content} wrapperProps={{ container: true, justifyContent: 'center' }} imgProps={{ style: { maxHeight: '50vh' } }} />)
+        sliders?.map((slider, i) => <GridImageView key={slider.id} src={slider.file.content} wrapperProps={{ container: true, justifyContent: 'center', style: { height: 729 } }} imgProps={{ style: { maxHeight: '50vh' } }} />)
       }
     </Carousel >
   )

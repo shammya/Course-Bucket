@@ -189,7 +189,7 @@ public class Admin extends Person{
 						+ "SELECT nvl(count(*),0) FROM rating rt WHERE trunc(time)=# AND value=2 AND c.id=rt.course_id) AS two,(\r\n"
 						+ "SELECT nvl(count(*),0) FROM rating rt WHERE trunc(time)=# AND value=3 AND c.id=rt.course_id) AS three,(\r\n"
 						+ "SELECT nvl(count(*),0) FROM rating rt WHERE trunc(time)=# AND value=4 AND c.id=rt.course_id) AS four,(\r\n"
-						+ "SELECT nvl(count(*),0) FROM rating rt WHERE trunc(time)=# AND value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.id= #";
+						+ "SELECT nvl(count(*),0) FROM rating rt WHERE trunc(time)=# AND value=5 AND c.id=rt.course_id) AS five FROM course c WHERE c.id= # ";
 				ResultSet rs1 = DB.executeQuery(sql1, dDate, dDate, dDate, dDate, dDate, dDate, dDate, id.toString());
 				rs1.next();
 				overviewContents.add(new OverviewContent(date, rs1.getInt("enr_std_count"), rs1.getInt("review_count"),

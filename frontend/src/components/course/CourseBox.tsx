@@ -58,16 +58,18 @@ function CourseBox({ courseData }) {
         style={{
           position: "relative",
           overflow: "visible",
-          backgroundColor: "black",
+          backgroundColor: "#37474f",
         }}
       >
         <CardMedia
           style={{ height: 135, backgroundSize: "cover" }}
           image={courseData.coverContent}
         />
-        {courseData?.off != undefined && courseData?.off != 0 && (
-          <div className={local.offerBG}>{courseData.off}%</div>
-        )}
+        {courseData?.off != undefined &&
+          courseData?.off != 0 &&
+          courseData?.price != 0 && (
+            <div className={local.offerBG}>{courseData.off}%</div>
+          )}
         <CardContent style={{ padding: "0px 10px 10px 10px" }}>
           <Grid
             container

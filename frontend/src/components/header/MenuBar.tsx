@@ -34,6 +34,7 @@ export const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     backgroundColor: "#445F67",
     zIndex: 100,
+    top: 126,
     // [theme.breakpoints.down("sm")]: {
     //   position: "relative",
     //   marginLeft: "20px",
@@ -170,7 +171,7 @@ export function SubMenu({
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {subCategories.map((item) => (
-              <Link href={`/category/${item.id}`}>
+              <Link href={`/category/${item.id}`} className="sub-nav-name">
                 <ListItem className={classes.subMenuItem} button key={item.id}>
                   <ListItemText primary={item.name} />
                 </ListItem>

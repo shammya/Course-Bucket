@@ -116,6 +116,15 @@ class CourseService {
       authHeaders()
     );
   }
+  existCourseByIdToShow(courseId: number) {
+    return axios.get(GLOBAL.HOST + `/public/exist-course-to-show/${courseId}`);
+  }
+  existCourseByIdToUpdate(courseId: number) {
+    return axios.get(
+      GLOBAL.HOST + `/exist-course-for-update/${courseId}`,
+      authHeaders()
+    );
+  }
 
   // } else {
   //   course.weeks.forEach((week) => {

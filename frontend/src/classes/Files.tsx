@@ -5,14 +5,14 @@ import { FileObject } from "material-ui-dropzone";
 
 export class Files {
   id: number;
-  type: "ICON" | "VIDEO" | "PICTURE" | "PDF" | "ARTICLE" | "LINK";
+  type: "ICON" | "VIDEO" | "PICTURE" | "PDF" | "ARTICLE" | "LINK" | "MESSAGE";
   title: string;
   content: any;
   uploadTime: Date;
   lastUpdateTime: Date;
 
   constructor(
-    type: "ICON" | "VIDEO" | "PICTURE" | "PDF" | "ARTICLE" | "LINK",
+    type: "ICON" | "VIDEO" | "PICTURE" | "PDF" | "ARTICLE" | "LINK" | "MESSAGE",
     title: string = ""
   ) {
     this.type = type;
@@ -27,7 +27,7 @@ export class Files {
     this.title = title;
     return this;
   }
-  setContent(content: string): Files {
+  setContent(content: any): Files {
     this.content = content;
     return this;
   }
@@ -36,12 +36,20 @@ export class Files {
     return this;
   }
   async upload() {
-    if (this.type == "VIDEO" || this.type == "PICTURE" || this.type == "PDF") {
+    if (
+      this.type == "VIDEO" ||
+      this.type == "PICTURE" ||
+      this.type == "PDF" ||
+      this.type == "MESSAGE"
+    ) {
       if (this.content.file) {
         const formData = new FormData();
         formData.append("file", this.content.file);
         formData.append("type", this.type);
-        formData.append("secure", this.type != "PICTURE" ? "true" : "false");
+        formData.append(
+          "secure",
+          this.type === "PICTURE" || this.type === "MESSAGE" ? "false" : "true"
+        );
         await axios
           .put(GLOBAL.HOST + `/resources/upload`, formData, authHeaders())
           .then((response) => {

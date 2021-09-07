@@ -23,10 +23,10 @@ public class Category {
 	}
 
 	public Category(Integer id) {
-		this.setId(id);
 		ResultSet rs = DB.executeQuery("SELECT * FROM CATEGORY WHERE ID = #", id.toString()), rs1;
 		try {
 			if (rs.next()) {
+				this.setId(id);
 				this.setName(rs.getString("NAME"));
 				// ResultSet rs1 = DB.executeQuery("SELECT NAME FROM CATEGORY WHERE ID = '#'",
 				// Integer.toString(rs.getInt("PARENT_ID")));

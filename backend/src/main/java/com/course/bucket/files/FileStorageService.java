@@ -59,6 +59,7 @@ public class FileStorageService {
 	}
 	
 	public static String encodeFileName(String name,String extension,String type, boolean secure) {
+		if(type.equalsIgnoreCase("message")) type = "picture";
 		StringBuilder sb = new StringBuilder(name);
 		
 		// Extension build
@@ -132,9 +133,10 @@ public class FileStorageService {
 		
 		Path targetLocation = null;
 		switch(type.toLowerCase()) {
-			case "picture":
-				targetLocation = this.fileStorageLocation.resolve("picture/");
-				break;
+		case "message":
+		case "picture":
+			targetLocation = this.fileStorageLocation.resolve("picture/");
+			break;
 			case "video":
 				targetLocation = this.fileStorageLocation.resolve("video/");
 				break;

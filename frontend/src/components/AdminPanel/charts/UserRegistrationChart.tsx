@@ -159,6 +159,7 @@ export function UserRegistrationChart() {
               handleViewTypeChange(dataSource, event.target.value as string)
             }
             variant="outlined"
+            style={{ backgroundColor: "#282C34" }}
           >
             {viewTypeArray.map((item) => (
               <MenuItem

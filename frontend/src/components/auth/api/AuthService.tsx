@@ -56,6 +56,11 @@ class AuthService {
   getCurrentUser() {
     return JSON.parse(localStorage.getItem("user") + "");
   }
+  getToken() {
+    if (this.getCurrentUser()) {
+      return this.getCurrentUser().token;
+    } else return "";
+  }
   getCurrentUsername() {
     if (this.getCurrentUser()) {
       return this.getCurrentUser().username;

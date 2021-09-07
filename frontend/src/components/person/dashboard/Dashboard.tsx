@@ -4,12 +4,14 @@ import {
   CardContent,
   Divider,
   Grid,
-  makeStyles,
   Typography,
+  makeStyles,
 } from "@material-ui/core";
+import { Looks, RateReview } from "@material-ui/icons";
 import AuthService from "components/auth/api/AuthService";
 import DrawerLayout, { IDrawerLayoutObject } from "layout/DrawerLayout";
 import React from "react";
+import { FaChalkboardTeacher, FaDollarSign, FaQq } from "react-icons/fa";
 import { Redirect, Route, Switch, useHistory } from "react-router";
 import { useRouteMatch } from "react-router-dom";
 import IncomePerCourseChart from "../teacher/IncomePerCourseChart";
@@ -203,6 +205,7 @@ function Dashboard() {
       ? TeacherObject
       : StudentObject;
   const route = useRouteMatch();
+  const pageNotFound = !AuthService.isLogin() || (AuthService.getCurrentAccountType() === 'Admin');
   return (
     <>
       <Switch>
@@ -212,14 +215,14 @@ function Dashboard() {
             path={`${route.path}/${item.urlShort}`}
             key={item.urlShort}
           >
-            <DrawerLayout objects={objects} defaultTabIndex={idx} />
+            <DrawerLayout objects={objects} defaultTabIndex={idx} pageNotFound={pageNotFound} />
           </Route>
         ))}
         <Route path={`${route.path}/**`}>
           <Redirect to={`${route.path}`} />
         </Route>
         <Route path={`${route.path}`}>
-          <DrawerLayout objects={objects} defaultTabIndex={0} />
+          <DrawerLayout objects={objects} defaultTabIndex={0}  pageNotFound={pageNotFound} />
         </Route>
       </Switch>
     </>

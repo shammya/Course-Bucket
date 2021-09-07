@@ -31,11 +31,11 @@ function SimpleReactFooter(props) {
                   <div key={resource.id}>
                     <a
                       href={`${resource.link}`}
-                      target="_blank"
+                      // target="_blank"
                       style={{ color: props.fontColor || "black" }}
                       className="resources"
                     >
-                      as {resource.name}
+                      {resource.name}
                     </a>
                   </div>
                 ))}

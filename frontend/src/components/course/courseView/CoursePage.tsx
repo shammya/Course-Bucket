@@ -74,11 +74,20 @@ export function CourseView() {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const [loading, setLoading] = useState(true);
+  const [pageNotFound, setPageNotFound] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (courseId) {
-      loadCourseContent();
+      CourseService.existCourseByIdToShow(courseId).then((response) => {
+        if (response.data) {
+          loadCourseContent();
+        } else {
+          setPageNotFound(true);
+        }
+      });
+    } else {
+      setPageNotFound(true);
     }
   }, [courseId]);
 
@@ -153,25 +162,34 @@ export function CourseView() {
         justifyContent="center"
         spacing={1}
       >
-        <Grid item>
-          <Typography variant="h5">
-            ৳
-            {course?.mainPrice
-              ? course?.mainPrice - (course?.mainPrice * course?.off) / 100
-              : ""}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography
-            variant="body2"
-            style={{ textDecoration: "line-through" }}
-          >
-            ৳{course?.mainPrice}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="body1">{course?.off}% off</Typography>
-        </Grid>
+        {course?.mainPrice == 0 && (
+          <Grid item>
+            <Typography variant="h5">FREE</Typography>
+          </Grid>
+        )}
+        {course?.mainPrice != 0 && (
+          <>
+            <Grid item>
+              <Typography variant="h5">
+                ৳
+                {course?.mainPrice
+                  ? course?.mainPrice - (course?.mainPrice * course?.off) / 100
+                  : ""}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography
+                variant="body2"
+                style={{ textDecoration: "line-through" }}
+              >
+                ৳{course?.mainPrice}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body1">{course?.off}% off</Typography>
+            </Grid>
+          </>
+        )}
       </Grid>
     );
   }
@@ -211,7 +229,9 @@ export function CourseView() {
         </Grid>
         <Grid item container direction="row">
           <Typography>Created by :</Typography>
-          <Link color="primary">{course?.teacherName}</Link>
+          <Link color="primary" href={`/profile/${course?.teacherUsername}`}>
+            {course?.teacherName}
+          </Link>
         </Grid>
         <Grid item container direction="row">
           <Grid item>Published date: {formattedDate}</Grid>
@@ -588,7 +608,7 @@ export function CourseView() {
     return <InstructorShortDetailsBox details={teacherInfo} />;
   }
   return (
-    <User loading={loading}>
+    <User loading={loading} pageNotFound={pageNotFound}>
       <StickyContainer>
         <Grid container direction="column" spacing={2}>
           <Breadcrumbs

@@ -71,7 +71,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Header() {
+export function Header({
+  disableCategoryBar = false,
+}: {
+  disableCategoryBar?: boolean;
+}) {
   const classes = useStyles();
   const history = useHistory();
   const [photo, setPhoto] = useState<Files>();
@@ -145,6 +149,12 @@ export function Header() {
         func: profileDetailsLoad,
       },
       {
+        label: "Message",
+        func: () => {
+          history.push("/message");
+        },
+      },
+      {
         label: "Sign out",
         link: "/auth/signin",
         func: () => {
@@ -170,6 +180,12 @@ export function Header() {
         label: "My Course",
         func: () => {
           history.push("/my-course");
+        },
+      },
+      {
+        label: "Message",
+        func: () => {
+          history.push("/message");
         },
       },
       {
@@ -207,6 +223,12 @@ export function Header() {
         label: "Purchase History",
         func: () => {
           history.push("/dashboard/purchase-history");
+        },
+      },
+      {
+        label: "Message",
+        func: () => {
+          history.push("/message");
         },
       },
       {
@@ -455,7 +477,7 @@ export function Header() {
   }
   return (
     <>
-      <Grid>
+      <Grid id="header-root">
         <Toolbar className={classes.root}>
           <Grid container direction="column" style={{ flexGrow: 1 }}>
             <Grid
@@ -477,7 +499,7 @@ export function Header() {
             </Responsive>
           </Grid>
         </Toolbar>
-        <TopNav />
+        {!disableCategoryBar && <TopNav />}
       </Grid>
     </>
   );

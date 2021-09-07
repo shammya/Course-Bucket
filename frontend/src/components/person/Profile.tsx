@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -95,7 +96,7 @@ const Profile = () => {
 
   async function loadData() {
     AuthService.existByUsername(username).then(async (response) => {
-      if (response.data) {
+      if (response.data.boolValue) {
         await PersonService.getPersonToShow(username).then(async (response) => {
           console.log("Fetched person", response.data);
           setPerson(response.data);
@@ -331,15 +332,19 @@ const Profile = () => {
         <CreateItem attribute="About" value={person?.about} />
         <CreateItem attribute="Contact">
           <Grid container direction="column" spacing={1}>
-            {/* <Grid item container>
-              <Button
-                style={{ width: "100%" }}
-                variant="contained"
-                color="primary"
-              >
-                Send Message
-              </Button>
-            </Grid> */}
+            {AuthService.getCurrentUsername() !== username && (
+              <Grid item container>
+                <Button
+                  style={{ width: "100%" }}
+                  variant="contained"
+                  color="primary"
+                  href={`/message/${person?.username}`}
+                >
+                  Send Message
+                </Button>
+              </Grid>
+            )}
+
             {person?.fbURL && (
               <Grid item>
                 <ContactChip

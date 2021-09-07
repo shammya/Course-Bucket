@@ -16,28 +16,32 @@ import { MenuBar, useStyles } from "./MenuBar";
 export function TopNav(props) {
   const classes = useStyles();
   const [menuItems, setMenuItems] = useState<Category[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     CategoryService.getCategories().then((response) => {
       setMenuItems(response.data[0].children);
+      setLoaded(true);
     });
   }, []);
 
   return (
     <React.Fragment>
-      <Responsive displayIn={["Laptop", "Tablet"]}>
-        <Grid
-          className={classes.menuContainer}
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <MenuBar mainCategories={menuItems} />
-          {/* {menuItems.map((item) => (
+      {loaded && (
+        <Responsive displayIn={["Laptop", "Tablet"]}>
+          <Grid
+            className={classes.menuContainer}
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <MenuBar mainCategories={menuItems} />
+            {/* {menuItems.map((item) => (
           ))} */}
-        </Grid>
-      </Responsive>
+          </Grid>
+        </Responsive>
+      )}
     </React.Fragment>
   );
 }

@@ -27,11 +27,17 @@ public class CategoryController {
 		//System.out.println("\t category : "+category.getName()+" "+category.getParentName()+" "+category.getAdminId());
 		Category.createNewCategory(category);
 	}
-	
+
 	
 	@GetMapping("/public/get-categories")
 	public List<Category> findCategories(){
 		return Category.getAllCategories();
+	}
+	
+	@GetMapping("/public/exist-category/{categoryId}")
+	public Boolean existCategory(@PathVariable Integer categoryId){
+		Category cat = new Category(categoryId);
+		return cat.getId() != null;
 	}
 	
 	

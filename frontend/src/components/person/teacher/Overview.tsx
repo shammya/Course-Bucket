@@ -217,9 +217,16 @@ export function OverviewBarChart() {
           <ScrollBar visible={true} position="bottom" />
           <ZoomAndPan argumentAxis="both" />
         </Chart>
-        <Grid container direction="row" justifyContent="center" spacing={1}>
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          spacing={1}
+          style={{ backgroundColor: "#282C34" }}
+        >
           <Grid item>
             <Select
+              style={{ height: "100%" }}
               value={viewType}
               onChange={(event) =>
                 handleViewTypeChange(dataSource, event.target.value as string)

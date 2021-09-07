@@ -123,12 +123,12 @@ public class Course {
 	}
 
 	public Course(Integer id) {
-		this.id = id;
 		ResultSet rs = DB.executeQuery("SELECT * FROM COURSE WHERE ID = #", id.toString());
 		try {
 			if (!rs.next()) {
 				return;
 			}
+			this.id = id;
 			title = rs.getString("TITLE");
 			subTitle = rs.getString("SUBTITLE");
 			mainPrice = rs.getDouble("PRICE");
@@ -739,7 +739,7 @@ public class Course {
 		String where = " where ";
 		int len = searchKeys.length;
 		for (int i = 0; i < len; i++) {
-			where += (" lower(title) like '%" + searchKeys[i] + "%' or lower(subtitle) like '%" + searchKeys[i] + "%'");
+			where += (" lower(title) like '%" + searchKeys[i].toLowerCase() + "%' or lower(subtitle) like '%" + searchKeys[i].toLowerCase() + "%'");
 			if (i < len - 1)
 				where += " or ";
 		}
@@ -855,7 +855,7 @@ public class Course {
 				+ "	  from rating \n" + "	  where course_id = c.id \n" + "	  group by course_id\n"
 				+ "	),0.0) as rating ,\n" + "	nvl(( select count(course_id)\n" + "	  from rating \n"
 				+ "	  where course_id = c.id\n" + "	  group by course_id\n" + "	),0) as rating_count ,\n"
-				+ "	c.price, (c.price *(100 - c.offer)/100) as offer_price\n" + "from course c , \n" + " ( " + sql
+				+ "	c.price, c.offer  as offer_price\n" + "from course c , \n" + " ( " + sql
 				+ " ) a\n" + "where c.id = a.id and c.is_approved = 'T'";
 
 		// System.err.println(finalSql);

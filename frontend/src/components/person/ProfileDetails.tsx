@@ -90,7 +90,7 @@ const ProfileDetails = (props) => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [person, setPerson] = useState<Person>(
-    props.location.state.person
+    props.location.state?.person
       ? props.location.state.person
       : new Person("", "", "")
   );
@@ -110,6 +110,8 @@ const ProfileDetails = (props) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [againNewPassword, setAgainNewPassword] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [pageNotFound, setPageNotFound] = useState(false);
   // Snackbar control
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -119,6 +121,7 @@ const ProfileDetails = (props) => {
     console.log("heheh");
     if (props.location.state) {
       setPerson(props.location.state.person);
+      setLoading(false);
     } else if (AuthService.getCurrentAccountType() != "") {
       if (AuthService.getCurrentAccountType() == "Teacher") {
         axios
@@ -131,9 +134,9 @@ const ProfileDetails = (props) => {
             response.data.photo = new Files(photo.type, photo.title)
               .setId(photo.id)
               .setContent(photo.content);
-            props.location.state.person = response.data;
-            props.location.state.registered = true;
+            props.location.state = { person: response.data, registered: true };
             setPerson(props.location.state.person);
+            setLoading(false);
             // history.push({
             //   pathname: "/profile-details",
             //   state: {
@@ -160,10 +163,13 @@ const ProfileDetails = (props) => {
                 registered: true,
               },
             });
+            setLoading(false);
           });
-      } else {
-        history.goBack();
       }
+    } else {
+      // history.goBack();
+      setLoading(false);
+      setPageNotFound(true);
     }
     CountryService.getAllCountries().then((response) => {
       setCountryItem(response.data);
@@ -178,7 +184,7 @@ const ProfileDetails = (props) => {
       });
     }
     // console.log(JSON.parse(JSON.stringify(person.country)));
-    if (props.location.state.registered) {
+    if (props.location.state?.registered) {
       if (person.country) {
         setCountryId(person.country.id);
       }
@@ -306,7 +312,7 @@ const ProfileDetails = (props) => {
         return;
       }
     }
-    if (props.location.state.registered) {
+    if (props.location.state?.registered) {
       enqueueSnackbar("Please wait, your profile is updating...", {
         variant: "info",
       });
@@ -681,7 +687,7 @@ const ProfileDetails = (props) => {
               </AccordionDetails>
             </Accordion>
           </Grid>
-          {props.location.state.registered && (
+          {props.location.state?.registered && (
             <Grid item container>
               <Accordion
                 expanded={true}
@@ -735,8 +741,8 @@ const ProfileDetails = (props) => {
   }
   return (
     <>
-      {props.location.state.registered ? (
-        <User>
+      {props.location.state?.registered || loading || pageNotFound ? (
+        <User loading={loading} pageNotFound={pageNotFound}>
           <Grid container justifyContent="center">
             <Grid item xs={12} sm={8} md={5} style={{ margin: "0 auto" }}>
               <FullPage />

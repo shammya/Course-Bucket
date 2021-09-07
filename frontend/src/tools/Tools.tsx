@@ -59,6 +59,19 @@ export function SuccessMessage({ open, message, onClose }) {
   );
 }
 
+export function getDifference(date: Date) {
+  var curDate = new Date();
+  var diff = Math.abs(curDate.getTime() - date.getTime()) / 1000;
+  if (diff < 60) return Math.floor(diff) + "s";
+  diff /= 60;
+  if (diff < 60) return Math.floor(diff) + "m";
+  diff /= 60;
+  if (diff < 24) return Math.floor(diff) + "h";
+  diff /= 24;
+  if (diff < 7) return Math.floor(diff) + "d";
+  return date.toLocaleDateString();
+}
+
 function ScrollToTop({ history }) {
   useEffect(() => {
     const unlisten = history.listen(() => {

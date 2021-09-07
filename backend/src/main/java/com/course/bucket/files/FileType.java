@@ -17,10 +17,10 @@ public enum FileType  implements Serializable {
     PDF("PDF"),
     ARTICLE("ARTICLE"),
     LINK("LINK"),
+    MESSAGE("MESSAGE"),
     
     MATERIAL_ICON("MaterialIcon"),
     SVG("SVG"),
-    MESSAGE("Message"),
     ;
     String name;
     Integer id;
@@ -29,7 +29,6 @@ public enum FileType  implements Serializable {
         try {
 			if(rs.next()) {
 				this.id = rs.getInt("ID");
-				System.out.println(this.id);
 			}
 	        rs.close();
 		} catch (SQLException e) {
@@ -47,7 +46,6 @@ public enum FileType  implements Serializable {
         ResultSet rs = DB.executeQuery("SELECT TYPE FROM FILE_TYPE WHERE ID = #", id.toString());
         try {
 			if(rs.next()) {
-				System.out.println(rs.getString("TYPE").toUpperCase());
 				type = FileType.valueOf(rs.getString("TYPE").toUpperCase());
 			}
 	        rs.close();

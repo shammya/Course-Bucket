@@ -65,6 +65,21 @@ public class CourseController {
 		}
 		return ResponseEntity.ok(course);
 	}
+	@GetMapping("/public/exist-course-to-show/{id}")
+	public Boolean existCourseToShow(@PathVariable Integer id) {
+		Course course = new Course(id);
+		if(course.getId() == null) return false;
+		return true;
+	}
+	@GetMapping("/exist-course-for-update/{id}")
+	public Boolean existCourseForUpdate(@PathVariable Integer id) {
+		Course course = new Course(id);
+		if(course.getId() == null) return false;
+		if(!ToolKit.getCurrentUserName().equals(course.getTeacherUserame())) {
+			return false;
+		}
+		return true;
+	}
 	
 	@GetMapping("/public/get-course-by-category/{id}")
 	public ArrayList<MiniCourse> getCourseByCategory(@PathVariable Integer id) {
