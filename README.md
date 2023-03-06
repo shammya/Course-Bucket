@@ -1,96 +1,96 @@
-# Guideline to Run the Project
 
-`1.` Create an oracle user .\
-username :  `coursebucket` password :  `cb`\
-\
-`2.` Create a database connection if you are using a third party app\
-\
-`3.` Grant all the privileges to the user\
-\
-`4.` Open a sql file and run the query situated at database folder of the project\
-\
-`5.` Open the back end folder in Eclipse IDE\
-\
-`6.` Select `bucketApplication.java` file and run the server.\
-\
-`7.` Open frontend folder in windows terminal\
-\
-`8.` Type the command  `npm install` and wait for installation\
-\
-`9.` Then type the command `npm start`\
-\
-`10.` The app will take at max 5 minutes to fully run on your browser\
+<!-- ![youtube views](https://img.shields.io/youtube/views/nm_V5exioyI?style=badge&logoColor=white&label=1st%20Runner%20Up&labelColor=ff0000&color=grey) -->
+
+![Badge](https://visitor-counter-badge.vercel.app/api/shammya/Course-Bucket?label=Visitors&color=EA6607&labelColor=451E0E) [![youtube views](https://img.shields.io/youtube/views/nm_V5exioyI?style=for-the-badge&logo=youtube&logoColor=white&label=youtube&labelColor=ff0000&color=grey)](https://youtu.be/nm_V5exioyI)
+
+# Course Bucket
+
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)  ![Maven](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens) ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Material UI](https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white) ![Oracle](https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=black)
 
 
 
 
-# Getting Started with Create React App
+## Description
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+As the world of internet progress, the need of online course contents increases day by day. In order to cope with the situations, we introduce our very project an online course offering platform called **COURSE BUCKET**. This website will provide all the necessary services regarding course creation, purchase and student-instructor communication.
 
-## Available Scripts
+## Use Cases
 
-In the project directory, you can run:
+1. **Registration :** We allow 2 kinds of registration namely Instructor and Student. Admin accounts are hard coded. And guest accounts are treated as unregistered account.
+2. **Students Functionalities :**
+    - Edit his account settings.
+    - Purchase courses.
+    - Review and rate any course.
+    - Ask a question to the course instructor.
+    - Message an instructor.
+    - Can see his course purchase history
+    - Can see his FAQs
+    - Can see his ratings and reviews
+    - Can access to his purchased course
+	 
+3. **Instructors Functionalities :**
+    - Edit his account settings
+    - Upload, delete or update his course.
+    - Can see his created courses
+    - Can see an overview of total revenue, enrollments, ratings, reviews and FAQs.
+    - Can see his students.
+    - Can see the sold courses details.
+    - Can create a course.
+    - Can message his students
 
-### `npm start`
+4. **Admin Functionalities :**
+    - Can see user list
+    - Can see, approve and unapprove a course. 
+    - Can update necessary database content.
+    - Can edit category list.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+5. **Search Course :** One can search a course based on his requirements.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+6. **Filtering :** Filtering is also available to make searched courses more meaningful  to  the users
 
-### `npm test`
+7. **Notification :** Admin, Students and Instructors can see notification on different events
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Guideline to Run the Project
 
-### `npm run eject`
+### Backend
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+`1.` Create an oracle user.
+username :  `coursebucket` password :  `cb`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`2.` Create a database connection if you are using a third party app
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+`3.` Grant all the privileges to the user
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+`4.` Open a sql file and run the query situated at database folder of the project
 
-## Learn More
+`5.` Open the back end folder in Eclipse IDE
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+`6.` Select `bucketApplication.java` file and run the server.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`7.` Open frontend folder in windows terminal
 
-### Code Splitting
+`8.` Type the command  `npm install` and wait for installation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+`9.` Then type the command `npm start`
 
-### Analyzing the Bundle Size
+`10.` The app will take at max 5 minutes to fully run on your browser
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Frontend
 
-### Making a Progressive Web App
+`1.` In the frontend directory, run `npm install` to install all the packages.
+`2.` Run `npm start` to start the frontend.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Credit
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<div>
+  <a href="https://github.com/shammya">
+    <img src="./database/images/shammya.jpg"/ height="150">
+  </a>
+  <a href="https://github.com/md-mehedi">
+    <img src="./database/images/md-mehedi.jpg"/ height="150">
+  </a>
+</div>
